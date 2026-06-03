@@ -1,0 +1,8 @@
+.superpowers/
+_deploy/
+.vercel/
+node_modules/
+.DS_Store
+.env.local
+.env
+.next/
