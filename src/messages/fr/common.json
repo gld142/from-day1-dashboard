@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "From Day 1",
+    "tagline": "Dashboard 360°",
+    "demo": "Démo"
+  },
+  "roles": {
+    "artist": "Artiste",
+    "label": "Structure",
+    "switchTo": "Vue {role}",
+    "viewingAs": "Vous voyez le dashboard comme : {name}"
+  },
+  "themes": {
+    "night": "Nuit",
+    "dawn": "Aube",
+    "day": "Jour",
+    "switch": "Changer d'ambiance"
+  },
+  "locale": {
+    "fr": "Français",
+    "en": "English",
+    "switch": "Changer de langue"
+  },
+  "periods": {
+    "today": "Aujourd'hui",
+    "7d": "7 jours",
+    "30d": "30 jours",
+    "90d": "90 jours",
+    "12m": "12 mois",
+    "ytd": "Année en cours",
+    "all": "Tout"
+  },
+  "actions": {
+    "seeAll": "Tout voir",
+    "seeDetails": "Voir le détail",
+    "export": "Exporter",
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "filter": "Filtrer",
+    "search": "Rechercher",
+    "compare": "Comparer",
+    "download": "Télécharger",
+    "share": "Partager",
+    "connect": "Connecter",
+    "soon": "Bientôt",
+    "new": "Nouveau",
+    "beta": "Bêta"
+  },
+  "units": {
+    "streams": "streams",
+    "listeners": "auditeurs",
+    "followers": "abonnés",
+    "tracks": "titres",
+    "perMonth": "/mois",
+    "vsPrev": "vs période précédente"
+  },
+  "states": {
+    "empty": "Aucune donnée pour le moment",
+    "emptyHint": "Connectez une source pour voir vos données en direct",
+    "loading": "Chargement",
+    "error": "Une erreur est survenue",
+    "upToDate": "À jour",
+    "lastSync": "Dernière synchro {time}"
+  },
+  "table": {
+    "rowsPerPage": "Lignes par page",
+    "of": "sur",
+    "noResults": "Aucun résultat"
+  }
+}

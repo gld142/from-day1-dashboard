@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "daily": "Rituel quotidien",
+    "data": "Data live",
+    "finances": "Finances",
+    "rights": "Business & droits",
+    "intelligence": "Intelligence",
+    "growth": "Croissance"
+  },
+  "items": {
+    "pulse": "Pulse",
+    "overview": "Vue d'ensemble",
+    "roster": "Roster",
+    "streams": "Streams live",
+    "revenue": "Revenus",
+    "audience": "Audience",
+    "finances": "Dépenses & P&L",
+    "calculator": "Revenue Calculator",
+    "valuation": "Valorisation",
+    "splits": "Splits",
+    "contracts": "Contrats",
+    "rights": "Droits FR",
+    "urssaf": "URSSAF & compte pro",
+    "audit": "Audit royalties IA",
+    "day1index": "Day 1 Index",
+    "copilot": "Copilot IA",
+    "arwatch": "A&R Watch",
+    "fans": "Fans CRM",
+    "tour": "Tournée",
+    "catalog": "Catalogue",
+    "team": "Équipe & accès"
+  }
+}

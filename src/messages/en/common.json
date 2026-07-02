@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "From Day 1",
+    "tagline": "360° Dashboard",
+    "demo": "Demo"
+  },
+  "roles": {
+    "artist": "Artist",
+    "label": "Structure",
+    "switchTo": "{role} view",
+    "viewingAs": "Viewing the dashboard as: {name}"
+  },
+  "themes": {
+    "night": "Night",
+    "dawn": "Dawn",
+    "day": "Day",
+    "switch": "Switch mood"
+  },
+  "locale": {
+    "fr": "Français",
+    "en": "English",
+    "switch": "Switch language"
+  },
+  "periods": {
+    "today": "Today",
+    "7d": "7 days",
+    "30d": "30 days",
+    "90d": "90 days",
+    "12m": "12 months",
+    "ytd": "Year to date",
+    "all": "All time"
+  },
+  "actions": {
+    "seeAll": "See all",
+    "seeDetails": "View details",
+    "export": "Export",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "filter": "Filter",
+    "search": "Search",
+    "compare": "Compare",
+    "download": "Download",
+    "share": "Share",
+    "connect": "Connect",
+    "soon": "Soon",
+    "new": "New",
+    "beta": "Beta"
+  },
+  "units": {
+    "streams": "streams",
+    "listeners": "listeners",
+    "followers": "followers",
+    "tracks": "tracks",
+    "perMonth": "/mo",
+    "vsPrev": "vs previous period"
+  },
+  "states": {
+    "empty": "No data yet",
+    "emptyHint": "Connect a source to see your live data",
+    "loading": "Loading",
+    "error": "Something went wrong",
+    "upToDate": "Up to date",
+    "lastSync": "Last sync {time}"
+  },
+  "table": {
+    "rowsPerPage": "Rows per page",
+    "of": "of",
+    "noResults": "No results"
+  }
+}
