@@ -1,0 +1,25 @@
+{
+  "placeholder": "Ask a question — instant answer",
+  "hint": "E.g. \"My best month?\", \"My streams over 30 days?\"",
+  "suggestions": {
+    "bestMonth": "What's my best month?",
+    "streams30": "My streams over 30 days?",
+    "revenue12": "My revenue over 12 months?",
+    "sacem": "Where's my SACEM at?",
+    "nextShow": "My next show?",
+    "expenses": "My expenses this year?",
+    "valuation": "What's my catalog worth?"
+  },
+  "answers": {
+    "bestMonth": "Your best month is {month} with {amount} in revenue across all sources.",
+    "streams30": "You generated {count} streams over the last 30 days ({delta} vs the previous period).",
+    "revenue12": "Over 12 months, your revenue totals {amount}. Top source: {source}.",
+    "sacem": "Across your latest SACEM statements: {received} received vs {expected} expected. {gap, select, yes {A gap was detected — check the audit.} other {Nothing unusual detected.}}",
+    "nextShow": "Your next show: {venue} in {city} on {date} — {sold} tickets sold of {capacity}.",
+    "expenses": "Expenses over the last 12 months: {amount}, top category: {category}.",
+    "valuation": "Your catalog is valued between {low} and {high} (NPS multiple method).",
+    "fallback": "In production, the Copilot will answer any question about your data. Try a suggested question — or explore the full Copilot."
+  },
+  "sourceNote": "Computed just now from your data",
+  "openCopilot": "Open Copilot"
+}

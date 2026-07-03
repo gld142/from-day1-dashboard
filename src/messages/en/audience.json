@@ -1,1 +1,77 @@
-{}
+{
+  "title": "Audience",
+  "subtitle": "Who listens to you, where, and how they discover you.",
+  "kpi": {
+    "listeners": "Monthly listeners",
+    "followers": "Estimated followers",
+    "followersHint": "across all platforms",
+    "superfans": "Superfans",
+    "superfansHint": "activable core fanbase",
+    "growth": "Monthly growth",
+    "growthHint": "audience-weighted average"
+  },
+  "segments": {
+    "title": "Fan segments",
+    "subtitle": "Fanbase segmented by engagement intensity — 30-day trend",
+    "superfans": {
+      "label": "Superfans",
+      "desc": "Stream every release on day one, buy merch and tickets."
+    },
+    "engaged": {
+      "label": "Engaged",
+      "desc": "Come back every week, follow playlists and socials."
+    },
+    "casual": {
+      "label": "Casual",
+      "desc": "Discovered via playlists and radio — the pool to convert."
+    },
+    "dormant": {
+      "label": "Dormant",
+      "desc": "Past listeners with no recent plays — prime re-engagement target."
+    }
+  },
+  "demo": {
+    "title": "Demographics",
+    "subtitle": "Modeled estimate derived from listening data",
+    "age": "Age groups",
+    "gender": "Gender split",
+    "female": "Women",
+    "male": "Men",
+    "nonbinary": "Other",
+    "cities": "Top cities",
+    "citiesHint": "Estimated monthly listeners per city",
+    "listeners": "listeners"
+  },
+  "discovery": {
+    "title": "Discovery sources",
+    "subtitle": "How listeners find their way to your music",
+    "share": "Share of new listens",
+    "algorithmic": {
+      "label": "Algorithmic",
+      "desc": "Radio, daily mixes, automatic DSP suggestions. Fueled by your completion and save rates."
+    },
+    "editorial": {
+      "label": "Editorial",
+      "desc": "Platform editorial playlists. Earned through pitching ahead of every release."
+    },
+    "playlists": {
+      "label": "Listener playlists",
+      "desc": "Playlists built by fans and independent curators. A strong signal of organic loyalty."
+    },
+    "ugc": {
+      "label": "UGC & socials",
+      "desc": "TikTok, Reels, Shorts. Volatile, but the top discovery engine under 25."
+    }
+  },
+  "roster": {
+    "title": "Roster audiences",
+    "subtitle": "Fanbase comparison — click an artist to zoom in",
+    "artist": "Artist",
+    "listeners": "Listeners",
+    "followers": "Est. followers",
+    "superfans": "Superfans",
+    "engagement": "Engagement",
+    "growth": "Growth",
+    "topMarket": "Top market"
+  }
+}

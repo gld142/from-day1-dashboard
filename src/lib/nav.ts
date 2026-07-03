@@ -25,6 +25,7 @@ import {
   Radar,
   ReceiptEuro,
   Scale,
+  Settings,
   ShieldCheck,
   Sparkles,
   SplitSquareHorizontal,
@@ -136,14 +137,23 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/team", labelKey: "items.team", icon: Users },
     ],
   },
+  {
+    labelKey: "sections.account",
+    items: [{ href: "/settings", labelKey: "items.settings", icon: Settings }],
+  },
 ];
 
-/** Aplati, filtré par persona. */
-export function navForPersona(persona: Persona): NavSection[] {
+/** Aplati, filtré par persona et par préférences de visibilité. */
+export function navForPersona(
+  persona: Persona,
+  isHidden?: (href: string) => boolean,
+): NavSection[] {
   return NAV_SECTIONS.map((s) => ({
     ...s,
     items: s.items.filter(
-      (i) => !i.personas || i.personas.includes(persona),
+      (i) =>
+        (!i.personas || i.personas.includes(persona)) &&
+        (!isHidden || !isHidden(i.href)),
     ),
   })).filter((s) => s.items.length > 0);
 }

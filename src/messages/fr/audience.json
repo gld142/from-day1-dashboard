@@ -1,1 +1,77 @@
-{}
+{
+  "title": "Audience",
+  "subtitle": "Qui vous écoute, où, et comment ils vous découvrent.",
+  "kpi": {
+    "listeners": "Auditeurs mensuels",
+    "followers": "Followers estimés",
+    "followersHint": "toutes plateformes confondues",
+    "superfans": "Superfans",
+    "superfansHint": "cœur de fanbase activable",
+    "growth": "Croissance mensuelle",
+    "growthHint": "moyenne pondérée par audience"
+  },
+  "segments": {
+    "title": "Segments de fans",
+    "subtitle": "Fanbase segmentée par intensité d'engagement — tendance sur 30 jours",
+    "superfans": {
+      "label": "Superfans",
+      "desc": "Écoutent chaque sortie dès le jour J, achètent merch et billets."
+    },
+    "engaged": {
+      "label": "Engagés",
+      "desc": "Reviennent chaque semaine, suivent les playlists et les réseaux."
+    },
+    "casual": {
+      "label": "Occasionnels",
+      "desc": "Découverte via playlists et radio — à convertir en engagés."
+    },
+    "dormant": {
+      "label": "Dormants",
+      "desc": "Anciens auditeurs sans écoute récente — cible idéale de réactivation."
+    }
+  },
+  "demo": {
+    "title": "Démographie",
+    "subtitle": "Estimation modélisée à partir des données d'écoute",
+    "age": "Tranches d'âge",
+    "gender": "Répartition par genre",
+    "female": "Femmes",
+    "male": "Hommes",
+    "nonbinary": "Autres",
+    "cities": "Top villes",
+    "citiesHint": "Auditeurs mensuels estimés par ville",
+    "listeners": "auditeurs"
+  },
+  "discovery": {
+    "title": "Sources de découverte",
+    "subtitle": "Comment les auditeurs arrivent jusqu'à votre musique",
+    "share": "Part des nouvelles écoutes",
+    "algorithmic": {
+      "label": "Algorithmique",
+      "desc": "Radio, Mix quotidiens, suggestions automatiques des DSP. Se nourrit de votre taux de complétion et de sauvegarde."
+    },
+    "editorial": {
+      "label": "Éditorial",
+      "desc": "Playlists éditoriales des plateformes. Se travaille via le pitching avant chaque sortie."
+    },
+    "playlists": {
+      "label": "Playlists auditeurs",
+      "desc": "Playlists créées par les fans et curateurs indépendants. Signal fort de fidélisation organique."
+    },
+    "ugc": {
+      "label": "UGC & réseaux",
+      "desc": "TikTok, Reels, Shorts. Volatile mais premier moteur de découverte chez les moins de 25 ans."
+    }
+  },
+  "roster": {
+    "title": "Audiences du roster",
+    "subtitle": "Comparatif des fanbases — cliquez sur un artiste pour zoomer",
+    "artist": "Artiste",
+    "listeners": "Auditeurs",
+    "followers": "Followers est.",
+    "superfans": "Superfans",
+    "engagement": "Engagement",
+    "growth": "Croissance",
+    "topMarket": "1er marché"
+  }
+}

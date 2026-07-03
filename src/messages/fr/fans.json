@@ -1,1 +1,66 @@
-{}
+{
+  "title": "Fans CRM",
+  "subtitle": "Comprenez qui écoute vraiment — et transformez l'écoute en engagement",
+  "labelSubtitle": "Segments agrégés du roster — comparez l'engagement artiste par artiste",
+  "segments": {
+    "superfans": {
+      "label": "Super-fans",
+      "description": "Écoutent chaque sortie, achètent le merch, viennent aux concerts",
+      "action": "Drop exclusif"
+    },
+    "engaged": {
+      "label": "Engagés",
+      "description": "Écoutes régulières, suivent les réseaux, réagissent aux annonces",
+      "action": "Inviter à la présale"
+    },
+    "casual": {
+      "label": "Occasionnels",
+      "description": "Découverte via playlists — à convertir en auditeurs fidèles",
+      "action": "Playlist signature"
+    },
+    "dormant": {
+      "label": "Dormants",
+      "description": "Aucune écoute depuis 90 jours — risque de décrochage",
+      "action": "Campagne de réactivation"
+    }
+  },
+  "funnel": {
+    "title": "Entonnoir d'engagement",
+    "description": "Répartition de la base fans par intensité de relation",
+    "ofBase": "{pct} de la base",
+    "suggested": "Action suggérée"
+  },
+  "superfans": {
+    "title": "Super-fans",
+    "description": "Vos ambassadeurs les plus actifs — traitez-les comme des VIP",
+    "rosterDescription": "Les fans les plus engagés, tous artistes confondus",
+    "score": "Engagement",
+    "invitePresale": "Inviter à la présale",
+    "exclusiveDrop": "Drop exclusif",
+    "sent": "Envoyé"
+  },
+  "ideas": {
+    "title": "Idées d'activation",
+    "description": "Des mécaniques prêtes à lancer pour monétiser l'engagement",
+    "prepare": "Préparer",
+    "presale": {
+      "title": "Présale tournée",
+      "description": "Accès prioritaire à la billetterie pour les super-fans, avant l'ouverture publique"
+    },
+    "vinyl": {
+      "title": "Vinyle édition limitée",
+      "description": "Pressage numéroté réservé aux 500 fans les plus engagés"
+    },
+    "listening": {
+      "title": "Listening party",
+      "description": "Écoute privée du prochain projet, en live avec Q&A"
+    }
+  },
+  "table": {
+    "title": "Segments par artiste",
+    "description": "Base fans détaillée pour chaque artiste du roster",
+    "artist": "Artiste",
+    "total": "Total",
+    "trend": "Super-fans 30 j"
+  }
+}

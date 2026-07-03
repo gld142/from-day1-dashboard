@@ -1,1 +1,56 @@
-{}
+{
+  "title": "Catalogue",
+  "subtitle": "Projets, titres, métadonnées — la source de vérité de votre répertoire",
+  "labelSubtitle": "Le répertoire complet du roster, projet par projet",
+  "searchPlaceholder": "Rechercher un titre, un projet, un ISRC…",
+  "allArtists": "Tout le roster",
+  "kpis": {
+    "tracks": "Titres au catalogue",
+    "projects": "Projets",
+    "streams": "Streams 12 mois",
+    "topShare": "Part du top titre"
+  },
+  "types": {
+    "album": "Album",
+    "ep": "EP",
+    "single": "Single"
+  },
+  "project": {
+    "tracks": "{count} titres",
+    "oneTrack": "1 titre",
+    "releasedOn": "Sorti le {date}",
+    "totalStreams": "Streams 12 m"
+  },
+  "columns": {
+    "track": "Titre",
+    "isrc": "ISRC",
+    "duration": "Durée",
+    "streams": "Streams 12 m",
+    "splits": "Splits"
+  },
+  "splits": {
+    "signed": "Signés",
+    "pending": "En attente",
+    "draft": "Brouillon"
+  },
+  "roles": {
+    "auteur": "Auteur",
+    "compositeur": "Compositeur",
+    "interprète": "Interprète",
+    "producteur": "Producteur",
+    "feat": "Feat"
+  },
+  "dialog": {
+    "metadata": "Métadonnées",
+    "isrc": "ISRC",
+    "duration": "Durée",
+    "releaseDate": "Date de sortie",
+    "streams": "Streams 12 mois",
+    "weight": "Part des streams artiste",
+    "splitsTitle": "Répartition des droits",
+    "signed": "Signé",
+    "pendingSignature": "Signature en attente",
+    "updatedAt": "Mis à jour le {date}"
+  },
+  "empty": "Aucun résultat pour cette recherche"
+}

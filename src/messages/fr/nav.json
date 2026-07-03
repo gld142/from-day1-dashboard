@@ -5,7 +5,8 @@
     "finances": "Finances",
     "rights": "Business & droits",
     "intelligence": "Intelligence",
-    "growth": "Croissance"
+    "growth": "Croissance",
+    "account": "Compte"
   },
   "items": {
     "pulse": "Pulse",
@@ -28,6 +29,7 @@
     "fans": "Fans CRM",
     "tour": "Tournée",
     "catalog": "Catalogue",
-    "team": "Équipe & accès"
+    "team": "Équipe & accès",
+    "settings": "Réglages"
   }
 }

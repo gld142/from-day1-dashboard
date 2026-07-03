@@ -1,0 +1,25 @@
+{
+  "placeholder": "Pose ta question — réponse immédiate",
+  "hint": "Ex : « Mon meilleur mois ? », « Mes streams sur 30 jours ? »",
+  "suggestions": {
+    "bestMonth": "Quel est mon meilleur mois ?",
+    "streams30": "Mes streams sur 30 jours ?",
+    "revenue12": "Mes revenus sur 12 mois ?",
+    "sacem": "Où en est ma SACEM ?",
+    "nextShow": "Ma prochaine date ?",
+    "expenses": "Mes dépenses cette année ?",
+    "valuation": "Combien vaut mon catalogue ?"
+  },
+  "answers": {
+    "bestMonth": "Ton meilleur mois est {month} avec {amount} de revenus toutes sources confondues.",
+    "streams30": "Tu as généré {count} streams sur les 30 derniers jours ({delta} vs période précédente).",
+    "revenue12": "Sur 12 mois, tes revenus totalisent {amount}. Première source : {source}.",
+    "sacem": "Sur tes derniers relevés SACEM : {received} reçus pour {expected} attendus. {gap, select, yes {Un écart a été détecté — regarde l'audit.} other {Rien d'anormal détecté.}}",
+    "nextShow": "Ta prochaine date : {venue} à {city} le {date} — {sold} billets vendus sur {capacity}.",
+    "expenses": "Dépenses des 12 derniers mois : {amount}, premier poste : {category}.",
+    "valuation": "Ton catalogue est estimé entre {low} et {high} (méthode multiple de NPS).",
+    "fallback": "En production, le Copilot répondra à toute question sur tes données. Essaie une question suggérée — ou explore le Copilot complet."
+  },
+  "sourceNote": "Calculé à l'instant depuis tes données",
+  "openCopilot": "Ouvrir le Copilot"
+}

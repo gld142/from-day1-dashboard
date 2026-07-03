@@ -50,6 +50,10 @@ import enCatalog from "./en/catalog.json";
 import frTeam from "./fr/team.json";
 import enTeam from "./en/team.json";
 import frSettings from "./fr/settings.json";
+import frBrief from "./fr/brief.json";
+import enBrief from "./en/brief.json";
+import frAsk from "./fr/ask.json";
+import enAsk from "./en/ask.json";
 import enSettings from "./en/settings.json";
 
 const MESSAGES = {
@@ -78,6 +82,8 @@ const MESSAGES = {
     catalog: frCatalog,
     team: frTeam,
     settings: frSettings,
+    brief: frBrief,
+    ask: frAsk,
   },
   en: {
     common: enCommon,
@@ -104,6 +110,8 @@ const MESSAGES = {
     catalog: enCatalog,
     team: enTeam,
     settings: enSettings,
+    brief: enBrief,
+    ask: enAsk,
   },
 } as const;
 

@@ -1,0 +1,32 @@
+{
+  "title": "Today's brief",
+  "subtitle": "Your essentials, in 30 seconds",
+  "subtitleLabel": "Your roster's essentials, in 30 seconds",
+  "open": "Today's brief",
+  "sections": {
+    "numbers": "Overnight numbers",
+    "alerts": "Needs attention",
+    "agenda": "Coming up",
+    "movers": "On the move"
+  },
+  "items": {
+    "streamsYesterday": "Streams yesterday",
+    "monthRevenue": "Revenue this month",
+    "topTrack": "Leading track",
+    "rosterStreams": "Roster streams (30d)",
+    "rosterNet": "Roster net (12mo)",
+    "nextShow": "Next show: {venue}, {city}",
+    "nextShowEmpty": "No shows scheduled",
+    "contractAlert": "{count, plural, =0 {No contract alerts} one {# contract alert} other {# contract alerts}}",
+    "rightsGap": "{amount} in gaps detected on your statements",
+    "rightsOk": "Rights statements: all clear",
+    "risingArtist": "{name}: {delta} streams over 30d"
+  },
+  "actions": {
+    "seeAudit": "View audit",
+    "seeContracts": "View contracts",
+    "seeTour": "View touring",
+    "seeRoster": "View roster",
+    "gotIt": "Got it for today"
+  }
+}

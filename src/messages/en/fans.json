@@ -1,1 +1,66 @@
-{}
+{
+  "title": "Fan CRM",
+  "subtitle": "Understand who really listens — and turn listening into engagement",
+  "labelSubtitle": "Aggregated roster segments — compare engagement artist by artist",
+  "segments": {
+    "superfans": {
+      "label": "Superfans",
+      "description": "Stream every release, buy merch, show up at every gig",
+      "action": "Exclusive drop"
+    },
+    "engaged": {
+      "label": "Engaged",
+      "description": "Regular listeners who follow socials and react to announcements",
+      "action": "Invite to presale"
+    },
+    "casual": {
+      "label": "Casual",
+      "description": "Playlist discovery — to convert into loyal listeners",
+      "action": "Signature playlist"
+    },
+    "dormant": {
+      "label": "Dormant",
+      "description": "No listen in the last 90 days — churn risk",
+      "action": "Reactivation campaign"
+    }
+  },
+  "funnel": {
+    "title": "Engagement funnel",
+    "description": "Fan base distribution by relationship intensity",
+    "ofBase": "{pct} of base",
+    "suggested": "Suggested action"
+  },
+  "superfans": {
+    "title": "Superfans",
+    "description": "Your most active ambassadors — treat them like VIPs",
+    "rosterDescription": "The most engaged fans across the whole roster",
+    "score": "Engagement",
+    "invitePresale": "Invite to presale",
+    "exclusiveDrop": "Exclusive drop",
+    "sent": "Sent"
+  },
+  "ideas": {
+    "title": "Activation ideas",
+    "description": "Ready-to-launch mechanics to monetize engagement",
+    "prepare": "Prepare",
+    "presale": {
+      "title": "Tour presale",
+      "description": "Priority ticket access for superfans, before the public on-sale"
+    },
+    "vinyl": {
+      "title": "Limited vinyl",
+      "description": "Numbered pressing reserved for your 500 most engaged fans"
+    },
+    "listening": {
+      "title": "Listening party",
+      "description": "Private first listen of the next project, live with Q&A"
+    }
+  },
+  "table": {
+    "title": "Segments by artist",
+    "description": "Detailed fan base for every artist on the roster",
+    "artist": "Artist",
+    "total": "Total",
+    "trend": "Superfans 30d"
+  }
+}

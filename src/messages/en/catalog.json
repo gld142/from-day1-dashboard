@@ -1,1 +1,56 @@
-{}
+{
+  "title": "Catalog",
+  "subtitle": "Projects, tracks, metadata — the source of truth for your repertoire",
+  "labelSubtitle": "The roster's full repertoire, project by project",
+  "searchPlaceholder": "Search a track, a project, an ISRC…",
+  "allArtists": "Whole roster",
+  "kpis": {
+    "tracks": "Tracks in catalog",
+    "projects": "Projects",
+    "streams": "Streams 12m",
+    "topShare": "Top track share"
+  },
+  "types": {
+    "album": "Album",
+    "ep": "EP",
+    "single": "Single"
+  },
+  "project": {
+    "tracks": "{count} tracks",
+    "oneTrack": "1 track",
+    "releasedOn": "Released {date}",
+    "totalStreams": "Streams 12m"
+  },
+  "columns": {
+    "track": "Track",
+    "isrc": "ISRC",
+    "duration": "Length",
+    "streams": "Streams 12m",
+    "splits": "Splits"
+  },
+  "splits": {
+    "signed": "Signed",
+    "pending": "Pending",
+    "draft": "Draft"
+  },
+  "roles": {
+    "auteur": "Lyricist",
+    "compositeur": "Composer",
+    "interprète": "Performer",
+    "producteur": "Producer",
+    "feat": "Featured"
+  },
+  "dialog": {
+    "metadata": "Metadata",
+    "isrc": "ISRC",
+    "duration": "Length",
+    "releaseDate": "Release date",
+    "streams": "Streams 12m",
+    "weight": "Share of artist streams",
+    "splitsTitle": "Rights split",
+    "signed": "Signed",
+    "pendingSignature": "Awaiting signature",
+    "updatedAt": "Updated {date}"
+  },
+  "empty": "No result for this search"
+}

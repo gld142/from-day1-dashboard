@@ -1,1 +1,61 @@
-{}
+{
+  "title": "Streams live",
+  "subtitle": "Performance multi-plateformes, territoires et titres — mise à jour quotidienne.",
+  "kpi": {
+    "total": "Streams sur la période",
+    "delta": "Évolution",
+    "deltaHint": "vs période précédente",
+    "bestDay": "Meilleure journée",
+    "bestDayOn": "le {date}",
+    "topDsp": "DSP dominant",
+    "topDspShare": "{share} des streams de la période"
+  },
+  "chart": {
+    "title": "Évolution des streams",
+    "daily": "Volume quotidien, tous DSP confondus",
+    "weekly": "Agrégé par semaine pour lisser la tendance",
+    "streams": "Streams",
+    "rosterNote": "Roster agrégé — {count} artistes"
+  },
+  "compare": {
+    "title": "Comparateur roster",
+    "subtitle": "Streams quotidiens par artiste — top {count} de la période",
+    "focusHint": "Cliquez sur un artiste pour zoomer sur son dashboard"
+  },
+  "dsp": {
+    "title": "Répartition par plateforme",
+    "subtitle": "Volume, tendance et part de marché par DSP",
+    "platform": "Plateforme",
+    "trend": "Tendance",
+    "streams": "Streams",
+    "delta": "Delta",
+    "share": "Part",
+    "names": {
+      "spotify": "Spotify",
+      "apple": "Apple Music",
+      "youtube": "YouTube",
+      "deezer": "Deezer",
+      "tiktok": "TikTok",
+      "amazon": "Amazon Music",
+      "other": "Autres"
+    }
+  },
+  "tracks": {
+    "title": "Top titres",
+    "subtitle": "Les {count} titres les plus streamés sur la période",
+    "rank": "#",
+    "track": "Titre",
+    "artist": "Artiste",
+    "project": "Projet",
+    "streams": "Streams",
+    "share": "Part"
+  },
+  "map": {
+    "title": "Audience mondiale",
+    "subtitle": "Streams par territoire sur la période",
+    "topCountries": "Top territoires",
+    "loading": "Chargement de la carte",
+    "streamsLabel": "streams",
+    "ofTotal": "du total"
+  }
+}

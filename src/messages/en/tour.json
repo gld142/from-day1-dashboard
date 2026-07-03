@@ -1,1 +1,43 @@
-{}
+{
+  "title": "Tour & live",
+  "subtitle": "Dates, attendance, stage revenue — your whole live business in one place",
+  "labelSubtitle": "Every date across the roster — filter by artist",
+  "filter": {
+    "all": "Whole roster"
+  },
+  "kpis": {
+    "upcoming": "Upcoming dates",
+    "fillRate": "Average fill rate",
+    "fillRateHint": "Across past dates",
+    "liveRevenue": "Live revenue 12m",
+    "bestVenue": "Best venue"
+  },
+  "timeline": {
+    "upcoming": "Upcoming",
+    "past": "Past dates",
+    "presale": "Presale open",
+    "estRevenue": "Estimated revenue",
+    "revenue": "Revenue",
+    "fill": "Fill rate",
+    "tickets": "{sold} / {capacity} tickets",
+    "date": "Date",
+    "city": "City",
+    "venue": "Venue",
+    "empty": "No dates scheduled yet"
+  },
+  "chart": {
+    "title": "Live revenue by month",
+    "description": "Last 12 months, all venues"
+  },
+  "cities": {
+    "title": "Top cities",
+    "description": "Ranked by ticketing revenue"
+  },
+  "reco": {
+    "title": "Cities to book",
+    "badge": "AI suggestion",
+    "description": "Streaming audience crossed with already-scheduled dates",
+    "item": "Strong audience in {country} — no date scheduled in {city}",
+    "streams": "{streams} streams / 30d"
+  }
+}

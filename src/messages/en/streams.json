@@ -1,1 +1,61 @@
-{}
+{
+  "title": "Live streams",
+  "subtitle": "Multi-platform performance, territories and tracks — updated daily.",
+  "kpi": {
+    "total": "Streams this period",
+    "delta": "Trend",
+    "deltaHint": "vs previous period",
+    "bestDay": "Best day",
+    "bestDayOn": "on {date}",
+    "topDsp": "Top DSP",
+    "topDspShare": "{share} of period streams"
+  },
+  "chart": {
+    "title": "Streams over time",
+    "daily": "Daily volume, all DSPs combined",
+    "weekly": "Aggregated by week to smooth the trend",
+    "streams": "Streams",
+    "rosterNote": "Aggregated roster — {count} artists"
+  },
+  "compare": {
+    "title": "Roster comparator",
+    "subtitle": "Daily streams per artist — top {count} this period",
+    "focusHint": "Click an artist to zoom into their dashboard"
+  },
+  "dsp": {
+    "title": "Platform breakdown",
+    "subtitle": "Volume, trend and market share per DSP",
+    "platform": "Platform",
+    "trend": "Trend",
+    "streams": "Streams",
+    "delta": "Delta",
+    "share": "Share",
+    "names": {
+      "spotify": "Spotify",
+      "apple": "Apple Music",
+      "youtube": "YouTube",
+      "deezer": "Deezer",
+      "tiktok": "TikTok",
+      "amazon": "Amazon Music",
+      "other": "Other"
+    }
+  },
+  "tracks": {
+    "title": "Top tracks",
+    "subtitle": "The {count} most streamed tracks this period",
+    "rank": "#",
+    "track": "Track",
+    "artist": "Artist",
+    "project": "Project",
+    "streams": "Streams",
+    "share": "Share"
+  },
+  "map": {
+    "title": "Global audience",
+    "subtitle": "Streams by territory this period",
+    "topCountries": "Top territories",
+    "loading": "Loading map",
+    "streamsLabel": "streams",
+    "ofTotal": "of total"
+  }
+}

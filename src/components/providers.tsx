@@ -3,6 +3,7 @@
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RoleProvider } from "@/lib/role";
+import { PrefsProvider } from "@/lib/prefs";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -14,7 +15,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       <RoleProvider>
-        <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
+        <PrefsProvider>
+          <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
+        </PrefsProvider>
       </RoleProvider>
     </ThemeProvider>
   );

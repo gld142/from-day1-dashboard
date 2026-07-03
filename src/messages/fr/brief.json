@@ -1,0 +1,32 @@
+{
+  "title": "Le brief du jour",
+  "subtitle": "L'essentiel de ton activité, en 30 secondes",
+  "subtitleLabel": "L'essentiel du roster, en 30 secondes",
+  "open": "Brief du jour",
+  "sections": {
+    "numbers": "Les chiffres de la nuit",
+    "alerts": "À traiter",
+    "agenda": "À venir",
+    "movers": "En mouvement"
+  },
+  "items": {
+    "streamsYesterday": "Streams hier",
+    "monthRevenue": "Revenus du mois",
+    "topTrack": "Titre en tête",
+    "rosterStreams": "Streams du roster (30 j)",
+    "rosterNet": "Net du roster (12 mois)",
+    "nextShow": "Prochaine date : {venue}, {city}",
+    "nextShowEmpty": "Aucune date programmée",
+    "contractAlert": "{count, plural, =0 {Aucune alerte contrat} one {# alerte contrat} other {# alertes contrats}}",
+    "rightsGap": "{amount} d'écarts détectés sur tes relevés",
+    "rightsOk": "Relevés de droits : rien à signaler",
+    "risingArtist": "{name} : {delta} de streams sur 30 j"
+  },
+  "actions": {
+    "seeAudit": "Voir l'audit",
+    "seeContracts": "Voir les contrats",
+    "seeTour": "Voir la tournée",
+    "seeRoster": "Voir le roster",
+    "gotIt": "C'est noté pour aujourd'hui"
+  }
+}

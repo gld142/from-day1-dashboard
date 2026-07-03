@@ -1,1 +1,24 @@
-{}
+{
+  "title": "Settings",
+  "subtitle": "Make the dashboard yours: visible modules, language, mood.",
+  "modules": {
+    "title": "Account modules",
+    "description": "Choose what you want to see — or not — in your navigation. Hidden modules stay accessible here at any time.",
+    "core": "Core",
+    "coreHint": "Always visible",
+    "labelOnly": "Structure view",
+    "hiddenCount": "{count, plural, =0 {All modules are visible} one {# module hidden} other {# modules hidden}}",
+    "resetAll": "Show everything"
+  },
+  "appearance": {
+    "title": "Appearance",
+    "description": "The mood applies instantly, across the whole dashboard.",
+    "theme": "Mood",
+    "language": "Language"
+  },
+  "account": {
+    "title": "Account",
+    "description": "Your role shapes what you see: an artist only sees themselves, a structure sees its whole roster.",
+    "currentRole": "Active role"
+  }
+}

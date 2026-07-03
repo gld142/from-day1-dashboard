@@ -1,1 +1,43 @@
-{}
+{
+  "title": "Tournée & live",
+  "subtitle": "Dates, remplissage, revenus scène — tout votre live au même endroit",
+  "labelSubtitle": "Toutes les dates du roster — filtrez par artiste",
+  "filter": {
+    "all": "Tout le roster"
+  },
+  "kpis": {
+    "upcoming": "Dates à venir",
+    "fillRate": "Remplissage moyen",
+    "fillRateHint": "Sur les dates passées",
+    "liveRevenue": "Revenus live 12 mois",
+    "bestVenue": "Meilleure salle"
+  },
+  "timeline": {
+    "upcoming": "À venir",
+    "past": "Dates passées",
+    "presale": "Prévente en cours",
+    "estRevenue": "Revenu estimé",
+    "revenue": "Revenu",
+    "fill": "Remplissage",
+    "tickets": "{sold} / {capacity} billets",
+    "date": "Date",
+    "city": "Ville",
+    "venue": "Salle",
+    "empty": "Aucune date programmée pour le moment"
+  },
+  "chart": {
+    "title": "Revenus live par mois",
+    "description": "12 derniers mois, toutes salles confondues"
+  },
+  "cities": {
+    "title": "Top villes",
+    "description": "Classées par revenus billetterie"
+  },
+  "reco": {
+    "title": "Villes à programmer",
+    "badge": "Suggestion IA",
+    "description": "Croisement audience streaming × dates déjà programmées",
+    "item": "Forte audience en {country} — aucune date programmée à {city}",
+    "streams": "{streams} streams / 30 j"
+  }
+}

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Sunrise } from "lucide-react";
 import { navForPersona } from "@/lib/nav";
+import { usePrefs } from "@/lib/prefs";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +17,8 @@ export function Sidebar() {
   const t = useTranslations("nav");
   const tc = useTranslations("common");
   const { persona } = useRole();
-  const sections = navForPersona(persona);
+  const { isHidden } = usePrefs();
+  const sections = navForPersona(persona, isHidden);
 
   return (
     <aside className="sticky top-0 hidden h-svh w-60 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex">
