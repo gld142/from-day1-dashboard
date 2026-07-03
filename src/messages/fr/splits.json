@@ -1,1 +1,47 @@
-{}
+{
+  "title": "Splits",
+  "subtitle": "La répartition des droits de chaque titre : qui touche quoi, et qui a signé.",
+  "kpis": {
+    "signed": "Splits signés",
+    "pending": "En attente de signature",
+    "draft": "Brouillons",
+    "collaborators": "Collaborateurs uniques"
+  },
+  "filters": {
+    "all": "Tous",
+    "signed": "Signés",
+    "pending": "En attente",
+    "draft": "Brouillons"
+  },
+  "status": {
+    "signed": "Signé",
+    "pending": "En attente",
+    "draft": "Brouillon"
+  },
+  "roles": {
+    "author": "Auteur",
+    "composer": "Compositeur",
+    "performer": "Interprète",
+    "producer": "Producteur",
+    "feat": "Feat"
+  },
+  "card": {
+    "remind": "Relancer",
+    "reminded": "Relance envoyée",
+    "detail": "Détail",
+    "updatedAt": "Mis à jour le {date}"
+  },
+  "dialog": {
+    "title": "Split — {track}",
+    "description": "{project} · ISRC {isrc}",
+    "holder": "Ayant droit",
+    "role": "Rôle",
+    "share": "Part",
+    "status": "Statut",
+    "total": "Total"
+  },
+  "labelView": {
+    "meta": "{tracks, plural, one {# titre} other {# titres}} · {pending, plural, =0 {tout est signé} one {# split à signer} other {# splits à signer}}"
+  },
+  "empty": "Aucun split ne correspond à ce filtre."
+}

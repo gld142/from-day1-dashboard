@@ -1,1 +1,64 @@
-{}
+{
+  "title": "Roster",
+  "subtitle": "Vue comparative des {count} artistes de {label} — santé, rentabilité, valorisation.",
+  "guard": {
+    "title": "Réservé à la vue structure",
+    "description": "Le roster compare l'ensemble des artistes du label entre eux. En vue artiste, vous accédez uniquement à vos propres données.",
+    "cta": "Passer en vue structure"
+  },
+  "kpis": {
+    "artists": "Artistes signés",
+    "streams30d": "Streams 30 j",
+    "revenue12m": "Revenus 12 mois",
+    "net12m": "Net 12 mois",
+    "valuation": "Valorisation catalogue"
+  },
+  "table": {
+    "title": "Comparatif roster",
+    "hint": "Cliquer sur une ligne zoome tout le dashboard sur cet artiste",
+    "artist": "Artiste",
+    "stage": "Stade",
+    "streams30d": "Streams 30 j",
+    "delta30d": "Δ 30 j",
+    "revenue12m": "Revenus 12 m",
+    "net12m": "Net 12 m",
+    "margin": "Marge",
+    "valuation": "Valo (méd.)",
+    "index": "Index",
+    "focused": "Zoom actif",
+    "sort": "Trier par {column}"
+  },
+  "stage": {
+    "emerging": "Émergent",
+    "developing": "Développement",
+    "established": "Établi",
+    "peak": "Sommet"
+  },
+  "matrix": {
+    "title": "Matrice croissance × marge",
+    "subtitle": "Position stratégique de chaque artiste — croissance mensuelle des streams vs marge nette 12 mois. Taille = revenus 12 mois.",
+    "growth": "Croissance mensuelle",
+    "margin": "Marge nette",
+    "quadrants": {
+      "stars": "Locomotives",
+      "bets": "Paris de croissance",
+      "cash": "Rentes",
+      "watch": "Sous surveillance"
+    }
+  },
+  "pnl": {
+    "title": "P&L par artiste — 12 mois glissants",
+    "revenue": "Revenus",
+    "expenses": "Dépenses",
+    "net": "Net"
+  },
+  "alerts": {
+    "title": "Alertes roster",
+    "subtitle": "Contrats à échéance et dynamiques négatives",
+    "contractMeta": "Contrat {type} · {counterparty}",
+    "due": "Échéance {date}",
+    "decline": "Streams en repli sur 30 jours",
+    "declineMeta": "vs 30 jours précédents",
+    "empty": "Aucune alerte — tout le roster est au vert"
+  }
+}

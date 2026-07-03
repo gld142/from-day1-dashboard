@@ -1,1 +1,56 @@
-{}
+{
+  "title": "Vue d'ensemble",
+  "subtitle": "La photo complète : streams, revenus, audience et catalogue.",
+  "subtitleLabel": "Le roster en un coup d'œil — cliquez sur un artiste pour zoomer.",
+  "backToRoster": "Vue roster",
+  "kpis": {
+    "streams30d": "Streams · 30 jours",
+    "vsPrev30d": "vs 30 jours précédents",
+    "revenue12m": "Revenus · 12 mois",
+    "revenue12mHint": "toutes sources confondues",
+    "valuation": "Valorisation catalogue",
+    "valuationHint": "estimation médiane",
+    "superfans": "Superfans",
+    "superfansHint": "tendance 30 jours",
+    "artists": "Artistes au roster",
+    "artistsHint": "signés chez Nocturne",
+    "net12m": "Net · 12 mois",
+    "netHint": "après dépenses"
+  },
+  "chart": {
+    "title": "Revenus × streams — 12 mois",
+    "revenue": "Revenus",
+    "streams": "Streams"
+  },
+  "dspCard": {
+    "title": "Répartition par plateforme",
+    "subtitle": "Streams · 30 jours",
+    "total": "Total"
+  },
+  "tracks": {
+    "title": "Top titres",
+    "subtitle": "Streams · 30 jours"
+  },
+  "territories": {
+    "title": "Top territoires",
+    "subtitle": "Streams · 30 jours"
+  },
+  "roster": {
+    "title": "Roster",
+    "subtitle": "Performance comparée sur 30 jours — cliquez pour zoomer.",
+    "streams30d": "Streams 30 j",
+    "revenue12m": "Revenus 12 m",
+    "margin": "Marge",
+    "day1Index": "Day 1 Index",
+    "zoom": "Voir le détail de {name}"
+  },
+  "dsp": {
+    "spotify": "Spotify",
+    "apple": "Apple Music",
+    "youtube": "YouTube",
+    "deezer": "Deezer",
+    "tiktok": "TikTok",
+    "amazon": "Amazon Music",
+    "other": "Autres"
+  }
+}

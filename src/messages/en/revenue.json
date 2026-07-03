@@ -1,1 +1,52 @@
-{}
+{
+  "title": "Revenue",
+  "subtitle": "All your revenue, every source — finally readable.",
+  "subtitleLabel": "Your roster's revenue, consolidated in one place.",
+  "kpis": {
+    "total12m": "Revenue (12mo)",
+    "monthlyAvg": "Monthly average",
+    "topSource": "Top source",
+    "vsPrevYear": "vs previous 12 months"
+  },
+  "sources": {
+    "streaming": "Streaming",
+    "sacem": "SACEM",
+    "neighboring": "Neighboring rights",
+    "spre": "Equitable remuneration",
+    "sync": "Sync licensing",
+    "live": "Live & shows",
+    "merch": "Merchandising"
+  },
+  "sourceDescriptions": {
+    "streaming": "Spotify, Apple Music, Deezer, YouTube and other DSPs",
+    "sacem": "Author rights collected by SACEM",
+    "neighboring": "ADAMI / SPEDIDAM — performers' rights",
+    "spre": "Radio play and public venues",
+    "sync": "Ads, film, TV and game licences",
+    "live": "Fees and ticketing",
+    "merch": "Merchandising sales"
+  },
+  "chart": {
+    "title": "Monthly evolution by source",
+    "subtitle": "Last 24 months, stacked by source"
+  },
+  "breakdown": {
+    "title": "Breakdown by source",
+    "period12m": "over 12 months",
+    "share": "Share",
+    "amount": "Amount",
+    "source": "Source",
+    "trend": "Trend"
+  },
+  "byArtist": {
+    "title": "Revenue by artist",
+    "subtitle": "Last 12 months — click to zoom in",
+    "net": "Net",
+    "margin": "Margin"
+  },
+  "insight": {
+    "diversification": "{count, plural, one {# active source} other {# active sources}} — {top} accounts for {share} of your revenue",
+    "concentrated": "Heads up: over 70% of your revenue comes from a single source",
+    "balanced": "Healthy diversification — no channel exceeds 70%"
+  }
+}

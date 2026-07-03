@@ -1,1 +1,64 @@
-{}
+{
+  "title": "Audit royalties IA",
+  "subtitle": "Rapprochement automatique entre vos streams réels et les montants déclarés par les plateformes, sociétés de gestion et labels.",
+  "hero": {
+    "label": "Montant récupérable détecté",
+    "findings": "{count, plural, =0 {Aucun écart détecté} one {# écart détecté} other {# écarts détectés}}",
+    "avgConfidence": "Confiance moyenne",
+    "scanned": "24 mois de relevés analysés",
+    "sources": "{count} sources croisées"
+  },
+  "finding": {
+    "expected": "Attendu (modèle Day 1)",
+    "reported": "Déclaré",
+    "gap": "Écart",
+    "confidence": "Confiance du modèle",
+    "generateLetter": "Générer la lettre",
+    "viewLetter": "Voir la lettre",
+    "period": "Période {period}"
+  },
+  "status": {
+    "open": "À traiter",
+    "letterGenerated": "Lettre générée",
+    "resolved": "Résolu"
+  },
+  "letter": {
+    "dialogTitle": "Lettre de demande de vérification",
+    "dialogSubtitle": "Pré-rédigée par l’IA à partir de vos données. Relisez et adaptez avant envoi.",
+    "date": "Paris, le {date}",
+    "to": "À l’attention du service royalties — {source}",
+    "subject": "Objet : demande de vérification des redevances — période {period}",
+    "greeting": "Madame, Monsieur,",
+    "body1": "À la suite du rapprochement automatique entre nos données de diffusion certifiées et votre relevé pour la période {period}, nous constatons un écart significatif entre le montant attendu ({expected}) et le montant déclaré ({reported}).",
+    "body2": "L’écart constaté s’élève à {gap}. Notre modèle de rapprochement — croisement des volumes de streams par plateforme, des taux contractuels applicables et de l’historique de versements — établit ce constat avec un niveau de confiance de {confidence}.",
+    "body3": "Nous vous remercions de bien vouloir procéder à une vérification détaillée de la période concernée, de nous transmettre le détail des assiettes et calculs appliqués et, le cas échéant, de procéder au versement de régularisation correspondant.",
+    "signoff": "Dans l’attente de votre retour sous 30 jours, nous vous prions d’agréer, Madame, Monsieur, l’expression de nos salutations distinguées.",
+    "signature": "{artist} — représenté via From Day 1",
+    "copy": "Copier",
+    "copied": "Copié",
+    "download": "Télécharger .txt (démo)"
+  },
+  "method": {
+    "title": "Comment fonctionne l’audit",
+    "subtitle": "Un rapprochement systématique, pas une estimation au doigt mouillé.",
+    "step1Title": "Ingestion",
+    "step1Desc": "Relevés DSP, SACEM, droits voisins et labels sont normalisés dans un référentiel unique.",
+    "step2Title": "Rapprochement",
+    "step2Desc": "Le modèle croise streams observés, taux par plateforme et clauses contractuelles pour estimer le montant attendu.",
+    "step3Title": "Score de confiance",
+    "step3Desc": "Chaque écart est pondéré selon la qualité des données sources et la stabilité historique des versements.",
+    "step4Title": "Lettre & suivi",
+    "step4Desc": "Une lettre de demande de vérification est pré-rédigée, prête à relire et envoyer. Le statut est suivi ici.",
+    "disclaimer": "Données de démonstration — les montants attendus sont des estimations du modèle, pas des créances certaines."
+  },
+  "label": {
+    "heroLabel": "Montant récupérable sur le roster",
+    "byArtist": "Écarts par artiste",
+    "artistTotal": "Écart total : {amount}",
+    "artistsWithFindings": "{count, plural, one {# artiste concerné} other {# artistes concernés}}"
+  },
+  "empty": {
+    "title": "Aucun écart détecté",
+    "hint": "Vos déclarations correspondent aux streams observés sur la période analysée."
+  }
+}

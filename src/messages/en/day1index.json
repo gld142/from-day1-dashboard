@@ -1,1 +1,57 @@
-{}
+{
+  "title": "Day 1 Index",
+  "subtitle": "A single score condensing volume, growth, diversification, engagement and momentum — comparable across artists.",
+  "gauge": {
+    "label": "Overall score",
+    "outOf": "/ 100",
+    "percentile": "Top {pct}% of comparable artists",
+    "updated": "Recomputed nightly from your data",
+    "labelAvg": "Roster average index",
+    "artistsCount": "{count, plural, one {# artist} other {# artists}}",
+    "best": "Best index",
+    "spread": "Min–max spread"
+  },
+  "breakdown": {
+    "title": "Score breakdown",
+    "subtitle": "Five dimensions computed from your actual data.",
+    "volume": "Volume",
+    "volumeDesc": "Monthly listeners, normalized across the roster",
+    "growth": "Growth",
+    "growthDesc": "Monthly stream growth rate",
+    "diversification": "Diversification",
+    "diversificationDesc": "Number of active revenue sources over 12 months",
+    "engagement": "Engagement",
+    "engagementDesc": "Superfan share of monthly audience",
+    "momentum": "Momentum",
+    "momentumDesc": "30-day stream dynamics vs the previous period"
+  },
+  "leaderboard": {
+    "title": "Roster leaderboard",
+    "subtitle": "Every artist on the roster, ranked by index.",
+    "rank": "#",
+    "artist": "Artist",
+    "stage": "Stage",
+    "index": "Index",
+    "you": "You",
+    "focusHint": "Click an artist to zoom in"
+  },
+  "stages": {
+    "emerging": "Emerging",
+    "developing": "Developing",
+    "established": "Established",
+    "peak": "At peak"
+  },
+  "public": {
+    "title": "Public page",
+    "subtitle": "What pros (bookers, sync, brands) see when you share your profile.",
+    "toggles": "What I make public",
+    "statListeners": "Monthly listeners",
+    "statIndex": "Day 1 Index",
+    "statGrowth": "Monthly growth",
+    "statGenre": "Genre & country",
+    "verified": "Data verified by From Day 1",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "preview": "Preview"
+  }
+}

@@ -1,1 +1,69 @@
-{}
+{
+  "title": "Revenue Calculator",
+  "subtitle": "Projetez vos revenus sur 6 à 24 mois selon vos scénarios de sortie et de croissance.",
+  "params": {
+    "title": "Paramètres",
+    "subtitle": "Ajustez les hypothèses, la projection se met à jour en direct",
+    "artist": "Artiste",
+    "horizon": "Horizon",
+    "months": "{count} mois",
+    "scenario": "Scénario de sortie",
+    "scenarios": {
+      "none": "Aucune sortie prévue",
+      "single": "Single à venir",
+      "ep": "EP à venir",
+      "album": "Album à venir"
+    },
+    "scenarioBoost": "+{points} pts de croissance",
+    "scenarioNone": "Croissance organique seule",
+    "growth": "Ajustement de croissance",
+    "growthHint": "Points de croissance mensuelle ajoutés ou retirés au rythme actuel",
+    "baseGrowth": "Croissance actuelle",
+    "effectiveGrowth": "Croissance projetée"
+  },
+  "kpis": {
+    "projectedTotal": "Total projeté ({count} mois)",
+    "range": "Fourchette de confiance",
+    "rangeHint": "Selon la bande basse / haute",
+    "monthlyAvg": "Mensuel moyen projeté",
+    "delta": "vs {count} derniers mois",
+    "deltaHint": "Projection comparée au réalisé récent"
+  },
+  "chart": {
+    "title": "Historique & projection",
+    "subtitle": "24 mois de réalisé, projection médiane et bande de confiance",
+    "actual": "Réalisé",
+    "projected": "Projeté",
+    "band": "Bande de confiance"
+  },
+  "table": {
+    "title": "Détail mensuel projeté",
+    "month": "Mois",
+    "low": "Bas",
+    "projected": "Médian",
+    "high": "Haut"
+  },
+  "donut": {
+    "title": "Répartition projetée par source",
+    "subtitle": "Proportions des 12 derniers mois appliquées au total projeté",
+    "total": "Projeté"
+  },
+  "sources": {
+    "streaming": "Streaming",
+    "sacem": "SACEM",
+    "neighboring": "Droits voisins",
+    "spre": "SPRÉ",
+    "sync": "Synchro",
+    "live": "Live",
+    "merch": "Merch"
+  },
+  "methodology": {
+    "title": "Méthodologie",
+    "intro": "Une projection transparente, pas une boule de cristal :",
+    "point1": "Niveau de départ : moyenne des 3 derniers mois de revenus réalisés.",
+    "point2": "Croissance : rythme mensuel actuel de l'artiste, ajusté par votre scénario de sortie et votre curseur.",
+    "point3": "Saisonnalité : coefficients mensuels appris sur 24 mois d'historique.",
+    "point4": "Incertitude : la bande de confiance s'élargit de ±12 % à court terme jusqu'à ±{maxSpread} % à l'horizon choisi.",
+    "disclaimer": "Projection indicative fondée sur les tendances passées — elle ne constitue pas une garantie de revenus."
+  }
+}

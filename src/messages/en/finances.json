@@ -1,1 +1,100 @@
-{}
+{
+  "title": "Expenses & P&L",
+  "subtitle": "Track every euro invested and the net result, by artist, project and track.",
+  "scope": {
+    "roster": "Whole roster",
+    "artists": "{count} artists"
+  },
+  "filters": {
+    "year": "Year",
+    "artist": "Artist",
+    "allArtists": "All artists",
+    "category": "Category",
+    "allCategories": "All categories",
+    "project": "Project",
+    "allProjects": "All projects"
+  },
+  "kpis": {
+    "expenses": "Expenses {year}",
+    "revenue": "Revenue {year}",
+    "net": "Net result",
+    "margin": "Net margin",
+    "vsPrevYear": "vs {year}",
+    "marginHint": "Share of revenue kept after expenses"
+  },
+  "chart": {
+    "title": "Revenue vs expenses — {year}",
+    "subtitle": "Monthly view with net result",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "net": "Net"
+  },
+  "donut": {
+    "title": "Expenses by category",
+    "subtitle": "Breakdown on the filtered scope",
+    "total": "Total",
+    "empty": "No expenses on this scope"
+  },
+  "categories": {
+    "studio": "Studio",
+    "clip": "Music video",
+    "marketing": "Marketing",
+    "distribution": "Distribution",
+    "promo": "Promo",
+    "tour": "Touring",
+    "other": "Other"
+  },
+  "compare": {
+    "title": "Comparisons",
+    "subtitle": "Where the money goes, year by year and project by project",
+    "byYear": "By year",
+    "byProject": "By project",
+    "byTrack": "By track",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "net": "Net",
+    "empty": "No expenses on this scope",
+    "topSpend": "Cumulative spend"
+  },
+  "register": {
+    "title": "Expense register",
+    "count": "{count, plural, =0 {no expenses} one {# expense} other {# expenses}}",
+    "searchPlaceholder": "Search a label, project, track…",
+    "date": "Date",
+    "label": "Label",
+    "category": "Category",
+    "project": "Project",
+    "track": "Track",
+    "amount": "Amount",
+    "addedBy": "Added by",
+    "source": "Source",
+    "manual": "Manual",
+    "wavely": "Wavely",
+    "wavelyTooltip": "Synced from Wavely",
+    "showMore": "Show more",
+    "shown": "{shown} of {total}",
+    "noResults": "No expense matches your search"
+  },
+  "add": {
+    "cta": "Add an expense",
+    "title": "New expense",
+    "description": "Record a manual expense. It will immediately appear in the register and the P&L.",
+    "label": "Label",
+    "labelPlaceholder": "E.g. EP mix & mastering",
+    "amount": "Amount (€)",
+    "date": "Date",
+    "category": "Category",
+    "artist": "Artist",
+    "project": "Project",
+    "track": "Track",
+    "optional": "optional",
+    "none": "None",
+    "submit": "Add expense"
+  },
+  "wavely": {
+    "title": "Wavely integration",
+    "description": "Connect your Wavely account to automatically sync your production and marketing expenses — no more double entry.",
+    "syncedCount": "{count, plural, one {# expense already synced} other {# expenses already synced}}",
+    "connect": "Connect Wavely"
+  }
+}

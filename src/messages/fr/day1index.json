@@ -1,1 +1,57 @@
-{}
+{
+  "title": "Day 1 Index",
+  "subtitle": "Un score unique qui condense volume, croissance, diversification, engagement et momentum — comparable entre artistes.",
+  "gauge": {
+    "label": "Score global",
+    "outOf": "/ 100",
+    "percentile": "Top {pct} % des artistes comparables",
+    "updated": "Recalculé chaque nuit à partir de vos données",
+    "labelAvg": "Index moyen du roster",
+    "artistsCount": "{count, plural, one {# artiste} other {# artistes}}",
+    "best": "Meilleur index",
+    "spread": "Écart min–max"
+  },
+  "breakdown": {
+    "title": "Décomposition du score",
+    "subtitle": "Cinq dimensions calculées à partir de vos données réelles.",
+    "volume": "Volume",
+    "volumeDesc": "Auditeurs mensuels, normalisés sur le roster",
+    "growth": "Croissance",
+    "growthDesc": "Rythme de croissance mensuel des streams",
+    "diversification": "Diversification",
+    "diversificationDesc": "Nombre de sources de revenus actives sur 12 mois",
+    "engagement": "Engagement",
+    "engagementDesc": "Part de superfans dans l’audience mensuelle",
+    "momentum": "Momentum",
+    "momentumDesc": "Dynamique des streams sur 30 jours vs période précédente"
+  },
+  "leaderboard": {
+    "title": "Classement du roster",
+    "subtitle": "Tous les artistes de la structure, classés par index.",
+    "rank": "#",
+    "artist": "Artiste",
+    "stage": "Stade",
+    "index": "Index",
+    "you": "Vous",
+    "focusHint": "Cliquez sur un artiste pour zoomer"
+  },
+  "stages": {
+    "emerging": "Émergent",
+    "developing": "En développement",
+    "established": "Établi",
+    "peak": "Au sommet"
+  },
+  "public": {
+    "title": "Page publique",
+    "subtitle": "Ce que voient les pros (bookers, synchros, marques) quand vous partagez votre profil.",
+    "toggles": "Ce que je rends public",
+    "statListeners": "Auditeurs mensuels",
+    "statIndex": "Day 1 Index",
+    "statGrowth": "Croissance mensuelle",
+    "statGenre": "Genre & pays",
+    "verified": "Données vérifiées par From Day 1",
+    "copy": "Copier le lien",
+    "copied": "Lien copié",
+    "preview": "Aperçu"
+  }
+}

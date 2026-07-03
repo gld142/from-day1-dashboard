@@ -1,1 +1,59 @@
-{}
+{
+  "title": "AI Copilot",
+  "subtitle": "Ask questions in natural language — the Copilot answers with your real data.",
+  "capabilities": {
+    "title": "What the Copilot can do",
+    "analyzeTitle": "Analyze your revenue",
+    "analyzeDesc": "Best month, dominant sources, seasonality — explained in one sentence.",
+    "anomalyTitle": "Detect anomalies",
+    "anomalyDesc": "Royalty gaps, stream drops, late payments.",
+    "auditTitle": "Prepare an audit",
+    "auditDesc": "Quantify a gap and pre-draft the verification letter.",
+    "forecastTitle": "Project what is next",
+    "forecastDesc": "6-12 month trends based on your current growth."
+  },
+  "chat": {
+    "assistantName": "Copilot",
+    "you": "You",
+    "status": "Connected to your data",
+    "placeholder": "Ask a question about your data…",
+    "send": "Send",
+    "typing": "Copilot is writing…",
+    "disclaimer": "Demo — answers are generated from your demo data.",
+    "suggestionsLabel": "Suggestions",
+    "generic": "Good question. In this demo I mostly answer the suggestions below — in production, I query all of your data (streams, revenue, contracts, rights) in natural language and cite my sources."
+  },
+  "greeting": {
+    "artist": "Hi {name} — I have analyzed your last 24 months of data. Ask me anything about your streams, revenue or rights.",
+    "label": "Hi — I am looking at the consolidated data of the {count} artists on {label}. Ask me your management questions."
+  },
+  "suggestions": {
+    "bestMonth": "What was my best month?",
+    "growth": "How is my growth doing?",
+    "topSource": "Which source earns me the most?",
+    "audit": "Am I owed money?",
+    "bestMonthLabel": "What was our best month?",
+    "growthLabel": "How is the roster growing?",
+    "topArtist": "Which artist is the most profitable?",
+    "auditLabel": "Are we owed money?"
+  },
+  "answers": {
+    "bestMonth": "Your best month is {month}: {amount} in revenue across all sources, {pct} above your monthly average ({avg}). The peak is mostly driven by streaming and live.",
+    "growth": "Over the last 30 days, your streams are moving {delta} versus the previous 30 days, with {streams} total streams. Your monthly listener base stands at {listeners} — the underlying trend is still carried by your {growthRate} monthly growth.",
+    "topSource": "Your top revenue source over 12 months is {source}: {amount}, which is {pct} of your total ({total}). That is a healthy concentration level — keep an eye on diversification.",
+    "audit": "Yes, probably. My reconciliation detects {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totaling {amount}. Head to the Audit module to generate the verification letters.",
+    "bestMonthLabel": "The roster best month is {month}: {amount} in consolidated revenue, {pct} above the monthly average ({avg}).",
+    "growthLabel": "Over 30 days, the roster totals {streams} streams, moving {delta} versus the previous period. The momentum is driven by your developing artists.",
+    "topArtist": "{artist} is your most profitable artist: {net} in net result over 12 months, at a {margin} margin. Revenue generated: {revenue}.",
+    "auditLabel": "Yes. Across the roster I detect {count, plural, =0 {no gap} one {# gap} other {# gaps}} for a recoverable total of {amount}, spread over {artists, plural, one {# artist} other {# artists}}. The Audit module holds the pre-drafted letters."
+  },
+  "sources": {
+    "streaming": "streaming",
+    "sacem": "SACEM",
+    "neighboring": "neighboring rights",
+    "spre": "SPRÉ",
+    "sync": "sync",
+    "live": "live",
+    "merch": "merch"
+  }
+}

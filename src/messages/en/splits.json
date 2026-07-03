@@ -1,1 +1,47 @@
-{}
+{
+  "title": "Splits",
+  "subtitle": "How each track's rights are shared: who earns what, and who has signed.",
+  "kpis": {
+    "signed": "Signed splits",
+    "pending": "Awaiting signature",
+    "draft": "Drafts",
+    "collaborators": "Unique collaborators"
+  },
+  "filters": {
+    "all": "All",
+    "signed": "Signed",
+    "pending": "Pending",
+    "draft": "Drafts"
+  },
+  "status": {
+    "signed": "Signed",
+    "pending": "Pending",
+    "draft": "Draft"
+  },
+  "roles": {
+    "author": "Lyricist",
+    "composer": "Composer",
+    "performer": "Performer",
+    "producer": "Producer",
+    "feat": "Feat"
+  },
+  "card": {
+    "remind": "Send reminder",
+    "reminded": "Reminder sent",
+    "detail": "Details",
+    "updatedAt": "Updated {date}"
+  },
+  "dialog": {
+    "title": "Split — {track}",
+    "description": "{project} · ISRC {isrc}",
+    "holder": "Rights holder",
+    "role": "Role",
+    "share": "Share",
+    "status": "Status",
+    "total": "Total"
+  },
+  "labelView": {
+    "meta": "{tracks, plural, one {# track} other {# tracks}} · {pending, plural, =0 {everything is signed} one {# split to sign} other {# splits to sign}}"
+  },
+  "empty": "No splits match this filter."
+}

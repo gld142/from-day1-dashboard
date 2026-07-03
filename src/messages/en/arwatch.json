@@ -1,1 +1,52 @@
-{}
+{
+  "title": "A&R Watch",
+  "subtitle": "{label} scouting radar — {count} emerging artists under watch.",
+  "guard": {
+    "title": "Label view only",
+    "description": "A&R Watch is the label's scouting tool: emerging talent detection and investment scoring. It is not available in artist view.",
+    "cta": "Switch to label view"
+  },
+  "kpis": {
+    "tracked": "Artists on radar",
+    "watchlisted": "Watchlisted",
+    "avgMomentum": "Avg momentum 30d",
+    "listeners": "Combined listeners"
+  },
+  "signal": {
+    "badge": "Strong signal",
+    "hint": "Fastest 30-day acceleration on the radar"
+  },
+  "card": {
+    "listeners": "monthly listeners",
+    "momentum": "30d momentum",
+    "index": "Day 1 Index",
+    "watch": "Watch",
+    "watching": "Watching",
+    "score": "Score"
+  },
+  "filters": {
+    "genre": "Genre",
+    "allGenres": "All genres",
+    "sort": "Sort",
+    "sortMomentum": "Momentum 30d",
+    "sortListeners": "Listeners",
+    "sortIndex": "Day 1 Index"
+  },
+  "empty": "No artist matches this filter",
+  "scoring": {
+    "open": "Investment scoring",
+    "title": "Scoring — {name}",
+    "description": "Deterministic estimate based on current audience, 30-day momentum and Day 1 Index.",
+    "range": "Recommended advance range",
+    "rangeHint": "Calibrated on projected 12-month streaming revenue",
+    "scenarios": "12-month projection",
+    "conservative": "Conservative scenario",
+    "conservativeHint": "30% of current momentum sustained over the year",
+    "optimistic": "Momentum scenario",
+    "optimisticHint": "Current momentum extended with decay",
+    "listeners12m": "Monthly listeners",
+    "revenue12m": "Streaming revenue 12m",
+    "breakEven": "Estimated advance payback: {months} months",
+    "disclaimer": "Demo model: purely indicative projection computed on simulated data. This is neither a valuation nor investment advice."
+  }
+}

@@ -1,1 +1,65 @@
-{}
+{
+  "title": "Droits FR",
+  "subtitle": "Vos droits d'auteur et droits voisins en France : ce que Day 1 estime, ce que les organismes versent, et les écarts détectés.",
+  "kpis": {
+    "received12m": "Reçu sur 12 mois",
+    "expected": "Attendu (en cours)",
+    "gaps": "Écarts détectés",
+    "upcoming": "Versements à venir",
+    "nextOn": "Prochain : {date}",
+    "last4Quarters": "4 derniers trimestres",
+    "pendingPeriod": "Répartitions en cours de traitement",
+    "gapsHint": "Montants potentiellement non versés"
+  },
+  "chart": {
+    "heading": "Attendu vs reçu par période",
+    "sub": "Estimation Day 1 croisée avec les relevés effectivement reçus, tous organismes confondus.",
+    "expected": "Attendu",
+    "received": "Reçu"
+  },
+  "periodShort": "T{q} {year}",
+  "organisms": {
+    "sacem": {
+      "name": "Société des auteurs, compositeurs et éditeurs de musique",
+      "desc": "Collecte et répartit vos droits d'auteur : streaming, radio, TV, concerts."
+    },
+    "adami": {
+      "name": "Administration des droits des artistes et musiciens interprètes",
+      "desc": "Gère vos droits voisins d'artiste-interprète principal."
+    },
+    "spedidam": {
+      "name": "Société de perception des droits des artistes-interprètes",
+      "desc": "Droits voisins des musiciens et artistes d'accompagnement."
+    },
+    "spre": {
+      "name": "Société pour la perception de la rémunération équitable",
+      "desc": "Rémunération équitable : diffusion en radios, TV et lieux sonorisés."
+    }
+  },
+  "orgCard": {
+    "received12m": "Reçu 12 mois",
+    "period": "Période",
+    "expected": "Attendu",
+    "received": "Reçu",
+    "status": "Statut"
+  },
+  "status": {
+    "received": "Reçu",
+    "pending": "En attente",
+    "gap": "Écart détecté"
+  },
+  "gapsCallout": {
+    "title": "{count, plural, one {# écart détecté} other {# écarts détectés}} · {amount} potentiellement non versés",
+    "body": "Day 1 croise vos streams et diffusions avec les relevés reçus. Ouvrez le module Audit pour vérifier chaque écart et générer les courriers de réclamation.",
+    "cta": "Ouvrir l'audit"
+  },
+  "timeline": {
+    "heading": "Prochains versements",
+    "sub": "Calendrier des répartitions : SACEM au trimestre, ADAMI et SPEDIDAM au semestre.",
+    "frequency": {
+      "quarterly": "Trimestriel",
+      "semiannual": "Semestriel"
+    },
+    "estimated": "≈ {amount} estimés"
+  }
+}

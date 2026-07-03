@@ -1,1 +1,60 @@
-{}
+{
+  "title": "Équipe & accès",
+  "subtitle": "Qui voit quoi chez {label} — membres, rôles et permissions par module.",
+  "artistTitle": "Accès à mes données",
+  "artistSubtitle": "Les personnes de {label} qui peuvent consulter votre dashboard, et ce qu'elles voient.",
+  "kpis": {
+    "members": "Membres actifs",
+    "roles": "Rôles distincts",
+    "activeWeek": "Actifs sur 7 jours",
+    "lastActivity": "Dernière activité : {date}"
+  },
+  "roles": {
+    "owner": "Fondateur",
+    "manager": "Manager",
+    "marketing": "Marketing",
+    "comptable": "Comptable",
+    "avocat": "Avocat"
+  },
+  "table": {
+    "title": "Membres",
+    "artistHint": "Seuls les membres ayant accès à vos données apparaissent ici",
+    "member": "Membre",
+    "role": "Rôle",
+    "artists": "Artistes",
+    "modules": "Modules",
+    "lastActive": "Dernière activité",
+    "allArtists": "Tous",
+    "allModules": "Tous les modules",
+    "pending": "Invitation en attente"
+  },
+  "matrix": {
+    "title": "Permissions par rôle",
+    "subtitle": "Accès aux modules, rôle par rôle",
+    "module": "Module"
+  },
+  "invite": {
+    "cta": "Inviter un membre",
+    "title": "Inviter un membre",
+    "description": "L'invité recevra un lien d'accès limité à son rôle et à son périmètre artistes.",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "prenom@label.fr",
+    "role": "Rôle",
+    "access": "Périmètre artistes",
+    "allArtists": "Tout le roster",
+    "send": "Envoyer l'invitation",
+    "sent": "Invitation envoyée à {email}"
+  },
+  "activity": {
+    "title": "Journal d'activité",
+    "subtitle": "Dernières actions de l'équipe sur le workspace",
+    "entries": {
+      "expense": "{name} a ajouté une dépense marketing pour {artist}",
+      "export": "{name} a exporté le rapport URSSAF du trimestre",
+      "split": "{name} a mis à jour les splits de « {track} »",
+      "contract": "{name} a annoté le contrat de {artist}",
+      "audit": "{name} a lancé un audit royalties pour {artist}",
+      "invite": "{name} a invité {invitee} en tant que {role}"
+    }
+  }
+}

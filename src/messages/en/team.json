@@ -1,1 +1,60 @@
-{}
+{
+  "title": "Team & access",
+  "subtitle": "Who sees what at {label} — members, roles and per-module permissions.",
+  "artistTitle": "Access to my data",
+  "artistSubtitle": "The people at {label} who can view your dashboard, and what they see.",
+  "kpis": {
+    "members": "Active members",
+    "roles": "Distinct roles",
+    "activeWeek": "Active in 7 days",
+    "lastActivity": "Last activity: {date}"
+  },
+  "roles": {
+    "owner": "Founder",
+    "manager": "Manager",
+    "marketing": "Marketing",
+    "comptable": "Accountant",
+    "avocat": "Lawyer"
+  },
+  "table": {
+    "title": "Members",
+    "artistHint": "Only members with access to your data appear here",
+    "member": "Member",
+    "role": "Role",
+    "artists": "Artists",
+    "modules": "Modules",
+    "lastActive": "Last active",
+    "allArtists": "All",
+    "allModules": "All modules",
+    "pending": "Pending invitation"
+  },
+  "matrix": {
+    "title": "Permissions by role",
+    "subtitle": "Module access, role by role",
+    "module": "Module"
+  },
+  "invite": {
+    "cta": "Invite a member",
+    "title": "Invite a member",
+    "description": "The invitee receives an access link scoped to their role and artist perimeter.",
+    "email": "Email address",
+    "emailPlaceholder": "name@label.com",
+    "role": "Role",
+    "access": "Artist perimeter",
+    "allArtists": "Whole roster",
+    "send": "Send invitation",
+    "sent": "Invitation sent to {email}"
+  },
+  "activity": {
+    "title": "Activity log",
+    "subtitle": "Latest team actions on the workspace",
+    "entries": {
+      "expense": "{name} added a marketing expense for {artist}",
+      "export": "{name} exported the quarterly URSSAF report",
+      "split": "{name} updated the splits of \"{track}\"",
+      "contract": "{name} annotated {artist}'s contract",
+      "audit": "{name} launched a royalty audit for {artist}",
+      "invite": "{name} invited {invitee} as {role}"
+    }
+  }
+}

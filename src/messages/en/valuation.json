@@ -1,1 +1,52 @@
-{}
+{
+  "title": "Catalog valuation",
+  "subtitle": "What your catalog is worth — and why. Transparent method, numbers included.",
+  "subtitleLabel": "Each artist's catalog value, and the whole portfolio.",
+  "kpis": {
+    "midValue": "Estimated valuation",
+    "nps": "NPS (annual net revenue)",
+    "multiple": "Applied multiple",
+    "range": "Range"
+  },
+  "method": {
+    "title": "How we compute it",
+    "step1": "NPS — your net catalog revenue over 12 months: {nps}",
+    "step2": "Multiple based on maturity ({stage}): {low}× to {high}×",
+    "step3": "Valuation = NPS × multiple, i.e. {rangeLow} to {rangeHigh}",
+    "note": "It's an estimate, not a promise: we always show the range, never a single number. Market multiples: 8-14× (indie), 14-18× (5y+ proven catalog), 18-24× (blue-chip)."
+  },
+  "stages": {
+    "emerging": "emerging",
+    "developing": "developing",
+    "established": "established",
+    "peak": "at peak"
+  },
+  "simulator": {
+    "title": "Multiple simulator",
+    "description": "Drag the multiple to see what a buyer would pay depending on their conviction.",
+    "atMultiple": "At {multiple}×",
+    "yourRange": "Your market zone"
+  },
+  "scenarios": {
+    "title": "Three scenarios",
+    "pessimistic": "Conservative",
+    "pessimisticDesc": "Low end — negotiation discount",
+    "nominal": "Nominal",
+    "nominalDesc": "Mid-range — typical transaction",
+    "optimistic": "Optimistic",
+    "optimisticDesc": "High end — bidding war or strategic buyer"
+  },
+  "byArtist": {
+    "title": "Valuation by artist",
+    "portfolioTotal": "Total portfolio value",
+    "artist": "Artist",
+    "nps": "NPS",
+    "multiple": "Multiple",
+    "value": "Valuation"
+  },
+  "growth": {
+    "title": "What about tomorrow?",
+    "description": "With your projected 12-month revenue growth, your median valuation could reach {future} within a year.",
+    "cta": "See the full projection"
+  }
+}

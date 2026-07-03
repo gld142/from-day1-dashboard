@@ -1,1 +1,52 @@
-{}
+{
+  "title": "A&R Watch",
+  "subtitle": "Radar de scouting {label} — {count} artistes émergents sous surveillance.",
+  "guard": {
+    "title": "Réservé à la vue structure",
+    "description": "L'A&R Watch est l'outil de scouting du label : détection de talents émergents et scoring d'investissement. En vue artiste, ce module n'est pas disponible.",
+    "cta": "Passer en vue structure"
+  },
+  "kpis": {
+    "tracked": "Artistes sur le radar",
+    "watchlisted": "En watchlist",
+    "avgMomentum": "Momentum moyen 30 j",
+    "listeners": "Auditeurs cumulés"
+  },
+  "signal": {
+    "badge": "Signal fort",
+    "hint": "Plus forte accélération du radar sur 30 jours"
+  },
+  "card": {
+    "listeners": "auditeurs/mois",
+    "momentum": "momentum 30 j",
+    "index": "Index Day 1",
+    "watch": "Suivre",
+    "watching": "Suivi",
+    "score": "Scorer"
+  },
+  "filters": {
+    "genre": "Genre",
+    "allGenres": "Tous les genres",
+    "sort": "Tri",
+    "sortMomentum": "Momentum 30 j",
+    "sortListeners": "Auditeurs",
+    "sortIndex": "Index Day 1"
+  },
+  "empty": "Aucun artiste ne correspond à ce filtre",
+  "scoring": {
+    "open": "Scoring d'investissement",
+    "title": "Scoring — {name}",
+    "description": "Estimation déterministe à partir de l'audience actuelle, du momentum 30 jours et de l'Index Day 1.",
+    "range": "Fourchette d'avance recommandée",
+    "rangeHint": "Calibrée sur les revenus streaming projetés à 12 mois",
+    "scenarios": "Projection à 12 mois",
+    "conservative": "Scénario prudent",
+    "conservativeHint": "30 % du momentum actuel soutenu sur l'année",
+    "optimistic": "Scénario momentum",
+    "optimisticHint": "Momentum actuel prolongé avec décroissance",
+    "listeners12m": "Auditeurs mensuels",
+    "revenue12m": "Revenus streaming 12 m",
+    "breakEven": "Retour sur avance estimé : {months} mois",
+    "disclaimer": "Modèle de démonstration : projection purement indicative calculée sur des données simulées. Ne constitue ni une valorisation ni un conseil d'investissement."
+  }
+}

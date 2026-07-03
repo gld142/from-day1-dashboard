@@ -1,1 +1,52 @@
-{}
+{
+  "title": "Valorisation du catalogue",
+  "subtitle": "Combien vaut ton catalogue — et pourquoi. Méthode transparente, chiffres à l'appui.",
+  "subtitleLabel": "La valeur du catalogue de chaque artiste, et du portefeuille entier.",
+  "kpis": {
+    "midValue": "Valorisation estimée",
+    "nps": "NPS (revenu net annuel)",
+    "multiple": "Multiple appliqué",
+    "range": "Fourchette"
+  },
+  "method": {
+    "title": "Comment on calcule",
+    "step1": "NPS — ton revenu net de catalogue sur 12 mois : {nps}",
+    "step2": "Multiple selon la maturité ({stage}) : {low}× à {high}×",
+    "step3": "Valorisation = NPS × multiple, soit {rangeLow} à {rangeHigh}",
+    "note": "C'est une estimation, pas une promesse : on affiche toujours la fourchette, jamais un chiffre unique. Les multiples observés sur le marché : 8-14× (indé), 14-18× (catalogue prouvé 5 ans+), 18-24× (blue-chip)."
+  },
+  "stages": {
+    "emerging": "émergent",
+    "developing": "en développement",
+    "established": "établi",
+    "peak": "au sommet"
+  },
+  "simulator": {
+    "title": "Simulateur de multiple",
+    "description": "Fais glisser le multiple pour voir ce qu'un acheteur paierait selon son niveau de conviction.",
+    "atMultiple": "À {multiple}×",
+    "yourRange": "Ta zone de marché"
+  },
+  "scenarios": {
+    "title": "Trois scénarios",
+    "pessimistic": "Prudent",
+    "pessimisticDesc": "Bas de fourchette — décote de négociation",
+    "nominal": "Nominal",
+    "nominalDesc": "Milieu de fourchette — transaction type",
+    "optimistic": "Optimiste",
+    "optimisticDesc": "Haut de fourchette — enchères ou acheteur stratégique"
+  },
+  "byArtist": {
+    "title": "Valorisation par artiste",
+    "portfolioTotal": "Valeur totale du portefeuille",
+    "artist": "Artiste",
+    "nps": "NPS",
+    "multiple": "Multiple",
+    "value": "Valorisation"
+  },
+  "growth": {
+    "title": "Et demain ?",
+    "description": "Avec la croissance projetée de tes revenus sur 12 mois, ta valorisation médiane pourrait atteindre {future} d'ici un an.",
+    "cta": "Voir la projection complète"
+  }
+}

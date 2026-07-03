@@ -1,1 +1,69 @@
-{}
+{
+  "title": "Revenue Calculator",
+  "subtitle": "Project your revenue over 6 to 24 months based on your release and growth scenarios.",
+  "params": {
+    "title": "Parameters",
+    "subtitle": "Adjust the assumptions, the projection updates live",
+    "artist": "Artist",
+    "horizon": "Horizon",
+    "months": "{count} months",
+    "scenario": "Release scenario",
+    "scenarios": {
+      "none": "No release planned",
+      "single": "Upcoming single",
+      "ep": "Upcoming EP",
+      "album": "Upcoming album"
+    },
+    "scenarioBoost": "+{points} growth pts",
+    "scenarioNone": "Organic growth only",
+    "growth": "Growth adjustment",
+    "growthHint": "Monthly growth points added to or removed from the current pace",
+    "baseGrowth": "Current growth",
+    "effectiveGrowth": "Projected growth"
+  },
+  "kpis": {
+    "projectedTotal": "Projected total ({count} months)",
+    "range": "Confidence range",
+    "rangeHint": "Based on the low / high band",
+    "monthlyAvg": "Projected monthly average",
+    "delta": "vs last {count} months",
+    "deltaHint": "Projection compared to recent actuals"
+  },
+  "chart": {
+    "title": "History & projection",
+    "subtitle": "24 months of actuals, median projection and confidence band",
+    "actual": "Actual",
+    "projected": "Projected",
+    "band": "Confidence band"
+  },
+  "table": {
+    "title": "Projected monthly detail",
+    "month": "Month",
+    "low": "Low",
+    "projected": "Median",
+    "high": "High"
+  },
+  "donut": {
+    "title": "Projected split by source",
+    "subtitle": "Last 12 months proportions applied to the projected total",
+    "total": "Projected"
+  },
+  "sources": {
+    "streaming": "Streaming",
+    "sacem": "SACEM",
+    "neighboring": "Neighboring rights",
+    "spre": "SPRE",
+    "sync": "Sync",
+    "live": "Live",
+    "merch": "Merch"
+  },
+  "methodology": {
+    "title": "Methodology",
+    "intro": "A transparent projection, not a crystal ball:",
+    "point1": "Starting level: average of the last 3 months of actual revenue.",
+    "point2": "Growth: the artist's current monthly pace, adjusted by your release scenario and slider.",
+    "point3": "Seasonality: monthly coefficients learned from 24 months of history.",
+    "point4": "Uncertainty: the confidence band widens from ±12% short-term up to ±{maxSpread}% at the chosen horizon.",
+    "disclaimer": "Indicative projection based on past trends — it is not a revenue guarantee."
+  }
+}

@@ -1,1 +1,64 @@
-{}
+{
+  "title": "AI Royalty Audit",
+  "subtitle": "Automatic reconciliation between your actual streams and the amounts reported by platforms, collection societies and labels.",
+  "hero": {
+    "label": "Recoverable amount detected",
+    "findings": "{count, plural, =0 {No gap detected} one {# gap detected} other {# gaps detected}}",
+    "avgConfidence": "Average confidence",
+    "scanned": "24 months of statements analyzed",
+    "sources": "{count} sources cross-checked"
+  },
+  "finding": {
+    "expected": "Expected (Day 1 model)",
+    "reported": "Reported",
+    "gap": "Gap",
+    "confidence": "Model confidence",
+    "generateLetter": "Generate letter",
+    "viewLetter": "View letter",
+    "period": "Period {period}"
+  },
+  "status": {
+    "open": "To handle",
+    "letterGenerated": "Letter generated",
+    "resolved": "Resolved"
+  },
+  "letter": {
+    "dialogTitle": "Verification request letter",
+    "dialogSubtitle": "Pre-drafted by AI from your data. Review and adapt before sending.",
+    "date": "Paris, {date}",
+    "to": "To the royalties department — {source}",
+    "subject": "Subject: royalty verification request — period {period}",
+    "greeting": "Dear Sir or Madam,",
+    "body1": "Following the automatic reconciliation between our certified consumption data and your statement for the period {period}, we have identified a significant discrepancy between the expected amount ({expected}) and the reported amount ({reported}).",
+    "body2": "The identified gap amounts to {gap}. Our reconciliation model — cross-referencing observed streams per platform, applicable contractual rates and payment history — establishes this finding with a confidence level of {confidence}.",
+    "body3": "We kindly ask you to carry out a detailed verification of the period in question, to provide us with the details of the bases and calculations applied and, where applicable, to proceed with the corresponding adjustment payment.",
+    "signoff": "Awaiting your response within 30 days, we remain at your disposal for any further information.",
+    "signature": "{artist} — represented via From Day 1",
+    "copy": "Copy",
+    "copied": "Copied",
+    "download": "Download .txt (demo)"
+  },
+  "method": {
+    "title": "How the audit works",
+    "subtitle": "A systematic reconciliation, not a back-of-the-envelope estimate.",
+    "step1Title": "Ingestion",
+    "step1Desc": "DSP statements, collection societies, neighboring rights and label reports are normalized into a single reference.",
+    "step2Title": "Reconciliation",
+    "step2Desc": "The model cross-references observed streams, per-platform rates and contractual clauses to estimate the expected amount.",
+    "step3Title": "Confidence score",
+    "step3Desc": "Each gap is weighted by source data quality and the historical stability of payments.",
+    "step4Title": "Letter & follow-up",
+    "step4Desc": "A verification request letter is pre-drafted, ready to review and send. Status is tracked here.",
+    "disclaimer": "Demo data — expected amounts are model estimates, not certain claims."
+  },
+  "label": {
+    "heroLabel": "Recoverable amount across the roster",
+    "byArtist": "Gaps by artist",
+    "artistTotal": "Total gap: {amount}",
+    "artistsWithFindings": "{count, plural, one {# artist affected} other {# artists affected}}"
+  },
+  "empty": {
+    "title": "No gap detected",
+    "hint": "Your statements match the streams observed over the analyzed period."
+  }
+}

@@ -13,6 +13,7 @@
   "segments": {
     "title": "Fan segments",
     "subtitle": "Fanbase segmented by engagement intensity — 30-day trend",
+    "ofFanbase": "of fanbase",
     "superfans": {
       "label": "Superfans",
       "desc": "Stream every release on day one, buy merch and tickets."

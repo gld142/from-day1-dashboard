@@ -1,1 +1,71 @@
-{}
+{
+  "title": "Contracts",
+  "subtitle": "Your commitments at a glance: deadlines, rates, advances and recoupment.",
+  "kpis": {
+    "active": "Active contracts",
+    "alerts": "Open alerts",
+    "avgRecoup": "Average recoupment"
+  },
+  "alerts": {
+    "heading": "Contract alerts",
+    "due": "Due: {date}",
+    "kinds": {
+      "expiry": "Contract ending",
+      "option": "Option to exercise",
+      "audit-window": "Audit window",
+      "unusual-clause": "Unusual clause"
+    }
+  },
+  "table": {
+    "heading": "All contracts",
+    "type": "Type",
+    "counterparty": "Counterparty",
+    "period": "Term",
+    "rate": "Rate",
+    "advance": "Advance",
+    "recoupment": "Recoupment",
+    "territory": "Territory",
+    "exclusivity": "Exclusivity"
+  },
+  "types": {
+    "licence": "License",
+    "distribution": "Distribution",
+    "edition": "Publishing",
+    "management": "Management",
+    "booking": "Booking"
+  },
+  "badges": {
+    "exclusive": "Exclusive",
+    "nonExclusive": "Non-exclusive",
+    "expired": "Expired",
+    "active": "Active"
+  },
+  "recoup": {
+    "heading": "Understanding recoupment",
+    "sub": "{type} contract · {counterparty}",
+    "advance": "Advance paid",
+    "recouped": "Already recouped",
+    "remaining": "Left to recoup",
+    "rate": "Artist rate",
+    "done": "Advance fully recouped — your royalties are now being paid out.",
+    "left": "{remaining} left to recoup before your first royalty payouts.",
+    "steps": {
+      "advance": {
+        "title": "1 · The advance",
+        "body": "At signing, the counterparty pays you {advance}. It is a loan against your future income, not a gift."
+      },
+      "recoup": {
+        "title": "2 · Recoupment",
+        "body": "Your royalties ({rate} of revenue) pay back that advance first: {recouped} repaid so far."
+      },
+      "payout": {
+        "title": "3 · Payouts",
+        "body": "Once the advance is 100% recouped, every euro of royalties lands directly in your account."
+      }
+    }
+  },
+  "labelView": {
+    "contractsOf": "{count, plural, one {# contract} other {# contracts}}"
+  },
+  "empty": "No contracts for this view."
+}

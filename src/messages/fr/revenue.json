@@ -1,1 +1,52 @@
-{}
+{
+  "title": "Revenus",
+  "subtitle": "Tous tes revenus, toutes sources confondues — enfin lisibles.",
+  "subtitleLabel": "Les revenus du roster, consolidés en un seul endroit.",
+  "kpis": {
+    "total12m": "Revenus 12 mois",
+    "monthlyAvg": "Moyenne mensuelle",
+    "topSource": "Première source",
+    "vsPrevYear": "vs 12 mois précédents"
+  },
+  "sources": {
+    "streaming": "Streaming",
+    "sacem": "SACEM",
+    "neighboring": "Droits voisins",
+    "spre": "Rémunération équitable",
+    "sync": "Synchronisation",
+    "live": "Live & concerts",
+    "merch": "Merchandising"
+  },
+  "sourceDescriptions": {
+    "streaming": "Spotify, Apple Music, Deezer, YouTube et les autres DSP",
+    "sacem": "Droits d'auteur collectés par la SACEM",
+    "neighboring": "ADAMI / SPEDIDAM — droits des interprètes",
+    "spre": "Diffusion radio et lieux publics",
+    "sync": "Licences pub, film, série, jeu vidéo",
+    "live": "Cachets et billetterie",
+    "merch": "Ventes de merchandising"
+  },
+  "chart": {
+    "title": "Évolution mensuelle par source",
+    "subtitle": "24 derniers mois, empilés par source"
+  },
+  "breakdown": {
+    "title": "Répartition par source",
+    "period12m": "sur 12 mois",
+    "share": "Part",
+    "amount": "Montant",
+    "source": "Source",
+    "trend": "Tendance"
+  },
+  "byArtist": {
+    "title": "Revenus par artiste",
+    "subtitle": "12 derniers mois — clique pour zoomer",
+    "net": "Net",
+    "margin": "Marge"
+  },
+  "insight": {
+    "diversification": "{count, plural, one {# source active} other {# sources actives}} — {top} représente {share} de tes revenus",
+    "concentrated": "Attention : plus de 70 % de tes revenus viennent d'une seule source",
+    "balanced": "Bonne diversification — aucun canal ne dépasse 70 %"
+  }
+}

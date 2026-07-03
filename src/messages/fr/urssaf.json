@@ -1,1 +1,67 @@
-{}
+{
+  "title": "URSSAF artiste-auteur",
+  "subtitle": "Estimez vos cotisations sociales, anticipez les échéances et préparez votre déclaration trimestrielle.",
+  "kpis": {
+    "declarable": "Revenus déclarables (12 m)",
+    "declarableHint": "Droits d'auteur : SACEM + sync",
+    "contributions": "Cotisations estimées",
+    "rateNote": "Taux global indicatif : {rate}",
+    "nextDeadline": "Prochaine échéance (jours)",
+    "deadlineOn": "Le {date} · déclaration {quarter}"
+  },
+  "sim": {
+    "heading": "Simulateur de cotisations",
+    "sub": "Ajustez le montant déclaré : le détail se recalcule en direct.",
+    "amountLabel": "Revenus artistiques à déclarer",
+    "line": "Cotisation",
+    "rate": "Taux",
+    "amount": "Montant",
+    "lines": {
+      "pension": "Assurance vieillesse plafonnée",
+      "csg": "CSG",
+      "crds": "CRDS",
+      "cfp": "Contribution formation professionnelle",
+      "pensionUncapped": "Assurance vieillesse déplafonnée"
+    },
+    "total": "Total des cotisations",
+    "net": "Net après cotisations",
+    "note": "Taux indicatifs 2026 pour un artiste-auteur déclarant en traitements et salaires."
+  },
+  "deadlines": {
+    "heading": "Échéances trimestrielles",
+    "sub": "Déclaration et paiement le 15 du mois suivant chaque trimestre civil.",
+    "paid": "Déclaré",
+    "next": "J-{days}",
+    "upcoming": "Planifié",
+    "quarter": "T{q} {year}"
+  },
+  "declaration": {
+    "title": "Générer ma déclaration pré-remplie",
+    "body": "Day 1 assemble vos revenus de droits d'auteur du trimestre dans le formulaire URSSAF, prêt à vérifier puis transmettre.",
+    "cta": "Préparer la déclaration",
+    "dialogTitle": "Récapitulatif · déclaration {quarter}",
+    "dialogSub": "Vérifiez ces montants avant transmission — document de démonstration.",
+    "rows": {
+      "declarant": "Déclarant",
+      "period": "Période",
+      "declarable": "Revenus artistiques du trimestre",
+      "contributions": "Cotisations estimées ({rate})",
+      "net": "Net estimé"
+    },
+    "periodValue": "{quarter} (avril – juin 2026)",
+    "download": "Télécharger le brouillon",
+    "disclaimer": "Document de travail : ne remplace pas la déclaration officielle sur urssaf.fr."
+  },
+  "note": {
+    "title": "Le statut artiste-auteur en bref",
+    "body": "Vos droits d'auteur (SACEM, édition, sync) relèvent du régime social des artistes-auteurs, géré par l'Urssaf Limousin : environ 16,3 % de cotisations, déclarées chaque trimestre. Les cachets de scène et les droits voisins (ADAMI, SPEDIDAM) dépendent d'autres régimes et ne sont pas inclus ici."
+  },
+  "labelTable": {
+    "heading": "Cotisations par artiste",
+    "sub": "Chaque artiste-auteur déclare individuellement — vue consolidée du roster.",
+    "artist": "Artiste",
+    "declarable": "Revenus déclarables (12 m)",
+    "contributions": "Cotisations estimées",
+    "share": "Part du roster"
+  }
+}

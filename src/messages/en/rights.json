@@ -1,1 +1,65 @@
-{}
+{
+  "title": "French rights",
+  "subtitle": "Your author and neighbouring rights in France: what Day 1 estimates, what the societies pay, and the gaps we detect.",
+  "kpis": {
+    "received12m": "Received over 12 months",
+    "expected": "Expected (in progress)",
+    "gaps": "Gaps detected",
+    "upcoming": "Upcoming payments",
+    "nextOn": "Next: {date}",
+    "last4Quarters": "Last 4 quarters",
+    "pendingPeriod": "Distributions being processed",
+    "gapsHint": "Amounts potentially unpaid"
+  },
+  "chart": {
+    "heading": "Expected vs received by period",
+    "sub": "Day 1 estimates cross-checked against statements actually received, all societies combined.",
+    "expected": "Expected",
+    "received": "Received"
+  },
+  "periodShort": "Q{q} {year}",
+  "organisms": {
+    "sacem": {
+      "name": "Society of authors, composers and music publishers",
+      "desc": "Collects and distributes your author rights: streaming, radio, TV, live."
+    },
+    "adami": {
+      "name": "Administration of rights for performing artists and musicians",
+      "desc": "Manages your neighbouring rights as a featured performer."
+    },
+    "spedidam": {
+      "name": "Collection society for performers' rights",
+      "desc": "Neighbouring rights for session musicians and backing artists."
+    },
+    "spre": {
+      "name": "Society for the collection of equitable remuneration",
+      "desc": "Equitable remuneration: airplay on radio, TV and public venues."
+    }
+  },
+  "orgCard": {
+    "received12m": "Received 12m",
+    "period": "Period",
+    "expected": "Expected",
+    "received": "Received",
+    "status": "Status"
+  },
+  "status": {
+    "received": "Received",
+    "pending": "Pending",
+    "gap": "Gap detected"
+  },
+  "gapsCallout": {
+    "title": "{count, plural, one {# gap detected} other {# gaps detected}} · {amount} potentially unpaid",
+    "body": "Day 1 cross-checks your streams and airplay against received statements. Open the Audit module to review each gap and generate claim letters.",
+    "cta": "Open audit"
+  },
+  "timeline": {
+    "heading": "Upcoming payments",
+    "sub": "Distribution calendar: SACEM quarterly, ADAMI and SPEDIDAM every six months.",
+    "frequency": {
+      "quarterly": "Quarterly",
+      "semiannual": "Semi-annual"
+    },
+    "estimated": "≈ {amount} estimated"
+  }
+}

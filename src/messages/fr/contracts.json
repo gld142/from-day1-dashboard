@@ -1,1 +1,71 @@
-{}
+{
+  "title": "Contrats",
+  "subtitle": "Vos engagements en un coup d'œil : échéances, taux, avances et recoupement.",
+  "kpis": {
+    "active": "Contrats actifs",
+    "alerts": "Alertes ouvertes",
+    "avgRecoup": "Recoupement moyen"
+  },
+  "alerts": {
+    "heading": "Alertes contractuelles",
+    "due": "Échéance : {date}",
+    "kinds": {
+      "expiry": "Fin de contrat",
+      "option": "Option à lever",
+      "audit-window": "Fenêtre d'audit",
+      "unusual-clause": "Clause inhabituelle"
+    }
+  },
+  "table": {
+    "heading": "Tous les contrats",
+    "type": "Type",
+    "counterparty": "Contrepartie",
+    "period": "Période",
+    "rate": "Taux",
+    "advance": "Avance",
+    "recoupment": "Recoupement",
+    "territory": "Territoire",
+    "exclusivity": "Exclusivité"
+  },
+  "types": {
+    "licence": "Licence",
+    "distribution": "Distribution",
+    "edition": "Édition",
+    "management": "Management",
+    "booking": "Booking"
+  },
+  "badges": {
+    "exclusive": "Exclusif",
+    "nonExclusive": "Non exclusif",
+    "expired": "Expiré",
+    "active": "Actif"
+  },
+  "recoup": {
+    "heading": "Comprendre le recoupement",
+    "sub": "Contrat {type} · {counterparty}",
+    "advance": "Avance versée",
+    "recouped": "Déjà recoupé",
+    "remaining": "Reste à recouper",
+    "rate": "Taux artiste",
+    "done": "Avance entièrement recoupée — vos royautés vous sont désormais versées.",
+    "left": "Encore {remaining} à recouper avant vos premiers versements de royautés.",
+    "steps": {
+      "advance": {
+        "title": "1 · L'avance",
+        "body": "À la signature, la contrepartie vous verse {advance}. C'est un prêt sur vos revenus futurs, pas un cadeau."
+      },
+      "recoup": {
+        "title": "2 · Le recoupement",
+        "body": "Vos royautés ({rate} des revenus) remboursent d'abord cette avance : {recouped} déjà remboursés."
+      },
+      "payout": {
+        "title": "3 · Les versements",
+        "body": "Une fois l'avance soldée à 100 %, chaque euro de royautés arrive directement sur votre compte."
+      }
+    }
+  },
+  "labelView": {
+    "contractsOf": "{count, plural, one {# contrat} other {# contrats}}"
+  },
+  "empty": "Aucun contrat pour cette vue."
+}

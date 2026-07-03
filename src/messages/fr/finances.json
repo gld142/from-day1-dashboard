@@ -1,1 +1,100 @@
-{}
+{
+  "title": "Dépenses & P&L",
+  "subtitle": "Suivez chaque euro investi et le résultat net, par artiste, projet et titre.",
+  "scope": {
+    "roster": "Tout le roster",
+    "artists": "{count} artistes"
+  },
+  "filters": {
+    "year": "Année",
+    "artist": "Artiste",
+    "allArtists": "Tous les artistes",
+    "category": "Catégorie",
+    "allCategories": "Toutes les catégories",
+    "project": "Projet",
+    "allProjects": "Tous les projets"
+  },
+  "kpis": {
+    "expenses": "Dépenses {year}",
+    "revenue": "Revenus {year}",
+    "net": "Résultat net",
+    "margin": "Marge nette",
+    "vsPrevYear": "vs {year}",
+    "marginHint": "Part des revenus conservée après dépenses"
+  },
+  "chart": {
+    "title": "Revenus vs dépenses — {year}",
+    "subtitle": "Vue mensuelle avec résultat net",
+    "revenue": "Revenus",
+    "expenses": "Dépenses",
+    "net": "Net"
+  },
+  "donut": {
+    "title": "Dépenses par catégorie",
+    "subtitle": "Répartition sur le périmètre filtré",
+    "total": "Total",
+    "empty": "Aucune dépense sur ce périmètre"
+  },
+  "categories": {
+    "studio": "Studio",
+    "clip": "Clip",
+    "marketing": "Marketing",
+    "distribution": "Distribution",
+    "promo": "Promo",
+    "tour": "Tournée",
+    "other": "Autre"
+  },
+  "compare": {
+    "title": "Comparaisons",
+    "subtitle": "Où part l'argent, année par année et projet par projet",
+    "byYear": "Par année",
+    "byProject": "Par projet",
+    "byTrack": "Par titre",
+    "revenue": "Revenus",
+    "expenses": "Dépenses",
+    "net": "Net",
+    "empty": "Aucune dépense sur ce périmètre",
+    "topSpend": "Dépenses cumulées"
+  },
+  "register": {
+    "title": "Registre des dépenses",
+    "count": "{count, plural, =0 {aucune dépense} one {# dépense} other {# dépenses}}",
+    "searchPlaceholder": "Rechercher un libellé, projet, titre…",
+    "date": "Date",
+    "label": "Libellé",
+    "category": "Catégorie",
+    "project": "Projet",
+    "track": "Titre",
+    "amount": "Montant",
+    "addedBy": "Ajouté par",
+    "source": "Source",
+    "manual": "Manuel",
+    "wavely": "Wavely",
+    "wavelyTooltip": "Synchronisé depuis Wavely",
+    "showMore": "Afficher plus",
+    "shown": "{shown} sur {total}",
+    "noResults": "Aucune dépense ne correspond à votre recherche"
+  },
+  "add": {
+    "cta": "Ajouter une dépense",
+    "title": "Nouvelle dépense",
+    "description": "Enregistrez une dépense manuelle. Elle apparaîtra immédiatement dans le registre et le P&L.",
+    "label": "Libellé",
+    "labelPlaceholder": "Ex : Mix & mastering EP",
+    "amount": "Montant (€)",
+    "date": "Date",
+    "category": "Catégorie",
+    "artist": "Artiste",
+    "project": "Projet",
+    "track": "Titre",
+    "optional": "optionnel",
+    "none": "Aucun",
+    "submit": "Ajouter la dépense"
+  },
+  "wavely": {
+    "title": "Intégration Wavely",
+    "description": "Connectez votre compte Wavely pour synchroniser automatiquement vos dépenses de production et de marketing — fini la double saisie.",
+    "syncedCount": "{count, plural, one {# dépense déjà synchronisée} other {# dépenses déjà synchronisées}}",
+    "connect": "Connecter Wavely"
+  }
+}

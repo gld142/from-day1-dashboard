@@ -21,6 +21,7 @@
     "fill": "Fill rate",
     "tickets": "{sold} / {capacity} tickets",
     "date": "Date",
+    "artist": "Artist",
     "city": "City",
     "venue": "Venue",
     "empty": "No dates scheduled yet"

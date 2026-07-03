@@ -1,1 +1,59 @@
-{}
+{
+  "title": "Copilot IA",
+  "subtitle": "Posez vos questions en langage naturel — le Copilot répond avec vos vraies données.",
+  "capabilities": {
+    "title": "Ce que le Copilot sait faire",
+    "analyzeTitle": "Analyser vos revenus",
+    "analyzeDesc": "Meilleur mois, sources dominantes, saisonnalité — expliqués en une phrase.",
+    "anomalyTitle": "Détecter les anomalies",
+    "anomalyDesc": "Écarts de royalties, chutes de streams, versements en retard.",
+    "auditTitle": "Préparer un audit",
+    "auditDesc": "Chiffrer un écart et pré-rédiger la lettre de vérification.",
+    "forecastTitle": "Projeter la suite",
+    "forecastDesc": "Tendances 6-12 mois à partir de votre croissance actuelle."
+  },
+  "chat": {
+    "assistantName": "Copilot",
+    "you": "Vous",
+    "status": "Connecté à vos données",
+    "placeholder": "Posez une question sur vos données…",
+    "send": "Envoyer",
+    "typing": "Le Copilot rédige…",
+    "disclaimer": "Démo — les réponses sont générées à partir de vos données de démonstration.",
+    "suggestionsLabel": "Suggestions",
+    "generic": "Bonne question. En démo, je réponds surtout aux suggestions ci-dessous — en production, j’interroge l’ensemble de vos données (streams, revenus, contrats, droits) en langage naturel et je cite mes sources."
+  },
+  "greeting": {
+    "artist": "Bonjour {name} — j’ai analysé vos 24 derniers mois de données. Demandez-moi n’importe quoi sur vos streams, revenus ou droits.",
+    "label": "Bonjour — j’ai sous les yeux les données consolidées des {count} artistes de {label}. Posez-moi vos questions de pilotage."
+  },
+  "suggestions": {
+    "bestMonth": "Quel a été mon meilleur mois ?",
+    "growth": "Où en est ma croissance ?",
+    "topSource": "Quelle source me rapporte le plus ?",
+    "audit": "Est-ce qu’on me doit de l’argent ?",
+    "bestMonthLabel": "Quel a été notre meilleur mois ?",
+    "growthLabel": "Où en est la croissance du roster ?",
+    "topArtist": "Quel artiste est le plus rentable ?",
+    "auditLabel": "Est-ce qu’on nous doit de l’argent ?"
+  },
+  "answers": {
+    "bestMonth": "Votre meilleur mois est {month} : {amount} de revenus toutes sources confondues, soit {pct} au-dessus de votre moyenne mensuelle ({avg}). Le pic vient surtout du streaming et du live.",
+    "growth": "Sur les 30 derniers jours, vos streams évoluent de {delta} par rapport aux 30 jours précédents, avec {streams} streams cumulés. Votre base d’auditeurs mensuels s’établit à {listeners} — la tendance de fond reste portée par votre croissance de {growthRate} par mois.",
+    "topSource": "Votre première source de revenus sur 12 mois est {source} : {amount}, soit {pct} de votre total ({total}). C’est un bon niveau de concentration — surveillez la diversification.",
+    "audit": "Oui, probablement. Mon rapprochement détecte {count, plural, =0 {aucun écart} one {# écart} other {# écarts}} entre attendu et déclaré, pour un total de {amount}. Rendez-vous dans le module Audit pour générer les lettres de vérification.",
+    "bestMonthLabel": "Le meilleur mois du roster est {month} : {amount} de revenus consolidés, soit {pct} au-dessus de la moyenne mensuelle ({avg}).",
+    "growthLabel": "Sur 30 jours, le roster cumule {streams} streams, en évolution de {delta} vs la période précédente. La dynamique est tirée par vos artistes en développement.",
+    "topArtist": "{artist} est votre artiste le plus rentable : {net} de résultat net sur 12 mois, pour une marge de {margin}. Revenus générés : {revenue}.",
+    "auditLabel": "Oui. Sur l’ensemble du roster, je détecte {count, plural, =0 {aucun écart} one {# écart} other {# écarts}} pour un total récupérable de {amount}, réparti sur {artists, plural, one {# artiste} other {# artistes}}. Le module Audit contient les lettres pré-rédigées."
+  },
+  "sources": {
+    "streaming": "le streaming",
+    "sacem": "la SACEM",
+    "neighboring": "les droits voisins",
+    "spre": "la SPRÉ",
+    "sync": "la synchro",
+    "live": "le live",
+    "merch": "le merch"
+  }
+}

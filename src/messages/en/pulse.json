@@ -1,1 +1,85 @@
-{}
+{
+  "title": "Pulse",
+  "subtitle": "Your morning ritual — the essentials in 30 seconds.",
+  "subtitleLabel": "The roster's pulse this morning — all artists combined.",
+  "backToRoster": "Roster view",
+  "hero": {
+    "today": "Streams today",
+    "todayLabel": "Roster streams today",
+    "vsYesterday": "vs yesterday"
+  },
+  "kpis": {
+    "streams7d": "Streams · 7 days",
+    "revenueMonth": "Revenue this month",
+    "vsPrevMonth": "vs previous month",
+    "monthlyListeners": "Monthly listeners",
+    "growthHint": "monthly trend",
+    "day1Index": "Day 1 Index",
+    "day1IndexHint": "out of 100",
+    "artists": "Artists on roster",
+    "artistsHint": "signed to Nocturne",
+    "revenue12m": "Revenue · 12 months",
+    "net12m": "Net · 12 months",
+    "netHint": "after expenses",
+    "valuation": "Catalog valuation",
+    "valuationHint": "median estimate"
+  },
+  "chart": {
+    "title": "Streams — last 90 days",
+    "titleLabel": "Roster streams — last 90 days",
+    "streams": "Streams"
+  },
+  "overnight": {
+    "title": "What changed overnight",
+    "topTrack": {
+      "kicker": "Driving track",
+      "body": "“{title}” generated {streams} streams yesterday — your current locomotive."
+    },
+    "bestDsp": {
+      "kicker": "Leading platform",
+      "body": "{dsp} carried {share} of last night's streams."
+    },
+    "momentum": {
+      "kicker": "7-day momentum",
+      "body": "7-day streams: {delta} vs the previous week."
+    },
+    "nextShow": {
+      "kicker": "Next show",
+      "body": "{venue}, {city} in {days} d — {sold} / {capacity} tickets sold."
+    },
+    "contract": {
+      "kicker": "Contract alert",
+      "body": "{message}"
+    },
+    "topMover": {
+      "kicker": "Top mover",
+      "body": "{name} is accelerating: {delta} streams over 30 days."
+    },
+    "topEarner": {
+      "kicker": "Revenue engine",
+      "body": "{name} drives {share} of the label's 12-month revenue."
+    },
+    "labelNextShow": {
+      "kicker": "Next roster show",
+      "body": "{name} — {venue}, {city} in {days} d."
+    },
+    "contractCount": {
+      "kicker": "Contracts",
+      "body": "{count, plural, one {# contract alert to handle} other {# contract alerts to handle}} across the roster."
+    }
+  },
+  "movers": {
+    "title": "Top movers · 30 days",
+    "subtitle": "Click an artist to zoom in",
+    "streams30d": "streams · 30 d"
+  },
+  "dsp": {
+    "spotify": "Spotify",
+    "apple": "Apple Music",
+    "youtube": "YouTube",
+    "deezer": "Deezer",
+    "tiktok": "TikTok",
+    "amazon": "Amazon Music",
+    "other": "Other"
+  }
+}

@@ -13,6 +13,7 @@
   "segments": {
     "title": "Segments de fans",
     "subtitle": "Fanbase segmentée par intensité d'engagement — tendance sur 30 jours",
+    "ofFanbase": "de la fanbase",
     "superfans": {
       "label": "Superfans",
       "desc": "Écoutent chaque sortie dès le jour J, achètent merch et billets."

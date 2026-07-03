@@ -1,1 +1,64 @@
-{}
+{
+  "title": "Roster",
+  "subtitle": "Comparative view of {label}'s {count} artists — health, profitability, valuation.",
+  "guard": {
+    "title": "Label view only",
+    "description": "The roster compares every artist on the label side by side. In artist view you only access your own data.",
+    "cta": "Switch to label view"
+  },
+  "kpis": {
+    "artists": "Signed artists",
+    "streams30d": "Streams 30d",
+    "revenue12m": "Revenue 12 months",
+    "net12m": "Net 12 months",
+    "valuation": "Catalog valuation"
+  },
+  "table": {
+    "title": "Roster comparison",
+    "hint": "Clicking a row focuses the whole dashboard on that artist",
+    "artist": "Artist",
+    "stage": "Stage",
+    "streams30d": "Streams 30d",
+    "delta30d": "Δ 30d",
+    "revenue12m": "Revenue 12m",
+    "net12m": "Net 12m",
+    "margin": "Margin",
+    "valuation": "Valuation (mid)",
+    "index": "Index",
+    "focused": "Focused",
+    "sort": "Sort by {column}"
+  },
+  "stage": {
+    "emerging": "Emerging",
+    "developing": "Developing",
+    "established": "Established",
+    "peak": "Peak"
+  },
+  "matrix": {
+    "title": "Growth × margin matrix",
+    "subtitle": "Each artist's strategic position — monthly stream growth vs 12-month net margin. Size = 12-month revenue.",
+    "growth": "Monthly growth",
+    "margin": "Net margin",
+    "quadrants": {
+      "stars": "Locomotives",
+      "bets": "Growth bets",
+      "cash": "Cash cows",
+      "watch": "Watch closely"
+    }
+  },
+  "pnl": {
+    "title": "P&L by artist — trailing 12 months",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "net": "Net"
+  },
+  "alerts": {
+    "title": "Roster alerts",
+    "subtitle": "Expiring contracts and negative momentum",
+    "contractMeta": "{type} contract · {counterparty}",
+    "due": "Due {date}",
+    "decline": "Streams declining over 30 days",
+    "declineMeta": "vs previous 30 days",
+    "empty": "No alerts — the whole roster is in the green"
+  }
+}
