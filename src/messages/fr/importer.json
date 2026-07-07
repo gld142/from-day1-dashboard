@@ -1,0 +1,66 @@
+{
+  "title": "Importer mes données",
+  "subtitle": "Dépose ton relevé distributeur — ton dashboard devient le tien, avec tes vrais chiffres.",
+  "privacy": "100 % local : ton fichier ne quitte jamais ton navigateur. Aucune donnée envoyée à un serveur.",
+  "dropzone": {
+    "title": "Dépose ton relevé CSV ici",
+    "hint": "ou clique pour choisir un fichier",
+    "formats": "DistroKid · TuneCore · Believe · CSV générique",
+    "parsing": "Analyse du fichier…"
+  },
+  "errors": {
+    "EMPTY_FILE": "Le fichier semble vide.",
+    "UNKNOWN_FORMAT": "Format non reconnu — il faut au minimum une colonne de montants ou de quantités.",
+    "NO_DATA_ROWS": "Aucune ligne exploitable trouvée dans ce fichier.",
+    "generic": "Impossible de lire ce fichier. Vérifie que c'est bien un export CSV de ton distributeur."
+  },
+  "preview": {
+    "title": "Aperçu de l'import",
+    "format": "Format détecté",
+    "formatNames": {
+      "distrokid": "DistroKid",
+      "tunecore": "TuneCore",
+      "believe": "Believe",
+      "generic": "CSV générique"
+    },
+    "period": "Période",
+    "rows": "{count} lignes lues",
+    "totalStreams": "Streams totaux",
+    "totalRevenue": "Revenus totaux",
+    "topTracks": "Tes titres les plus streamés",
+    "countries": "{count} territoires détectés",
+    "warnings": "{count} lignes ignorées (format de date non reconnu)"
+  },
+  "config": {
+    "artistName": "Ton nom d'artiste",
+    "artistNamePlaceholder": "Ex : Sky Lune",
+    "currency": "Devise du relevé : {currency}",
+    "eurRate": "Taux de conversion vers l'euro",
+    "eurRateHint": "1 {currency} = {rate} €"
+  },
+  "actions": {
+    "activate": "Activer mes données",
+    "cancel": "Recommencer",
+    "goToPulse": "Voir mon dashboard"
+  },
+  "active": {
+    "title": "Tes données sont actives",
+    "description": "Tout le dashboard affiche les chiffres de « {name} » — importés le {date} depuis {format}.",
+    "stats": "{months} mois · {streams} streams · {revenue} de revenus",
+    "modules": "Les modules sans données importées (droits, tournée, splits…) affichent un état vide en attendant leurs connexions.",
+    "reimport": "Importer un nouveau relevé",
+    "deactivate": "Repasser en mode démo",
+    "delete": "Supprimer mes données",
+    "deleteConfirm": "Tes données importées seront effacées de ce navigateur. Continuer ?"
+  },
+  "success": {
+    "title": "C'est fait — bienvenue chez toi.",
+    "description": "Ton Pulse, tes revenus, ta valorisation : tout est calculé sur tes vrais chiffres."
+  },
+  "howto": {
+    "title": "Où trouver ton relevé ?",
+    "distrokid": "DistroKid → Bank → Download earnings data (CSV)",
+    "tunecore": "TuneCore → Revenus → Télécharger le rapport de ventes",
+    "believe": "Believe Backstage → Rapports financiers → Export CSV"
+  }
+}

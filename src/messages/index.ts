@@ -64,6 +64,8 @@ import frComparatif from "./fr/comparatif.json";
 import enComparatif from "./en/comparatif.json";
 import frOnboardings from "./fr/onboardings.json";
 import enOnboardings from "./en/onboardings.json";
+import frImporter from "./fr/importer.json";
+import enImporter from "./en/importer.json";
 import frAsk from "./fr/ask.json";
 import enAsk from "./en/ask.json";
 import enSettings from "./en/settings.json";
@@ -100,6 +102,7 @@ const MESSAGES = {
     fractional: frFractional,
     comparatif: frComparatif,
     onboardings: frOnboardings,
+    importer: frImporter,
     brief: frBrief,
     ask: frAsk,
   },
@@ -134,6 +137,7 @@ const MESSAGES = {
     fractional: enFractional,
     comparatif: enComparatif,
     onboardings: enOnboardings,
+    importer: enImporter,
     brief: enBrief,
     ask: enAsk,
   },

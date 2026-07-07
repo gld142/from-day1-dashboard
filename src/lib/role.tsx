@@ -19,7 +19,13 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from "react";
+import {
+  getUserData,
+  subscribeUserData,
+  USER_ARTIST_ID,
+} from "@/lib/userdata/store";
 
 export type Persona = "artist" | "label";
 
@@ -35,6 +41,8 @@ type RoleContextValue = {
   setFocusedArtistId: (id: string | null) => void;
   /** True si l'utilisateur courant a le droit de voir les modules structure. */
   isLabel: boolean;
+  /** True si des données réelles importées sont actives (mode "Mes données"). */
+  hasUserData: boolean;
 };
 
 const RoleContext = createContext<RoleContextValue | null>(null);
@@ -85,17 +93,27 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     setFocusedArtistId(null);
   }, []);
 
+  // Données réelles importées : en persona artiste, le profil utilisateur
+  // remplace l'artiste de démo dans TOUT le dashboard.
+  const hasUserData = useSyncExternalStore(
+    subscribeUserData,
+    () => !!getUserData()?.active,
+    () => false,
+  );
+  const artistSelfId = hasUserData ? USER_ARTIST_ID : DEMO_ARTIST_ID;
+
   const value = useMemo<RoleContextValue>(
     () => ({
       persona,
       artistId:
-        persona === "artist" ? DEMO_ARTIST_ID : (focusedArtistId ?? DEMO_ARTIST_ID),
-      focusedArtistId: persona === "artist" ? DEMO_ARTIST_ID : focusedArtistId,
+        persona === "artist" ? artistSelfId : (focusedArtistId ?? DEMO_ARTIST_ID),
+      focusedArtistId: persona === "artist" ? artistSelfId : focusedArtistId,
       setPersona,
       setFocusedArtistId,
       isLabel: persona === "label",
+      hasUserData,
     }),
-    [persona, focusedArtistId, setPersona],
+    [persona, focusedArtistId, setPersona, artistSelfId, hasUserData],
   );
 
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;

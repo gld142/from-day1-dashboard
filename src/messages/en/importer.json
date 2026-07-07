@@ -1,0 +1,66 @@
+{
+  "title": "Import my data",
+  "subtitle": "Drop your distributor statement — the dashboard becomes yours, with your real numbers.",
+  "privacy": "100% local: your file never leaves your browser. No data is sent to any server.",
+  "dropzone": {
+    "title": "Drop your CSV statement here",
+    "hint": "or click to pick a file",
+    "formats": "DistroKid · TuneCore · Believe · generic CSV",
+    "parsing": "Reading your file…"
+  },
+  "errors": {
+    "EMPTY_FILE": "This file looks empty.",
+    "UNKNOWN_FORMAT": "Unrecognized format — we need at least an earnings or quantity column.",
+    "NO_DATA_ROWS": "No usable rows found in this file.",
+    "generic": "Couldn't read this file. Make sure it's a CSV export from your distributor."
+  },
+  "preview": {
+    "title": "Import preview",
+    "format": "Detected format",
+    "formatNames": {
+      "distrokid": "DistroKid",
+      "tunecore": "TuneCore",
+      "believe": "Believe",
+      "generic": "Generic CSV"
+    },
+    "period": "Period",
+    "rows": "{count} rows read",
+    "totalStreams": "Total streams",
+    "totalRevenue": "Total revenue",
+    "topTracks": "Your most streamed tracks",
+    "countries": "{count} territories detected",
+    "warnings": "{count} rows skipped (unrecognized date format)"
+  },
+  "config": {
+    "artistName": "Your artist name",
+    "artistNamePlaceholder": "E.g. Sky Lune",
+    "currency": "Statement currency: {currency}",
+    "eurRate": "Conversion rate to euro",
+    "eurRateHint": "1 {currency} = {rate} €"
+  },
+  "actions": {
+    "activate": "Activate my data",
+    "cancel": "Start over",
+    "goToPulse": "See my dashboard"
+  },
+  "active": {
+    "title": "Your data is live",
+    "description": "The whole dashboard now shows “{name}” — imported on {date} from {format}.",
+    "stats": "{months} months · {streams} streams · {revenue} in revenue",
+    "modules": "Modules without imported data (rights, touring, splits…) show an empty state until their integrations arrive.",
+    "reimport": "Import a new statement",
+    "deactivate": "Switch back to demo mode",
+    "delete": "Delete my data",
+    "deleteConfirm": "Your imported data will be erased from this browser. Continue?"
+  },
+  "success": {
+    "title": "Done — welcome home.",
+    "description": "Your Pulse, your revenue, your valuation: everything is computed from your real numbers."
+  },
+  "howto": {
+    "title": "Where to find your statement?",
+    "distrokid": "DistroKid → Bank → Download earnings data (CSV)",
+    "tunecore": "TuneCore → Revenue → Download sales report",
+    "believe": "Believe Backstage → Financial reports → CSV export"
+  }
+}

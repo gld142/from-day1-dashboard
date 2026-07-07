@@ -16,6 +16,7 @@ import {
   Coins,
   Crosshair,
   FileText,
+  FileUp,
   Fingerprint,
   FlaskConical,
   Gauge,
@@ -176,7 +177,15 @@ export const NAV_SECTIONS: NavSection[] = [
   },
   {
     labelKey: "sections.account",
-    items: [{ href: "/settings", labelKey: "items.settings", icon: Settings }],
+    items: [
+      {
+        href: "/import",
+        labelKey: "items.importer",
+        icon: FileUp,
+        badgeKey: "new",
+      },
+      { href: "/settings", labelKey: "items.settings", icon: Settings },
+    ],
   },
 ];
 

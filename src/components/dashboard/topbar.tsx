@@ -43,14 +43,20 @@ export function Topbar() {
   const t = useTranslations("common");
   const locale = useLocale();
   const { theme, setTheme } = useTheme();
-  const { persona, setPersona, focusedArtistId, setFocusedArtistId, isLabel } =
-    useRole();
+  const {
+    persona,
+    artistId,
+    setPersona,
+    focusedArtistId,
+    setFocusedArtistId,
+    isLabel,
+  } = useRole();
   const [mounted, setMounted] = useState(false);
   const [, startTransition] = useTransition();
   useEffect(() => setMounted(true), []);
 
   const focused = focusedArtistId ? getArtist(focusedArtistId) : null;
-  const artist = getArtist("sky-lune");
+  const artist = getArtist(persona === "artist" ? artistId : "sky-lune");
 
   return (
     <header className="hairline-b sticky top-0 z-30 flex h-14 items-center gap-2 bg-background/80 px-4 backdrop-blur-md">
