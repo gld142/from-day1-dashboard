@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -34,6 +36,7 @@
     "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4",
     "@types/d3-scale": "^4.0.9",
     "@types/node": "^20",
@@ -44,6 +47,7 @@
     "eslint-config-next": "16.2.10",
     "eslint-plugin-i18next": "^6.1.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
