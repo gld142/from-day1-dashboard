@@ -1,1 +1,64 @@
-{}
+{
+  "title": "Fractional ownership",
+  "subtitle": "Sell a fraction of your future royalties to fund your career — without giving up your masters.",
+  "subtitleLabel": "Simulate a fractional raise for every artist on the roster — no masters transferred.",
+  "banner": {
+    "title": "Preview — Bolero / Anote partnership being integrated",
+    "body": "The investment infrastructure is coming. The simulator below already runs on your real valuation data."
+  },
+  "params": {
+    "title": "Parameters",
+    "subtitle": "Adjust the share sold and the duration",
+    "artist": "Artist",
+    "share": "Royalty share sold",
+    "duration": "Duration",
+    "years": "{count} years",
+    "basis": "Basis: NPS {nps} × {pct}% × {multiple}× multiple adjusted over {years} years"
+  },
+  "results": {
+    "raised": "Estimated amount raised",
+    "investorPerYear": "Paid to investors / year",
+    "artistKeeps": "Share kept / year",
+    "breakEven": "Investor break-even",
+    "yearsSuffix": " yrs"
+  },
+  "chart": {
+    "title": "Cash flows over the term",
+    "subtitle": "Catalog revenue split between the artist and investors",
+    "artistShare": "Artist share",
+    "investorShare": "Investor share",
+    "atYear": "Year {years}",
+    "breakEvenMark": "The dashed line marks the investor break-even"
+  },
+  "useCases": {
+    "title": "Why raise?",
+    "subtitle": "Three concrete use cases, computed live on the valuation",
+    "clip": "Fund a music video",
+    "clipDesc": "Direction, shoot, post-production",
+    "tour": "Fund a tour",
+    "tourDesc": "Booking, production, transport",
+    "album": "Fund an album",
+    "albumDesc": "Studio, mix, mastering, features",
+    "cede": "to sell over {years} years",
+    "overCap": "exceeds the 25% cap"
+  },
+  "investor": {
+    "title": "Investor view",
+    "preview": "Preview",
+    "subtitle": "What an investor will see in their portfolio",
+    "held": "Share held",
+    "invested": "Invested",
+    "roi": "Simulated ROI over the term",
+    "nextPayout": "Next payout"
+  },
+  "portfolio": {
+    "title": "Theoretical raisable across the portfolio",
+    "subtitle": "25% royalty cap per artist, {years}-year term",
+    "total": "Total raisable",
+    "perArtist": "Max amount per artist"
+  },
+  "disclaimer": {
+    "title": "Regulatory notice",
+    "body": "Demo preview: no real investment offer is being made. Any future offering will be operated through a licensed provider (CIP / PSFP equivalent) under AMF supervision. Investing in royalties carries a risk of capital loss and illiquidity; simulated performance is not indicative of future results."
+  }
+}

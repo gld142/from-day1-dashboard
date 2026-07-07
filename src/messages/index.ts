@@ -131,7 +131,7 @@ const MESSAGES = {
     algoposition: enAlgoPosition,
     discovery: enDiscovery,
     sync: enSync,
-    enFractional: enFractional,
+    fractional: enFractional,
     comparatif: enComparatif,
     onboardings: enOnboardings,
     brief: enBrief,

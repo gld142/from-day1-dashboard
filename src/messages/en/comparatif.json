@@ -1,1 +1,109 @@
-{}
+{
+  "title": "vs Competitors",
+  "subtitle": "Every competitor does part of the job. From Day 1 is the only one that brings it all together — natively, in France.",
+  "hero": {
+    "kicker": "The thesis",
+    "title": "Nobody combines all 7",
+    "description": "Seven Tier S capabilities. Each one exists somewhere at a competitor — no platform in the world combines them all.",
+    "features": {
+      "frRights": {
+        "title": "Native French rights",
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE — tracked and reconciled automatically"
+      },
+      "urssaf": {
+        "title": "Auto URSSAF",
+        "desc": "Social filings generated and pre-filled, zero quarterly anxiety"
+      },
+      "audit": {
+        "title": "AI royalty audit",
+        "desc": "Gaps between expected and paid detected, claim letter generated"
+      },
+      "copilot": {
+        "title": "AI Copilot",
+        "desc": "Answers in plain language on your data — not silent dashboards"
+      },
+      "fractional": {
+        "title": "Fractional",
+        "desc": "Fractional investment in catalogs, the V3 rail"
+      },
+      "index": {
+        "title": "Public Day 1 Index",
+        "desc": "0-100 career health score, comparable and shareable"
+      },
+      "valuation": {
+        "title": "Valuation + simulator",
+        "desc": "NPS × multiple, transparent range, deal simulator"
+      }
+    }
+  },
+  "table": {
+    "title": "The comparison table",
+    "subtitle": "12 capabilities × 6 platforms. Only one column is full.",
+    "capability": "Capability",
+    "legend": {
+      "yes": "Included",
+      "partial": "Partial",
+      "no": "Missing"
+    },
+    "products": {
+      "fd1": "From Day 1",
+      "chartmetric": "Chartmetric",
+      "soundcharts": "Soundcharts",
+      "stem": "Stem",
+      "songtrust": "Songtrust",
+      "artists247": "24/7 Artists"
+    },
+    "productDesc": {
+      "fd1": "The career OS",
+      "chartmetric": "Analytics only",
+      "soundcharts": "Analytics only",
+      "stem": "Splits + distribution",
+      "songtrust": "Publishing admin",
+      "artists247": "Education + light tools"
+    },
+    "rows": {
+      "analytics": "Real-time multi-DSP analytics",
+      "revenue": "Consolidated revenue (7 sources)",
+      "frRights": "Native French rights (SACEM, ADAMI, SPEDIDAM, SPRE)",
+      "urssaf": "URSSAF filings",
+      "splits": "Splits + e-signatures",
+      "audit": "AI royalty audit",
+      "valuation": "Catalog valuation",
+      "ai": "Conversational AI",
+      "labelView": "Label / roster view",
+      "french": "Native French language",
+      "fractional": "Fractional investment"
+    },
+    "price": "Entry price",
+    "prices": {
+      "fd1": "{low} – {high} /month",
+      "chartmetric": "from $5/month",
+      "soundcharts": "from $10/month",
+      "stem": "distribution commission",
+      "songtrust": "$100 + 15% commission",
+      "artists247": "$10 – 50/month"
+    }
+  },
+  "window": {
+    "title": "The market window",
+    "cards": {
+      "market": {
+        "title": "33% of the market",
+        "desc": "A third of recorded music revenue comes from independent artists. In France, no consolidated tool serves them in their language or under their law."
+      },
+      "barrier": {
+        "title": "18 months of R&D",
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE: the French regulatory barrier costs any US player at least 18 months of R&D to enter. Ours is already built."
+      },
+      "risk": {
+        "title": "The real risk",
+        "desc": "A giant — Spotify, Believe, Chartmetric — extends its offer toward consolidation. The only answer: speed of execution, and France-first depth."
+      }
+    }
+  },
+  "pitch": {
+    "kicker": "90-second pitch",
+    "quote": "An independent artist in France juggles six tools without ever seeing their career whole: stats on one side, an expense spreadsheet on the other, SACEM paying 18 months late, URSSAF as a quarterly panic. From Day 1 brings it all together — multi-DSP analytics, consolidated revenue, reconciled French rights, AI royalty audit, real-time catalog valuation. Chartmetric does stats. Stem does splits. Songtrust does publishing. Nobody does all seven, and nobody will do them in France within 18 months. We are already there. From {low} to {high} per month, from bedroom producer to indie label.",
+    "author": "The investor pitch — From Day 1"
+  }
+}

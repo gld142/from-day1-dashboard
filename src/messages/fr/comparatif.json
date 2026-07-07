@@ -1,1 +1,109 @@
-{}
+{
+  "title": "vs Concurrents",
+  "subtitle": "Chaque concurrent fait une partie du travail. From Day 1 est le seul à tout réunir — nativement, en France.",
+  "hero": {
+    "kicker": "La thèse",
+    "title": "Personne ne réunit les 7",
+    "description": "Sept capacités Tier S. Chacune existe quelque part chez un concurrent — aucune plateforme au monde ne les réunit toutes.",
+    "features": {
+      "frRights": {
+        "title": "Droits FR natifs",
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE — suivis et réconciliés automatiquement"
+      },
+      "urssaf": {
+        "title": "URSSAF auto",
+        "desc": "Déclarations sociales générées et pré-remplies, zéro angoisse trimestrielle"
+      },
+      "audit": {
+        "title": "Audit royalties IA",
+        "desc": "Écarts entre attendu et versé détectés, courrier de réclamation généré"
+      },
+      "copilot": {
+        "title": "Copilot IA",
+        "desc": "Des réponses en français sur tes données — pas des dashboards muets"
+      },
+      "fractional": {
+        "title": "Fractional",
+        "desc": "Investissement fractionné dans les catalogues, le rail V3"
+      },
+      "index": {
+        "title": "Day 1 Index public",
+        "desc": "Score de santé carrière 0-100, comparable et partageable"
+      },
+      "valuation": {
+        "title": "Valorisation + simulateur",
+        "desc": "NPS × multiple, fourchette transparente, simulateur de deal"
+      }
+    }
+  },
+  "table": {
+    "title": "Le tableau comparatif",
+    "subtitle": "12 capacités × 6 plateformes. Une seule colonne est pleine.",
+    "capability": "Capacité",
+    "legend": {
+      "yes": "Inclus",
+      "partial": "Partiel",
+      "no": "Absent"
+    },
+    "products": {
+      "fd1": "From Day 1",
+      "chartmetric": "Chartmetric",
+      "soundcharts": "Soundcharts",
+      "stem": "Stem",
+      "songtrust": "Songtrust",
+      "artists247": "24/7 Artists"
+    },
+    "productDesc": {
+      "fd1": "L'OS de carrière",
+      "chartmetric": "Analytics seulement",
+      "soundcharts": "Analytics seulement",
+      "stem": "Splits + distribution",
+      "songtrust": "Admin publishing",
+      "artists247": "Éducation + outils légers"
+    },
+    "rows": {
+      "analytics": "Analytics temps réel multi-DSP",
+      "revenue": "Revenus consolidés (7 sources)",
+      "frRights": "Droits FR natifs (SACEM, ADAMI, SPEDIDAM, SPRE)",
+      "urssaf": "Déclarations URSSAF",
+      "splits": "Splits + signatures électroniques",
+      "audit": "Audit royalties IA",
+      "valuation": "Valorisation de catalogue",
+      "ai": "IA conversationnelle",
+      "labelView": "Vue label / roster",
+      "french": "Langue FR native",
+      "fractional": "Investissement fractionné"
+    },
+    "price": "Prix d'entrée",
+    "prices": {
+      "fd1": "{low} – {high} /mois",
+      "chartmetric": "dès 5 $/mois",
+      "soundcharts": "dès 10 $/mois",
+      "stem": "commission sur distribution",
+      "songtrust": "100 $ + 15 % de commission",
+      "artists247": "10 – 50 $/mois"
+    }
+  },
+  "window": {
+    "title": "La fenêtre de marché",
+    "cards": {
+      "market": {
+        "title": "33 % du marché",
+        "desc": "Un tiers des revenus de la musique enregistrée vient d'artistes indépendants. En France, aucun outil consolidé ne les sert dans leur langue ni dans leur droit."
+      },
+      "barrier": {
+        "title": "18 mois de R&D",
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE : la barrière réglementaire française coûte au moins 18 mois de R&D à n'importe quel acteur US qui voudrait entrer. Nous, c'est déjà construit."
+      },
+      "risk": {
+        "title": "Le vrai risque",
+        "desc": "Un géant — Spotify, Believe, Chartmetric — étend son offre vers le consolidé. La seule réponse : la vitesse d'exécution, et la profondeur France d'abord."
+      }
+    }
+  },
+  "pitch": {
+    "kicker": "Pitch 90 secondes",
+    "quote": "Un artiste indépendant en France jongle entre six outils sans jamais voir sa carrière en entier : les stats d'un côté, un Excel de dépenses de l'autre, la SACEM qui verse avec 18 mois de retard, l'URSSAF en angoisse trimestrielle. From Day 1 réunit tout — analytics multi-DSP, revenus consolidés, droits français réconciliés, audit IA des royalties, valorisation de catalogue en temps réel. Chartmetric fait les stats. Stem fait les splits. Songtrust fait l'édition. Personne ne fait les sept, et personne ne les fera en France avant 18 mois. Nous, on est déjà là. De {low} à {high} par mois, du bedroom producer au label indé.",
+    "author": "Le pitch investisseur — From Day 1"
+  }
+}

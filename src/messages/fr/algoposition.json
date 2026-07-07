@@ -1,1 +1,80 @@
-{}
+{
+  "title": "Position algorithmique",
+  "subtitle": "Radiographie de ta place dans l'algorithme Spotify : d'où viennent tes streams de recommandation, et comment en gagner plus.",
+  "subtitleLabel": "Santé algorithmique du roster : qui l'algorithme pousse, qui il commence à oublier.",
+  "kpis": {
+    "algoShare": "Part algorithmique des streams",
+    "healthScore": "Score de santé algo",
+    "of100": "sur 100",
+    "releaseRadar": "Streams Release Radar · 28 j",
+    "radio": "Streams Radio & Autoplay · 28 j"
+  },
+  "sources": {
+    "title": "D'où vient ta part algorithmique",
+    "description": "L'algorithme génère {share} % de tes streams, répartis sur 5 surfaces de recommandation. Chacune se travaille différemment.",
+    "discoverWeekly": {
+      "name": "Discover Weekly",
+      "hint": "Playlist personnalisée du lundi, pour les auditeurs qui ne te connaissent pas encore — un save rate élevé sur tes titres récents en augmente la portée."
+    },
+    "releaseRadar": {
+      "name": "Release Radar",
+      "hint": "Tes nouveautés poussées à tes followers le vendredi — chaque abonné Spotify gagné avant la sortie élargit directement cette audience."
+    },
+    "radio": {
+      "name": "Radio",
+      "hint": "Stations générées à partir d'un titre ou artiste proche — se déclenche quand ton save rate dépasse durablement ~30 %."
+    },
+    "autoplay": {
+      "name": "Autoplay",
+      "hint": "Lecture automatique en fin de playlist ou d'album — un faible skip rate maintient tes titres dans ces files d'attente."
+    },
+    "dailyMix": {
+      "name": "Daily Mix",
+      "hint": "Mixes quotidiens de tes auditeurs réguliers — se nourrit de la ré-écoute : plus tes fans reviennent, plus tu y apparais."
+    }
+  },
+  "mix": {
+    "title": "Évolution des sources · 90 jours",
+    "description": "Part des streams venant de l'algorithme, des playlists éditoriales et de l'écoute organique (recherche, bibliothèque, profil).",
+    "algorithmic": "Algorithmique",
+    "editorial": "Éditorial",
+    "organic": "Organique"
+  },
+  "signals": {
+    "title": "Signaux",
+    "rrKicker": "Release Radar",
+    "rrBody": "Ta part Release Radar a bondi de +{pct} % dans les 28 jours suivant la sortie de « {title} ». Capitalise avec un single dans les 8 semaines.",
+    "saveKicker": "Save rate",
+    "saveAbove": "Ton save rate de {rate} % dépasse le seuil de ~{threshold} % qui déclenche la Radio : tes titres tournent désormais en stations automatiques.",
+    "saveBelow": "Ton save rate de {rate} % est à {missing} pt du seuil de ~30 % qui déclenche la Radio. Un appel au save en fin de clip ou de story peut suffire.",
+    "dwKicker": "Discover Weekly",
+    "dwAbove": "Discover Weekly pèse {share} % de tes streams, soit {diff} pt au-dessus de la moyenne du roster : l'algo te teste auprès de nouvelles audiences.",
+    "dwBelow": "Discover Weekly ne pèse que {share} % de tes streams ({diff} pt sous la moyenne du roster). Des pré-saves et du pitch playlist avant sortie relancent ce canal.",
+    "completionKicker": "Écoute complète",
+    "completionGood": "{rate} % de tes écoutes vont au bout du titre : un signal de qualité fort que l'algo récompense en élargissant tes recommandations.",
+    "completionLow": "Seulement {rate} % de tes écoutes vont au bout du titre. Des intros plus courtes et un hook avant 30 secondes améliorent ce signal."
+  },
+  "perception": {
+    "title": "Comment l'algo te voit",
+    "description": "Les trois signaux d'engagement que Spotify mesure sur chaque écoute — ce sont eux qui décident si l'algo te pousse.",
+    "saveRate": "Save rate",
+    "saveRateHint": "Part des auditeurs qui ajoutent le titre à leur bibliothèque — au-dessus de ~{threshold} %, la Radio se déclenche.",
+    "skipRate": "Skip rate",
+    "skipRateHint": "Part des écoutes zappées avant 30 secondes — rester sous ~{threshold} % protège ta présence en Autoplay.",
+    "completion": "Écoute complète",
+    "completionHint": "Part des écoutes menées au bout — au-dessus de ~{threshold} %, le titre est « retenu » et recommandé plus largement.",
+    "note": "Valeurs estimées à partir de tes streams de démo. En production, ces signaux viendront de Spotify for Artists — les seuils indiqués sont des ordres de grandeur observés, pas des règles officielles."
+  },
+  "roster": {
+    "title": "Santé algo du roster",
+    "description": "Score de santé, part algorithmique et tendance 28 j par artiste — clique pour ouvrir la radiographie complète.",
+    "avgShare": "Part algo moyenne",
+    "avgScore": "Score santé moyen",
+    "bestScore": "Meilleur score",
+    "artist": "Artiste",
+    "score": "Score",
+    "share": "Part algo",
+    "rr": "Release Radar 28 j",
+    "trend": "Tendance"
+  }
+}

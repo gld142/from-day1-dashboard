@@ -1,1 +1,66 @@
-{}
+{
+  "title": "Sync & Licensing",
+  "subtitle": "Votre catalogue exposé aux superviseurs — pub, film, série, jeu vidéo.",
+  "subtitleLabel": "Le catalogue du roster exposé aux superviseurs — pub, film, série, jeu vidéo.",
+  "filterAll": "Tous les artistes",
+  "kpis": {
+    "readyTracks": "Titres prêts pour le sync",
+    "readyHint": "sur {total} titres tagués",
+    "briefs": "Briefs reçus",
+    "briefsHint": "30 derniers jours",
+    "proposals": "Propositions en cours",
+    "proposalsHint": "en attente de retour superviseur",
+    "syncRevenue": "Revenus sync 12 mois",
+    "syncRevenueHint": "vs 12 mois précédents"
+  },
+  "briefs": {
+    "title": "Briefs ouverts",
+    "subtitle": "Opportunités reçues des superviseurs, classées par affinité avec le catalogue",
+    "budget": "Budget",
+    "deadline": "Deadline {date}",
+    "mood": "Mood recherché",
+    "match": "Affinité",
+    "bestTracks": "Titres à proposer",
+    "bestArtist": "Artiste le mieux placé",
+    "propose": "Proposer",
+    "proposed": "Proposé",
+    "types": {
+      "tv": "Pub TV",
+      "series": "Série",
+      "game": "Jeu vidéo",
+      "film": "Film indé"
+    }
+  },
+  "moods": {
+    "melancholic": "Mélancolique",
+    "energetic": "Énergique",
+    "nocturnal": "Nocturne",
+    "cinematic": "Cinématique",
+    "dreamy": "Onirique",
+    "dark": "Sombre",
+    "uplifting": "Solaire",
+    "raw": "Brut"
+  },
+  "catalog": {
+    "title": "Catalogue tagué",
+    "subtitle": "Tags mood dérivés du catalogue — un sync exige des splits signés",
+    "bpm": "BPM",
+    "splitsOk": "Splits signés",
+    "splitsWarning": "Splits incomplets",
+    "more": "+ {count} autres titres"
+  },
+  "pipeline": {
+    "title": "Pipeline sync",
+    "subtitle": "Du brief reçu à la signature",
+    "received": "Brief reçu",
+    "proposed": "Proposé",
+    "negotiation": "Négo",
+    "signed": "Signé"
+  },
+  "commission": {
+    "title": "Commission transparente",
+    "rate": "15–20 %",
+    "rateLabel": "sur les deals conclus",
+    "body": "From Day 1 prend 15 à 20 % uniquement sur les deals sync conclus — rien en amont, rien sur vos autres revenus. Les splits signés sont appliqués automatiquement au versement."
+  }
+}

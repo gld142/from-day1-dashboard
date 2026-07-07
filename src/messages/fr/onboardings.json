@@ -1,1 +1,220 @@
-{}
+{
+  "title": "Onboardings partenaires",
+  "subtitle": "Le pipeline qui fait de From Day 1 un standard de place — pas juste un outil de plus.",
+  "kpis": {
+    "targeted": "Partenaires ciblés",
+    "targetedHint": "7 canaux, un owner chacun",
+    "inDiscussion": "En discussion",
+    "inDiscussionHint": "Conversations actives ce mois-ci",
+    "pilots": "Pilotes visés M+3",
+    "pilotsHint": "Believe 500 artistes + MaMA",
+    "goal": "Objectif M18",
+    "goalHint": "des inscriptions via partenaires"
+  },
+  "board": {
+    "title": "Pipeline",
+    "subtitle": "Change le statut d'un partenaire pour le faire avancer. Clique sur une card pour le détail complet.",
+    "columns": {
+      "toContact": "À contacter",
+      "discussion": "En discussion",
+      "pilot": "Pilote",
+      "signed": "Signé"
+    },
+    "empty": "Personne ici pour l'instant.",
+    "brings": "Ils apportent",
+    "weBring": "On apporte",
+    "nextAction": "Prochaine action",
+    "owner": "Owner",
+    "statusLabel": "Statut",
+    "priority": "Priorité absolue",
+    "details": "Voir le détail"
+  },
+  "dialog": {
+    "pitchTitle": "Pitch 90 secondes",
+    "metricsTitle": "Métriques de succès",
+    "risksTitle": "Risques & mitigations",
+    "mitigation": "Mitigation",
+    "m3": "M+3",
+    "m9": "M+9",
+    "m18": "M+18"
+  },
+  "method": {
+    "title": "La méthode",
+    "subtitle": "Cinq principes non négociables, appliqués à chaque partenariat.",
+    "principles": {
+      "activable": {
+        "title": "Activable en moins de 6 mois",
+        "desc": "Si le premier artiste onboardé arrive après M+6, le deal ne vaut pas l'énergie."
+      },
+      "owner": {
+        "title": "Un owner nommé",
+        "desc": "Une personne, un partenaire. Pas de responsabilité diluée, pas de deal orphelin."
+      },
+      "metrics": {
+        "title": "Métriques claires",
+        "desc": "Chaque partenariat a ses cibles M+3 / M+9 / M+18 écrites avant la signature."
+      },
+      "pilot": {
+        "title": "Pilote d'abord",
+        "desc": "On prouve la valeur sur un périmètre réduit avant de généraliser. Jamais l'inverse."
+      },
+      "exclusivity": {
+        "title": "Exclusivité a posteriori",
+        "desc": "L'exclusivité se gagne avec des résultats — elle ne se donne jamais à la signature."
+      }
+    }
+  },
+  "partners": {
+    "believe": {
+      "name": "Believe",
+      "tag": "Distribution",
+      "brings": "Des milliers d'artistes distribués, crédibilité marché immédiate",
+      "weBring": "Couche analytics + droits FR en marque blanche, rev-share 25 %",
+      "nextAction": "Warm intro Ismaël Kané — cadrer le pilote 500 artistes",
+      "pitch": "Believe distribue, From Day 1 fait rester. Leur churn artistes vient du manque de visibilité consolidée : on branche notre couche analytics + droits FR sur leur portail, en marque blanche, rev-share 25 %. Pilote sur 500 artistes de leur roster FR, activable en 90 jours via warm intro Ismaël Kané. Believe gagne de la rétention, on gagne le canal de distribution le plus puissant de France.",
+      "m3": "Pilote signé, 500 artistes du roster FR onboardés",
+      "m9": "Taux d'activation > 60 %, churn Believe en baisse mesurable",
+      "m18": "Extension à tout le roster FR, co-marketing officiel",
+      "risks": {
+        "r1": {
+          "risk": "Believe internalise et construit sa propre couche",
+          "mitigation": "Cycle produit long chez eux — verrouiller un pilote exclusif 12 mois avant leur prochain cycle budgétaire"
+        },
+        "r2": {
+          "risk": "Négociation rev-share qui traîne 6 mois+",
+          "mitigation": "Proposer un pilote gratuit borné à 90 jours, la négo commence après la preuve"
+        },
+        "r3": {
+          "risk": "Dépendance excessive à un seul canal",
+          "mitigation": "Plafonner Believe à 40 % des inscriptions partenaires, diversifier ADAMI + écoles en parallèle"
+        }
+      }
+    },
+    "adami": {
+      "name": "ADAMI",
+      "tag": "Organisme de gestion",
+      "brings": "50 000 membres artistes-interprètes, légitimité institutionnelle",
+      "weBring": "Traduction IA des relevés, portail membre modernisé",
+      "nextAction": "RDV direction numérique — démo traduction de relevés",
+      "pitch": "Le portail membre de l'ADAMI vieillit et ses relevés restent illisibles pour la majorité des 50 000 membres. On leur offre la traduction IA des relevés en langage clair, intégrée à leur espace membre. L'ADAMI modernise son service sans R&D, on gagne l'accès au plus grand vivier d'artistes-interprètes de France.",
+      "m3": "Démo validée par la direction numérique, pilote sur 1 000 membres",
+      "m9": "Traduction de relevés en production dans l'espace membre",
+      "m18": "Offre From Day 1 co-brandée proposée à tous les membres",
+      "risks": {
+        "r1": {
+          "risk": "Cycle de décision institutionnel très lent",
+          "mitigation": "Sponsor interne à la direction numérique + pilote sans engagement juridique"
+        },
+        "r2": {
+          "risk": "Sensibilité données membres (RGPD)",
+          "mitigation": "Traitement en France, DPA dès le pilote, aucune donnée revendue"
+        }
+      }
+    },
+    "sacem": {
+      "name": "SACEM",
+      "tag": "Organisme de gestion",
+      "brings": "Crédibilité maximale, données droits d'auteur à la source",
+      "weBring": "Interface moderne de suivi pour leurs sociétaires",
+      "nextAction": "Cartographier les contacts innovation — viser le programme partenaires",
+      "pitch": "La SACEM est le boss final : personne ne pitch les droits d'auteur en France sans elle. On ne cherche pas un deal commercial à court terme mais une place dans leur programme innovation — être l'interface moderne que leurs sociétaires réclament. Chaque trimestre de présence institutionnelle augmente la barrière pour un entrant US.",
+      "m3": "Contact qualifié au sein du programme innovation",
+      "m9": "POC de suivi sociétaire présenté en interne",
+      "m18": "Partenariat institutionnel ou API sociétaire pilote",
+      "risks": {
+        "r1": {
+          "risk": "Inertie institutionnelle — horizon 18-24 mois",
+          "mitigation": "Ne rien construire de dépendant de la SACEM avant signature, la traiter comme un bonus"
+        },
+        "r2": {
+          "risk": "Perception de concurrence avec leurs propres outils",
+          "mitigation": "Se positionner en complément sociétaire, jamais en remplacement de leurs systèmes"
+        }
+      }
+    },
+    "bolero": {
+      "name": "Bolero / Anote",
+      "tag": "Fractional — rail V3",
+      "brings": "Infrastructure d'investissement fractionné dans les catalogues",
+      "weBring": "Le flux d'artistes valorisés, données de valorisation propres",
+      "nextAction": "Call exploratoire — API de listing des catalogues",
+      "pitch": "Bolero et Anote ont construit le rail de l'investissement fractionné en musique — mais leur goulot, c'est le sourcing de catalogues valorisés proprement. Nous, on a la valorisation NPS × multiple en temps réel sur chaque artiste. On branche notre flux sur leur rail : eux gagnent du deal flow qualifié, nous on active la V3 fractional sans construire l'infra réglementée.",
+      "m3": "Call exploratoire fait, périmètre API défini",
+      "m9": "3 catalogues du roster listés en test",
+      "m18": "Rail fractional intégré dans le produit V3",
+      "risks": {
+        "r1": {
+          "risk": "Cadre réglementaire AMF encore mouvant",
+          "mitigation": "Laisser le risque réglementaire chez le partenaire régulé, rester fournisseur de données"
+        },
+        "r2": {
+          "risk": "Volume de deals trop faible pour les intéresser",
+          "mitigation": "Arriver avec 10 catalogues pré-valorisés et consentis dès le premier call"
+        }
+      }
+    },
+    "qonto": {
+      "name": "Qonto",
+      "tag": "Fintech",
+      "brings": "Compte pro intégré, réseau de 500 000 entreprises clientes",
+      "weBring": "Vertical musique clé en main pour leur marketplace",
+      "nextAction": "Dossier marketplace partenaires + contact BD",
+      "pitch": "Chaque artiste qui se structure ouvre un compte pro — et Qonto veut des verticales métier pour se différencier. On devient leur vertical musique : compte pro intégré dans From Day 1, onboarding financier des artistes chez eux. Eux gagnent un segment créatif en croissance, nos artistes gagnent un compte pro pensé pour leurs flux de royalties.",
+      "m3": "Listing sur la marketplace partenaires Qonto",
+      "m9": "Intégration compte pro dans l'onboarding From Day 1",
+      "m18": "500 comptes artistes ouverts via le partenariat",
+      "risks": {
+        "r1": {
+          "risk": "Partenariat marketing sans intégration profonde",
+          "mitigation": "Exiger l'accès API dès le pilote, pas juste un logo croisé"
+        },
+        "r2": {
+          "risk": "Concurrence Shine / Revolut sur le même segment",
+          "mitigation": "Rester non-exclusif tant que l'intégration n'est pas profonde"
+        }
+      }
+    },
+    "mama": {
+      "name": "MaMA Festival",
+      "tag": "Événement",
+      "brings": "6 000 pros et artistes émergents réunis à Paris chaque octobre",
+      "weBring": "Dashboard officiel du festival, onboarding sur place",
+      "nextAction": "Confirmer le stand + atelier « lis tes relevés » édition octobre",
+      "pitch": "Le MaMA, c'est trois jours où toute la musique émergente française est au même endroit. On y est partenaire data : atelier « apprends à lire tes relevés », onboarding sur stand, Day 1 Index offert à chaque artiste programmé. Coût maîtrisé, récolte directe : des centaines d'artistes qualifiés qui repartent avec leur dashboard déjà rempli.",
+      "m3": "Stand + atelier confirmés pour l'édition d'octobre",
+      "m9": "300 artistes onboardés pendant le festival",
+      "m18": "Partenariat data officiel reconduit, extension aux Trans Musicales",
+      "risks": {
+        "r1": {
+          "risk": "Pic d'inscriptions sans rétention après l'événement",
+          "mitigation": "Parcours d'activation J+7 et J+30 dédié à la cohorte festival"
+        },
+        "r2": {
+          "risk": "Coût du stand disproportionné au volume",
+          "mitigation": "Négocier le partenariat data en échange de visibilité plutôt qu'en cash"
+        }
+      }
+    },
+    "schools": {
+      "name": "Écoles de musique",
+      "tag": "Éducation — CFA / ICART",
+      "brings": "Des promotions entières de futurs professionnels chaque année",
+      "weBring": "Licences éducation + module « gérer sa carrière » clé en main",
+      "nextAction": "Proposer le module carrière aux responsables pédagogiques CFA",
+      "pitch": "Chaque promo de CFA ou d'ICART, c'est une cohorte d'artistes et de managers qui prendront leurs habitudes outils dans les 24 prochains mois. On équipe les écoles en licences éducation quasi gratuites avec un module « gérer sa carrière » prêt à enseigner. Les étudiants apprennent le métier sur From Day 1 — et le gardent en sortant.",
+      "m3": "2 écoles pilotes équipées, module carrière testé en cours",
+      "m9": "5 écoles actives, premiers diplômés convertis en payant",
+      "m18": "Réseau de 15 écoles, pipeline annuel d'inscriptions récurrent",
+      "risks": {
+        "r1": {
+          "risk": "Cycle de vente calé sur l'année scolaire",
+          "mitigation": "Signer avant juin pour une rentrée en septembre, sinon viser janvier"
+        },
+        "r2": {
+          "risk": "Conversion faible des licences gratuites vers le payant",
+          "mitigation": "Licence limitée à la durée des études + offre jeune diplômé à la sortie"
+        }
+      }
+    }
+  }
+}

@@ -1,1 +1,80 @@
-{}
+{
+  "title": "Algorithmic position",
+  "subtitle": "An X-ray of your place inside the Spotify algorithm: where your recommendation streams come from, and how to earn more.",
+  "subtitleLabel": "Roster algorithmic health: who the algorithm is pushing, who it is starting to forget.",
+  "kpis": {
+    "algoShare": "Algorithmic share of streams",
+    "healthScore": "Algo health score",
+    "of100": "out of 100",
+    "releaseRadar": "Release Radar streams · 28d",
+    "radio": "Radio & Autoplay streams · 28d"
+  },
+  "sources": {
+    "title": "Where your algorithmic share comes from",
+    "description": "The algorithm drives {share}% of your streams, spread across 5 recommendation surfaces. Each one is grown differently.",
+    "discoverWeekly": {
+      "name": "Discover Weekly",
+      "hint": "Monday's personalized playlist, aimed at listeners who don't know you yet — a high save rate on your recent tracks widens its reach."
+    },
+    "releaseRadar": {
+      "name": "Release Radar",
+      "hint": "Your new releases pushed to your followers every Friday — every Spotify follower gained before release day directly grows this audience."
+    },
+    "radio": {
+      "name": "Radio",
+      "hint": "Stations generated from a similar track or artist — it kicks in once your save rate stays above ~30% over time."
+    },
+    "autoplay": {
+      "name": "Autoplay",
+      "hint": "Automatic playback after a playlist or album ends — a low skip rate keeps your tracks in these queues."
+    },
+    "dailyMix": {
+      "name": "Daily Mix",
+      "hint": "Daily mixes of your regular listeners — fed by repeat listening: the more your fans come back, the more you appear."
+    }
+  },
+  "mix": {
+    "title": "Source evolution · 90 days",
+    "description": "Share of streams coming from the algorithm, editorial playlists and organic listening (search, library, profile).",
+    "algorithmic": "Algorithmic",
+    "editorial": "Editorial",
+    "organic": "Organic"
+  },
+  "signals": {
+    "title": "Signals",
+    "rrKicker": "Release Radar",
+    "rrBody": "Your Release Radar share jumped +{pct}% in the 28 days after “{title}” dropped. Capitalize with a single within 8 weeks.",
+    "saveKicker": "Save rate",
+    "saveAbove": "Your save rate of {rate}% is above the ~{threshold}% threshold that triggers Radio: your tracks now run in automatic stations.",
+    "saveBelow": "Your save rate of {rate}% is {missing} pt short of the ~30% threshold that triggers Radio. A save call-to-action at the end of a clip or story can be enough.",
+    "dwKicker": "Discover Weekly",
+    "dwAbove": "Discover Weekly drives {share}% of your streams, {diff} pt above the roster average: the algorithm is testing you with new audiences.",
+    "dwBelow": "Discover Weekly only drives {share}% of your streams ({diff} pt below the roster average). Pre-saves and playlist pitching before release revive this channel.",
+    "completionKicker": "Completion",
+    "completionGood": "{rate}% of your plays run to the end of the track: a strong quality signal the algorithm rewards by widening your recommendations.",
+    "completionLow": "Only {rate}% of your plays run to the end of the track. Shorter intros and a hook before the 30-second mark improve this signal."
+  },
+  "perception": {
+    "title": "How the algorithm sees you",
+    "description": "The three engagement signals Spotify measures on every play — they decide whether the algorithm pushes you.",
+    "saveRate": "Save rate",
+    "saveRateHint": "Share of listeners adding the track to their library — above ~{threshold}%, Radio kicks in.",
+    "skipRate": "Skip rate",
+    "skipRateHint": "Share of plays skipped before 30 seconds — staying under ~{threshold}% protects your Autoplay presence.",
+    "completion": "Completion",
+    "completionHint": "Share of plays running to the end — above ~{threshold}%, the track is “retained” and recommended more widely.",
+    "note": "Values estimated from your demo streams. In production these signals will come from Spotify for Artists — the thresholds shown are observed orders of magnitude, not official rules."
+  },
+  "roster": {
+    "title": "Roster algo health",
+    "description": "Health score, algorithmic share and 28-day trend per artist — click to open the full X-ray.",
+    "avgShare": "Average algo share",
+    "avgScore": "Average health score",
+    "bestScore": "Best score",
+    "artist": "Artist",
+    "score": "Score",
+    "share": "Algo share",
+    "rr": "Release Radar 28d",
+    "trend": "Trend"
+  }
+}

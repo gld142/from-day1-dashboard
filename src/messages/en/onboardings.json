@@ -1,1 +1,220 @@
-{}
+{
+  "title": "Partner onboardings",
+  "subtitle": "The pipeline that makes From Day 1 an industry standard — not just another tool.",
+  "kpis": {
+    "targeted": "Targeted partners",
+    "targetedHint": "7 channels, one owner each",
+    "inDiscussion": "In discussion",
+    "inDiscussionHint": "Active conversations this month",
+    "pilots": "Pilots targeted M+3",
+    "pilotsHint": "Believe 500 artists + MaMA",
+    "goal": "M18 goal",
+    "goalHint": "of signups via partners"
+  },
+  "board": {
+    "title": "Pipeline",
+    "subtitle": "Change a partner's status to move it forward. Click a card for the full detail.",
+    "columns": {
+      "toContact": "To contact",
+      "discussion": "In discussion",
+      "pilot": "Pilot",
+      "signed": "Signed"
+    },
+    "empty": "Nobody here yet.",
+    "brings": "They bring",
+    "weBring": "We bring",
+    "nextAction": "Next action",
+    "owner": "Owner",
+    "statusLabel": "Status",
+    "priority": "Top priority",
+    "details": "View details"
+  },
+  "dialog": {
+    "pitchTitle": "90-second pitch",
+    "metricsTitle": "Success metrics",
+    "risksTitle": "Risks & mitigations",
+    "mitigation": "Mitigation",
+    "m3": "M+3",
+    "m9": "M+9",
+    "m18": "M+18"
+  },
+  "method": {
+    "title": "The method",
+    "subtitle": "Five non-negotiable principles, applied to every partnership.",
+    "principles": {
+      "activable": {
+        "title": "Activable within 6 months",
+        "desc": "If the first onboarded artist arrives after M+6, the deal is not worth the energy."
+      },
+      "owner": {
+        "title": "One named owner",
+        "desc": "One person, one partner. No diluted responsibility, no orphaned deal."
+      },
+      "metrics": {
+        "title": "Clear metrics",
+        "desc": "Every partnership has its M+3 / M+9 / M+18 targets written before signing."
+      },
+      "pilot": {
+        "title": "Pilot first",
+        "desc": "Prove the value on a small scope before generalizing. Never the other way around."
+      },
+      "exclusivity": {
+        "title": "Exclusivity a posteriori",
+        "desc": "Exclusivity is earned with results — it is never granted at signature."
+      }
+    }
+  },
+  "partners": {
+    "believe": {
+      "name": "Believe",
+      "tag": "Distribution",
+      "brings": "Thousands of distributed artists, instant market credibility",
+      "weBring": "White-label analytics + French rights layer, 25% rev-share",
+      "nextAction": "Warm intro Ismaël Kané — scope the 500-artist pilot",
+      "pitch": "Believe distributes, From Day 1 makes artists stay. Their artist churn comes from the lack of consolidated visibility: we plug our analytics + French rights layer into their portal, white-label, 25% rev-share. Pilot on 500 artists from their French roster, activable in 90 days via warm intro Ismaël Kané. Believe gains retention, we gain the most powerful distribution channel in France.",
+      "m3": "Pilot signed, 500 artists from the French roster onboarded",
+      "m9": "Activation rate > 60%, measurable drop in Believe churn",
+      "m18": "Extension to the whole French roster, official co-marketing",
+      "risks": {
+        "r1": {
+          "risk": "Believe internalizes and builds its own layer",
+          "mitigation": "Long product cycles on their side — lock a 12-month exclusive pilot before their next budget cycle"
+        },
+        "r2": {
+          "risk": "Rev-share negotiation dragging 6+ months",
+          "mitigation": "Offer a free pilot capped at 90 days; negotiation starts after the proof"
+        },
+        "r3": {
+          "risk": "Over-dependence on a single channel",
+          "mitigation": "Cap Believe at 40% of partner signups, diversify ADAMI + schools in parallel"
+        }
+      }
+    },
+    "adami": {
+      "name": "ADAMI",
+      "tag": "Collecting society",
+      "brings": "50,000 performer members, institutional legitimacy",
+      "weBring": "AI translation of statements, modernized member portal",
+      "nextAction": "Meeting with digital directorate — statement translation demo",
+      "pitch": "ADAMI's member portal is aging and its statements remain unreadable for most of its 50,000 members. We offer AI translation of statements into plain language, embedded in their member area. ADAMI modernizes its service with zero R&D, we gain access to the largest pool of performers in France.",
+      "m3": "Demo validated by the digital directorate, pilot on 1,000 members",
+      "m9": "Statement translation live in the member area",
+      "m18": "Co-branded From Day 1 offer proposed to all members",
+      "risks": {
+        "r1": {
+          "risk": "Very slow institutional decision cycle",
+          "mitigation": "Internal sponsor in the digital directorate + pilot with no legal commitment"
+        },
+        "r2": {
+          "risk": "Member data sensitivity (GDPR)",
+          "mitigation": "Processing in France, DPA from the pilot onward, no data resold"
+        }
+      }
+    },
+    "sacem": {
+      "name": "SACEM",
+      "tag": "Collecting society",
+      "brings": "Maximum credibility, author rights data at the source",
+      "weBring": "A modern tracking interface for their members",
+      "nextAction": "Map innovation contacts — target the partner program",
+      "pitch": "SACEM is the final boss: nobody pitches author rights in France without them. We are not chasing a short-term commercial deal but a seat in their innovation program — being the modern interface their members are asking for. Every quarter of institutional presence raises the barrier for a US entrant.",
+      "m3": "Qualified contact inside the innovation program",
+      "m9": "Member-tracking POC presented internally",
+      "m18": "Institutional partnership or pilot member API",
+      "risks": {
+        "r1": {
+          "risk": "Institutional inertia — 18-24 month horizon",
+          "mitigation": "Build nothing that depends on SACEM before signature; treat it as a bonus"
+        },
+        "r2": {
+          "risk": "Perceived competition with their own tools",
+          "mitigation": "Position as a member companion, never as a replacement for their systems"
+        }
+      }
+    },
+    "bolero": {
+      "name": "Bolero / Anote",
+      "tag": "Fractional — V3 rail",
+      "brings": "Fractional catalog investment infrastructure",
+      "weBring": "A flow of properly valued artists, proprietary valuation data",
+      "nextAction": "Exploratory call — catalog listing API",
+      "pitch": "Bolero and Anote built the fractional investment rail for music — but their bottleneck is sourcing properly valued catalogs. We have real-time NPS × multiple valuation on every artist. We plug our flow into their rail: they gain qualified deal flow, we activate fractional V3 without building the regulated infrastructure.",
+      "m3": "Exploratory call done, API scope defined",
+      "m9": "3 roster catalogs listed in test",
+      "m18": "Fractional rail integrated in the V3 product",
+      "risks": {
+        "r1": {
+          "risk": "AMF regulatory framework still moving",
+          "mitigation": "Leave the regulatory risk with the regulated partner; stay a data provider"
+        },
+        "r2": {
+          "risk": "Deal volume too low to interest them",
+          "mitigation": "Arrive at the first call with 10 pre-valued, consenting catalogs"
+        }
+      }
+    },
+    "qonto": {
+      "name": "Qonto",
+      "tag": "Fintech",
+      "brings": "Embedded business account, 500,000 business customers",
+      "weBring": "A turnkey music vertical for their marketplace",
+      "nextAction": "Partner marketplace application + BD contact",
+      "pitch": "Every artist who incorporates opens a business account — and Qonto wants industry verticals to differentiate. We become their music vertical: business account embedded in From Day 1, financial onboarding of artists on their side. They gain a growing creative segment, our artists gain a business account built for royalty flows.",
+      "m3": "Listed on the Qonto partner marketplace",
+      "m9": "Business account integrated in the From Day 1 onboarding",
+      "m18": "500 artist accounts opened through the partnership",
+      "risks": {
+        "r1": {
+          "risk": "Marketing partnership without deep integration",
+          "mitigation": "Require API access from the pilot, not just a crossed logo"
+        },
+        "r2": {
+          "risk": "Shine / Revolut competing on the same segment",
+          "mitigation": "Stay non-exclusive until the integration is deep"
+        }
+      }
+    },
+    "mama": {
+      "name": "MaMA Festival",
+      "tag": "Event",
+      "brings": "6,000 pros and emerging artists gathered in Paris every October",
+      "weBring": "Official festival dashboard, on-site onboarding",
+      "nextAction": "Confirm booth + \"read your statements\" workshop for the October edition",
+      "pitch": "MaMA is three days when the entire French emerging music scene is in one place. We are its data partner: a \"learn to read your statements\" workshop, on-booth onboarding, a free Day 1 Index for every programmed artist. Controlled cost, direct harvest: hundreds of qualified artists leaving with their dashboard already filled.",
+      "m3": "Booth + workshop confirmed for the October edition",
+      "m9": "300 artists onboarded during the festival",
+      "m18": "Official data partnership renewed, extension to Trans Musicales",
+      "risks": {
+        "r1": {
+          "risk": "Signup spike without retention after the event",
+          "mitigation": "Dedicated D+7 and D+30 activation journey for the festival cohort"
+        },
+        "r2": {
+          "risk": "Booth cost disproportionate to volume",
+          "mitigation": "Negotiate the data partnership against visibility rather than cash"
+        }
+      }
+    },
+    "schools": {
+      "name": "Music schools",
+      "tag": "Education — CFA / ICART",
+      "brings": "Entire cohorts of future professionals every year",
+      "weBring": "Education licenses + turnkey \"manage your career\" module",
+      "nextAction": "Pitch the career module to CFA academic directors",
+      "pitch": "Every CFA or ICART cohort is a class of artists and managers who will form their tooling habits within 24 months. We equip schools with near-free education licenses and a ready-to-teach \"manage your career\" module. Students learn the business on From Day 1 — and keep it when they graduate.",
+      "m3": "2 pilot schools equipped, career module tested in class",
+      "m9": "5 active schools, first graduates converted to paid",
+      "m18": "Network of 15 schools, recurring annual signup pipeline",
+      "risks": {
+        "r1": {
+          "risk": "Sales cycle locked to the school year",
+          "mitigation": "Sign before June for a September start, otherwise aim for January"
+        },
+        "r2": {
+          "risk": "Low conversion from free licenses to paid",
+          "mitigation": "License limited to study duration + young graduate offer at exit"
+        }
+      }
+    }
+  }
+}

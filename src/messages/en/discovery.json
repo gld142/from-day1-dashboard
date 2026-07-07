@@ -1,1 +1,73 @@
-{}
+{
+  "title": "Discovery Lab",
+  "subtitle": "The potential of your unreleased tracks, measured before release — pick the right single without betting blind.",
+  "subtitleLabel": "The most promising unreleased tracks across the roster, scored by AI before any release.",
+  "kpis": {
+    "demos": "Demos analyzed",
+    "best": "Best Discovery Score",
+    "avg": "Average score",
+    "of100": "out of 100",
+    "firstWeek": "Estimated streams · first week",
+    "firstWeekHint": "if the best demo ships as a single"
+  },
+  "podium": {
+    "kicker": "Priority single",
+    "reason": "Its hook scores {hook}/100 and its TikTok viral potential reaches {tiktok}/100, with a playlist affinity of {playlist}/100: it is the strongest candidate for your next release.",
+    "estimate": "≈ {streams} estimated first-week streams as a single"
+  },
+  "scores": {
+    "tiktok": "TikTok viral potential",
+    "playlist": "Playlist affinity",
+    "hit": "Similarity to current hits",
+    "hook": "Hook strength"
+  },
+  "tiers": {
+    "priority": "Priority single",
+    "strong": "High potential",
+    "promising": "Promising",
+    "development": "Needs work"
+  },
+  "list": {
+    "title": "Your unreleased tracks",
+    "bpm": "BPM",
+    "analyzing": "Audio analysis in progress — score available in a few minutes.",
+    "analyzingBadge": "Analyzing…"
+  },
+  "compare": {
+    "title": "Demo comparison",
+    "description": "The 4 dimensions of the Discovery Score, side by side — spot each demo's strengths."
+  },
+  "method": {
+    "title": "How we score your demos",
+    "description": "The Discovery Score blends three families of signals — no black box, every sub-score is explainable.",
+    "audio": {
+      "title": "Audio tagging",
+      "description": "Signal analysis: energy, tempo, structure, hook placement and the sonic signature of each demo."
+    },
+    "market": {
+      "title": "Market trends",
+      "description": "Continuous comparison with the sounds rising on TikTok, in playlists and in the charts of your genre."
+    },
+    "history": {
+      "title": "Artist history",
+      "description": "Your past performance: what worked on your previous releases calibrates the prediction for your audience."
+    }
+  },
+  "upload": {
+    "cta": "Upload a demo",
+    "title": "Analyze a demo",
+    "description": "Drop an audio file: the AI scores it within minutes. Your demos stay private and never leave your workspace.",
+    "dropzone": "Drag your audio file here",
+    "formats": "WAV, MP3, AIFF · 50 MB max",
+    "nameLabel": "Demo title",
+    "namePlaceholder": "E.g. New intro",
+    "submit": "Start analysis",
+    "defaultName": "Untitled demo"
+  },
+  "rosterView": {
+    "title": "Best unreleased tracks in the roster",
+    "description": "Each artist's best demo, ranked by Discovery Score — everything you need to prioritize upcoming releases.",
+    "selectArtist": "Pick an artist",
+    "hint": "Click a row to open the artist's full lab."
+  }
+}

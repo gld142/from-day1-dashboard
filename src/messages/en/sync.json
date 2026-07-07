@@ -1,1 +1,66 @@
-{}
+{
+  "title": "Sync & Licensing",
+  "subtitle": "Your catalog in front of supervisors — ads, film, series, video games.",
+  "subtitleLabel": "The roster's catalog in front of supervisors — ads, film, series, video games.",
+  "filterAll": "All artists",
+  "kpis": {
+    "readyTracks": "Sync-ready tracks",
+    "readyHint": "of {total} tagged tracks",
+    "briefs": "Briefs received",
+    "briefsHint": "last 30 days",
+    "proposals": "Open proposals",
+    "proposalsHint": "awaiting supervisor feedback",
+    "syncRevenue": "Sync revenue 12 months",
+    "syncRevenueHint": "vs previous 12 months"
+  },
+  "briefs": {
+    "title": "Open briefs",
+    "subtitle": "Opportunities from supervisors, ranked by catalog affinity",
+    "budget": "Budget",
+    "deadline": "Deadline {date}",
+    "mood": "Requested mood",
+    "match": "Match",
+    "bestTracks": "Tracks to pitch",
+    "bestArtist": "Best-placed artist",
+    "propose": "Pitch",
+    "proposed": "Pitched",
+    "types": {
+      "tv": "TV ad",
+      "series": "Series",
+      "game": "Video game",
+      "film": "Indie film"
+    }
+  },
+  "moods": {
+    "melancholic": "Melancholic",
+    "energetic": "Energetic",
+    "nocturnal": "Nocturnal",
+    "cinematic": "Cinematic",
+    "dreamy": "Dreamy",
+    "dark": "Dark",
+    "uplifting": "Uplifting",
+    "raw": "Raw"
+  },
+  "catalog": {
+    "title": "Tagged catalog",
+    "subtitle": "Mood tags derived from the catalog — a sync deal requires signed splits",
+    "bpm": "BPM",
+    "splitsOk": "Splits signed",
+    "splitsWarning": "Splits incomplete",
+    "more": "+ {count} more tracks"
+  },
+  "pipeline": {
+    "title": "Sync pipeline",
+    "subtitle": "From brief to signature",
+    "received": "Brief in",
+    "proposed": "Pitched",
+    "negotiation": "Nego",
+    "signed": "Signed"
+  },
+  "commission": {
+    "title": "Transparent commission",
+    "rate": "15–20%",
+    "rateLabel": "on closed deals",
+    "body": "From Day 1 takes 15 to 20% only on closed sync deals — nothing upfront, nothing on your other revenue. Signed splits are applied automatically on payout."
+  }
+}

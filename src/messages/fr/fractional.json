@@ -1,1 +1,64 @@
-{}
+{
+  "title": "Fractional ownership",
+  "subtitle": "Vendez une fraction de vos royalties futures pour financer votre carrière — sans céder vos masters.",
+  "subtitleLabel": "Simulez une levée fractionnée pour chaque artiste du roster — sans cession de masters.",
+  "banner": {
+    "title": "Préversion — partenariat Bolero / Anote en cours d'intégration",
+    "body": "L'infrastructure d'investissement arrive. Le simulateur ci-dessous fonctionne déjà avec vos données réelles de valorisation."
+  },
+  "params": {
+    "title": "Paramètres",
+    "subtitle": "Ajustez la part cédée et la durée",
+    "artist": "Artiste",
+    "share": "Part des royalties cédée",
+    "duration": "Durée",
+    "years": "{count} ans",
+    "basis": "Base : NPS {nps} × {pct} % × multiple {multiple}× ajusté sur {years} ans"
+  },
+  "results": {
+    "raised": "Montant levé estimé",
+    "investorPerYear": "Reversé aux investisseurs / an",
+    "artistKeeps": "Part conservée / an",
+    "breakEven": "Break-even investisseur",
+    "yearsSuffix": " ans"
+  },
+  "chart": {
+    "title": "Flux sur la durée",
+    "subtitle": "Répartition des revenus catalogue entre l'artiste et les investisseurs",
+    "artistShare": "Part artiste",
+    "investorShare": "Part investisseurs",
+    "atYear": "Année {years}",
+    "breakEvenMark": "Le pointillé marque le break-even investisseur"
+  },
+  "useCases": {
+    "title": "Pourquoi lever ?",
+    "subtitle": "Trois cas d'usage concrets, calculés en direct sur la valorisation",
+    "clip": "Financer un clip",
+    "clipDesc": "Réalisation, tournage, post-production",
+    "tour": "Financer une tournée",
+    "tourDesc": "Booking, technique, transport",
+    "album": "Financer un album",
+    "albumDesc": "Studio, mix, mastering, featurings",
+    "cede": "à céder sur {years} ans",
+    "overCap": "dépasse le plafond de 25 %"
+  },
+  "investor": {
+    "title": "Vue investisseur",
+    "preview": "Aperçu",
+    "subtitle": "Ce qu'un investisseur verra dans son portefeuille",
+    "held": "Part détenue",
+    "invested": "Investi",
+    "roi": "ROI simulé sur la durée",
+    "nextPayout": "Prochain versement"
+  },
+  "portfolio": {
+    "title": "Levable théorique du portefeuille",
+    "subtitle": "Plafond de 25 % des royalties par artiste, durée {years} ans",
+    "total": "Total levable",
+    "perArtist": "Montant max par artiste"
+  },
+  "disclaimer": {
+    "title": "Avertissement réglementaire",
+    "body": "Préversion à visée de démonstration : aucune offre d'investissement réelle n'est proposée. Toute offre future sera opérée via un prestataire agréé (CIP / PSFP) sous supervision de l'AMF. Investir dans des royalties comporte un risque de perte en capital et d'illiquidité ; les performances simulées ne préjugent pas des performances futures."
+  }
+}

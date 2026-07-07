@@ -1,1 +1,73 @@
-{}
+{
+  "title": "Discovery Lab",
+  "subtitle": "Le potentiel de tes inédits, mesuré avant la sortie — pour choisir le bon single sans parier à l'aveugle.",
+  "subtitleLabel": "Les inédits les plus prometteurs du roster, scorés par l'IA avant toute sortie.",
+  "kpis": {
+    "demos": "Inédits analysés",
+    "best": "Meilleur Discovery Score",
+    "avg": "Score moyen",
+    "of100": "sur 100",
+    "firstWeek": "Streams estimés · 1re semaine",
+    "firstWeekHint": "si le meilleur inédit sort en single"
+  },
+  "podium": {
+    "kicker": "Single prioritaire",
+    "reason": "Son hook score {hook}/100 et son potentiel viral TikTok atteint {tiktok}/100, avec une affinité playlists de {playlist}/100 : c'est le candidat le plus solide pour ta prochaine sortie.",
+    "estimate": "≈ {streams} streams estimés la première semaine en single"
+  },
+  "scores": {
+    "tiktok": "Potentiel viral TikTok",
+    "playlist": "Affinité playlists",
+    "hit": "Similarité aux hits",
+    "hook": "Force du hook"
+  },
+  "tiers": {
+    "priority": "Single prioritaire",
+    "strong": "Fort potentiel",
+    "promising": "Prometteur",
+    "development": "À retravailler"
+  },
+  "list": {
+    "title": "Tes inédits",
+    "bpm": "BPM",
+    "analyzing": "Analyse audio en cours — score disponible dans quelques minutes.",
+    "analyzingBadge": "En analyse…"
+  },
+  "compare": {
+    "title": "Comparaison des inédits",
+    "description": "Les 4 dimensions du Discovery Score, côte à côte — repère les forces de chaque démo."
+  },
+  "method": {
+    "title": "Comment on score tes démos",
+    "description": "Le Discovery Score croise trois familles de signaux — aucune boîte noire, chaque sous-score est explicable.",
+    "audio": {
+      "title": "Tagging audio",
+      "description": "Analyse du signal : énergie, tempo, structure, placement du hook et signature sonore de chaque démo."
+    },
+    "market": {
+      "title": "Tendances marché",
+      "description": "Comparaison en continu avec les sonorités qui montent sur TikTok, dans les playlists et les charts de ton genre."
+    },
+    "history": {
+      "title": "Historique artiste",
+      "description": "Tes performances passées : ce qui a marché sur tes sorties précédentes calibre la prédiction pour ton audience."
+    }
+  },
+  "upload": {
+    "cta": "Uploader une démo",
+    "title": "Analyser une démo",
+    "description": "Dépose un fichier audio : l'IA le score en quelques minutes. Tes démos restent privées et ne quittent jamais ton espace.",
+    "dropzone": "Glisse ton fichier audio ici",
+    "formats": "WAV, MP3, AIFF · 50 Mo max",
+    "nameLabel": "Titre de la démo",
+    "namePlaceholder": "Ex : Nouvelle intro",
+    "submit": "Lancer l'analyse",
+    "defaultName": "Démo sans titre"
+  },
+  "rosterView": {
+    "title": "Meilleurs inédits du roster",
+    "description": "Le meilleur inédit de chaque artiste, classé par Discovery Score — de quoi prioriser les prochaines sorties.",
+    "selectArtist": "Choisir un artiste",
+    "hint": "Clique sur une ligne pour ouvrir le lab complet de l'artiste."
+  }
+}
