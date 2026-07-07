@@ -28,6 +28,12 @@
     "focused": "Zoom actif",
     "sort": "Trier par {column}"
   },
+  "export": {
+    "button": "Exporter",
+    "csv": "Exporter en CSV",
+    "print": "Rapport imprimable (PDF)",
+    "genre": "Genre"
+  },
   "stage": {
     "emerging": "Émergent",
     "developing": "Développement",

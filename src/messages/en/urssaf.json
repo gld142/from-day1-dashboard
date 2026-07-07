@@ -52,6 +52,12 @@
     "download": "Download draft",
     "disclaimer": "Working document: does not replace the official filing on urssaf.fr."
   },
+  "export": {
+    "button": "Export",
+    "csv": "Export as CSV",
+    "print": "Printable report (PDF)",
+    "base": "Declarable income (12m)"
+  },
   "note": {
     "title": "The artist-author status in short",
     "body": "Your author rights (SACEM, publishing, sync) fall under the French artist-author social scheme, managed by Urssaf Limousin: roughly 16.3% in contributions, filed every quarter. Live fees and neighbouring rights (ADAMI, SPEDIDAM) belong to other schemes and are not included here."

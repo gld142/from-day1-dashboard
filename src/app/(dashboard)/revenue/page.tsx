@@ -41,12 +41,15 @@ import {
 } from "@/lib/demo/api";
 import type { RevenueSource } from "@/lib/demo/types";
 import { REVENUE_SOURCES } from "@/lib/demo/types";
+import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
+import { ExportMenu } from "@/components/modules/exports/export-menu";
+import { PrintStyles } from "@/components/modules/exports/print-styles";
 
 const SOURCE_COLOR: Record<RevenueSource, string> = {
   streaming: "var(--chart-1)",
@@ -167,13 +170,37 @@ export default function RevenuePage() {
     data.total12 === 0 ? 0 : (data.sources[0]?.amount ?? 0) / data.total12;
   const focused = focusedArtistId ? getArtist(focusedArtistId) : null;
 
+  /* ── Export CSV mensuel par source (24 mois) ───────────────────────── */
+  const exportMonthlyCsv = () => {
+    const rows = data.stacked.flatMap((entry) =>
+      REVENUE_SOURCES.flatMap((source) => {
+        const amount = (entry as Record<string, string | number>)[source];
+        return typeof amount === "number"
+          ? [{ month: entry.month, source, amount }]
+          : [];
+      }),
+    );
+    downloadCsv("day1-revenue-24m", rows, [
+      { header: t("export.month"), cell: (r) => r.month },
+      { header: t("breakdown.source"), cell: (r) => t(`sources.${r.source}`) },
+      { header: t("breakdown.amount"), cell: (r) => round2(r.amount) },
+    ]);
+  };
+
   return (
     <div>
+      <PrintStyles />
       <PageHeader
         title={t("title")}
         subtitle={aggregated ? t("subtitleLabel") : t("subtitle")}
       >
         {focused && <ArtistBadge artist={focused} size="md" />}
+        <ExportMenu
+          label={t("export.button")}
+          csvLabel={t("export.csv")}
+          printLabel={t("export.print")}
+          onExportCsv={exportMonthlyCsv}
+        />
       </PageHeader>
 
       {/* KPIs */}

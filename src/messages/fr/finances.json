@@ -91,6 +91,11 @@
     "none": "Aucun",
     "submit": "Ajouter la dépense"
   },
+  "export": {
+    "button": "Exporter",
+    "csv": "Exporter en CSV",
+    "print": "Rapport imprimable (PDF)"
+  },
   "wavely": {
     "title": "Intégration Wavely",
     "description": "Connectez votre compte Wavely pour synchroniser automatiquement vos dépenses de production et de marketing — fini la double saisie.",

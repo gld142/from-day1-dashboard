@@ -28,6 +28,12 @@
     "focused": "Focused",
     "sort": "Sort by {column}"
   },
+  "export": {
+    "button": "Export",
+    "csv": "Export as CSV",
+    "print": "Printable report (PDF)",
+    "genre": "Genre"
+  },
   "stage": {
     "emerging": "Emerging",
     "developing": "Developing",

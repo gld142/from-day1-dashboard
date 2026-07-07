@@ -44,6 +44,12 @@
     "net": "Net",
     "margin": "Margin"
   },
+  "export": {
+    "button": "Export",
+    "csv": "Export as CSV",
+    "print": "Printable report (PDF)",
+    "month": "Month"
+  },
   "insight": {
     "diversification": "{count, plural, one {# active source} other {# active sources}} — {top} accounts for {share} of your revenue",
     "concentrated": "Heads up: over 70% of your revenue comes from a single source",

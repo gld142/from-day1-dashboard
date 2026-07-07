@@ -91,6 +91,11 @@
     "none": "None",
     "submit": "Add expense"
   },
+  "export": {
+    "button": "Export",
+    "csv": "Export as CSV",
+    "print": "Printable report (PDF)"
+  },
   "wavely": {
     "title": "Wavely integration",
     "description": "Connect your Wavely account to automatically sync your production and marketing expenses — no more double entry.",

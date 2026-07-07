@@ -22,6 +22,8 @@ import {
   type MonthlyPnlPoint,
 } from "@/components/modules/finances/pnl-monthly-chart";
 import { WavelyCard } from "@/components/modules/finances/wavely-card";
+import { ExportMenu } from "@/components/modules/exports/export-menu";
+import { PrintStyles } from "@/components/modules/exports/print-styles";
 import {
   Select,
   SelectContent,
@@ -32,6 +34,7 @@ import {
 import {
   ARTISTS,
   PROJECTS,
+  TEAM,
   TRACKS,
   expenses as fetchExpenses,
   getArtist,
@@ -40,6 +43,7 @@ import {
 } from "@/lib/demo/api";
 import type { Expense, ExpenseCategory } from "@/lib/demo/types";
 import { EXPENSE_CATEGORIES } from "@/lib/demo/types";
+import { downloadCsv } from "@/lib/export";
 import { fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 
@@ -196,8 +200,42 @@ export default function FinancesPage() {
     [filteredExpenses],
   );
 
+  /* ── Export CSV du registre filtré, tel qu'affiché ─────────────────── */
+  const exportExpensesCsv = () => {
+    const projectTitle = new Map(PROJECTS.map((p) => [p.id, p.title]));
+    const trackTitle = new Map(TRACKS.map((tr) => [tr.id, tr.title]));
+    const memberName = new Map(TEAM.map((m) => [m.id, m.name]));
+    downloadCsv<Expense>(`day1-expenses-${year}`, filteredExpenses, [
+      { header: t("register.date"), cell: (e) => e.date },
+      { header: t("register.label"), cell: (e) => e.label },
+      {
+        header: t("register.category"),
+        cell: (e) => t(`categories.${e.category}`),
+      },
+      {
+        header: t("register.project"),
+        cell: (e) => (e.projectId ? (projectTitle.get(e.projectId) ?? "") : ""),
+      },
+      {
+        header: t("register.track"),
+        cell: (e) => (e.trackId ? (trackTitle.get(e.trackId) ?? "") : ""),
+      },
+      { header: t("register.amount"), cell: (e) => e.amount },
+      {
+        header: t("register.addedBy"),
+        cell: (e) => memberName.get(e.addedBy) ?? e.addedBy,
+      },
+      {
+        header: t("register.source"),
+        cell: (e) =>
+          e.source === "wavely" ? t("register.wavely") : t("register.manual"),
+      },
+    ]);
+  };
+
   return (
     <div className="rise-in">
+      <PrintStyles />
       <PageHeader
         title={t("title")}
         subtitle={
@@ -206,6 +244,12 @@ export default function FinancesPage() {
             : `${t("subtitle")} — ${t("scope.roster")}`
         }
       >
+        <ExportMenu
+          label={t("export.button")}
+          csvLabel={t("export.csv")}
+          printLabel={t("export.print")}
+          onExportCsv={exportExpensesCsv}
+        />
         <AddExpenseDialog
           isLabel={isLabel}
           defaultArtistId={artistId}

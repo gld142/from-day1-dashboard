@@ -63,6 +63,7 @@
     "emptyHint": "Connect a source to see your live data",
     "loading": "Loading",
     "error": "Something went wrong",
+    "retry": "Try again",
     "upToDate": "Up to date",
     "lastSync": "Last sync {time}"
   },

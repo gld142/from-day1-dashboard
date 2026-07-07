@@ -13,7 +13,10 @@ import { RosterAlerts } from "@/components/modules/structure/roster-alerts";
 import { RosterMatrix } from "@/components/modules/structure/roster-matrix";
 import { RosterPnlBars } from "@/components/modules/structure/roster-pnl-bars";
 import { RosterTable } from "@/components/modules/structure/roster-table";
-import { LABEL, labelTotals, rosterRows } from "@/lib/demo/api";
+import { ExportMenu } from "@/components/modules/exports/export-menu";
+import { PrintStyles } from "@/components/modules/exports/print-styles";
+import { LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
+import { downloadCsv, round2 } from "@/lib/export";
 import { useRole } from "@/lib/role";
 
 export default function RosterPage() {
@@ -34,12 +37,36 @@ export default function RosterPage() {
     );
   }
 
+  /* ── Export CSV du comparatif roster ───────────────────────────────── */
+  const exportRosterCsv = () => {
+    downloadCsv<RosterRow>("day1-roster", rows, [
+      { header: t("table.artist"), cell: (r) => r.name },
+      { header: t("export.genre"), cell: (r) => r.genre },
+      { header: t("table.stage"), cell: (r) => t(`stage.${r.careerStage}`) },
+      { header: t("table.streams30d"), cell: (r) => r.streams30d },
+      { header: t("table.delta30d"), cell: (r) => round2(r.delta30d) },
+      { header: t("table.revenue12m"), cell: (r) => round2(r.revenue12m) },
+      { header: t("table.net12m"), cell: (r) => round2(r.net12m) },
+      { header: t("table.margin"), cell: (r) => round2(r.margin) },
+      { header: t("table.valuation"), cell: (r) => r.valuationMid },
+      { header: t("table.index"), cell: (r) => r.day1Index },
+    ]);
+  };
+
   return (
     <div className="rise-in space-y-6">
+      <PrintStyles />
       <PageHeader
         title={t("title")}
         subtitle={t("subtitle", { count: totals.artists, label: LABEL.name })}
-      />
+      >
+        <ExportMenu
+          label={t("export.button")}
+          csvLabel={t("export.csv")}
+          printLabel={t("export.print")}
+          onExportCsv={exportRosterCsv}
+        />
+      </PageHeader>
 
       {/* KPIs label */}
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-5">

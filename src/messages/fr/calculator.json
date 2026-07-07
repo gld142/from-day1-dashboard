@@ -46,7 +46,9 @@
   "donut": {
     "title": "Répartition projetée par source",
     "subtitle": "Proportions des 12 derniers mois appliquées au total projeté",
-    "total": "Projeté"
+    "total": "Projeté",
+    "emptyTitle": "Pas encore de sources de revenus",
+    "emptyDescription": "Dès que des revenus seront enregistrés, la répartition par source apparaîtra ici."
   },
   "sources": {
     "streaming": "Streaming",

@@ -26,6 +26,11 @@ import {
   InsightCard,
   type InsightTone,
 } from "@/components/modules/pilotage/insight-card";
+import {
+  KpiStagger,
+  KpiStaggerItem,
+} from "@/components/modules/signature/kpi-stagger";
+import { SunriseArc } from "@/components/modules/signature/sunrise-arc";
 import { StreamsAreaChart } from "@/components/modules/pilotage/streams-area-chart";
 import { TopMovers } from "@/components/modules/pilotage/top-movers";
 import {
@@ -327,50 +332,65 @@ export default function PulsePage() {
       {artistView && (
         <div className="space-y-4">
           {/* Héro + KPIs */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-            <KpiCard
-              hero
-              id="pulse-hero"
-              className="sm:col-span-2 xl:col-span-2"
-              label={t("hero.today")}
-              value={artistView.today}
-              delta={artistView.deltaToday}
-              deltaLabel={t("hero.vsYesterday")}
-              spark={artistView.heroSpark}
-              sparkColor="var(--brand)"
-            />
-            <KpiCard
-              id="pulse-7d"
-              label={t("kpis.streams7d")}
-              value={artistView.s7}
-              delta={artistView.d7}
-              spark={artistView.spark7}
-            />
-            <KpiCard
-              id="pulse-rev"
-              label={t("kpis.revenueMonth")}
-              value={artistView.revMonth}
-              format="eur"
-              delta={artistView.revDelta}
-              deltaLabel={t("kpis.vsPrevMonth")}
-              spark={artistView.revSpark}
-              sparkColor="var(--chart-2)"
-            />
-            <KpiCard
-              id="pulse-listeners"
-              label={t("kpis.monthlyListeners")}
-              value={artistView.artist.monthlyListeners}
-              delta={artistView.artist.growthRate * 100}
-              deltaLabel={t("kpis.growthHint")}
-            />
-            <KpiCard
-              id="pulse-index"
-              label={t("kpis.day1Index")}
-              value={artistView.artist.day1Index}
-              format="int"
-              deltaLabel={t("kpis.day1IndexHint")}
-            />
-          </div>
+          <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+            <KpiStaggerItem className="relative sm:col-span-2 xl:col-span-2">
+              <KpiCard
+                hero
+                id="pulse-hero"
+                className="h-full"
+                label={t("hero.today")}
+                value={artistView.today}
+                delta={artistView.deltaToday}
+                deltaLabel={t("hero.vsYesterday")}
+                spark={artistView.heroSpark}
+                sparkColor="var(--brand)"
+              />
+              <SunriseArc />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-7d"
+                className="h-full"
+                label={t("kpis.streams7d")}
+                value={artistView.s7}
+                delta={artistView.d7}
+                spark={artistView.spark7}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-rev"
+                className="h-full"
+                label={t("kpis.revenueMonth")}
+                value={artistView.revMonth}
+                format="eur"
+                delta={artistView.revDelta}
+                deltaLabel={t("kpis.vsPrevMonth")}
+                spark={artistView.revSpark}
+                sparkColor="var(--chart-2)"
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-listeners"
+                className="h-full"
+                label={t("kpis.monthlyListeners")}
+                value={artistView.artist.monthlyListeners}
+                delta={artistView.artist.growthRate * 100}
+                deltaLabel={t("kpis.growthHint")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-index"
+                className="h-full"
+                label={t("kpis.day1Index")}
+                value={artistView.artist.day1Index}
+                format="int"
+                deltaLabel={t("kpis.day1IndexHint")}
+              />
+            </KpiStaggerItem>
+          </KpiStagger>
 
           {/* Grand chart 90 j */}
           <section className="rounded-xl border bg-card p-5">
@@ -406,45 +426,60 @@ export default function PulsePage() {
       {labelView && (
         <div className="space-y-4">
           {/* Héro + KPIs label */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-            <KpiCard
-              hero
-              id="pulse-label-hero"
-              className="sm:col-span-2 xl:col-span-2"
-              label={t("hero.todayLabel")}
-              value={labelView.today}
-              delta={labelView.deltaToday}
-              deltaLabel={t("hero.vsYesterday")}
-              spark={labelView.heroSpark}
-              sparkColor="var(--brand)"
-            />
-            <KpiCard
-              id="pulse-label-7d"
-              label={t("kpis.streams7d")}
-              value={labelView.cur7}
-              delta={labelView.d7}
-            />
-            <KpiCard
-              id="pulse-label-rev"
-              label={t("kpis.revenue12m")}
-              value={labelView.totals.revenue12m}
-              format="eur"
-            />
-            <KpiCard
-              id="pulse-label-net"
-              label={t("kpis.net12m")}
-              value={labelView.totals.net12m}
-              format="eur"
-              deltaLabel={t("kpis.netHint")}
-            />
-            <KpiCard
-              id="pulse-label-valo"
-              label={t("kpis.valuation")}
-              value={labelView.totals.valuationMid}
-              format="eur"
-              deltaLabel={t("kpis.valuationHint")}
-            />
-          </div>
+          <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+            <KpiStaggerItem className="relative sm:col-span-2 xl:col-span-2">
+              <KpiCard
+                hero
+                id="pulse-label-hero"
+                className="h-full"
+                label={t("hero.todayLabel")}
+                value={labelView.today}
+                delta={labelView.deltaToday}
+                deltaLabel={t("hero.vsYesterday")}
+                spark={labelView.heroSpark}
+                sparkColor="var(--brand)"
+              />
+              <SunriseArc />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-label-7d"
+                className="h-full"
+                label={t("kpis.streams7d")}
+                value={labelView.cur7}
+                delta={labelView.d7}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-label-rev"
+                className="h-full"
+                label={t("kpis.revenue12m")}
+                value={labelView.totals.revenue12m}
+                format="eur"
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-label-net"
+                className="h-full"
+                label={t("kpis.net12m")}
+                value={labelView.totals.net12m}
+                format="eur"
+                deltaLabel={t("kpis.netHint")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="pulse-label-valo"
+                className="h-full"
+                label={t("kpis.valuation")}
+                value={labelView.totals.valuationMid}
+                format="eur"
+                deltaLabel={t("kpis.valuationHint")}
+              />
+            </KpiStaggerItem>
+          </KpiStagger>
 
           {/* Chart agrégé + top movers */}
           <div className="grid gap-4 xl:grid-cols-3">

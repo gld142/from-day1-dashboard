@@ -52,6 +52,12 @@
     "download": "Télécharger le brouillon",
     "disclaimer": "Document de travail : ne remplace pas la déclaration officielle sur urssaf.fr."
   },
+  "export": {
+    "button": "Exporter",
+    "csv": "Exporter en CSV",
+    "print": "Rapport imprimable (PDF)",
+    "base": "Revenus déclarables (12 m)"
+  },
   "note": {
     "title": "Le statut artiste-auteur en bref",
     "body": "Vos droits d'auteur (SACEM, édition, sync) relèvent du régime social des artistes-auteurs, géré par l'Urssaf Limousin : environ 16,3 % de cotisations, déclarées chaque trimestre. Les cachets de scène et les droits voisins (ADAMI, SPEDIDAM) dépendent d'autres régimes et ne sont pas inclus ici."

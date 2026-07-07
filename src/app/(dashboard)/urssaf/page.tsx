@@ -15,6 +15,7 @@ import {
   revenueSeries,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
+import { downloadCsv, round2 } from "@/lib/export";
 import { fmtDate, fmtEur, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -24,9 +25,12 @@ import {
   ContributionSimulator,
   DeadlinesTimeline,
   DeclarationCard,
+  URSSAF_LINES,
   URSSAF_RATE,
   type Deadline,
 } from "@/components/modules/droits/urssaf-widgets";
+import { ExportMenu } from "@/components/modules/exports/export-menu";
+import { PrintStyles } from "@/components/modules/exports/print-styles";
 import {
   Table,
   TableBody,
@@ -107,9 +111,45 @@ export default function UrssafPage() {
     : "";
   const declarantName = grouped ? LABEL.name : getArtist(artistId).name;
 
+  /* ── Export CSV du détail des cotisations simulées ─────────────────── */
+  const exportContributionsCsv = () => {
+    const rows: Array<{ label: string; rate: number | null; amount: number }> =
+      [
+        { label: t("export.base"), rate: null, amount: round2(declarable) },
+        ...URSSAF_LINES.map((line) => ({
+          label: t(`sim.lines.${line.key}`),
+          rate: line.rate,
+          amount: round2((declarable * line.rate) / 100),
+        })),
+        {
+          label: t("sim.total"),
+          rate: URSSAF_RATE,
+          amount: round2(contributions),
+        },
+        {
+          label: t("sim.net"),
+          rate: null,
+          amount: round2(declarable - contributions),
+        },
+      ];
+    downloadCsv("day1-urssaf", rows, [
+      { header: t("sim.line"), cell: (r) => r.label },
+      { header: t("sim.rate"), cell: (r) => r.rate },
+      { header: t("sim.amount"), cell: (r) => r.amount },
+    ]);
+  };
+
   return (
     <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <PrintStyles />
+      <PageHeader title={t("title")} subtitle={t("subtitle")}>
+        <ExportMenu
+          label={t("export.button")}
+          csvLabel={t("export.csv")}
+          printLabel={t("export.print")}
+          onExportCsv={exportContributionsCsv}
+        />
+      </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <KpiCard

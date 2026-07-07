@@ -7,6 +7,7 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import NumberFlow from "@number-flow/react";
+import { PieChart } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -19,6 +20,11 @@ import {
   type ForecastRow,
 } from "@/components/modules/calculator/forecast-table";
 import { MethodologyCard } from "@/components/modules/calculator/methodology-card";
+import { EmptyState } from "@/components/modules/signature/empty-state";
+import {
+  KpiStagger,
+  KpiStaggerItem,
+} from "@/components/modules/signature/kpi-stagger";
 import {
   SourceDonut,
   type SourceSlice,
@@ -268,45 +274,55 @@ export default function CalculatorPage() {
 
         {/* ── Colonne résultats ───────────────────────────────────────── */}
         <div className="min-w-0 space-y-4">
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <KpiCard
-              id="calc-total"
-              label={t("kpis.projectedTotal", { count: horizon })}
-              value={totalProjected}
-              format="eur"
-              hero
-            />
-            <div className="flex flex-col gap-1 rounded-xl border bg-card p-4">
-              <span className="text-xs font-medium text-muted-foreground">
-                {t("kpis.range")}
-              </span>
-              <span className="num text-lg font-semibold tracking-tight">
-                {fmtEur(locale, totalLow, { compact: true })}
-                <span className="mx-1 text-muted-foreground">–</span>
-                {fmtEur(locale, totalHigh, { compact: true })}
-              </span>
-              <span className="text-[11px] text-muted-foreground">
-                {t("kpis.rangeHint")}
-              </span>
-            </div>
-            <KpiCard
-              id="calc-monthly"
-              label={t("kpis.monthlyAvg")}
-              value={monthlyAvg}
-              format="eur"
-            />
-            <div className="flex flex-col gap-1 rounded-xl border bg-card p-4">
-              <span className="text-xs font-medium text-muted-foreground">
-                {t("kpis.delta", { count: horizon })}
-              </span>
-              <span className="num text-2xl font-semibold tracking-tight">
-                <DeltaChip value={deltaVsPast} className="text-sm" />
-              </span>
-              <span className="text-[11px] text-muted-foreground">
-                {t("kpis.deltaHint")}
-              </span>
-            </div>
-          </div>
+          <KpiStagger className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <KpiStaggerItem>
+              <KpiCard
+                id="calc-total"
+                className="h-full"
+                label={t("kpis.projectedTotal", { count: horizon })}
+                value={totalProjected}
+                format="eur"
+                hero
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <div className="flex h-full flex-col gap-1 rounded-xl border bg-card p-4">
+                <span className="text-xs font-medium text-muted-foreground">
+                  {t("kpis.range")}
+                </span>
+                <span className="num text-lg font-semibold tracking-tight">
+                  {fmtEur(locale, totalLow, { compact: true })}
+                  <span className="mx-1 text-muted-foreground">–</span>
+                  {fmtEur(locale, totalHigh, { compact: true })}
+                </span>
+                <span className="text-[11px] text-muted-foreground">
+                  {t("kpis.rangeHint")}
+                </span>
+              </div>
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="calc-monthly"
+                className="h-full"
+                label={t("kpis.monthlyAvg")}
+                value={monthlyAvg}
+                format="eur"
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <div className="flex h-full flex-col gap-1 rounded-xl border bg-card p-4">
+                <span className="text-xs font-medium text-muted-foreground">
+                  {t("kpis.delta", { count: horizon })}
+                </span>
+                <span className="num text-2xl font-semibold tracking-tight">
+                  <DeltaChip value={deltaVsPast} className="text-sm" />
+                </span>
+                <span className="text-[11px] text-muted-foreground">
+                  {t("kpis.deltaHint")}
+                </span>
+              </div>
+            </KpiStaggerItem>
+          </KpiStagger>
 
           <section className="rounded-xl border bg-card p-5">
             <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
@@ -364,7 +380,15 @@ export default function CalculatorPage() {
                 <p className="mb-4 text-xs text-muted-foreground">
                   {t("donut.subtitle")}
                 </p>
-                <SourceDonut data={sourceSlices} />
+                {sourceSlices.length > 0 ? (
+                  <SourceDonut data={sourceSlices} />
+                ) : (
+                  <EmptyState
+                    icon={PieChart}
+                    title={t("donut.emptyTitle")}
+                    description={t("donut.emptyDescription")}
+                  />
+                )}
               </section>
               <MethodologyCard horizon={horizon} />
             </div>

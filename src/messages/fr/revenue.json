@@ -44,6 +44,12 @@
     "net": "Net",
     "margin": "Marge"
   },
+  "export": {
+    "button": "Exporter",
+    "csv": "Exporter en CSV",
+    "print": "Rapport imprimable (PDF)",
+    "month": "Mois"
+  },
   "insight": {
     "diversification": "{count, plural, one {# source active} other {# sources actives}} — {top} représente {share} de tes revenus",
     "concentrated": "Attention : plus de 70 % de tes revenus viennent d'une seule source",

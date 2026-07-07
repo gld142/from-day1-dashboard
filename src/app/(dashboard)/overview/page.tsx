@@ -14,6 +14,10 @@ import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Button } from "@/components/ui/button";
 import { DspDonut } from "@/components/modules/pilotage/dsp-donut";
+import {
+  KpiStagger,
+  KpiStaggerItem,
+} from "@/components/modules/signature/kpi-stagger";
 import { RevenueStreamsChart } from "@/components/modules/pilotage/revenue-streams-chart";
 import {
   RosterGrid,
@@ -202,37 +206,49 @@ export default function OverviewPage() {
       {artistView && (
         <div className="space-y-4">
           {/* KPIs */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <KpiCard
-              id="ov-streams"
-              label={t("kpis.streams30d")}
-              value={artistView.s30}
-              delta={artistView.d30}
-              deltaLabel={t("kpis.vsPrev30d")}
-              spark={artistView.spark30}
-            />
-            <KpiCard
-              id="ov-revenue"
-              label={t("kpis.revenue12m")}
-              value={artistView.rev12}
-              format="eur"
-              deltaLabel={t("kpis.revenue12mHint")}
-            />
-            <KpiCard
-              id="ov-valuation"
-              label={t("kpis.valuation")}
-              value={artistView.valuation.mid}
-              format="eur"
-              deltaLabel={t("kpis.valuationHint")}
-            />
-            <KpiCard
-              id="ov-superfans"
-              label={t("kpis.superfans")}
-              value={artistView.superfans?.count ?? 0}
-              delta={artistView.superfans?.trend}
-              deltaLabel={t("kpis.superfansHint")}
-            />
-          </div>
+          <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-streams"
+                className="h-full"
+                label={t("kpis.streams30d")}
+                value={artistView.s30}
+                delta={artistView.d30}
+                deltaLabel={t("kpis.vsPrev30d")}
+                spark={artistView.spark30}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-revenue"
+                className="h-full"
+                label={t("kpis.revenue12m")}
+                value={artistView.rev12}
+                format="eur"
+                deltaLabel={t("kpis.revenue12mHint")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-valuation"
+                className="h-full"
+                label={t("kpis.valuation")}
+                value={artistView.valuation.mid}
+                format="eur"
+                deltaLabel={t("kpis.valuationHint")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-superfans"
+                className="h-full"
+                label={t("kpis.superfans")}
+                value={artistView.superfans?.count ?? 0}
+                delta={artistView.superfans?.trend}
+                deltaLabel={t("kpis.superfansHint")}
+              />
+            </KpiStaggerItem>
+          </KpiStagger>
 
           {/* Revenus × streams */}
           <section className="rounded-xl border bg-card p-5">
@@ -276,36 +292,48 @@ export default function OverviewPage() {
       {labelView && (
         <div className="space-y-4">
           {/* KPIs roster */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <KpiCard
-              id="ov-label-artists"
-              label={t("kpis.artists")}
-              value={labelView.totals.artists}
-              format="int"
-              deltaLabel={t("kpis.artistsHint")}
-            />
-            <KpiCard
-              id="ov-label-streams"
-              label={t("kpis.streams30d")}
-              value={labelView.totals.streams30d}
-              delta={labelView.d30}
-              deltaLabel={t("kpis.vsPrev30d")}
-            />
-            <KpiCard
-              id="ov-label-revenue"
-              label={t("kpis.revenue12m")}
-              value={labelView.totals.revenue12m}
-              format="eur"
-              deltaLabel={t("kpis.revenue12mHint")}
-            />
-            <KpiCard
-              id="ov-label-valuation"
-              label={t("kpis.valuation")}
-              value={labelView.totals.valuationMid}
-              format="eur"
-              deltaLabel={t("kpis.valuationHint")}
-            />
-          </div>
+          <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-label-artists"
+                className="h-full"
+                label={t("kpis.artists")}
+                value={labelView.totals.artists}
+                format="int"
+                deltaLabel={t("kpis.artistsHint")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-label-streams"
+                className="h-full"
+                label={t("kpis.streams30d")}
+                value={labelView.totals.streams30d}
+                delta={labelView.d30}
+                deltaLabel={t("kpis.vsPrev30d")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-label-revenue"
+                className="h-full"
+                label={t("kpis.revenue12m")}
+                value={labelView.totals.revenue12m}
+                format="eur"
+                deltaLabel={t("kpis.revenue12mHint")}
+              />
+            </KpiStaggerItem>
+            <KpiStaggerItem>
+              <KpiCard
+                id="ov-label-valuation"
+                className="h-full"
+                label={t("kpis.valuation")}
+                value={labelView.totals.valuationMid}
+                format="eur"
+                deltaLabel={t("kpis.valuationHint")}
+              />
+            </KpiStaggerItem>
+          </KpiStagger>
 
           {/* Grille roster cliquable */}
           <section>

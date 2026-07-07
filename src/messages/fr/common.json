@@ -63,6 +63,7 @@
     "emptyHint": "Connectez une source pour voir vos données en direct",
     "loading": "Chargement",
     "error": "Une erreur est survenue",
+    "retry": "Réessayer",
     "upToDate": "À jour",
     "lastSync": "Dernière synchro {time}"
   },

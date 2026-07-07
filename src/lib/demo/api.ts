@@ -368,11 +368,13 @@ export function catalogValuation(artistId: string): Valuation {
   const a = getArtist(artistId);
   const nps = totalRevenue(artistId, 12) * 0.72;
   const [mLow, mHigh] =
-    a.careerStage === "established"
-      ? [14, 18]
-      : a.careerStage === "developing"
-        ? [10, 14]
-        : [8, 11];
+    a.careerStage === "peak"
+      ? [18, 24]
+      : a.careerStage === "established"
+        ? [14, 18]
+        : a.careerStage === "developing"
+          ? [10, 14]
+          : [8, 11];
   const low = nps * mLow;
   const high = nps * mHigh;
   return {

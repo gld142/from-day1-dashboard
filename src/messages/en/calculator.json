@@ -46,7 +46,9 @@
   "donut": {
     "title": "Projected split by source",
     "subtitle": "Last 12 months proportions applied to the projected total",
-    "total": "Projected"
+    "total": "Projected",
+    "emptyTitle": "No revenue sources yet",
+    "emptyDescription": "As soon as revenue is recorded, the split by source will appear here."
   },
   "sources": {
     "streaming": "Streaming",
