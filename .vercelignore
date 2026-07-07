@@ -1,0 +1,6 @@
+.next-e2e
+e2e/screenshots
+test-results
+playwright-report
+node_modules
+legacy
