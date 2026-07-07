@@ -144,7 +144,7 @@ export function WorldMap({
                 : "var(--surface-3)";
               return (
                 <Geography
-                  key={id || `geo-${i}`}
+                  key={`geo-${i}-${id ?? "x"}`}
                   geography={geo}
                   onMouseEnter={(e) => {
                     if (!country) return;
