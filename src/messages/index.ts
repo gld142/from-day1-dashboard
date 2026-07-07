@@ -52,6 +52,18 @@ import enTeam from "./en/team.json";
 import frSettings from "./fr/settings.json";
 import frBrief from "./fr/brief.json";
 import enBrief from "./en/brief.json";
+import frAlgoPosition from "./fr/algoposition.json";
+import enAlgoPosition from "./en/algoposition.json";
+import frDiscovery from "./fr/discovery.json";
+import enDiscovery from "./en/discovery.json";
+import frSync from "./fr/sync.json";
+import enSync from "./en/sync.json";
+import frFractional from "./fr/fractional.json";
+import enFractional from "./en/fractional.json";
+import frComparatif from "./fr/comparatif.json";
+import enComparatif from "./en/comparatif.json";
+import frOnboardings from "./fr/onboardings.json";
+import enOnboardings from "./en/onboardings.json";
 import frAsk from "./fr/ask.json";
 import enAsk from "./en/ask.json";
 import enSettings from "./en/settings.json";
@@ -82,6 +94,12 @@ const MESSAGES = {
     catalog: frCatalog,
     team: frTeam,
     settings: frSettings,
+    algoposition: frAlgoPosition,
+    discovery: frDiscovery,
+    sync: frSync,
+    fractional: frFractional,
+    comparatif: frComparatif,
+    onboardings: frOnboardings,
     brief: frBrief,
     ask: frAsk,
   },
@@ -110,6 +128,12 @@ const MESSAGES = {
     catalog: enCatalog,
     team: enTeam,
     settings: enSettings,
+    algoposition: enAlgoPosition,
+    discovery: enDiscovery,
+    sync: enSync,
+    enFractional: enFractional,
+    comparatif: enComparatif,
+    onboardings: enOnboardings,
     brief: enBrief,
     ask: enAsk,
   },

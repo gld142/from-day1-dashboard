@@ -6,7 +6,8 @@
     "rights": "Business & droits",
     "intelligence": "Intelligence",
     "growth": "Croissance",
-    "account": "Compte"
+    "account": "Compte",
+    "pitch": "Stratégie & pitch"
   },
   "items": {
     "pulse": "Pulse",
@@ -30,6 +31,12 @@
     "tour": "Tournée",
     "catalog": "Catalogue",
     "team": "Équipe & accès",
-    "settings": "Réglages"
+    "settings": "Réglages",
+    "algoposition": "Position algo Spotify",
+    "discovery": "Discovery Lab",
+    "sync": "Sync & Licensing",
+    "fractional": "Fractional / Bolero",
+    "comparatif": "vs Concurrents",
+    "onboardings": "Onboardings partenaires"
   }
 }
