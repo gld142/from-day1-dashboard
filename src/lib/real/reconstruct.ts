@@ -35,6 +35,32 @@ function weeklyFactor(dow: number): number {
   return w.other;
 }
 
+/** Poids de la rampe pour un jour à `i` jours d'aujourd'hui (0 ≤ w ≤ 1, w(0) = 1). */
+function rampWeight(alpha: number, i: number, N: number): number {
+  return Math.max(0, 1 - (alpha * i) / N);
+}
+
+/**
+ * Résout α tel que Σ raw_j · w(α, i_j) = cible sur les jours 0..N−1 (hors aujourd'hui).
+ * La somme est strictement décroissante en α (de Σ raw à 0 pour α = N) : bissection,
+ * 60 itérations, purement arithmétique → déterministe.
+ */
+function solveRamp(raw: number[], N: number, cible: number): number {
+  const sumAt = (alpha: number) => {
+    let s = 0;
+    for (let j = 0; j < N; j++) s += raw[j] * rampWeight(alpha, N - j, N);
+    return s;
+  };
+  let lo = 0;
+  let hi = N;
+  for (let k = 0; k < 60; k++) {
+    const mid = (lo + hi) / 2;
+    if (sumAt(mid) > cible) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
 export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
   const { key, total, dailyNow, days, today, measured } = input;
   const rand = rngFor(`reconstruct:${key}`);
@@ -66,22 +92,29 @@ export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
   // 2. Aujourd'hui est exactement le débit relevé.
   raw[days - 1] = dailyNow;
 
-  // 3. Contrainte de somme, appliquée aux autres jours (jamais à aujourd'hui).
-  //    Sortie dans la fenêtre : toute l'histoire du titre est visible → somme ≈ total.
-  //    Sinon : plafond à 95 % du total (un vieux titre du catalogue a pu
-  //    streamer bien plus que 365 × son débit actuel, on le laisse tel quel).
+  // 3. Contrainte de somme sur les autres jours (jamais sur aujourd'hui), par une
+  //    rampe linéaire continue à aujourd'hui : w_i = max(0, 1 − α·i/N), i = jours
+  //    avant aujourd'hui (i = 0 → poids 1, donc raccord avec dailyNow). Si α > 1
+  //    la rampe touche zéro dans la fenêtre : le titre « naît » plus tard, sans saut.
+  //    Sortie dans la fenêtre : toute l'histoire est visible → somme = total.
+  //    Sinon : plafond à 95 % du total (un vieux titre du catalogue a pu streamer
+  //    bien plus que 365 × son débit actuel, on le laisse tel quel).
+  const N = days - 1;
   const others = raw.slice(0, -1).reduce((a, v) => a + v, 0);
   const releaseInWindow = release !== null && release >= dates[0] && release <= todayIso;
-  let factor = 1;
-  if (others > 0) {
-    if (releaseInWindow) factor = (total - dailyNow) / others;
-    else if (others + dailyNow > 0.95 * total) factor = (0.95 * total - dailyNow) / others;
+  const cible = Math.max(0, (releaseInWindow ? total : 0.95 * total) - dailyNow);
+  const weights: number[] = new Array<number>(days).fill(1);
+  if (releaseInWindow && others > 0 && others < cible) {
+    // Sortie dans la fenêtre mais pas assez de streams bruts : montée uniforme.
+    weights.fill(cible / others);
+  } else if (others > cible) {
+    const alpha = solveRamp(raw, N, cible);
+    for (let j = 0; j < N; j++) weights[j] = rampWeight(alpha, N - j, N);
   }
-  factor = Math.max(0, factor);
 
   const series: ReconstructedDay[] = dates.map((date, i) => {
     const isToday = i === days - 1;
-    const streams = isToday ? dailyNow : raw[i] * factor;
+    const streams = isToday ? dailyNow : raw[i] * weights[i];
     return { date, streams: Math.max(0, Math.round(streams)), provenance: isToday ? "measured" : "reconstructed" };
   });
 

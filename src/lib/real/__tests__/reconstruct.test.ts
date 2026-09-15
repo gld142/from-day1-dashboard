@@ -59,4 +59,13 @@ describe("reconstructTrack", () => {
     };
     expect(avg(5)).toBeGreaterThan(avg(1));
   });
+
+  it("en mode plafond, la veille reste continue avec aujourd'hui", () => {
+    // Même cas que « ne dépasse jamais le total » : la réduction se fait par une
+    // rampe dans le temps, pas par un facteur uniforme qui ferait sauter le dernier jour.
+    const s = reconstructTrack({ key: "y", total: 400_000, dailyNow: 3_000, days: 365, today: TODAY });
+    const veille = s[s.length - 2].streams;
+    expect(veille).toBeGreaterThanOrEqual(3_000 * 0.75);
+    expect(veille).toBeLessThanOrEqual(3_000 * 1.25);
+  });
 });
