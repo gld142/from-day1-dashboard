@@ -29,7 +29,7 @@ import {
 
 export type Persona = "artist" | "label";
 
-export const DEMO_ARTIST_ID = "sky-lune";
+export const DEMO_ARTIST_ID = "dadju";
 
 type RoleContextValue = {
   persona: Persona;

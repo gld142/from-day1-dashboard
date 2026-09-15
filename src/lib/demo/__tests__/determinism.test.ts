@@ -34,8 +34,8 @@ describe("déterminisme des générateurs", () => {
   });
 
   it("streamSeries est déterministe aussi sur une fenêtre courte", () => {
-    expect(JSON.stringify(streamSeries("sky-lune", 30))).toBe(
-      JSON.stringify(streamSeries("sky-lune", 30)),
+    expect(JSON.stringify(streamSeries("dadju", 30))).toBe(
+      JSON.stringify(streamSeries("dadju", 30)),
     );
   });
 });

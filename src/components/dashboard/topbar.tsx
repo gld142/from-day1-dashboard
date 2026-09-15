@@ -16,7 +16,7 @@ import {
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
 import { ARTISTS, LABEL, getArtist } from "@/lib/demo/api";
-import { useRole } from "@/lib/role";
+import { DEMO_ARTIST_ID, useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,7 +56,7 @@ export function Topbar() {
   useEffect(() => setMounted(true), []);
 
   const focused = focusedArtistId ? getArtist(focusedArtistId) : null;
-  const artist = getArtist(persona === "artist" ? artistId : "sky-lune");
+  const artist = getArtist(persona === "artist" ? artistId : DEMO_ARTIST_ID);
 
   return (
     <header className="hairline-b sticky top-0 z-30 flex h-14 items-center gap-2 bg-background/80 px-4 backdrop-blur-md">

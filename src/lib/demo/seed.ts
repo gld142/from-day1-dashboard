@@ -1,3 +1,5 @@
+import { LATEST_DATE } from "@/lib/real/snapshots";
+
 /**
  * RNG déterministe (mulberry32) : mêmes données à chaque rendu,
  * côté serveur comme côté client — indispensable pour l'hydration.
@@ -22,16 +24,13 @@ export function hashString(s: string): number {
   return h >>> 0;
 }
 
-/** RNG dérivé d'une clé stable ("sky-lune:streams:spotify"). */
+/** RNG dérivé d'une clé stable ("dadju:streams:spotify"). */
 export function rngFor(key: string) {
   return mulberry32(hashString(key));
 }
 
-/**
- * "Aujourd'hui" figé pour la démo : les séries sont stables d'un jour à
- * l'autre pendant le développement. À brancher sur Date.now() en prod.
- */
-export const DEMO_TODAY = new Date("2026-07-02T00:00:00Z");
+/** « Aujourd'hui » = date du dernier relevé réel : les séries restent stables entre deux snapshots. */
+export const DEMO_TODAY = new Date(`${LATEST_DATE}T00:00:00Z`);
 
 export function daysAgo(n: number): Date {
   const d = new Date(DEMO_TODAY);

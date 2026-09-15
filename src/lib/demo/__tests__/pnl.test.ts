@@ -62,7 +62,7 @@ describe("pnlByYear", () => {
   );
 
   it("les années sont triées croissantes", () => {
-    const years = pnlByYear("kayro").map((y) => y.year);
+    const years = pnlByYear("nono-la-grinta").map((y) => y.year);
     expect(years).toEqual([...years].sort((a, b) => a - b));
   });
 });

@@ -16,7 +16,7 @@ describe("revenueForecast — structure", () => {
   });
 
   it("respecte un horizon personnalisé", () => {
-    const fc = revenueForecast("sky-lune", { horizon: 6 });
+    const fc = revenueForecast("dadju", { horizon: 6 });
     expect(fc.filter((p) => p.projected !== null)).toHaveLength(6);
   });
 
@@ -51,7 +51,7 @@ describe("revenueForecast — bande de confiance", () => {
   });
 
   it("les points historiques n'ont pas de bande", () => {
-    for (const p of revenueForecast("vela")) {
+    for (const p of revenueForecast("kiko")) {
       if (p.actual === null) continue;
       expect(p.projected).toBeNull();
       expect(p.low).toBeNull();
@@ -81,8 +81,10 @@ describe("revenueForecast — scénarios", () => {
   });
 
   it("deux appels identiques donnent la même prévision", () => {
-    expect(JSON.stringify(revenueForecast("kayro", { growthDelta: 0.1 }))).toBe(
-      JSON.stringify(revenueForecast("kayro", { growthDelta: 0.1 })),
+    expect(
+      JSON.stringify(revenueForecast("nono-la-grinta", { growthDelta: 0.1 })),
+    ).toBe(
+      JSON.stringify(revenueForecast("nono-la-grinta", { growthDelta: 0.1 })),
     );
   });
 });
