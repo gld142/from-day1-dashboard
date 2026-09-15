@@ -28,7 +28,8 @@ doit rendre cette bascule triviale (voir §7, interface `StreamSource`).
 ### Dedans
 
 1. Couche de données réelles pour Kiko, Dadju, Nono La Grinta (snapshots
-   quotidiens versionnés dans le repo).
+   quotidiens versionnés dans le repo) : Spotify, Kworb, Deezer, YouTube,
+   villes d'écoute.
 2. L'algo Day 1 : estimateur de revenus multi-DSP en fourchette, mix DSP par
    artiste, calibration par relevé, écart d'audit, Position algo, Day 1 Index et
    Pulse alimentés par le réel.
@@ -45,7 +46,7 @@ doit rendre cette bascule triviale (voir §7, interface `StreamSource`).
 
 ### Dehors (jusqu'après la réunion)
 
-Auth, backend et persistance, Soundcharts live, YouTube, les cinq autres
+Auth, backend et persistance, Soundcharts live, les cinq autres
 canaux (SACEM, ADAMI, SPEDIDAM, MaMA, Bolero), l'import S4A automatisé au-delà
 d'un parser CSV, tout nouveau module.
 
@@ -60,6 +61,7 @@ d'un parser CSV, tout nouveau module.
 | Titres suivis par Kworb | — | 239 | ~55 |
 | Play counts publics top 5 (page Spotify rendue) | *Odjo* 203 809, *Business class* 122 254, *One in a million* 124 394, *Rayon de soleil* 69 866, *Ding Deng Dong* 91 405 | oui | oui |
 | Deezer artist id / fans | à identifier (candidat `9161`, à vérifier par les titres) | `4803754` / 3 276 021 | `194146027` / 289 972 |
+| YouTube | chaîne à identifier | chaîne `UC8HMvOLE0etpO_eVjJ98bHA` (DADJU), 8,01 M d'abonnés ; *Reine* (clip) 439 698 165 vues | chaîne à identifier |
 | Statut dans la démo | indé (distribution) | signé label (deal artiste) | signé label (deal artiste) |
 
 Kiko = « Golden Boy from Togo », confirmé par Gaël.
@@ -72,11 +74,15 @@ Kiko = « Golden Boy from Togo », confirmé par Gaël.
 | Page artiste Spotify (rendue JS, Playwright) | play count cumulé des 5 titres populaires | page publique | quotidien ; delta J/J-1 = streams réels du jour pour ces 5 titres |
 | Kworb `spotify/artist/<id>_songs.html` | total cumulé + débit quotidien **par titre** | site public | quotidien (Dadju, Nono) |
 | API Deezer publique `api.deezer.com` | fans artiste, rang de popularité par titre | API officielle sans clé | quotidien, signal de mix DSP |
+| YouTube Data API v3 (clé Google Cloud gratuite, 10 000 unités/jour) | vues cumulées par vidéo (chaîne officielle + chaîne « Topic »), abonnés | API officielle | quotidien ; delta J/J-1 = vues réelles du jour |
+| Page artiste Spotify rendue — bloc « Plus d'infos » | les 5 villes où l'artiste est le plus écouté, avec auditeurs | page publique | quotidien, pondération territoriale (§5.1) |
 | Export Spotify for Artists de Kiko (CSV) | historique quotidien réel par titre | fourni par l'artiste | si Gaël l'obtient avant mercredi |
 | Apple Music | rien de public (métadonnées iTunes seulement) | — | estimé uniquement |
 
-Ce qui n'existe pour personne, même payant : les streams Apple et Deezer d'un
-artiste. Tout le marché les estime ; nous aussi, mais on le dit.
+Ce qui n'existe pour personne, même payant : les streams Apple, Deezer et
+Amazon d'un artiste. Tout le marché les estime ; nous aussi, mais on le dit.
+YouTube, lui, est mesurable : on ne compte que les vues des chaînes de
+l'artiste (officielle + « Topic »), jamais le Content ID sur des vidéos tierces.
 
 ## 4. Couche de données réelles
 
@@ -99,7 +105,12 @@ relève les sources ci-dessus pour les trois artistes et écrit
     "dailyStreams": 1587902,
     "tracks": [{ "name": "Reine", "total": 228869436, "daily": 82112 }]
   },
-  "deezer": { "fans": 3276021, "topTracks": [{ "title": "…", "rank": 963029 }] }
+  "deezer": { "fans": 3276021, "topTracks": [{ "title": "…", "rank": 963029 }] },
+  "youtube": {
+    "subscribers": 8010000,
+    "videos": [{ "videoId": "tVKaN_H35xs", "title": "Reine", "channel": "official", "views": 439698165 }]
+  },
+  "topCities": [{ "city": "Paris", "country": "FR", "listeners": 512000 }]   // page Spotify rendue
 }
 ```
 
@@ -160,35 +171,66 @@ rien ne casse.
 
 ## 5. L'algo Day 1
 
-### 5.1 Estimateur de revenus
+### 5.1 Estimateur de revenus — le stream rémunérateur
 
-Pour chaque jour et chaque DSP :
+Principe : partir d'un taux **mesuré pour la France** et le corriger par ce
+qu'on sait de l'artiste, plutôt que d'appliquer une moyenne mondiale.
+
+**Ancrage (mesuré, SNEP bilan 2025, côté producteur = brut master)** :
+abonnement audio 553 M€ pour 122 Md de streams premium → **0,00453 €/stream
+premium** ; freemium ≈ 84 M€ (déduit de « +12 %, soit +9 M€ ») pour ≈ 30 Md
+de streams → **≈ 0,0028 €** ; audio mixé 80/20 → ≈ 0,0042 €. Ces trois
+valeurs et leur source sont dans `params.ts`.
+
+Pour chaque jour, titre et DSP :
 
 ```
-brut_ayant_droit(dsp, j) = streams(dsp, j) × taux(dsp)
+€ brut master = streams_rémunérateurs × taux(DSP, territoire, tier)
 ```
 
-- `streams(spotify, j)` : mesuré ou reconstitué (§4).
-- `streams(autre_dsp, j)` : `streams(spotify, j) × mix(dsp) / mix(spotify)`
-  (§5.2).
-- `taux(dsp)` : paramètre en fourchette basse/haute, € par stream brut reversé
-  aux ayants droit. Valeurs de départ (hypothèses issues des fourchettes
-  couramment publiées, **à recaler par relevé**) : Spotify 0,0030–0,0042 ;
-  Deezer 0,0040–0,0060 ; Apple 0,0060–0,0080 ; Amazon 0,0035–0,0050 ; YouTube
-  0,0010–0,0020. Centralisées dans `src/lib/real/params.ts` avec leur source.
+1. **Rémunérabilité** — un stream compte s'il est ≥ 30 s (les compteurs
+   publics Spotify sont supposés suivre cette règle ; à vérifier sur le relevé
+   de Kiko), si le titre dépasse le seuil du DSP (Spotify : ≥ 1 000 streams sur
+   12 mois glissants, sinon 0 €), et s'il n'est pas retiré comme artificiel
+   (on n'a pas ce signal : on affiche l'hypothèse « 0 % retiré »). L'UI montre
+   « streams » et « streams rémunérateurs » côte à côte.
+2. **DSP** — coefficient par DSP appliqué au taux France : Spotify 0,85
+   (plus de gratuit), Deezer 1,15, Apple 1,45 (pas de gratuit), Amazon 1,0,
+   YouTube : clips officiels 0,25 (AVOD), art tracks « Topic » 0,7. Bornes
+   basse/haute ± 15 % autour de chaque coefficient. Valeurs de départ
+   (hypothèses, cohérentes avec les fourchettes publiées), à recaler par relevé.
+3. **Deezer artist-centric** (modèle lancé avec Universal en 2023, étendu à la
+   SACEM en 2025) — si l'artiste est « professionnel » (≥ 1 000 streams/mois
+   par ≥ 500 auditeurs uniques : les trois le sont), ses streams Deezer pèsent
+   ×2 ; les écoutes actives (recherche, playlist non algorithmique) ×2 encore.
+   Part d'écoutes actives : hypothèse 40 % (paramètre). Poids Deezer effectif
+   affiché dans l'UI — c'est un argument face à Universal.
+4. **Territoire** — la page Spotify publique donne les 5 premières villes
+   d'écoute ; on en déduit une répartition par zone (France/Belgique/Suisse,
+   Europe, Amérique du Nord, Afrique, reste) et un taux par zone en fraction du
+   taux France (départ : FR/BE/CH 1,0 ; Europe 0,9 ; Amérique du Nord 1,1 ;
+   Afrique 0,15 ; reste 0,5). Pour Kiko, c'est le correctif principal.
+5. **Tier** — part premium/gratuit : 80/20 (France) par défaut ; le relevé
+   distributeur, qui sépare Spotify Free et Premium par pays, la remplace.
 
-Sorties : jour, semaine, mois, année glissante, chacune en **fourchette**
-(basse / centrale / haute) avec un **niveau de confiance** :
+Sorties : jour, semaine, mois, année glissante, en **fourchette** basse /
+centrale / haute, avec un **niveau de confiance** :
 
-- *élevé* : période entièrement mesurée et taux calibré par relevé ;
-- *moyen* : mesuré mais taux par défaut, ou reconstitué avec taux calibré ;
-- *indicatif* : reconstitué et taux par défaut.
+- *élevé* : période mesurée, taux et mix calibrés par relevé ;
+- *moyen* : mesuré avec paramètres par défaut, ou reconstitué avec calibration ;
+- *indicatif* : reconstitué et paramètres par défaut.
 
-Deux lectures :
+Deux cascades, affichées séparément :
 
-- **vue label** : brut ayant droit ;
-- **vue artiste** : part artiste = brut × taux contractuel (simulé, cohérent
-  avec `dealType` : indé/distribution ≈ 85–100 %, deal artiste ≈ 18–25 %).
+- **Master** : brut master → vue label = brut ; vue artiste = brut ×
+  part contractuelle (simulée, cohérente avec `dealType` : distribution 85–100 %,
+  deal artiste 18–25 % du net, recoupement ignoré dans la démo).
+- **Édition (droits d'auteur)** : ≈ 15 % du chiffre DSP part vers l'édition ;
+  l'artiste auteur-compositeur en touche sa part via la SACEM (paramètre de
+  départ : 50 % de la part édition, simulé par titre selon les splits).
+
+Précision attendue (avis, à vérifier sur Kiko) : ± 25 % sans relevé, ± 20 %
+avec le mix corrigé, ± 5 % après calibration.
 
 ### 5.2 Mix DSP par artiste
 
@@ -196,7 +238,8 @@ Parts de marché France streaming audio (hypothèse de départ, dans
 `params.ts`) : Spotify 55 %, Deezer 17 %, Apple 14 %, Amazon 6 %, YouTube Music
 5 %, autres 3 %.
 
-Correction par artiste avec un signal réel : `r = fansDeezer / auditeursMensuelsSpotify`.
+Correction par artiste avec deux signaux réels : `r = fansDeezer / auditeursMensuelsSpotify`
+pour Deezer ; pour YouTube, pas d'estimation : les vues sont mesurées (§3).
 La médiane de marché `r₀` est un paramètre (départ : 0,25). Le poids Deezer de
 l'artiste est multiplié par `clamp(r / r₀, 0,5, 2,5)`, puis le mix est
 renormalisé. Dadju (r ≈ 0,51) voit sa part Deezer relevée ; Kiko (à mesurer)
@@ -291,6 +334,7 @@ src/lib/real/real-source.ts      // §4.4
 src/lib/real/params.ts           // taux, parts de marché, seuils, r₀
 src/lib/real/estimator.ts        // §5.1
 src/lib/real/dsp-mix.ts          // §5.2
+src/lib/real/territory.ts        // §5.1 point 4 — villes → zones → coefficient
 src/lib/real/calibration.ts      // §5.3
 src/lib/real/audit-gap.ts        // §5.4
 src/lib/userdata/parse-s4a.ts    // §4.5, optionnel
@@ -349,6 +393,9 @@ Audit / Day 1 Index / Roster (consommation des nouvelles sorties + badges),
 - Les taux par stream sont des hypothèses : affichés en fourchette et
   étiquetés, jamais un chiffre net.
 - Deezer id de Kiko à vérifier par ses titres avant de l'utiliser.
+- Clé YouTube Data API à créer par Gaël (Google Cloud, gratuit). Sans clé, le
+  script lit les pages publiques YouTube (`viewCount` dans le HTML), avec la
+  même provenance `measured` ; l'API reste la voie à garder en prod.
 - Pas de vrai relevé pour Dadju et Nono : l'écart d'audit est une mise en
   scène cohérente, et on le dit si on nous le demande.
 - Je n'ai pas encore relancé build et tests : l'état témoin de mardi peut
