@@ -24,6 +24,9 @@ export const DSPS: DSP[] = [
 
 export type CareerStage = "emerging" | "developing" | "established" | "peak";
 
+/** D'où vient un chiffre — affiché dans l'UI, jamais caché. */
+export type Provenance = "measured" | "reconstructed" | "estimated" | "simulated";
+
 export type Artist = {
   id: string;
   name: string;
@@ -39,6 +42,10 @@ export type Artist = {
   signedSince: string; // ISO date
   dealType: "licence" | "distribution" | "artiste" | "indé";
   country: string;
+  /** Identifiants externes (artistes réels de la démo). */
+  spotifyId?: string;
+  deezerId?: string;
+  youtubeChannelId?: string;
 };
 
 export type Project = {
@@ -66,6 +73,7 @@ export type StreamPoint = {
   date: string; // ISO day
   dsp: DSP;
   streams: number;
+  provenance?: Provenance;
 };
 
 export type RevenueSource =
