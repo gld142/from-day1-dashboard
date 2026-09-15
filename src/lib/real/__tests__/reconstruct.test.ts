@@ -68,4 +68,25 @@ describe("reconstructTrack", () => {
     expect(veille).toBeGreaterThanOrEqual(3_000 * 0.75);
     expect(veille).toBeLessThanOrEqual(3_000 * 1.25);
   });
+
+  it("catalogue : aucun rescaling quand Σ brut < 0,95·total", () => {
+    // 10 k/j × 364 j = 3,64 M ≪ 47,5 M : la série doit rester au niveau du débit relevé.
+    const s = reconstructTrack({ key: "w", total: 50_000_000, dailyNow: 10_000, days: 364, today: TODAY });
+    const sum = s.reduce((a, p) => a + p.streams, 0);
+    expect(sum).toBeGreaterThanOrEqual(0.9 * 10_000 * 364);
+    expect(sum).toBeLessThanOrEqual(1.15 * 10_000 * 364);
+    for (const p of s) {
+      expect(p.streams).toBeGreaterThanOrEqual(0.8 * 10_000);
+      expect(p.streams).toBeLessThanOrEqual(1.25 * 10_000);
+    }
+  });
+
+  it("sortie dans la fenêtre : la veille reste continue avec aujourd'hui", () => {
+    const s = reconstructTrack({
+      key: "z", total: 500_000, dailyNow: 2_000, days: 365, today: TODAY, releaseDate: "2026-07-01",
+    });
+    const veille = s[s.length - 2].streams;
+    expect(veille).toBeGreaterThanOrEqual(2_000 * 0.75);
+    expect(veille).toBeLessThanOrEqual(2_000 * 1.25);
+  });
 });

@@ -35,7 +35,7 @@ function weeklyFactor(dow: number): number {
   return w.other;
 }
 
-/** Poids de la rampe pour un jour à `i` jours d'aujourd'hui (0 ≤ w ≤ 1, w(0) = 1). */
+/** Poids de la rampe pour un jour à `i` jours d'aujourd'hui (w ≥ 0, w(0) = 1). */
 function rampWeight(alpha: number, i: number, N: number): number {
   return Math.max(0, 1 - (alpha * i) / N);
 }
@@ -67,6 +67,12 @@ export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
   const todayIso = isoDay(today);
   const release = input.releaseDate ? input.releaseDate.slice(0, 10) : null;
   const releaseMs = release ? Date.parse(`${release}T00:00:00Z`) : NaN;
+  // Pic de sortie normalisé par sa valeur à l'âge d'aujourd'hui : la série brute
+  // reste continue avec `dailyNow`, seule l'échelle du pic change (absorbée par
+  // la contrainte de somme).
+  const spikeAt = (ageDays: number) =>
+    1 + RECONSTRUCT.releaseSpike * Math.exp(-ageDays / RECONSTRUCT.releaseDecayDays);
+  const spikeToday = release ? spikeAt((today.getTime() - releaseMs) / DAY_MS) : 1;
 
   // 1. Série brute : débit × saisonnalité × bruit, modulée par la sortie.
   //    Le RNG est consommé à chaque jour, même à zéro, pour une séquence stable.
@@ -80,10 +86,7 @@ export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
     let v = dailyNow * weeklyFactor(d.getUTCDay()) * noise;
     if (release) {
       if (date < release) v = 0;
-      else {
-        const age = (d.getTime() - releaseMs) / DAY_MS;
-        v *= 1 + RECONSTRUCT.releaseSpike * Math.exp(-age / RECONSTRUCT.releaseDecayDays);
-      }
+      else v *= spikeAt((d.getTime() - releaseMs) / DAY_MS) / spikeToday;
     }
     dates.push(date);
     raw.push(v);
@@ -94,8 +97,9 @@ export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
 
   // 3. Contrainte de somme sur les autres jours (jamais sur aujourd'hui), par une
   //    rampe linéaire continue à aujourd'hui : w_i = max(0, 1 − α·i/N), i = jours
-  //    avant aujourd'hui (i = 0 → poids 1, donc raccord avec dailyNow). Si α > 1
-  //    la rampe touche zéro dans la fenêtre : le titre « naît » plus tard, sans saut.
+  //    avant aujourd'hui (i = 0 → poids 1, donc raccord avec dailyNow). α > 0
+  //    réduit le passé (si α > 1 la rampe touche zéro dans la fenêtre : le titre
+  //    « naît » plus tard, sans saut) ; α < 0 le relève (poids > 1).
   //    Sortie dans la fenêtre : toute l'histoire est visible → somme = total.
   //    Sinon : plafond à 95 % du total (un vieux titre du catalogue a pu streamer
   //    bien plus que 365 × son débit actuel, on le laisse tel quel).
@@ -104,11 +108,12 @@ export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
   const releaseInWindow = release !== null && release >= dates[0] && release <= todayIso;
   const cible = Math.max(0, (releaseInWindow ? total : 0.95 * total) - dailyNow);
   const weights: number[] = new Array<number>(days).fill(1);
-  if (releaseInWindow && others > 0 && others < cible) {
-    // Sortie dans la fenêtre mais pas assez de streams bruts : montée uniforme.
-    weights.fill(cible / others);
-  } else if (others > cible) {
-    const alpha = solveRamp(raw, N, cible);
+  if (others > 0 && (releaseInWindow || others > cible)) {
+    // Σ raw·(1 − α·i/N) = cible est linéaire en α : forme fermée exacte tant que la
+    // rampe ne touche pas zéro (α ≤ 1) ; au-delà la borne à 0 impose la bissection.
+    const moment = raw.slice(0, -1).reduce((a, v, j) => a + (v * (N - j)) / N, 0);
+    const linear = (others - cible) / moment;
+    const alpha = linear <= 1 ? linear : solveRamp(raw, N, cible);
     for (let j = 0; j < N; j++) weights[j] = rampWeight(alpha, N - j, N);
   }
 
