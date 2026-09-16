@@ -44,6 +44,7 @@ import {
   realTopTracks,
   simulatedStatement,
   summarize,
+  tiktokSignal as realTiktokSignal,
   weakest,
   type Confidence,
   type DailyEstimate,
@@ -51,6 +52,7 @@ import {
   type EstimateSummary,
   type Provenance,
   type Range,
+  type TikTokSignal,
 } from "@/lib/real";
 import {
   getUserData,
@@ -79,7 +81,7 @@ import type {
 
 export { ARTISTS, CONTRACTS, EMERGING, LABEL, PROJECTS, SPLITS, TEAM, TRACKS };
 export type { ForecastPoint };
-export type { DailyEstimate, EstimatePeriod, EstimateSummary };
+export type { DailyEstimate, EstimatePeriod, EstimateSummary, TikTokSignal };
 
 /* ─────────────── Fiches artistes (démo + profil utilisateur) ─────────────── */
 
@@ -176,6 +178,40 @@ export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
 /** Par DSP, la plus faible provenance sur la fenêtre — vide hors couche réelle. */
 export function provenanceByDsp(artistId: string, days = 30): Partial<Record<DSP, Provenance>> {
   return hasRealData(artistId) ? realProvenanceByDsp(artistId, days) : {};
+}
+
+/* ─────────────── Signal TikTok (viralité, pas revenu) ─────────────── */
+
+/**
+ * Vidéos utilisant les sons de l'artiste, delta hier, titre le plus repris,
+ * rang tendances FR. Simulé (badge) tant qu'aucun relevé TikTok n'existe ;
+ * null hors couche réelle.
+ */
+export function tiktokSignal(artistId: string): TikTokSignal | null {
+  return hasRealData(artistId) ? realTiktokSignal(artistId) : null;
+}
+
+/**
+ * Signal TikTok du roster : Σ vidéos et Σ delta des artistes réels ; le titre
+ * le plus repris est celui de l'artiste qui cumule le plus de vidéos (les
+ * relevés ne donnent pas le détail par son) ; meilleur rang FR non nul ;
+ * provenance = la plus faible. null si aucun artiste réel.
+ */
+export function rosterTiktokSignal(): TikTokSignal | null {
+  const parts = ARTISTS.flatMap((a) => {
+    const s = tiktokSignal(a.id);
+    return s ? [s] : [];
+  });
+  if (parts.length === 0) return null;
+  const biggest = parts.reduce((a, p) => (p.videos > a.videos ? p : a), parts[0]);
+  const ranks = parts.flatMap((p) => (p.trendingRankFr === null ? [] : [p.trendingRankFr]));
+  return {
+    videos: parts.reduce((s, p) => s + p.videos, 0),
+    deltaYesterday: parts.reduce((s, p) => s + p.deltaYesterday, 0),
+    topSound: biggest.topSound,
+    trendingRankFr: ranks.length > 0 ? Math.min(...ranks) : null,
+    provenance: weakest(parts.map((p) => p.provenance)),
+  };
 }
 
 /* ─────────────── Séries — utilisateur > réel > démo ─────────────── */

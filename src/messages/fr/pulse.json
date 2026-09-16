@@ -53,6 +53,12 @@
       "kicker": "Momentum 7 jours",
       "body": "Streams sur 7 jours : {delta} vs la semaine précédente."
     },
+    "tiktok": {
+      "kicker": "TikTok · signal",
+      "body": "≈ {videos} vidéos utilisent tes sons, {delta} hier. Titre le plus repris : « {sound} ».",
+      "bodyWithTrend": "≈ {videos} vidéos utilisent tes sons, {delta} hier. Titre le plus repris : « {sound} », n° {rank} des tendances France.",
+      "note": "Signal de viralité, pas un stream rémunéré."
+    },
     "nextShow": {
       "kicker": "Prochaine date",
       "body": "{venue}, {city} dans {days} j — {sold} / {capacity} billets vendus."
@@ -72,6 +78,11 @@
     "labelNextShow": {
       "kicker": "Prochaine date roster",
       "body": "{name} — {venue}, {city} dans {days} j."
+    },
+    "tiktokRoster": {
+      "kicker": "TikTok · roster",
+      "body": "≈ {videos} vidéos utilisent les sons du roster, {delta} hier. Titre le plus repris : « {sound} ».",
+      "bodyWithTrend": "≈ {videos} vidéos utilisent les sons du roster, {delta} hier. Titre le plus repris : « {sound} », n° {rank} des tendances France."
     },
     "contractCount": {
       "kicker": "Contrats",

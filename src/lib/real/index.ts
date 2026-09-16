@@ -12,4 +12,16 @@ export {
 export { estimateDay, summarize, weakest } from "./estimator";
 export { calibrationFromUserData, type Calibration } from "./calibration";
 export { auditGap, simulatedStatement } from "./audit-gap";
-export type { Confidence, DailyEstimate, EstimatePeriod, EstimateSummary, Provenance, Range, Snapshot } from "./types";
+export { tiktokSignal } from "./tiktok-signal";
+export type {
+  Confidence,
+  DailyEstimate,
+  EstimatePeriod,
+  EstimateSummary,
+  Provenance,
+  Range,
+  Snapshot,
+  TikTokSignal,
+  TikTokSnapshot,
+  TikTokSound,
+} from "./types";

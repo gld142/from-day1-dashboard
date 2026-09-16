@@ -13,6 +13,7 @@ import {
   Crown,
   FileWarning,
   Flame,
+  Music2,
   Radio,
   TrendingDown,
   TrendingUp,
@@ -46,14 +47,17 @@ import {
   provenanceByDsp,
   rosterEstimateSummary,
   rosterRows,
+  rosterTiktokSignal,
   streamsByDsp,
   streamsDelta,
   sumStreams,
+  tiktokSignal,
   topTracks,
   tourDates,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
-import type { EstimatePeriod, EstimateSummary } from "@/lib/demo/api";
+import type { EstimatePeriod, EstimateSummary, TikTokSignal } from "@/lib/demo/api";
+import type { Provenance } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
@@ -100,7 +104,40 @@ type Insight = {
   kicker: string;
   body: string;
   tone: InsightTone;
+  /** Provenance affichée en badge (ex. : signal TikTok simulé). */
+  badge?: Provenance;
+  /** Note discrète sous le corps. */
+  footnote?: string;
 };
+
+/** Delta signé (« +1 234 » / « −56 » / « +0 ») pour les compteurs de vidéos. */
+function fmtSigned(locale: string, n: number): string {
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 0,
+    signDisplay: "always",
+  }).format(n);
+}
+
+/**
+ * Corps de l'insight TikTok : la phrase avec rang FR quand il existe, sinon
+ * sans — deux clés distinctes plutôt qu'une concaténation, pour que chaque
+ * langue garde sa propre ponctuation.
+ */
+function tiktokBody(
+  t: ReturnType<typeof useTranslations<"pulse">>,
+  locale: string,
+  ns: "overnight.tiktok" | "overnight.tiktokRoster",
+  s: TikTokSignal,
+): string {
+  const params = {
+    videos: fmtCompact(locale, s.videos),
+    delta: fmtSigned(locale, s.deltaYesterday),
+    sound: s.topSound ?? "—",
+  };
+  return s.trendingRankFr === null
+    ? t(`${ns}.body`, params)
+    : t(`${ns}.bodyWithTrend`, { ...params, rank: s.trendingRankFr });
+}
 
 export default function PulsePage() {
   const t = useTranslations("pulse");
@@ -149,6 +186,7 @@ export default function PulsePage() {
     const nightTotal = night.reduce((s, d) => s + d.streams, 0);
     const bestDsp = night[0];
     const topTrack = topTracks(artistId, 1, 1)[0];
+    const tiktok = tiktokSignal(artistId);
     const nextShow = tourDates(artistId).find((d) => d.status === "upcoming");
     const alerts = CONTRACTS.filter((c) => c.artistId === artistId).flatMap(
       (c) => c.alerts,
@@ -190,6 +228,18 @@ export default function PulsePage() {
       body: t("overnight.momentum.body", { delta: fmtPct(locale, d7) }),
       tone: d7 >= 0 ? "success" : "destructive",
     });
+    if (tiktok) {
+      // Signal de viralité, pas un revenu : badge de provenance + note explicite.
+      insights.push({
+        key: "tiktok",
+        icon: Music2,
+        kicker: t("overnight.tiktok.kicker"),
+        body: tiktokBody(t, locale, "overnight.tiktok", tiktok),
+        tone: "brand",
+        badge: tiktok.provenance,
+        footnote: t("overnight.tiktok.note"),
+      });
+    }
     if (nextShow) {
       insights.push({
         key: "nextShow",
@@ -269,6 +319,7 @@ export default function PulsePage() {
     const alertCount = CONTRACTS.flatMap((c) => c.alerts).filter(
       (a) => a.severity !== "info",
     ).length;
+    const tiktok = rosterTiktokSignal();
 
     const insights: Insight[] = [];
     if (topMover) {
@@ -307,6 +358,17 @@ export default function PulsePage() {
           days: daysUntil(nextShow.date),
         }),
         tone: "muted",
+      });
+    }
+    if (tiktok) {
+      insights.push({
+        key: "tiktokRoster",
+        icon: Music2,
+        kicker: t("overnight.tiktokRoster.kicker"),
+        body: tiktokBody(t, locale, "overnight.tiktokRoster", tiktok),
+        tone: "brand",
+        badge: tiktok.provenance,
+        footnote: t("overnight.tiktok.note"),
       });
     }
     insights.push({
@@ -491,7 +553,7 @@ export default function PulsePage() {
             <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">
               {t("overnight.title")}
             </h2>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {artistView.insights.map((i) => (
                 <InsightCard
                   key={i.key}
@@ -499,6 +561,8 @@ export default function PulsePage() {
                   kicker={i.kicker}
                   body={i.body}
                   tone={i.tone}
+                  badge={i.badge}
+                  footnote={i.footnote}
                 />
               ))}
             </div>
@@ -601,7 +665,7 @@ export default function PulsePage() {
             <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">
               {t("overnight.title")}
             </h2>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {labelView.insights.map((i) => (
                 <InsightCard
                   key={i.key}
@@ -609,6 +673,8 @@ export default function PulsePage() {
                   kicker={i.kicker}
                   body={i.body}
                   tone={i.tone}
+                  badge={i.badge}
+                  footnote={i.footnote}
                 />
               ))}
             </div>

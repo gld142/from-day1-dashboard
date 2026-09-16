@@ -53,6 +53,12 @@
       "kicker": "7-day momentum",
       "body": "7-day streams: {delta} vs the previous week."
     },
+    "tiktok": {
+      "kicker": "TikTok · signal",
+      "body": "≈ {videos} videos use your sounds, {delta} yesterday. Most reused track: “{sound}”.",
+      "bodyWithTrend": "≈ {videos} videos use your sounds, {delta} yesterday. Most reused track: “{sound}”, #{rank} in France trends.",
+      "note": "Virality signal, not a paid stream."
+    },
     "nextShow": {
       "kicker": "Next show",
       "body": "{venue}, {city} in {days} d — {sold} / {capacity} tickets sold."
@@ -72,6 +78,11 @@
     "labelNextShow": {
       "kicker": "Next roster show",
       "body": "{name} — {venue}, {city} in {days} d."
+    },
+    "tiktokRoster": {
+      "kicker": "TikTok · roster",
+      "body": "≈ {videos} videos use the roster's sounds, {delta} yesterday. Most reused track: “{sound}”.",
+      "bodyWithTrend": "≈ {videos} videos use the roster's sounds, {delta} yesterday. Most reused track: “{sound}”, #{rank} in France trends."
     },
     "contractCount": {
       "kicker": "Contracts",

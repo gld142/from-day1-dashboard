@@ -12,6 +12,7 @@ import {
   PROJECTS,
   getArtist,
   provenanceByDsp,
+  tiktokSignal,
   topTracks,
 } from "@/lib/demo/api";
 import type { DSP } from "@/lib/demo/types";
@@ -126,6 +127,12 @@ export default function StreamsPage() {
   }, [aggregate, artistId, days, byDsp]);
   const maxCountry = Math.max(1, ...countries.map((c) => c.streams));
 
+  /* Signal TikTok (viralité, pas revenu) — un seul artiste réel, jamais en roster agrégé. */
+  const tiktok = useMemo(
+    () => (aggregate ? null : tiktokSignal(artistId)),
+    [aggregate, artistId],
+  );
+
   const pct = (n: number) => fmtPct(locale, n).replace("+", "");
 
   return (
@@ -235,6 +242,16 @@ export default function StreamsPage() {
                 <ProvenanceBadge provenance={provenance} />
               </span>
             ))}
+          </div>
+        )}
+        {tiktok && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 px-1 text-xs text-muted-foreground">
+            <span>
+              {t("tiktokSignal", { videos: fmtCompact(locale, tiktok.videos) })}
+            </span>
+            <span aria-hidden>·</span>
+            <span>{t("tiktokNote")}</span>
+            <ProvenanceBadge provenance={tiktok.provenance} />
           </div>
         )}
       </div>

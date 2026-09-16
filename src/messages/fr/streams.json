@@ -2,6 +2,8 @@
   "title": "Streams live",
   "subtitle": "Performance multi-plateformes, territoires et titres — mise à jour quotidienne.",
   "provenanceLegend": "Provenance par plateforme",
+  "tiktokSignal": "TikTok · ≈ {videos} vidéos utilisent les sons",
+  "tiktokNote": "signal de viralité, pas un stream rémunéré",
   "kpi": {
     "total": "Streams sur la période",
     "delta": "Évolution",

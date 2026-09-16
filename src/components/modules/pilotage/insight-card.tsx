@@ -3,8 +3,12 @@
 /**
  * Carte insight "Ce qui a changé cette nuit" :
  * icône teintée + kicker + phrase générée depuis les données.
+ * Optionnel : badge de provenance en fin de kicker (mesuré / simulé…) et
+ * note de bas de carte en petit (« signal de viralité, pas un stream rémunéré »).
  */
 import type { LucideIcon } from "lucide-react";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import type { Provenance } from "@/lib/demo/types";
 import { cn } from "@/lib/utils";
 
 export type InsightTone = "brand" | "success" | "warning" | "destructive" | "muted";
@@ -22,12 +26,18 @@ export function InsightCard({
   kicker,
   body,
   tone = "brand",
+  badge,
+  footnote,
   className,
 }: {
   icon: LucideIcon;
   kicker: string;
   body: string;
   tone?: InsightTone;
+  /** Provenance de la donnée qui porte l'insight — rendue en badge à droite du kicker. */
+  badge?: Provenance;
+  /** Note discrète sous le corps (ex. : rappel qu'un signal n'est pas un revenu). */
+  footnote?: string;
   className?: string;
 }) {
   return (
@@ -49,8 +59,12 @@ export function InsightCard({
         <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
           {kicker}
         </span>
+        {badge && <ProvenanceBadge provenance={badge} className="ml-auto" />}
       </div>
       <p className="text-sm leading-snug">{body}</p>
+      {footnote && (
+        <p className="mt-auto text-xs text-muted-foreground">{footnote}</p>
+      )}
     </div>
   );
 }
