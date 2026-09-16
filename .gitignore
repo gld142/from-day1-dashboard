@@ -45,3 +45,6 @@ e2e/screenshots/
 .next-e2e/
 test-results/
 playwright-report/
+
+# Moteur binaire impeccable (12 Mo) — téléchargé à la volée, jamais versionné
+.claude/skills/impeccable/scripts/bin/
