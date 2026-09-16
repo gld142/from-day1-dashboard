@@ -7,7 +7,14 @@
  */
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ARTISTS, PROJECTS, getArtist, topTracks } from "@/lib/demo/api";
+import {
+  ARTISTS,
+  PROJECTS,
+  getArtist,
+  provenanceByDsp,
+  topTracks,
+} from "@/lib/demo/api";
+import type { DSP } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -15,6 +22,7 @@ import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   aggregateWeekly,
@@ -104,6 +112,18 @@ export default function StreamsPage() {
   }, [ids, days, total]);
 
   const countries = useMemo(() => combinedCountries(ids, days), [ids, days]);
+
+  /* Provenance par plateforme (couche réelle, un seul artiste) — même ordre que
+   * le tableau de répartition (par volume), sur la fenêtre affichée. Vide en vue
+   * roster agrégée. */
+  const provByDsp = useMemo(() => {
+    if (aggregate) return [];
+    const prov = provenanceByDsp(artistId, days);
+    return byDsp.flatMap(({ dsp }) => {
+      const p = prov[dsp as DSP];
+      return p ? [{ dsp, provenance: p }] : [];
+    });
+  }, [aggregate, artistId, days, byDsp]);
   const maxCountry = Math.max(1, ...countries.map((c) => c.streams));
 
   const pct = (n: number) => fmtPct(locale, n).replace("+", "");
@@ -203,9 +223,20 @@ export default function StreamsPage() {
         </div>
       )}
 
-      {/* Répartition DSP */}
+      {/* Répartition DSP + légende de provenance par plateforme */}
       <div className="mt-4">
         <DspBreakdown ids={ids} days={days} />
+        {provByDsp.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 px-1 text-xs text-muted-foreground">
+            <span>{t("provenanceLegend")}</span>
+            {provByDsp.map(({ dsp, provenance }) => (
+              <span key={dsp} className="inline-flex items-center gap-1">
+                <span>{t(`dsp.names.${dsp}`)}</span>
+                <ProvenanceBadge provenance={provenance} />
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Top titres */}
