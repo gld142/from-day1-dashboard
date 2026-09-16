@@ -1,10 +1,13 @@
 /**
  * API de lecture — LA façade que les pages consomment.
  *
- * Depuis l'import CSV : chaque fonction consulte d'abord le store des
- * données réelles de l'utilisateur (src/lib/userdata) ; si l'artistId
- * est le profil utilisateur actif, ce sont SES chiffres qui alimentent
- * tout le dashboard. Sinon, générateurs démo déterministes.
+ * Ordre de priorité des sources, pour chaque fonction :
+ *   1. le store des données de l'utilisateur (src/lib/userdata) — si l'artistId
+ *      est le profil utilisateur actif, ce sont SES chiffres (import CSV) ;
+ *   2. la couche réelle (src/lib/real) — les artistes du roster dont on a des
+ *      relevés publics committés : streams, revenus streaming estimés, pays,
+ *      écarts d'audit, résumés d'estimation ;
+ *   3. les générateurs démo déterministes, pour tout le reste.
  */
 import {
   ARTISTS,
@@ -20,7 +23,6 @@ import {
 import {
   auditFindings as genAuditFindings,
   countryBreakdown as genCountryBreakdown,
-  dailyTotals as genDailyTotals,
   expensesFor as genExpensesFor,
   fanSegments as genFanSegments,
   revenueForecast as genRevenueForecast,
@@ -32,6 +34,26 @@ import {
 } from "./generators";
 import { DEMO_TODAY, isoMonth } from "./seed";
 import {
+  auditGap,
+  calibrationFromUserData,
+  hasRealData,
+  realCountryBreakdown,
+  realDailyEstimates,
+  realProvenanceByDsp,
+  realStreamSeries,
+  realTopTracks,
+  simulatedStatement,
+  summarize,
+  weakest,
+  type Confidence,
+  type DailyEstimate,
+  type EstimatePeriod,
+  type EstimateSummary,
+  type Provenance,
+  type Range,
+} from "@/lib/real";
+import {
+  getUserData,
   isUserArtist,
   userArtist,
   userCountryBreakdown,
@@ -43,6 +65,7 @@ import type {
   Artist,
   AuditFinding,
   CountryStreams,
+  DSP,
   Expense,
   ExpenseCategory,
   FanSegment,
@@ -56,6 +79,7 @@ import type {
 
 export { ARTISTS, CONTRACTS, EMERGING, LABEL, PROJECTS, SPLITS, TEAM, TRACKS };
 export type { ForecastPoint };
+export type { DailyEstimate, EstimatePeriod, EstimateSummary };
 
 /* ─────────────── Fiches artistes (démo + profil utilisateur) ─────────────── */
 
@@ -67,28 +91,130 @@ export function getArtist(id: string): Artist {
   return getDemoArtist(id);
 }
 
-/* ─────────────── Séries — overlay utilisateur ─────────────── */
+/* ─────────────── Couche réelle : estimations € et calibration ─────────────── */
+
+export function hasReal(artistId: string): boolean {
+  return hasRealData(artistId);
+}
+
+/**
+ * Calibration active pour un artiste. Elle vient du relevé importé (mode
+ * « Mes données ») ; en démo elle s'applique au profil utilisateur et à Kiko
+ * si Gaël importe son vrai relevé (spec §5.3).
+ */
+function activeCalibration(artistId: string) {
+  const c = calibrationFromUserData(getUserData());
+  return c && (isUserArtist(artistId) || artistId === "kiko") ? c : null;
+}
+
+/* Memo des estimations quotidiennes : plusieurs pages (Pulse, Revenus, Audit…)
+ * redemandent la même fenêtre à chaque rendu ; 730 jours × 3 artistes ne doivent
+ * être calculés qu'une fois. Le cache est vidé dès que les données utilisateur
+ * changent (import, activation) — la calibration en dépend. */
+const estimatesMemo = new Map<string, DailyEstimate[]>();
+let estimatesMemoUserKey = "";
+
+function userDataKey(): string {
+  const ud = getUserData();
+  return ud ? `${ud.importedAt}|${ud.active}` : "";
+}
+
+/** Estimations € quotidiennes (fourchettes) — vide pour un artiste sans relevé réel. */
+export function dailyEstimates(artistId: string, days = 365): DailyEstimate[] {
+  if (!hasRealData(artistId)) return [];
+  const userKey = userDataKey();
+  if (userKey !== estimatesMemoUserKey) {
+    estimatesMemo.clear();
+    estimatesMemoUserKey = userKey;
+  }
+  const key = `${artistId}:${days}`;
+  const hit = estimatesMemo.get(key);
+  if (hit) return hit;
+  const cal = activeCalibration(artistId);
+  const out = realDailyEstimates(artistId, days, DEMO_TODAY, undefined, cal?.ratePerStream);
+  estimatesMemo.set(key, out);
+  return out;
+}
+
+export function estimateSummary(artistId: string, period: EstimatePeriod): EstimateSummary {
+  const a = getArtist(artistId);
+  return summarize(dailyEstimates(artistId, 365), period, {
+    calibrated: activeCalibration(artistId) !== null,
+    dealType: a.dealType,
+  });
+}
+
+const CONFIDENCE_ORDER: Confidence[] = ["indicative", "medium", "high"];
+const ZERO_RANGE: Range = { low: 0, mid: 0, high: 0 };
+const addRange = (a: Range, b: Range): Range => ({ low: a.low + b.low, mid: a.mid + b.mid, high: a.high + b.high });
+
+/**
+ * Résumé roster : somme des artistes réels. Confiance et provenance = les plus
+ * faibles rencontrées ; calibré seulement si tous le sont ; fenêtre du premier.
+ */
+export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
+  const parts = ARTISTS.filter((a) => hasRealData(a.id)).map((a) => estimateSummary(a.id, period));
+  const first = parts[0];
+  return {
+    period,
+    from: first?.from ?? "",
+    to: first?.to ?? "",
+    streams: parts.reduce((s, p) => s + p.streams, 0),
+    payableStreams: parts.reduce((s, p) => s + p.payableStreams, 0),
+    grossMaster: parts.reduce((acc, p) => addRange(acc, p.grossMaster), ZERO_RANGE),
+    artistShare: parts.reduce((acc, p) => addRange(acc, p.artistShare), ZERO_RANGE),
+    publishing: parts.reduce((acc, p) => addRange(acc, p.publishing), ZERO_RANGE),
+    confidence: parts.reduce<Confidence>(
+      (worst, p) => (CONFIDENCE_ORDER.indexOf(p.confidence) < CONFIDENCE_ORDER.indexOf(worst) ? p.confidence : worst),
+      first?.confidence ?? "indicative",
+    ),
+    provenance: weakest(parts.map((p) => p.provenance)),
+    calibrated: parts.length > 0 && parts.every((p) => p.calibrated),
+  };
+}
+
+/** Par DSP, la plus faible provenance sur la fenêtre — vide hors couche réelle. */
+export function provenanceByDsp(artistId: string, days = 30): Partial<Record<DSP, Provenance>> {
+  return hasRealData(artistId) ? realProvenanceByDsp(artistId, days) : {};
+}
+
+/* ─────────────── Séries — utilisateur > réel > démo ─────────────── */
 
 export function streamSeries(artistId: string, days = 365): StreamPoint[] {
   if (isUserArtist(artistId)) return userStreamSeries(days, DEMO_TODAY);
+  if (hasRealData(artistId)) return realStreamSeries(artistId, days);
   return genStreamSeries(artistId, days);
 }
 
+/** Agrégat quotidien tous DSP confondus — sur la source servie par `streamSeries`. */
 export function dailyTotals(artistId: string, days = 365) {
-  if (isUserArtist(artistId)) {
-    const byDay = new Map<string, number>();
-    for (const p of userStreamSeries(days, DEMO_TODAY)) {
-      byDay.set(p.date, (byDay.get(p.date) ?? 0) + p.streams);
-    }
-    return Array.from(byDay.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([date, streams]) => ({ date, streams }));
+  const byDay = new Map<string, number>();
+  for (const p of streamSeries(artistId, days)) {
+    byDay.set(p.date, (byDay.get(p.date) ?? 0) + p.streams);
   }
-  return genDailyTotals(artistId, days);
+  return Array.from(byDay.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, streams]) => ({ date, streams }));
+}
+
+/**
+ * Artiste réel : € streaming par mois = Σ mensuelle du brut master estimé (mid),
+ * sur 730 jours pour couvrir les 24 mois d'historique. Les autres sources de
+ * revenus restent synthétiques (générateur).
+ */
+function realStreamingByMonth(artistId: string): Map<string, number> {
+  const byMonth = new Map<string, number>();
+  for (const d of dailyEstimates(artistId, 730)) {
+    const month = d.date.slice(0, 7);
+    byMonth.set(month, (byMonth.get(month) ?? 0) + d.grossMaster.mid);
+  }
+  for (const [month, v] of byMonth) byMonth.set(month, Math.round(v));
+  return byMonth;
 }
 
 export function revenueSeries(artistId: string, months = 24): RevenuePoint[] {
   if (isUserArtist(artistId)) return userRevenueSeries(months, DEMO_TODAY);
+  if (hasRealData(artistId)) return genRevenueSeries(artistId, months, realStreamingByMonth(artistId));
   return genRevenueSeries(artistId, months);
 }
 
@@ -98,11 +224,8 @@ export function expensesFor(artistId: string, months = 24): Expense[] {
 }
 
 export function countryBreakdown(artistId: string, days = 30): CountryStreams[] {
-  if (isUserArtist(artistId)) {
-    const all = userCountryBreakdown();
-    if (all.length > 0) return all;
-  }
-  if (isUserArtist(artistId)) return [];
+  if (isUserArtist(artistId)) return userCountryBreakdown();
+  if (hasRealData(artistId)) return realCountryBreakdown(artistId, days) ?? genCountryBreakdown(artistId, days);
   return genCountryBreakdown(artistId, days);
 }
 
@@ -111,9 +234,44 @@ export function rightsStatements(artistId: string): RightsStatement[] {
   return genRightsStatements(artistId);
 }
 
+/** Trimestre ISO « YYYY-Tn » d'une date ISO. */
+function quarterOf(date: string): string {
+  return `${date.slice(0, 4)}-T${Math.ceil(Number(date.slice(5, 7)) / 3)}`;
+}
+
+/** Premier jour d'un trimestre « YYYY-Tn ». */
+function quarterStart(quarter: string): string {
+  const month = (Number(quarter.slice(6)) - 1) * 3 + 1;
+  return `${quarter.slice(0, 4)}-${String(month).padStart(2, "0")}-01`;
+}
+
+/**
+ * Écarts d'audit. Artistes réels : les écarts de droits générés sont conservés,
+ * mais l'écart « label » synthétique laisse place aux écarts estimé / déclaré par
+ * DSP et par trimestre clos — toujours attribués au DSP (audit-gap.ts).
+ */
 export function auditFindings(artistId: string): AuditFinding[] {
   if (isUserArtist(artistId)) return [];
-  return genAuditFindings(artistId);
+  if (!hasRealData(artistId)) return genAuditFindings(artistId);
+
+  const est = dailyEstimates(artistId, 365);
+  const currentQuarter = quarterOf(est[est.length - 1]?.date ?? "");
+  const firstDate = est[0]?.date ?? "";
+  const lines = new Map<string, { period: string; dsp: DSP; mid: number }>();
+  for (const d of est) {
+    const period = quarterOf(d.date);
+    // Trimestres clos seulement : ni le trimestre en cours, ni un trimestre entamé avant la fenêtre.
+    if (period === currentQuarter || quarterStart(period) < firstDate) continue;
+    for (const [dsp, v] of Object.entries(d.byDsp) as Array<[DSP, NonNullable<DailyEstimate["byDsp"][DSP]>]>) {
+      const key = `${period}:${dsp}`;
+      const line = lines.get(key) ?? { period, dsp, mid: 0 };
+      line.mid += v.gross.mid;
+      lines.set(key, line);
+    }
+  }
+  const closed = Array.from(lines.values());
+  const rights = genAuditFindings(artistId).filter((f) => !f.id.endsWith("-af-label"));
+  return [...auditGap(artistId, closed, simulatedStatement(artistId, closed)), ...rights];
 }
 
 export function tourDates(artistId: string): TourDate[] {
@@ -139,7 +297,10 @@ export function revenueForecast(
   artistId: string,
   opts?: { growthDelta?: number; horizon?: number },
 ): ForecastPoint[] {
-  if (!isUserArtist(artistId)) return genRevenueForecast(artistId, opts);
+  if (!isUserArtist(artistId)) {
+    // Même historique que `revenueSeries` : streaming estimé pour les artistes réels.
+    return genRevenueForecast(artistId, opts, hasRealData(artistId) ? realStreamingByMonth(artistId) : undefined);
+  }
 
   // Projection sur les données réelles : tendance composée simple.
   const horizon = opts?.horizon ?? 12;
@@ -216,6 +377,7 @@ export function topTracks(artistId: string, days: number, limit = 8) {
       streams: Math.round((t.streams / totalAll) * totalPeriod),
     })) as Array<Track & { streams: number }>;
   }
+  if (hasRealData(artistId)) return realTopTracks(artistId, days, limit);
   const total = sumStreams(artistId, days);
   return TRACKS.filter((t) => t.artistId === artistId)
     .map((t) => ({

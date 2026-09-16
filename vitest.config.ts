@@ -10,5 +10,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/__tests__/**/*.test.ts"],
+    // La couche réelle reconstruit 239 titres × 730 jours pour Dadju (~1 s isolé) ;
+    // sous forte charge machine, le premier appel a été mesuré à 7,5 s.
+    testTimeout: 20_000,
   },
 });

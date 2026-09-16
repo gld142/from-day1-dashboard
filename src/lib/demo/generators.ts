@@ -107,8 +107,9 @@ function sourceProfile(artistId: string): Record<RevenueSource, number> {
   };
 }
 
-/** Revenus mensuels par source sur `months` mois (défaut 24). */
-export function revenueSeries(artistId: string, months = 24): RevenuePoint[] {
+/** Revenus mensuels par source sur `months` mois (défaut 24).
+ *  `streamingOverride` (mois → € brut master) remplace le calcul synthétique — artistes réels. */
+export function revenueSeries(artistId: string, months = 24, streamingOverride?: Map<string, number>): RevenuePoint[] {
   const out: RevenuePoint[] = [];
   const profile = sourceProfile(artistId);
   const rand = rngFor(`${artistId}:revenue`);
@@ -119,7 +120,9 @@ export function revenueSeries(artistId: string, months = 24): RevenuePoint[] {
     const a = getArtist(artistId);
     const monthlyStreams = (getArtist(artistId).monthlyListeners * 2.6) *
       Math.pow(1 + a.growthRate, -(i - 0)) ;
-    const streaming = monthlyStreams * STREAM_RATE * (0.92 + rand() * 0.16);
+    // `rand()` est consommé dans les deux cas : le bruit du reste de la série ne bouge pas.
+    const synthetic = monthlyStreams * STREAM_RATE * (0.92 + rand() * 0.16);
+    const streaming = streamingOverride?.get(month) ?? synthetic;
 
     out.push({ month, source: "streaming", amount: Math.round(streaming), artistId });
 
@@ -262,8 +265,12 @@ const TEAM_SPENDERS = ["omar", "lisa", "ines", "gael"];
 export function expensesFor(artistId: string, months = 24): Expense[] {
   const rand = rngFor(`${artistId}:expenses`);
   const a = getArtist(artistId);
-  const scale =
+  const stageScale =
     a.careerStage === "established" ? 2.2 : a.careerStage === "developing" ? 1 : 0.55;
+  // Un artiste à 24 k auditeurs ne dépense pas comme un artiste à 6 M : sous 300 k auditeurs,
+  // l'échelle décroît linéairement.
+  const sizeFactor = Math.min(1, a.monthlyListeners / 300_000);
+  const scale = stageScale * sizeFactor;
   const projects = PROJECTS.filter((p) => p.artistId === artistId);
   const out: Expense[] = [];
   let n = 0;
@@ -508,15 +515,18 @@ export type ForecastPoint = {
  * Projection 12 mois : tendance (croissance composée artiste) ×
  * saisonnalité mensuelle apprise sur l'historique + bande de confiance.
  * `scenario` module la croissance (ex : +0.25 si sortie d'album prévue).
+ * `streamingOverride` : même sens que dans `revenueSeries` — l'historique projeté
+ * doit être celui que le dashboard affiche (artistes réels).
  */
 export function revenueForecast(
   artistId: string,
   opts?: { growthDelta?: number; horizon?: number },
+  streamingOverride?: Map<string, number>,
 ): ForecastPoint[] {
   const horizon = opts?.horizon ?? 12;
   const growthDelta = opts?.growthDelta ?? 0;
   const a = getArtist(artistId);
-  const history = revenueSeries(artistId, 24);
+  const history = revenueSeries(artistId, 24, streamingOverride);
   const byMonth = new Map<string, number>();
   for (const p of history) {
     byMonth.set(p.month, (byMonth.get(p.month) ?? 0) + p.amount);
