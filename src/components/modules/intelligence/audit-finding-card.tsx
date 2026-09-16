@@ -44,7 +44,7 @@ export function AuditFindingCard({
     <div className="flex flex-col gap-4 rounded-xl border bg-card p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{finding.source}</p>
+          <p className="text-sm font-medium leading-snug">{finding.source}</p>
           <p className="mt-0.5 text-xs text-muted-foreground">
             {t("finding.period", { period: finding.period })}
           </p>
@@ -61,29 +61,27 @@ export function AuditFindingCard({
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <div className="min-w-0">
-          <p className="text-[11px] text-muted-foreground">{t("finding.expected")}</p>
-          <p className="num mt-0.5 text-sm font-semibold">
-            {fmtEur(locale, finding.expected)}
-          </p>
-        </div>
-        <div className="min-w-0">
-          <p className="text-[11px] text-muted-foreground">{t("finding.reported")}</p>
-          <p className="num mt-0.5 text-sm font-semibold text-muted-foreground">
-            {fmtEur(locale, finding.reported)}
-          </p>
-        </div>
-        <div className="min-w-0">
-          <p className="text-[11px] text-muted-foreground">{t("finding.gap")}</p>
-          <p className="num mt-0.5 text-sm font-semibold text-destructive">
-            −{fmtEur(locale, gap)}
-          </p>
-        </div>
-      </div>
+      {/* Deux rangées de grille (libellés puis chiffres) : les montants restent
+          alignés même quand un libellé passe sur deux lignes. */}
+      <dl className="grid grid-cols-3 gap-x-3 gap-y-0.5">
+        <dt className="min-w-0 self-end text-xs text-muted-foreground">
+          {t("finding.expected")}
+        </dt>
+        <dt className="min-w-0 self-end text-xs text-muted-foreground">
+          {t("finding.reported")}
+        </dt>
+        <dt className="min-w-0 self-end text-xs text-muted-foreground">
+          {t("finding.gap")}
+        </dt>
+        <dd className="num text-sm font-semibold">{fmtEur(locale, finding.expected)}</dd>
+        <dd className="num text-sm font-semibold text-muted-foreground">
+          {fmtEur(locale, finding.reported)}
+        </dd>
+        <dd className="num text-sm font-semibold text-destructive">−{fmtEur(locale, gap)}</dd>
+      </dl>
 
       <div>
-        <div className="mb-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
+        <div className="mb-1.5 flex items-center justify-between text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1">
             <ScanSearch className="size-3" aria-hidden />
             {t("finding.confidence")}

@@ -28,10 +28,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const SEVERITY_STYLES: Record<ContractAlert["severity"], { border: string; icon: string }> = {
-  info: { border: "border-l-brand/60", icon: "text-brand" },
-  warning: { border: "border-l-warning/70", icon: "text-warning" },
-  danger: { border: "border-l-destructive/70", icon: "text-destructive" },
+/** La sévérité se lit sur la pastille de l'icône (fond teinté + trait), pas sur un bord latéral. */
+const SEVERITY_STYLES: Record<ContractAlert["severity"], { well: string; icon: string }> = {
+  info: { well: "bg-brand/12", icon: "text-brand" },
+  warning: { well: "bg-warning/12", icon: "text-warning" },
+  danger: { well: "bg-destructive/12", icon: "text-destructive" },
 };
 
 const KIND_ICONS: Record<ContractAlert["kind"], React.ComponentType<{ className?: string }>> = {
@@ -57,13 +58,15 @@ export function AlertCard({
   const message = alert.message[locale === "fr" ? "fr" : "en"];
 
   return (
-    <div
-      className={cn(
-        "flex items-start gap-3 rounded-xl border border-l-4 bg-card p-4",
-        style.border,
-      )}
-    >
-      <Icon className={cn("mt-0.5 size-4 shrink-0", style.icon)} aria-hidden />
+    <div className="flex items-start gap-3 rounded-xl border bg-card p-4">
+      <span
+        className={cn(
+          "flex size-7 shrink-0 items-center justify-center rounded-md",
+          style.well,
+        )}
+      >
+        <Icon className={cn("size-4", style.icon)} aria-hidden />
+      </span>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="text-xs font-semibold">{t(`alerts.kinds.${alert.kind}`)}</span>

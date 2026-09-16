@@ -330,7 +330,7 @@ function PartnerDialog({
               <h3 className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                 {t("dialog.pitchTitle")}
               </h3>
-              <blockquote className="rounded-lg border-l-2 border-brand bg-surface-2 p-3 font-heading text-[13px] italic leading-relaxed">
+              <blockquote className="rounded-lg bg-brand/8 p-3 font-heading text-[13px] italic leading-relaxed">
                 {t(`partners.${partner.id}.pitch`)}
               </blockquote>
             </section>

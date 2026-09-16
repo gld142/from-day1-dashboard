@@ -170,7 +170,7 @@ export default function RightsPage() {
       </div>
 
       {kpis.gapCount > 0 && (
-        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-l-4 border-l-warning/70 bg-card p-4">
+        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-warning/30 bg-warning/6 p-4">
           <TriangleAlert className="size-4 shrink-0 text-warning" aria-hidden />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-semibold">

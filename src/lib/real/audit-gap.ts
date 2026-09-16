@@ -45,7 +45,7 @@ export function auditGap(
       finding: {
         id: `${artistId}-gap-${e.dsp}-${e.period}`,
         artistId,
-        source: `${DSP_LABEL[e.dsp]} — écart estimé / déclaré`,
+        source: `${DSP_LABEL[e.dsp]} · écart estimé/déclaré`,
         period: e.period,
         expected: Math.round(e.mid),
         reported: Math.round(r.amount),
