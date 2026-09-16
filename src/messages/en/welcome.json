@@ -12,7 +12,7 @@
       "name": "Universal Music France",
       "welcomeTitle": "Welcome, <accent>Universal</accent> teams — your artists finally see what you see",
       "welcomeBody": "And you see what the platforms don't tell you. In 3 minutes, we connect the roster, map the contracts and deliver the first roster brief.",
-      "offer": "Pilot on a targeted roster — 90 days",
+      "offer": "Pilot on a targeted roster, 90 days",
       "steps": {
         "1": {
           "title": "Connect the Universal catalogue",
@@ -20,18 +20,18 @@
         },
         "2": {
           "title": "Map contracts & rights",
-          "desc": "Options, recoupments, period ends, splits, SACEM — every deadline becomes an alert, never a surprise."
+          "desc": "Options, recoupments, period ends, splits, SACEM: every deadline becomes an alert, never a surprise."
         },
         "3": {
           "title": "Receive the first roster brief",
-          "desc": "The label Pulse: growth signals, contractual alerts, DSP gaps to claim — calibrated on your data."
+          "desc": "The label Pulse, calibrated on your data: growth signals, contractual alerts, DSP gaps to claim."
         }
       },
-      "firstInsight": "“Across the 3 pilot artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter — DSP claim file ready.”",
+      "firstInsight": "“Across the 3 pilot artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter. DSP claim file ready.”",
       "values": {
         "1": {
           "promise": "Artist statement transparency",
-          "delivery": "Retention, fewer disputes — the artist understands their earnings, continuously"
+          "delivery": "Retention, fewer disputes: the artist understands their earnings, continuously"
         },
         "2": {
           "promise": "Contractual alerts",
@@ -39,11 +39,11 @@
         },
         "3": {
           "promise": "Continuous A&R signals",
-          "delivery": "Data-driven roster — momentum, concentration, drop-offs"
+          "delivery": "Data-driven roster: momentum, concentration, drop-offs"
         },
         "4": {
           "promise": "Label-side DSP audit",
-          "delivery": "Recover what the platforms underpay — substantiated claim, never an internal conflict"
+          "delivery": "Recover what the platforms underpay: substantiated claim, never an internal conflict"
         },
         "5": {
           "promise": "Co-branded artist portal",
@@ -98,7 +98,7 @@
       "steps": {
         "1": {
           "title": "Import your statement",
-          "desc": "DistroKid, TuneCore, Believe — one CSV, 100% local."
+          "desc": "DistroKid, TuneCore, Believe: one CSV, 100% local."
         },
         "2": {
           "title": "Check your tracks and splits",

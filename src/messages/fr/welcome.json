@@ -12,7 +12,7 @@
       "name": "Universal Music France",
       "welcomeTitle": "Bienvenue, équipes <accent>Universal</accent> — vos artistes voient enfin ce que vous voyez",
       "welcomeBody": "Et vous voyez ce que les plateformes ne vous disent pas. En 3 minutes, on connecte le roster, on cartographie les contrats et on livre le premier brief roster.",
-      "offer": "Pilote sur un roster ciblé — 90 jours",
+      "offer": "Pilote sur un roster ciblé, 90 jours",
       "steps": {
         "1": {
           "title": "Connectez le catalogue Universal",
@@ -20,18 +20,18 @@
         },
         "2": {
           "title": "Cartographie contrats & droits",
-          "desc": "Options, recoupements, fins de période, splits, SACEM — chaque échéance devient une alerte, jamais une surprise."
+          "desc": "Options, recoupements, fins de période, splits, SACEM : chaque échéance devient une alerte, jamais une surprise."
         },
         "3": {
           "title": "Recevez le premier brief roster",
-          "desc": "Le Pulse label : signaux de croissance, alertes contractuelles, écarts DSP à réclamer — calibré sur vos données."
+          "desc": "Le Pulse label, calibré sur vos données : signaux de croissance, alertes contractuelles, écarts DSP à réclamer."
         }
       },
-      "firstInsight": "« Sur les 3 artistes du pilote, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos — dossier de réclamation DSP prêt. »",
+      "firstInsight": "« Sur les 3 artistes du pilote, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos. Dossier de réclamation DSP prêt. »",
       "values": {
         "1": {
           "promise": "Transparence des relevés artistes",
-          "delivery": "Rétention, moins de litiges — l'artiste comprend ses gains, en continu"
+          "delivery": "Rétention, moins de litiges : l'artiste comprend ses gains, en continu"
         },
         "2": {
           "promise": "Alertes contractuelles",
@@ -39,11 +39,11 @@
         },
         "3": {
           "promise": "Signaux A&R en continu",
-          "delivery": "Roster piloté à la donnée — momentum, concentration, décrochages"
+          "delivery": "Roster piloté à la donnée : momentum, concentration, décrochages"
         },
         "4": {
           "promise": "Audit DSP côté label",
-          "delivery": "Récupérer ce que les plateformes sous-paient — réclamation étayée, jamais un conflit interne"
+          "delivery": "Récupérer ce que les plateformes sous-paient : réclamation étayée, jamais un conflit interne"
         },
         "5": {
           "promise": "Portail artiste co-brandé",
@@ -98,7 +98,7 @@
       "steps": {
         "1": {
           "title": "Importe ton relevé",
-          "desc": "DistroKid, TuneCore, Believe — un CSV, 100 % local."
+          "desc": "DistroKid, TuneCore, Believe : un CSV, 100 % local."
         },
         "2": {
           "title": "Vérifie tes titres et tes splits",

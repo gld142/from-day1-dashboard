@@ -35,26 +35,30 @@ export function CobrandScreen({
   const accent = (chunks: ReactNode) => (
     <span className="text-brand">{chunks}</span>
   );
+  /* Montant de la citation : chiffre tabulaire, en couleur de marque. */
+  const figure = (chunks: ReactNode) => (
+    <span className="num text-brand">{chunks}</span>
+  );
   const values = Array.from({ length: source.values }, (_, i) => i + 1);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8 md:py-14">
       {/* ─── Fenêtre navigateur factice ─── */}
       <section className="rise-in overflow-hidden rounded-xl border bg-card shadow-sm">
-        <div className="flex h-9 items-center gap-3 border-b bg-surface-2/60 px-3">
+        <div className="flex items-center gap-3 border-b bg-surface-2/60 px-3 py-2">
           <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
             <span className="size-2.5 rounded-full bg-destructive/70" />
             <span className="size-2.5 rounded-full bg-warning/70" />
             <span className="size-2.5 rounded-full bg-success/70" />
           </div>
-          <div className="num mx-auto min-w-0 truncate rounded-md bg-background/70 px-3 py-0.5 text-[11px] text-muted-foreground">
+          <div className="num mx-auto min-w-0 truncate rounded-md bg-background/70 px-3 py-1 text-xs text-muted-foreground">
             {t("url", { source: source.id })}
           </div>
           {/* Contrepoids des 3 points : l'URL reste centrée optiquement. */}
           <div className="hidden w-[42px] shrink-0 sm:block" aria-hidden />
         </div>
 
-        <div className="bg-gradient-to-b from-card to-surface-2/40 p-6 md:p-10">
+        <div className="p-6 md:p-10">
           {/* En-tête co-marque */}
           <div className="flex items-center justify-center gap-4">
             {source.logo ? (
@@ -80,7 +84,7 @@ export function CobrandScreen({
             <h1 className="font-heading text-2xl font-bold leading-tight md:text-[28px]">
               {t.rich(`${k}.welcomeTitle`, { accent })}
             </h1>
-            <p className="mx-auto mt-3 max-w-xl text-[13px] leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-[60ch] text-[13px] leading-relaxed text-muted-foreground">
               {t(`${k}.welcomeBody`)}
             </p>
             <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-1.5 text-xs font-bold text-brand-foreground">
@@ -88,38 +92,42 @@ export function CobrandScreen({
             </span>
           </div>
 
-          {/* 3 étapes */}
-          <ol className="mt-9 grid gap-4 md:grid-cols-3">
+          {/* 3 étapes : une grille séparée par des filets, pas trois cartes
+              dans la carte. Le numéro reste le repère de marque. */}
+          <ol className="mt-9 grid max-md:divide-y md:grid-cols-3 md:divide-x">
             {STEPS.map((n) => (
               <li
                 key={n}
-                className="relative rounded-xl border bg-card/80 p-4 pt-5"
+                className="max-md:py-4 max-md:first:pt-0 max-md:last:pb-0 md:px-6 md:first:pl-0 md:last:pr-0"
               >
-                <span className="num absolute -top-3 left-4 inline-flex size-7 items-center justify-center rounded-full bg-brand text-xs font-bold text-brand-foreground">
-                  {n}
-                </span>
-                <h2 className="text-[13px] font-semibold leading-tight">
-                  {t(`${k}.steps.${n}.title`)}
-                </h2>
-                <p className="mt-1.5 text-xs leading-snug text-muted-foreground">
+                <div className="flex items-center gap-2.5">
+                  <span className="num inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-brand-foreground">
+                    {n}
+                  </span>
+                  <h2 className="text-[13px] font-semibold leading-tight">
+                    {t(`${k}.steps.${n}.title`)}
+                  </h2>
+                </div>
+                <p className="mt-2 text-xs leading-snug text-muted-foreground">
                   {t(`${k}.steps.${n}.desc`)}
                 </p>
               </li>
             ))}
           </ol>
 
-          {/* Premier insight — montant réel */}
-          <div className="brand-glow mt-6 rounded-xl border border-brand/30 bg-brand/5 p-5">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-brand">
-              {t("firstInsightLabel")}
-            </div>
-            <p className="mt-2 text-[15px] font-semibold leading-snug">
+          {/* Premier insight (montant réel) : une citation entre deux filets,
+              le chiffre porte la couleur de marque. Pas de boîte dans la boîte. */}
+          <figure className="mx-auto mt-8 max-w-[60ch] border-y py-5 text-center">
+            <blockquote className="text-[15px] font-semibold leading-snug md:text-base">
               {t.rich(`${k}.firstInsight`, {
-                accent,
+                accent: figure,
                 gap: fmtEur(locale, gapEur),
               })}
-            </p>
-          </div>
+            </blockquote>
+            <figcaption className="mt-3 text-[11px] font-bold uppercase tracking-widest text-brand">
+              {t("firstInsightLabel")}
+            </figcaption>
+          </figure>
 
           {/* CTA — le persona est appliqué au clic (navigation client : le
               RoleProvider ne se remonte pas) ET porté par l'URL (lien partagé,
@@ -163,7 +171,7 @@ export function CobrandScreen({
         </section>
 
         <section className="rounded-xl border bg-surface-2/40 p-4">
-          <h2 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
             {t("sidebarTitle")}
           </h2>
           <ul className="mt-2.5 space-y-0.5 text-xs">
