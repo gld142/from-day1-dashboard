@@ -6,6 +6,15 @@
  * seedé (jamais Math.random : hydration serveur/client) et pic de sortie.
  * Chaque point porte sa provenance : `measured` pour aujourd'hui et les jours
  * réellement relevés, `reconstructed` pour le reste.
+ *
+ * Forme de la série brute (avant contrainte de somme), pour un jour à `i` jours
+ * d'aujourd'hui : dailyNow × dérive(i) × hebdo(dow, i) × bruit(i) × pics(i).
+ * - dérive et amplitude hebdo sont tirées au niveau ARTISTE (préfixe de la clé
+ *   avant « : ») : partagées par tous les titres, elles survivent à la somme du
+ *   catalogue ; tirées par titre, elles se moyenneraient en une ligne plate ;
+ * - bruit et pics ponctuels sont propres au titre (clé complète).
+ * Toutes les composantes sont indexées par `i` (jours avant aujourd'hui), donc
+ * une même date garde la même valeur brute quelle que soit la longueur de fenêtre.
  */
 import { isoDay, rngFor } from "@/lib/demo/seed";
 import { RECONSTRUCT } from "./params";
@@ -33,6 +42,84 @@ function weeklyFactor(dow: number): number {
   if (dow === 0) return w.sun;
   if (dow === 1) return w.mon;
   return w.other;
+}
+
+/** Tirage uniforme dans [lo, hi]. */
+function between(rand: () => number, [lo, hi]: readonly [number, number]): number {
+  return lo + rand() * (hi - lo);
+}
+
+/**
+ * Dérive lente d'un artiste : somme de sinusoïdes (période, phase, amplitude
+ * tirées une fois par artiste), évaluée en `i` jours avant aujourd'hui.
+ * La phase est tirée dans {0, π} : la dérive vaut exactement 1 aujourd'hui,
+ * donc la veille reste raccordée au débit relevé et aux jours mesurés (une
+ * phase libre créerait une marche entre bloc reconstitué et bloc mesuré, bien
+ * visible sur la somme d'un catalogue où le bruit se moyenne), et l'enveloppe
+ * reste centrée sur 1 (une normalisation par drift(0) l'élargirait).
+ */
+function makeDrift(artist: string): (i: number) => number {
+  const rand = rngFor(`reconstruct:drift:${artist}`);
+  const D = RECONSTRUCT.drift;
+  const comps: Array<{ period: number; phase: number; amp: number }> = [];
+  for (let k = 0; k < D.components; k++) {
+    // Ordre des tirages figé : période, phase, amplitude.
+    const period = between(rand, D.periodDays);
+    const phase = rand() < 0.5 ? 0 : Math.PI;
+    const amp = between(rand, D.amplitude);
+    comps.push({ period, phase, amp });
+  }
+  return (i) => {
+    let d = 1;
+    for (const c of comps) d += c.amp * Math.sin((2 * Math.PI * i) / c.period + c.phase);
+    return d;
+  };
+}
+
+/**
+ * Coefficient d'amplitude du motif hebdo pour la semaine `w` (0 = celle
+ * d'aujourd'hui), tiré au niveau artiste. Table calculée une fois par appel :
+ * la semaine w reçoit le (w+1)-ième tirage quelle que soit la longueur de fenêtre.
+ */
+function makeWeeklyScale(artist: string, weeks: number): (w: number) => number {
+  const rand = rngFor(`reconstruct:weeks:${artist}`);
+  const table: number[] = [];
+  for (let w = 0; w < weeks; w++) table.push(between(rand, RECONSTRUCT.weeklyJitter));
+  return (w) => table[w];
+}
+
+/** Au-delà de cet âge (jours après le sommet), le pic est éteint (exp(−3) ≈ 5 %). */
+const BUMP_WINDOW = Math.ceil(3 * RECONSTRUCT.bumps.decayDays);
+
+/**
+ * Pics ponctuels d'un titre : `perYear` sommets par tranche de 365 jours, placés
+ * en jours avant aujourd'hui ; la décroissance va du sommet vers aujourd'hui
+ * (âge = sommet − i). Les tirages se font par tranche entière, indépendamment de
+ * `days`, puis on ne garde que les sommets dont toute la traîne tombe dans la
+ * fenêtre sans toucher ni aujourd'hui (i = 0) ni la veille (i = 1).
+ */
+function makeBumps(key: string, days: number): (i: number) => number {
+  const rand = rngFor(`reconstruct:bumps:${key}`);
+  const B = RECONSTRUCT.bumps;
+  const peaks: Array<{ at: number; height: number }> = [];
+  const blocks = Math.ceil(days / 365);
+  for (let b = 0; b < blocks; b++) {
+    const n = B.perYear[0] + Math.floor(rand() * (B.perYear[1] - B.perYear[0] + 1));
+    for (let k = 0; k < n; k++) {
+      // Ordre des tirages figé : position, hauteur.
+      const at = b * 365 + Math.floor(rand() * 365);
+      const height = between(rand, B.height);
+      if (at >= BUMP_WINDOW + 1 && at <= days - 2) peaks.push({ at, height });
+    }
+  }
+  return (i) => {
+    let f = 1;
+    for (const p of peaks) {
+      const age = p.at - i;
+      if (age >= 0 && age < BUMP_WINDOW) f *= 1 + (p.height - 1) * Math.exp(-age / B.decayDays);
+    }
+    return f;
+  };
 }
 
 /** Poids de la rampe pour un jour à `i` jours d'aujourd'hui (w ≥ 0, w(0) = 1). */
@@ -63,7 +150,18 @@ function solveRamp(raw: number[], N: number, cible: number): number {
 
 export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
   const { key, total, dailyNow, days, today, measured } = input;
+  const artist = key.split(":")[0];
+  // Niveau artiste (dérive, amplitude hebdo) puis niveau titre (pics, bruit).
+  // Chaque composante a son propre flux seedé et un nombre de tirages fixé par
+  // (`days`, paramètres) : déterministe, et stable d'une longueur de fenêtre à l'autre.
+  const drift = makeDrift(artist);
+  const weeklyScale = makeWeeklyScale(artist, Math.ceil(days / 7));
+  const bumps = makeBumps(key, days);
   const rand = rngFor(`reconstruct:${key}`);
+  // Bruit journalier indexé par i (jours avant aujourd'hui) : le tirage d'une
+  // date ne dépend pas de la longueur de la fenêtre.
+  const noise: number[] = [];
+  for (let i = 0; i < days; i++) noise.push(1 + (rand() * 2 - 1) * RECONSTRUCT.noiseAmplitude);
   const todayIso = isoDay(today);
   const release = input.releaseDate ? input.releaseDate.slice(0, 10) : null;
   const releaseMs = release ? Date.parse(`${release}T00:00:00Z`) : NaN;
@@ -74,16 +172,16 @@ export function reconstructTrack(input: ReconstructInput): ReconstructedDay[] {
     1 + RECONSTRUCT.releaseSpike * Math.exp(-ageDays / RECONSTRUCT.releaseDecayDays);
   const spikeToday = release ? spikeAt((today.getTime() - releaseMs) / DAY_MS) : 1;
 
-  // 1. Série brute : débit × saisonnalité × bruit, modulée par la sortie.
-  //    Le RNG est consommé à chaque jour, même à zéro, pour une séquence stable.
+  // 1. Série brute : débit × dérive × saisonnalité (d'amplitude variable par
+  //    semaine) × bruit × pics ponctuels, modulée par la sortie.
   const dates: string[] = [];
   const raw: number[] = [];
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(today);
     d.setUTCDate(d.getUTCDate() - i);
     const date = isoDay(d);
-    const noise = 1 + (rand() * 2 - 1) * RECONSTRUCT.noiseAmplitude;
-    let v = dailyNow * weeklyFactor(d.getUTCDay()) * noise;
+    const weekly = 1 + (weeklyFactor(d.getUTCDay()) - 1) * weeklyScale(Math.floor(i / 7));
+    let v = dailyNow * drift(i) * weekly * noise[i] * bumps(i);
     if (release) {
       if (date < release) v = 0;
       else v *= spikeAt((d.getTime() - releaseMs) / DAY_MS) / spikeToday;

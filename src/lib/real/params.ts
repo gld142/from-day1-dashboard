@@ -111,10 +111,36 @@ export const AUTHOR_SHARE_OF_PUBLISHING = 0.5;
 export const AUDIT_GAP_REL = 0.12;
 export const AUDIT_GAP_ABS_EUR = 100;
 
-/* ─── Reconstruction ─── */
+/* ─── Reconstruction — HYPOTHÈSES de forme (reconstruct.ts) ─── */
 export const RECONSTRUCT = {
+  /** Motif hebdo de base (vendredi/samedi hauts, lundi bas). */
   weekly: { fri: 1.1, sat: 1.1, sun: 1.03, mon: 0.95, other: 1.0 },
-  noiseAmplitude: 0.08,
+  /**
+   * Bruit blanc journalier uniforme, propre à chaque titre. ±8 % quand il portait
+   * seul l'irrégularité ; ramené à ±7 % depuis que dérive, amplitude hebdo
+   * variable et pics ponctuels en portent une part structurée.
+   */
+  noiseAmplitude: 0.07,
   releaseSpike: 3,
   releaseDecayDays: 45,
+  /**
+   * Dérive lente, commune à tous les titres d'un artiste (même calendrier :
+   * une semaine haute l'est pour tout le catalogue, sinon elle disparaît dans la
+   * somme). Somme de `components` sinusoïdes de période tirée dans `periodDays`
+   * et d'amplitude tirée dans `amplitude` : ±5–8 % sur quelques semaines.
+   */
+  drift: { components: 2, periodDays: [35, 120], amplitude: [0.03, 0.05] },
+  /**
+   * Amplitude du motif hebdo, tirée par semaine (niveau artiste) : l'écart au
+   * facteur 1 est multiplié par un coefficient dans cet intervalle. Une vague
+   * hebdo d'amplitude constante trahit une série synthétique.
+   */
+  weeklyJitter: [0.5, 1.4],
+  /**
+   * Pics ponctuels par titre (ajout playlist, passage TV) : `perYear` pics par
+   * tranche de 365 jours, de hauteur `height` (facteur multiplicatif au sommet),
+   * qui redescendent en exp(−âge / decayDays) sur ~5 jours. Jamais sur
+   * aujourd'hui ni la veille (le débit relevé reste le point d'ancrage).
+   */
+  bumps: { perYear: [1, 3], height: [1.15, 1.4], decayDays: 2.5 },
 } as const;
