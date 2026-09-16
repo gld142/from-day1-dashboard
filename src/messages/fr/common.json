@@ -74,11 +74,13 @@
   },
   "provenance": {
     "measured": "Mesuré",
+    "declared": "Renseigné",
     "reconstructed": "Reconstitué",
     "estimated": "Estimé",
     "simulated": "Simulé",
     "tip": {
       "measured": "Relevé sur les compteurs publics (Spotify, Kworb, YouTube) ou sur un relevé importé.",
+      "declared": "Saisi par vous : pourcentages du contrat ou contrat importé.",
       "reconstructed": "Historique reconstitué à partir du total cumulé et du débit quotidien réel — la courbe est plausible, pas relevée jour par jour.",
       "estimated": "Extrapolé depuis Spotify avec le mix DSP de l'artiste — aucune plateforme ne publie ces chiffres.",
       "simulated": "Donnée de démonstration, inventée pour être cohérente avec le réel."

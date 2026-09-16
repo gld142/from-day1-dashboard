@@ -24,8 +24,12 @@ export const DSPS: DSP[] = [
 
 export type CareerStage = "emerging" | "developing" | "established" | "peak";
 
-/** D'où vient un chiffre — affiché dans l'UI, jamais caché. */
-export type Provenance = "measured" | "reconstructed" | "estimated" | "simulated";
+/**
+ * D'où vient un chiffre — affiché dans l'UI, jamais caché.
+ * « declared » : saisi par l'utilisateur (pourcentages du contrat, contrat
+ * importé) — plus fiable qu'une reconstitution, moins qu'une mesure.
+ */
+export type Provenance = "measured" | "declared" | "reconstructed" | "estimated" | "simulated";
 
 export type Artist = {
   id: string;

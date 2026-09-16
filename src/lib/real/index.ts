@@ -9,7 +9,7 @@ export {
   realTopTracks,
   spotifyDailyByTrack,
 } from "./real-source";
-export { ESTIMATE_PERIODS, PERIOD_DAYS, estimateDay, summarize, weakest } from "./estimator";
+export { ESTIMATE_PERIODS, PERIOD_DAYS, estimateDay, summarize, weakest, type DeclaredShares } from "./estimator";
 export { calibrationFromUserData, type Calibration } from "./calibration";
 export { auditGap, simulatedStatement } from "./audit-gap";
 export { tiktokSignal } from "./tiktok-signal";

@@ -5,9 +5,10 @@ import type { Provenance } from "@/lib/demo/types";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
-/** Teintes discrètes : vert = mesuré, bleu = reconstitué, ambre = estimé, gris = simulé. */
+/** Teintes discrètes : vert = mesuré, marque = renseigné, bleu = reconstitué, ambre = estimé, gris = simulé. */
 const TONE: Record<Provenance, string> = {
   measured: "border-emerald-500/40 text-emerald-600 dark:text-emerald-400",
+  declared: "border-brand/40 text-brand",
   reconstructed: "border-sky-500/40 text-sky-600 dark:text-sky-400",
   estimated: "border-amber-500/40 text-amber-600 dark:text-amber-400",
   simulated: "border-muted-foreground/30 text-muted-foreground",

@@ -65,6 +65,7 @@ import {
   userStreamSeries,
   userTopTracks,
 } from "@/lib/userdata/store";
+import { getShares, sharesSnapshot } from "@/lib/userdata/shares-store";
 import type {
   Artist,
   AuditFinding,
@@ -142,12 +143,37 @@ export function dailyEstimates(artistId: string, days = 365): DailyEstimate[] {
   return out;
 }
 
+/* Memo des résumés : les pages en redemandent cinq (hier → 12 mois) à chaque
+ * rendu. La clé porte les parts renseignées (sharesSnapshot) et les données
+ * utilisateur : un enregistrement dans le panneau « Ta part » invalide tout. */
+const summaryMemo = new Map<string, EstimateSummary>();
+let summaryMemoKey = "";
+
+/**
+ * Résumé d'une période. Les cascades (part artiste, droits d'auteur) suivent
+ * les pourcentages renseignés par l'artiste s'il y en a — provenance
+ * « renseigné » — sinon l'hypothèse de contrat, « simulé ».
+ */
 export function estimateSummary(artistId: string, period: EstimatePeriod): EstimateSummary {
+  const invalidation = `${userDataKey()}|${sharesSnapshot()}`;
+  if (invalidation !== summaryMemoKey) {
+    summaryMemo.clear();
+    summaryMemoKey = invalidation;
+  }
+  const key = `${artistId}:${period}`;
+  const hit = summaryMemo.get(key);
+  if (hit) return hit;
   const a = getArtist(artistId);
-  return summarize(dailyEstimates(artistId, 365), period, {
+  const shares = getShares(artistId);
+  const out = summarize(dailyEstimates(artistId, 365), period, {
     calibrated: activeCalibration(artistId) !== null,
     dealType: a.dealType,
+    shares: shares
+      ? { masterSharePct: shares.masterSharePct, isAuthor: shares.isAuthor, authorSharePct: shares.authorSharePct }
+      : undefined,
   });
+  summaryMemo.set(key, out);
+  return out;
 }
 
 /** Les cinq résumés (hier → 12 mois) d'un coup, pour les tuiles et le sélecteur. */
@@ -221,8 +247,9 @@ const ZERO_RANGE: Range = { low: 0, mid: 0, high: 0 };
 const addRange = (a: Range, b: Range): Range => ({ low: a.low + b.low, mid: a.mid + b.mid, high: a.high + b.high });
 
 /**
- * Résumé roster : somme des artistes réels. Confiance et provenance = les plus
- * faibles rencontrées ; calibré seulement si tous le sont ; fenêtre du premier.
+ * Résumé roster : somme des artistes réels. Confiance et provenances (streams,
+ * part artiste, droits d'auteur) = les plus faibles rencontrées ; calibré
+ * seulement si tous le sont ; fenêtre du premier.
  */
 export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
   const parts = ARTISTS.filter((a) => hasRealData(a.id)).map((a) => estimateSummary(a.id, period));
@@ -240,6 +267,8 @@ export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
       (worst, p) => (CONFIDENCE_ORDER.indexOf(p.confidence) < CONFIDENCE_ORDER.indexOf(worst) ? p.confidence : worst),
       first?.confidence ?? "indicative",
     ),
+    sharesProvenance: weakest(parts.map((p) => p.sharesProvenance)),
+    publishingProvenance: weakest(parts.map((p) => p.publishingProvenance)),
     provenance: weakest(parts.map((p) => p.provenance)),
     calibrated: parts.length > 0 && parts.every((p) => p.calibrated),
   };

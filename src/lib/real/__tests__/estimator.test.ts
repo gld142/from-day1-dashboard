@@ -5,6 +5,7 @@ import {
   estimateDay,
   publishingShare,
   summarize,
+  weakest,
   type DayInput,
 } from "@/lib/real/estimator";
 import { RATE_FR, TIER_FR, blendedRate } from "@/lib/real/params";
@@ -94,6 +95,55 @@ describe("summarize / confiance / cascades", () => {
     expect(s.grossMaster.mid).toBeCloseTo(days[0].grossMaster.mid * 7, 0);
     expect(s.artistShare.mid).toBeCloseTo(s.grossMaster.mid * 0.2, 0);
     expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * 0.15 * 0.5, 0);
+  });
+
+  it("sans parts renseignées, les cascades sont simulées (contrat inventé)", () => {
+    const s = summarize(days, "week", { calibrated: false, dealType: "artiste" });
+    expect(s.sharesProvenance).toBe("simulated");
+    expect(s.publishingProvenance).toBe("simulated");
+  });
+
+  it("parts renseignées : part artiste = brut × pct, même facteur sur les trois bornes, provenance « declared »", () => {
+    const s = summarize(days, "week", {
+      calibrated: false,
+      dealType: "artiste",
+      shares: { masterSharePct: 18, isAuthor: true, authorSharePct: 50 },
+    });
+    expect(s.artistShare.mid).toBeCloseTo(s.grossMaster.mid * 0.18, 6);
+    expect(s.artistShare.low).toBeCloseTo(s.grossMaster.low * 0.18, 6);
+    expect(s.artistShare.high).toBeCloseTo(s.grossMaster.high * 0.18, 6);
+    expect(s.sharesProvenance).toBe("declared");
+    // Auteur à 50 % : brut × 15 % (édition) × 50 %.
+    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * 0.15 * 0.5, 6);
+    expect(s.publishingProvenance).toBe("declared");
+  });
+
+  it("pas auteur : droits d'auteur à zéro, renseigné", () => {
+    const s = summarize(days, "week", {
+      calibrated: false,
+      dealType: "artiste",
+      shares: { masterSharePct: 18, isAuthor: false, authorSharePct: 50 },
+    });
+    expect(s.publishing).toEqual({ low: 0, mid: 0, high: 0 });
+    expect(s.publishingProvenance).toBe("declared");
+  });
+
+  it("auteur sans part connue : droits d'auteur par défaut, simulé ; part master inconnue : contrat simulé", () => {
+    const s = summarize(days, "week", {
+      calibrated: false,
+      dealType: "distribution",
+      shares: { masterSharePct: null, isAuthor: true, authorSharePct: null },
+    });
+    expect(s.artistShare.mid).toBeCloseTo(s.grossMaster.mid * 0.9, 6);
+    expect(s.sharesProvenance).toBe("simulated");
+    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * 0.15 * 0.5, 6);
+    expect(s.publishingProvenance).toBe("simulated");
+  });
+
+  it("weakest : renseigné se classe entre mesuré et reconstitué", () => {
+    expect(weakest(["measured", "declared"])).toBe("declared");
+    expect(weakest(["declared", "reconstructed"])).toBe("reconstructed");
+    expect(weakest(["declared", "simulated"])).toBe("simulated");
   });
 
   it("confiance : mesuré + calibré = élevé ; reconstitué + défaut = indicatif", () => {

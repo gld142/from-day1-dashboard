@@ -18,6 +18,7 @@ import {
   topTracks,
 } from "@/lib/demo/api";
 import { latestSnapshot, realStreamSeries } from "@/lib/real";
+import { clearShares, saveShares } from "@/lib/userdata/shares-store";
 
 describe("api.ts sur les artistes réels", () => {
   it.each(ARTISTS.map((a) => a.id))("%s : la façade sert la série réelle", (id) => {
@@ -91,6 +92,25 @@ describe("api.ts sur les artistes réels", () => {
     const sum = ARTISTS.reduce((s, a) => s + estimateSummary(a.id, "month").grossMaster.mid, 0);
     expect(r.grossMaster.mid).toBeCloseTo(sum, 6);
     expect(r.streams).toBeGreaterThan(0);
+  });
+
+  it("parts renseignées : le memo des résumés s'invalide, la cascade suit le pourcentage, le roster reste « simulé » tant qu'un artiste ne l'est pas", () => {
+    const before = estimateSummary("dadju", "day");
+    expect(before.sharesProvenance).toBe("simulated");
+    expect(before.artistShare.mid).toBeCloseTo(before.grossMaster.mid * 0.2, 6);
+    try {
+      saveShares({ artistId: "dadju", masterSharePct: 18, isAuthor: true, authorSharePct: 50, contractFileName: null });
+      const after = estimateSummary("dadju", "day");
+      expect(after.sharesProvenance).toBe("declared");
+      expect(after.publishingProvenance).toBe("declared");
+      expect(after.artistShare.mid).toBeCloseTo(after.grossMaster.mid * 0.18, 6);
+      expect(after.publishing.mid).toBeCloseTo(after.grossMaster.mid * 0.15 * 0.5, 6);
+      // Les autres artistes n'ont rien renseigné : le roster reste simulé.
+      expect(rosterEstimateSummary("day").sharesProvenance).toBe("simulated");
+    } finally {
+      clearShares("dadju");
+    }
+    expect(estimateSummary("dadju", "day").sharesProvenance).toBe("simulated");
   });
 
   it("auditFindings des artistes réels : au moins un écart attribué à un DSP, aucun au label", () => {

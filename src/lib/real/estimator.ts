@@ -51,9 +51,9 @@ const mulRange = (a: Range, b: Range): Range => ({ low: a.low * b.low, mid: a.mi
 const lerpRange = (a: Range, b: Range, t: number): Range => addRange(scaleRange(a, 1 - t), scaleRange(b, t));
 
 /* ─── Provenance ─── */
-const PROVENANCE_ORDER: Provenance[] = ["measured", "reconstructed", "estimated", "simulated"];
+const PROVENANCE_ORDER: Provenance[] = ["measured", "declared", "reconstructed", "estimated", "simulated"];
 
-/** La plus faible des provenances (measured < reconstructed < estimated < simulated). */
+/** La plus faible des provenances (measured < declared < reconstructed < estimated < simulated). */
 export function weakest(ps: Provenance[]): Provenance {
   let worst = 0;
   for (const p of ps) worst = Math.max(worst, PROVENANCE_ORDER.indexOf(p));
@@ -114,14 +114,60 @@ export function confidenceOf(provenance: Provenance, calibrated: boolean): Confi
 }
 
 /* ─── Cascades ─── */
-/** Part artiste du brut master selon le type de contrat (borne à borne). */
+/**
+ * Parts renseignées par l'artiste (« Ta part, c'est ton contrat ») : elles
+ * remplacent les hypothèses de contrat. null = inconnue → hypothèse conservée.
+ */
+export type DeclaredShares = {
+  /** Part de l'artiste sur le master (0-100). */
+  masterSharePct: number | null;
+  /** Auteur et/ou compositeur de ses titres ? */
+  isAuthor: boolean;
+  /** Part de l'artiste dans les droits d'auteur de ses titres (0-100). */
+  authorSharePct: number | null;
+};
+
+/** Part artiste du brut master selon le type de contrat (borne à borne) — HYPOTHÈSE. */
 export function artistShare(gross: Range, dealType: Artist["dealType"]): Range {
   return mulRange(gross, DEAL_SHARE[dealType]);
 }
 
-/** Part auteur de l'édition : brut × part édition du DSP × part auteur dans l'édition. */
+/** Part auteur de l'édition : brut × part édition du DSP × part auteur dans l'édition — HYPOTHÈSE. */
 export function publishingShare(gross: Range): Range {
   return scaleRange(gross, PUBLISHING_SHARE_OF_DSP * AUTHOR_SHARE_OF_PUBLISHING);
+}
+
+/**
+ * Part artiste : le pourcentage renseigné (même facteur sur les trois bornes,
+ * seule l'incertitude du brut subsiste), sinon l'hypothèse liée au contrat.
+ */
+export function artistShareOf(
+  gross: Range,
+  dealType: Artist["dealType"],
+  shares?: DeclaredShares,
+): { value: Range; provenance: Provenance } {
+  if (shares && shares.masterSharePct !== null) {
+    return { value: scaleRange(gross, shares.masterSharePct / 100), provenance: "declared" };
+  }
+  return { value: artistShare(gross, dealType), provenance: "simulated" };
+}
+
+/**
+ * Droits d'auteur : zéro si l'artiste a dit ne pas être auteur ; sa part
+ * renseignée sur la part édition du DSP sinon ; l'hypothèse par défaut à défaut.
+ */
+export function publishingShareOf(
+  gross: Range,
+  shares?: DeclaredShares,
+): { value: Range; provenance: Provenance } {
+  if (shares && !shares.isAuthor) return { value: ZERO, provenance: "declared" };
+  if (shares && shares.authorSharePct !== null) {
+    return {
+      value: scaleRange(gross, PUBLISHING_SHARE_OF_DSP * (shares.authorSharePct / 100)),
+      provenance: "declared",
+    };
+  }
+  return { value: publishingShare(gross), provenance: "simulated" };
 }
 
 /* ─── Agrégation sur une période ─── */
@@ -136,15 +182,21 @@ export const PERIOD_DAYS: Record<EstimatePeriod, number> = {
 /** Les périodes dans l'ordre croissant — l'ordre d'affichage des sélecteurs. */
 export const ESTIMATE_PERIODS: readonly EstimatePeriod[] = ["day", "week", "month", "quarter", "year"];
 
-/** Résume les N derniers jours (tableau supposé trié par date croissante). */
+/**
+ * Résume les N derniers jours (tableau supposé trié par date croissante).
+ * `shares` : parts renseignées par l'artiste ; sans elles, les cascades
+ * restent des hypothèses de contrat, marquées « simulé ».
+ */
 export function summarize(
   days: DailyEstimate[],
   period: EstimatePeriod,
-  opts: { calibrated: boolean; dealType: Artist["dealType"] },
+  opts: { calibrated: boolean; dealType: Artist["dealType"]; shares?: DeclaredShares },
 ): EstimateSummary {
   const slice = days.slice(-PERIOD_DAYS[period]);
   const grossMaster = slice.reduce((acc, d) => addRange(acc, d.grossMaster), ZERO);
   const provenance = weakest(slice.map((d) => d.provenance));
+  const artist = artistShareOf(grossMaster, opts.dealType, opts.shares);
+  const publishing = publishingShareOf(grossMaster, opts.shares);
   return {
     period,
     from: slice[0]?.date ?? "",
@@ -152,8 +204,10 @@ export function summarize(
     streams: slice.reduce((s, d) => s + d.streams, 0),
     payableStreams: slice.reduce((s, d) => s + d.payableStreams, 0),
     grossMaster,
-    artistShare: artistShare(grossMaster, opts.dealType),
-    publishing: publishingShare(grossMaster),
+    artistShare: artist.value,
+    publishing: publishing.value,
+    sharesProvenance: artist.provenance,
+    publishingProvenance: publishing.provenance,
     confidence: confidenceOf(provenance, opts.calibrated),
     provenance,
     calibrated: opts.calibrated,

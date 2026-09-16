@@ -72,7 +72,12 @@ export type EstimateSummary = {
   grossMaster: Range;
   artistShare: Range;
   publishing: Range;
+  /** « declared » si la part artiste vient des pourcentages renseignés, « simulated » si c'est l'hypothèse de contrat. */
+  sharesProvenance: Provenance;
+  /** Idem pour les droits d'auteur (pas auteur → 0, renseigné). */
+  publishingProvenance: Provenance;
   confidence: Confidence;
+  /** Provenance des streams sous-jacents (la plus faible de la fenêtre). */
   provenance: Provenance;
   calibrated: boolean;
 };

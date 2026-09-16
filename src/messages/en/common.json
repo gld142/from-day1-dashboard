@@ -74,11 +74,13 @@
   },
   "provenance": {
     "measured": "Measured",
+    "declared": "Declared",
     "reconstructed": "Reconstructed",
     "estimated": "Estimated",
     "simulated": "Simulated",
     "tip": {
       "measured": "Read from public counters (Spotify, Kworb, YouTube) or from an imported statement.",
+      "declared": "Entered by you: contract percentages or imported contract.",
       "reconstructed": "History rebuilt from the cumulative total and today's real daily rate — plausible, not read day by day.",
       "estimated": "Extrapolated from Spotify with the artist's DSP mix — no platform publishes these figures.",
       "simulated": "Demo data, invented to stay consistent with the real numbers."
