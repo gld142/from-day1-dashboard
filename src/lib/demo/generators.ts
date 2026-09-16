@@ -269,7 +269,9 @@ export function expensesFor(artistId: string, months = 24): Expense[] {
     a.careerStage === "established" ? 2.2 : a.careerStage === "developing" ? 1 : 0.55;
   // Un artiste à 24 k auditeurs ne dépense pas comme un artiste à 6 M : sous 300 k auditeurs,
   // l'échelle décroît linéairement.
-  const sizeFactor = Math.min(1, a.monthlyListeners / 300_000);
+  // Au-dessus de 300 k auditeurs, les budgets (clips, marketing, tournée) grossissent
+  // avec l'artiste ; plafond ×25 pour garder des montants plausibles sur une major.
+  const sizeFactor = Math.min(25, a.monthlyListeners / 300_000);
   const scale = stageScale * sizeFactor;
   const projects = PROJECTS.filter((p) => p.artistId === artistId);
   const out: Expense[] = [];
