@@ -1,16 +1,25 @@
-import fs from "node:fs";
-import path from "node:path";
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
+import {
+  THEMES,
+  assertIntegrity,
+  collectConsole,
+  ready,
+  seed,
+  shot,
+  slug,
+  type Persona,
+} from "./helpers";
 
 /**
- * Audit visuel automatisé : 28 routes × 3 thèmes, persona label.
+ * Audit visuel automatisé : 30 routes × 3 thèmes (persona label), plus les
+ * 5 pages du parcours de démo en persona artiste. Desktop 1440×900.
  * Pour chaque combinaison :
  *  - seed localStorage (thème + rôle) AVANT le goto (addInitScript),
- *  - attend le h1 visible (Next 16 compile à la demande),
- *  - échoue s'il y a une erreur console (pas les warnings) ou une
- *    exception non catchée (pageerror),
- *  - échoue en cas de débordement horizontal,
- *  - screenshot fullPage dans e2e/screenshots/<route>-<theme>.png.
+ *  - attend le h1 visible et le thème appliqué,
+ *  - échoue s'il y a une erreur console (pas les warnings), une exception
+ *    non catchée, un MISSING_MESSAGE, un débordement horizontal, ou un texte
+ *    rendu suspect (NaN, undefined, [object, clé i18n brute),
+ *  - screenshot fullPage dans e2e/screenshots/<route>[-<persona>]-<theme>.png.
  */
 
 const ROUTES = [
@@ -42,82 +51,30 @@ const ROUTES = [
   "comparatif",
   "onboardings",
   "settings",
+  // Écrans co-brandés (hors shell dashboard : pas de sidebar / topbar).
+  "welcome?source=universal",
+  "welcome?source=believe",
 ] as const;
 
-const THEMES = ["night", "dawn", "day"] as const;
+/** Pages du parcours de démo : couvertes aussi en persona artiste. */
+const ARTIST_ROUTES = ["pulse", "revenue", "streams", "audit", "roster"] as const;
 
-const SCREENSHOT_DIR = path.join(__dirname, "screenshots");
-
-for (const route of ROUTES) {
-  test.describe(`/${route}`, () => {
+function audit(route: string, persona: Persona) {
+  const withPersona = route.includes("?") ? `${route}&persona=${persona}` : `${route}?persona=${persona}`;
+  const name = persona === "label" ? slug(route) : `${slug(route)}-${persona}`;
+  test.describe(`/${route} (${persona})`, () => {
     for (const theme of THEMES) {
-      test(`theme ${theme} — pas d'erreur console, pas de débordement, screenshot`, async ({
-        page,
-      }) => {
-        const consoleErrors: string[] = [];
-        page.on("console", (msg) => {
-          if (msg.type() === "error") {
-            consoleErrors.push(msg.text());
-          }
-        });
-        page.on("pageerror", (err) => {
-          consoleErrors.push(`pageerror: ${err.message}`);
-        });
-
-        // Thème + persona label seedés avant tout script de la page.
-        await page.addInitScript(
-          ([t]) => {
-            window.localStorage.setItem("theme", t);
-            window.localStorage.setItem(
-              "day1-role",
-              JSON.stringify({ persona: "label", focusedArtistId: null }),
-            );
-          },
-          [theme] as const,
-        );
-
-        await page.goto(`/${route}`, {
-          waitUntil: "domcontentloaded",
-          timeout: 90_000,
-        });
-
-        // La page est prête quand le h1 est visible…
-        await expect(page.locator("h1").first()).toBeVisible({
-          timeout: 60_000,
-        });
-        // …et que next-themes a bien appliqué le thème demandé.
-        await page.waitForFunction(
-          (t) => document.documentElement.getAttribute("data-theme") === t,
-          theme,
-          { timeout: 15_000 },
-        );
-        // Laisse les charts/animations se poser avant le screenshot.
-        await page.waitForTimeout(900);
-
-        const overflow = await page.evaluate(() => ({
-          scrollWidth: document.documentElement.scrollWidth,
-          clientWidth: document.documentElement.clientWidth,
-        }));
-
-        fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
-        await page.screenshot({
-          path: path.join(SCREENSHOT_DIR, `${route}-${theme}.png`),
-          fullPage: true,
-        });
-
-        expect
-          .soft(
-            consoleErrors,
-            `Erreurs console sur /${route} (${theme}) :\n${consoleErrors.join("\n")}`,
-          )
-          .toEqual([]);
-        expect
-          .soft(
-            overflow.scrollWidth,
-            `Débordement horizontal sur /${route} (${theme}) : scrollWidth=${overflow.scrollWidth} > clientWidth=${overflow.clientWidth}`,
-          )
-          .toBeLessThanOrEqual(overflow.clientWidth + 1);
+      test(`theme ${theme} — console, débordement, texte, screenshot`, async ({ page }) => {
+        const consoleErrors = collectConsole(page);
+        await seed(page, theme, persona);
+        await page.goto(`/${withPersona}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
+        await ready(page, theme);
+        await shot(page, `${name}-${theme}`);
+        await assertIntegrity(page, `/${withPersona} (${theme})`, consoleErrors);
       });
     }
   });
 }
+
+for (const route of ROUTES) audit(route, "label");
+for (const route of ARTIST_ROUTES) audit(route, "artist");
