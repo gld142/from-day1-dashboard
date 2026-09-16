@@ -61,7 +61,7 @@ export const MARKET_MIX_FR: Record<DSP, number> = {
 
 /** Médiane de marché du ratio fans Deezer / auditeurs mensuels Spotify — HYPOTHÈSE. */
 export const DEEZER_RATIO_MEDIAN = 0.25;
-export const DEEZER_RATIO_CLAMP: [number, number] = [0.5, 2.5];
+export const DEEZER_RATIO_CLAMP: [number, number] = [0.5, 1.6];
 
 /* ─── Deezer artist-centric (UMG × Deezer 2023, SACEM 2025) — règles PUBLIÉES ─── */
 export const DEEZER_ARTIST_CENTRIC = {
@@ -70,8 +70,9 @@ export const DEEZER_ARTIST_CENTRIC = {
   activeBoost: 2,
   /** Part d'écoutes actives (recherche, playlist non algo) — HYPOTHÈSE. */
   activeShareDefault: 0.4,
-  /** Poids moyen d'un stream Deezer dans le pool (pro-rata boosté) — HYPOTHÈSE. */
-  averageWeight: 1.6,
+  /** Poids moyen d'un stream Deezer dans le pool (pro-rata boosté) — HYPOTHÈSE conservatrice :
+   *  un artiste pro pèse ≈ ×1,4 le stream moyen, pas ×1,75 (Universal connaît le vrai split). */
+  averageWeight: 2.0,
 } as const;
 
 /* ─── Seuils de rémunérabilité — règles PUBLIÉES ─── */

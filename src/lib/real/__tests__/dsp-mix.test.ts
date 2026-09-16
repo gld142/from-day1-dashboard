@@ -20,10 +20,10 @@ describe("artistMix", () => {
 });
 
 describe("deezerWeight", () => {
-  it("un artiste pro pèse entre 1,5 et 2 fois le stream Deezer moyen", () => {
+  it("un artiste pro pèse entre 1,2 et 1,6 fois le stream Deezer moyen", () => {
     const w = deezerWeight({ pro: true });
-    expect(w).toBeGreaterThan(1.5);
-    expect(w).toBeLessThan(2);
+    expect(w).toBeGreaterThan(1.2);
+    expect(w).toBeLessThan(1.6);
   });
   it("un artiste non pro pèse moins que la moyenne", () => {
     expect(deezerWeight({ pro: false })).toBeLessThan(1);
