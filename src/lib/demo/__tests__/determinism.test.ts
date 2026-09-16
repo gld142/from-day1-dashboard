@@ -11,6 +11,7 @@ import {
   revenueSeries,
   streamSeries,
 } from "@/lib/demo/generators";
+import { realDailyEstimates, realStreamSeries } from "@/lib/real";
 
 const ARTIST_IDS = ARTISTS.map((a) => a.id);
 
@@ -79,5 +80,14 @@ describe("aucun montant négatif", () => {
     for (const d of dailyTotals(id)) {
       expect(d.streams).toBeGreaterThanOrEqual(0);
     }
+  });
+});
+
+describe("déterminisme de la couche réelle", () => {
+  it.each(ARTIST_IDS)("realStreamSeries(%s) : deux appels identiques", (id) => {
+    expect(JSON.stringify(realStreamSeries(id, 90))).toBe(JSON.stringify(realStreamSeries(id, 90)));
+  });
+  it.each(ARTIST_IDS)("realDailyEstimates(%s) : deux appels identiques", (id) => {
+    expect(JSON.stringify(realDailyEstimates(id, 30))).toBe(JSON.stringify(realDailyEstimates(id, 30)));
   });
 });
