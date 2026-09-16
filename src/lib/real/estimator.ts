@@ -125,7 +125,16 @@ export function publishingShare(gross: Range): Range {
 }
 
 /* ─── Agrégation sur une période ─── */
-const PERIOD_DAYS: Record<EstimatePeriod, number> = { day: 1, week: 7, month: 30, year: 365 };
+/** Nombre de jours couverts par chaque période. */
+export const PERIOD_DAYS: Record<EstimatePeriod, number> = {
+  day: 1,
+  week: 7,
+  month: 30,
+  quarter: 90,
+  year: 365,
+};
+/** Les périodes dans l'ordre croissant — l'ordre d'affichage des sélecteurs. */
+export const ESTIMATE_PERIODS: readonly EstimatePeriod[] = ["day", "week", "month", "quarter", "year"];
 
 /** Résume les N derniers jours (tableau supposé trié par date croissante). */
 export function summarize(

@@ -60,7 +60,8 @@ export type DailyEstimate = {
   provenance: Provenance;
 };
 
-export type EstimatePeriod = "day" | "week" | "month" | "year";
+/** Fenêtres de l'estimateur : hier, 7 j, 30 j, 90 j, 12 mois (cf. PERIOD_DAYS). */
+export type EstimatePeriod = "day" | "week" | "month" | "quarter" | "year";
 
 export type EstimateSummary = {
   period: EstimatePeriod;

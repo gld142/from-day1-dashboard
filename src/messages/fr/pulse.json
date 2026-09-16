@@ -37,7 +37,8 @@
   "estimate": {
     "title": "Ce que ça rapporte — estimation en continu",
     "subtitle": "Streams rémunérateurs × taux France (SNEP 2025), corrigés par plateforme, territoire et modèle Deezer artist-centric. Un relevé importé recalibre tout.",
-    "titleLabel": "Ce que le roster rapporte — estimation en continu"
+    "titleLabel": "Ce que le roster rapporte — estimation en continu",
+    "detail": "Voir le détail des revenus"
   },
   "overnight": {
     "title": "Ce qui a changé cette nuit",

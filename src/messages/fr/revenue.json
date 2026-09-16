@@ -10,11 +10,13 @@
   },
   "estimate": {
     "title": "Estimation live",
+    "titleLabel": "Estimation live du roster",
     "subtitle": "Ce que génèrent les streams, jour par jour : brut master, part artiste, droits d'auteur.",
     "period": {
       "day": "Hier",
       "week": "7 jours",
       "month": "30 jours",
+      "quarter": "90 jours",
       "year": "12 mois"
     },
     "gross": "Brut master",
@@ -24,7 +26,8 @@
     "range": "{low} – {high}",
     "calibrated": "Calibré par relevé",
     "notCalibrated": "Taux par défaut : importez un relevé pour calibrer",
-    "byDsp": "Par plateforme · 30 jours",
+    "byDspPeriod": "Par plateforme · {period}",
+    "selectPeriod": "Période de l'estimation",
     "dspRate": "{rate} €/stream",
     "colPlatform": "Plateforme",
     "colProvenance": "Provenance",

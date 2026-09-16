@@ -6,9 +6,11 @@
  * Label : mêmes rituels agrégés roster + top movers cliquables.
  */
 import { useMemo } from "react";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
+  ArrowRight,
   CalendarDays,
   Crown,
   FileWarning,
@@ -39,13 +41,13 @@ import {
   ARTISTS,
   CONTRACTS,
   dailyTotals,
-  estimateSummary,
+  estimateSummaries,
   getArtist,
   hasReal,
   labelTotals,
   monthlyRevenueTotals,
   provenanceByDsp,
-  rosterEstimateSummary,
+  rosterEstimateSummaries,
   rosterRows,
   rosterTiktokSignal,
   streamsByDsp,
@@ -56,7 +58,7 @@ import {
   tourDates,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
-import type { EstimatePeriod, EstimateSummary, TikTokSignal } from "@/lib/demo/api";
+import type { TikTokSignal } from "@/lib/demo/api";
 import type { Provenance } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
@@ -86,17 +88,8 @@ function aggregatedDaily(days: number): Array<{ date: string; streams: number }>
     .map(([date, streams]) => ({ date, streams }));
 }
 
-const EST_PERIODS: EstimatePeriod[] = ["day", "week", "month", "year"];
-
-/** Les quatre résumés d'estimation (jour / semaine / mois / année) d'un coup. */
-function estimateSet(
-  summarize: (p: EstimatePeriod) => EstimateSummary,
-): Record<EstimatePeriod, EstimateSummary> {
-  return Object.fromEntries(EST_PERIODS.map((p) => [p, summarize(p)])) as Record<
-    EstimatePeriod,
-    EstimateSummary
-  >;
-}
+/** Le détail des revenus s'ouvre sur la période des tuiles « 30 jours ». */
+const REVENUE_DETAIL_HREF = "/revenue?period=month";
 
 type Insight = {
   key: string;
@@ -176,9 +169,7 @@ export default function PulsePage() {
     const series90 = dailyTotals(artistId, 90);
 
     /* Estimation € (couche réelle uniquement) + provenance du compteur du jour */
-    const est = hasReal(artistId)
-      ? estimateSet((p) => estimateSummary(artistId, p))
-      : null;
+    const est = hasReal(artistId) ? estimateSummaries(artistId) : null;
     const streamsProvenance = provenanceByDsp(artistId, 1).spotify;
 
     /* Insights de la nuit */
@@ -306,7 +297,7 @@ export default function PulsePage() {
 
     const series90 = aggregatedDaily(90);
     const movers = [...rows].sort((a, b) => b.delta30d - a.delta30d).slice(0, 5);
-    const est = estimateSet(rosterEstimateSummary);
+    const est = rosterEstimateSummaries();
 
     /* Insights roster */
     const topMover = movers[0];
@@ -395,6 +386,16 @@ export default function PulsePage() {
 
   /* Cascade mise en avant : part artiste pour l'artiste, brut master pour le label. */
   const line = persona === "artist" ? "artistShare" : "grossMaster";
+
+  /* « Voir le détail des revenus » : Revenus s'ouvre sur la même période. */
+  const detailLink = (
+    <Button asChild variant="ghost" size="sm">
+      <Link href={REVENUE_DETAIL_HREF}>
+        {t("estimate.detail")}
+        <ArrowRight aria-hidden />
+      </Link>
+    </Button>
+  );
 
   /* ───────────────────────────── Rendu ───────────────────────────── */
 
@@ -545,6 +546,7 @@ export default function PulsePage() {
               line={line}
               title={t("estimate.title")}
               subtitle={t("estimate.subtitle")}
+              actions={detailLink}
             />
           )}
 
@@ -658,6 +660,7 @@ export default function PulsePage() {
             line="grossMaster"
             title={t("estimate.titleLabel")}
             subtitle={t("estimate.subtitle")}
+            actions={detailLink}
           />
 
           {/* Ce qui a changé cette nuit — roster */}

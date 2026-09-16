@@ -10,11 +10,13 @@
   },
   "estimate": {
     "title": "Live estimate",
+    "titleLabel": "Roster live estimate",
     "subtitle": "What streams generate, day by day: gross master, artist share, songwriter royalties.",
     "period": {
       "day": "Yesterday",
       "week": "7 days",
       "month": "30 days",
+      "quarter": "90 days",
       "year": "12 months"
     },
     "gross": "Gross master",
@@ -24,7 +26,8 @@
     "range": "{low} – {high}",
     "calibrated": "Calibrated from statement",
     "notCalibrated": "Default rates: import a statement to calibrate",
-    "byDsp": "By platform · 30 days",
+    "byDspPeriod": "By platform · {period}",
+    "selectPeriod": "Estimate period",
     "dspRate": "{rate} €/stream",
     "colPlatform": "Platform",
     "colProvenance": "Provenance",

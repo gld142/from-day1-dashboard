@@ -5,7 +5,7 @@
  * le voile" : chaque euro, d'où qu'il vienne, lisible et comparé.
  */
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Area,
@@ -33,22 +33,25 @@ import {
 } from "lucide-react";
 import {
   ARTISTS,
-  dailyEstimates,
-  estimateSummary,
+  ESTIMATE_PERIODS,
+  dspEstimates,
+  estimateSummaries,
   getArtist,
   hasReal,
   monthlyRevenueTotals,
   pnlByArtist,
-  provenanceByDsp,
   revenueBySource,
   revenueSeries,
+  rosterDspEstimates,
+  rosterEstimateSummaries,
 } from "@/lib/demo/api";
-import type { EstimatePeriod, EstimateSummary } from "@/lib/demo/api";
-import type { DSP, Provenance, RevenueSource } from "@/lib/demo/types";
-import { DSPS, REVENUE_SOURCES } from "@/lib/demo/types";
+import type { DspEstimate, EstimatePeriod, EstimateSummary } from "@/lib/demo/api";
+import type { RevenueSource } from "@/lib/demo/types";
+import { REVENUE_SOURCES } from "@/lib/demo/types";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { useUrlParam } from "@/lib/url-param";
 import { cn } from "@/lib/utils";
 import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -57,6 +60,7 @@ import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -99,19 +103,10 @@ const STACK_COLORS = [
   "var(--chart-3)",
 ];
 
-const EST_PERIODS: EstimatePeriod[] = ["day", "week", "month", "year"];
-
-/** Fenêtre du tableau « par plateforme » (jours). */
-const BY_DSP_DAYS = 30;
-
-type DspEstimateRow = {
-  dsp: DSP;
-  streams: number;
-  gross: number;
-  provenance: Provenance;
-  /** € brut master par stream sur la fenêtre. */
-  rate: number;
-};
+/** `?period=` : une des cinq périodes de l'estimateur, sinon null. */
+function parsePeriod(raw: string | null): EstimatePeriod | null {
+  return ESTIMATE_PERIODS.includes(raw as EstimatePeriod) ? (raw as EstimatePeriod) : null;
+}
 
 const TOOLTIP_STYLE = {
   background: "var(--popover)",
@@ -127,6 +122,14 @@ export default function RevenuePage() {
   const { persona, artistId, isLabel, focusedArtistId, setFocusedArtistId } =
     useRole();
   const aggregated = isLabel && !focusedArtistId;
+
+  /* Période de l'estimation, portée par l'URL (?period=) : le lien « Voir le
+   * détail » de Pulse et un rechargement retombent sur la même vue. */
+  const [period, setUrlPeriod] = useUrlParam("period", parsePeriod, "month");
+  const setPeriod = useCallback(
+    (v: string) => setUrlPeriod(v as EstimatePeriod),
+    [setUrlPeriod],
+  );
 
   const data = useMemo(() => {
     const ids = aggregated ? ARTISTS.map((a) => a.id) : [artistId];
@@ -197,47 +200,19 @@ export default function RevenuePage() {
     };
   }, [aggregated, artistId]);
 
-  /* ── Estimation live (couche réelle, un seul artiste en focus) ──────────── */
+  /* ── Estimation live (couche réelle) : l'artiste en focus, ou le roster ──── */
   const est = useMemo<Record<EstimatePeriod, EstimateSummary> | null>(() => {
-    if (aggregated || !hasReal(artistId)) return null;
-    return Object.fromEntries(
-      EST_PERIODS.map((p) => [p, estimateSummary(artistId, p)]),
-    ) as Record<EstimatePeriod, EstimateSummary>;
+    if (aggregated) return rosterEstimateSummaries();
+    return hasReal(artistId) ? estimateSummaries(artistId) : null;
   }, [aggregated, artistId]);
 
-  /* Par plateforme sur 30 jours : streams, brut master (mid), provenance la plus
-   * faible de la fenêtre, taux effectif €/stream. Trié par brut décroissant.
-   * On découpe la même série de 365 j que les résumés (la reconstitution dépend
-   * de la longueur de fenêtre) pour que le total colle à la tuile « 30 jours ». */
-  const byDsp = useMemo<DspEstimateRow[]>(() => {
-    if (aggregated || !hasReal(artistId)) return [];
-    const prov = provenanceByDsp(artistId, BY_DSP_DAYS);
-    const streams: Partial<Record<DSP, number>> = {};
-    const gross: Partial<Record<DSP, number>> = {};
-    const seen: Partial<Record<DSP, Provenance>> = {};
-    for (const d of dailyEstimates(artistId, 365).slice(-BY_DSP_DAYS)) {
-      for (const dsp of DSPS) {
-        const v = d.byDsp[dsp];
-        if (!v) continue;
-        streams[dsp] = (streams[dsp] ?? 0) + v.streams;
-        gross[dsp] = (gross[dsp] ?? 0) + v.gross.mid;
-        seen[dsp] ??= v.provenance;
-      }
-    }
-    return DSPS.filter((dsp) => seen[dsp] !== undefined)
-      .map((dsp) => {
-        const st = streams[dsp] ?? 0;
-        const g = gross[dsp] ?? 0;
-        return {
-          dsp,
-          streams: st,
-          gross: g,
-          provenance: prov[dsp] ?? seen[dsp] ?? "estimated",
-          rate: st > 0 ? g / st : 0,
-        };
-      })
-      .sort((a, b) => b.gross - a.gross);
-  }, [aggregated, artistId]);
+  /* Par plateforme sur la période choisie : streams, brut master (mid),
+   * provenance la plus faible, taux effectif €/stream — la somme des lignes
+   * retombe sur le brut master de la tuile correspondante. */
+  const byDsp = useMemo<DspEstimate[]>(() => {
+    if (aggregated) return rosterDspEstimates(period);
+    return hasReal(artistId) ? dspEstimates(artistId, period) : [];
+  }, [aggregated, artistId, period]);
 
   const fmtRate = (rate: number) =>
     new Intl.NumberFormat(locale, {
@@ -282,22 +257,35 @@ export default function RevenuePage() {
         />
       </PageHeader>
 
-      {/* Estimation live — fourchettes jour / semaine / mois / année */}
+      {/* Estimation live — fourchettes jour / semaine / mois / année, la période
+          choisie en relief. Le sélecteur pilote aussi le tableau par plateforme. */}
       {est && (
         <EstimateBoard
           className="rise-in mb-4"
           summaries={est}
           line={persona === "artist" ? "artistShare" : "grossMaster"}
-          title={t("estimate.title")}
+          focus={period}
+          title={aggregated ? t("estimate.titleLabel") : t("estimate.title")}
           subtitle={t("estimate.subtitle")}
+          actions={
+            <Tabs value={period} onValueChange={setPeriod}>
+              <TabsList aria-label={t("estimate.selectPeriod")}>
+                {ESTIMATE_PERIODS.map((p) => (
+                  <TabsTrigger key={p} value={p} className="num text-xs">
+                    {t(`estimate.period.${p}`)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          }
         />
       )}
 
-      {/* Par plateforme · 30 jours — provenance, volume, taux effectif, brut */}
+      {/* Par plateforme · période — provenance, volume, taux effectif, brut */}
       {byDsp.length > 0 && (
         <section className="rise-in mb-4 rounded-xl border bg-card p-5">
           <h2 className="font-heading text-base font-semibold tracking-tight">
-            {t("estimate.byDsp")}
+            {t("estimate.byDspPeriod", { period: t(`estimate.period.${period}`) })}
           </h2>
           <Table className="mt-3">
             <TableHeader>

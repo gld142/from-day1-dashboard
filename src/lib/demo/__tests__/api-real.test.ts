@@ -4,11 +4,14 @@ import {
   auditFindings,
   countryBreakdown,
   dailyEstimates,
+  dspEstimates,
+  estimateSummaries,
   estimateSummary,
   expensesFor,
   hasReal,
   provenanceByDsp,
   revenueSeries,
+  rosterDspEstimates,
   rosterEstimateSummary,
   streamSeries,
   sumStreams,
@@ -45,6 +48,42 @@ describe("api.ts sur les artistes réels", () => {
     expect(d.grossMaster.low).toBeLessThan(d.grossMaster.high);
     expect(d.artistShare.mid).toBeLessThan(d.grossMaster.mid);
     expect(d.calibrated).toBe(false);
+    // 90 jours : entre le mois et l'année, sur exactement 90 jours.
+    const q = estimateSummary("dadju", "quarter");
+    expect(q.grossMaster.mid).toBeGreaterThan(m.grossMaster.mid);
+    expect(q.grossMaster.mid).toBeLessThan(y.grossMaster.mid);
+    expect(q.period).toBe("quarter");
+    expect(dailyEstimates("dadju", 365).slice(-90)[0].date).toBe(q.from);
+  });
+
+  it("estimateSummaries sert les cinq périodes, identiques aux résumés unitaires", () => {
+    const all = estimateSummaries("dadju");
+    expect(Object.keys(all).sort()).toEqual(["day", "month", "quarter", "week", "year"]);
+    expect(all.quarter.grossMaster.mid).toBe(estimateSummary("dadju", "quarter").grossMaster.mid);
+  });
+
+  it("dspEstimates : la somme des plateformes retombe sur le brut master de la période", () => {
+    for (const period of ["day", "week", "month", "quarter", "year"] as const) {
+      const rows = dspEstimates("dadju", period);
+      expect(rows.length).toBeGreaterThan(0);
+      const sum = rows.reduce((s, r) => s + r.gross, 0);
+      expect(sum).toBeCloseTo(estimateSummary("dadju", period).grossMaster.mid, 6);
+      // Trié par brut décroissant, taux effectif cohérent.
+      for (let i = 1; i < rows.length; i++) expect(rows[i - 1].gross).toBeGreaterThanOrEqual(rows[i].gross);
+      for (const r of rows) if (r.streams > 0) expect(r.rate).toBeCloseTo(r.gross / r.streams, 12);
+    }
+  });
+
+  it("rosterDspEstimates : somme des artistes réels, égale au résumé roster", () => {
+    const rows = rosterDspEstimates("week");
+    const sum = rows.reduce((s, r) => s + r.gross, 0);
+    expect(sum).toBeCloseTo(rosterEstimateSummary("week").grossMaster.mid, 6);
+    const spotify = rows.find((r) => r.dsp === "spotify")!;
+    const perArtist = ARTISTS.reduce(
+      (s, a) => s + (dspEstimates(a.id, "week").find((r) => r.dsp === "spotify")?.streams ?? 0),
+      0,
+    );
+    expect(spotify.streams).toBe(perArtist);
   });
 
   it("rosterEstimateSummary agrège les trois artistes", () => {

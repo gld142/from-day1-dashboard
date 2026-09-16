@@ -37,7 +37,8 @@
   "estimate": {
     "title": "What it earns — live estimate",
     "subtitle": "Payable streams × French rate (SNEP 2025), adjusted per platform, territory and Deezer's artist-centric model. An imported statement recalibrates everything.",
-    "titleLabel": "What the roster earns — live estimate"
+    "titleLabel": "What the roster earns — live estimate",
+    "detail": "See revenue details"
   },
   "overnight": {
     "title": "What changed overnight",

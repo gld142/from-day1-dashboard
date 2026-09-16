@@ -34,6 +34,8 @@ import {
 } from "./generators";
 import { DEMO_TODAY, isoMonth } from "./seed";
 import {
+  ESTIMATE_PERIODS,
+  PERIOD_DAYS,
   auditGap,
   calibrationFromUserData,
   hasRealData,
@@ -78,10 +80,12 @@ import type {
   TourDate,
   Track,
 } from "./types";
+import { DSPS } from "./types";
 
 export { ARTISTS, CONTRACTS, EMERGING, LABEL, PROJECTS, SPLITS, TEAM, TRACKS };
 export type { ForecastPoint };
 export type { DailyEstimate, EstimatePeriod, EstimateSummary, TikTokSignal };
+export { ESTIMATE_PERIODS, PERIOD_DAYS };
 
 /* ─────────────── Fiches artistes (démo + profil utilisateur) ─────────────── */
 
@@ -146,6 +150,72 @@ export function estimateSummary(artistId: string, period: EstimatePeriod): Estim
   });
 }
 
+/** Les cinq résumés (hier → 12 mois) d'un coup, pour les tuiles et le sélecteur. */
+function summariesOf(summarizeOne: (p: EstimatePeriod) => EstimateSummary): Record<EstimatePeriod, EstimateSummary> {
+  return Object.fromEntries(ESTIMATE_PERIODS.map((p) => [p, summarizeOne(p)])) as Record<EstimatePeriod, EstimateSummary>;
+}
+
+export function estimateSummaries(artistId: string): Record<EstimatePeriod, EstimateSummary> {
+  return summariesOf((p) => estimateSummary(artistId, p));
+}
+
+/** Une plateforme sur une fenêtre : volume, brut master (mid), provenance la plus faible, taux effectif €/stream. */
+export type DspEstimate = {
+  dsp: DSP;
+  streams: number;
+  gross: number;
+  provenance: Provenance;
+  rate: number;
+};
+
+/**
+ * Par plateforme sur les `days` derniers jours, trié par brut décroissant.
+ * On découpe la même série de 365 j que les résumés (la reconstitution dépend
+ * de la longueur de fenêtre) : la somme des lignes colle au résumé de la période.
+ * Plusieurs artistes = somme des volumes et des bruts, provenance la plus faible.
+ */
+function dspEstimatesOf(artistIds: string[], days: number): DspEstimate[] {
+  const streams: Partial<Record<DSP, number>> = {};
+  const gross: Partial<Record<DSP, number>> = {};
+  const provenances: Partial<Record<DSP, Provenance[]>> = {};
+  for (const id of artistIds) {
+    if (!hasRealData(id)) continue;
+    const prov = provenanceByDsp(id, days);
+    const seen: Partial<Record<DSP, Provenance>> = {};
+    for (const d of dailyEstimates(id, 365).slice(-days)) {
+      for (const dsp of DSPS) {
+        const v = d.byDsp[dsp];
+        if (!v) continue;
+        streams[dsp] = (streams[dsp] ?? 0) + v.streams;
+        gross[dsp] = (gross[dsp] ?? 0) + v.gross.mid;
+        seen[dsp] ??= v.provenance;
+      }
+    }
+    // Une provenance par artiste et par DSP : celle de la fenêtre, sinon la première vue.
+    for (const dsp of DSPS) {
+      const p = prov[dsp] ?? seen[dsp];
+      if (p) (provenances[dsp] ??= []).push(p);
+    }
+  }
+  return DSPS.filter((dsp) => provenances[dsp] !== undefined)
+    .map((dsp) => {
+      const st = streams[dsp] ?? 0;
+      const g = gross[dsp] ?? 0;
+      return { dsp, streams: st, gross: g, provenance: weakest(provenances[dsp] ?? []), rate: st > 0 ? g / st : 0 };
+    })
+    .sort((a, b) => b.gross - a.gross);
+}
+
+/** Par plateforme d'un artiste — vide hors couche réelle. */
+export function dspEstimates(artistId: string, period: EstimatePeriod): DspEstimate[] {
+  return dspEstimatesOf([artistId], PERIOD_DAYS[period]);
+}
+
+/** Par plateforme du roster : somme des artistes réels. */
+export function rosterDspEstimates(period: EstimatePeriod): DspEstimate[] {
+  return dspEstimatesOf(ARTISTS.map((a) => a.id), PERIOD_DAYS[period]);
+}
+
 const CONFIDENCE_ORDER: Confidence[] = ["indicative", "medium", "high"];
 const ZERO_RANGE: Range = { low: 0, mid: 0, high: 0 };
 const addRange = (a: Range, b: Range): Range => ({ low: a.low + b.low, mid: a.mid + b.mid, high: a.high + b.high });
@@ -173,6 +243,10 @@ export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
     provenance: weakest(parts.map((p) => p.provenance)),
     calibrated: parts.length > 0 && parts.every((p) => p.calibrated),
   };
+}
+
+export function rosterEstimateSummaries(): Record<EstimatePeriod, EstimateSummary> {
+  return summariesOf(rosterEstimateSummary);
 }
 
 /** Par DSP, la plus faible provenance sur la fenêtre — vide hors couche réelle. */
