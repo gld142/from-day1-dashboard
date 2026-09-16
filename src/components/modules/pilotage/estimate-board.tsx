@@ -57,12 +57,14 @@ export function EstimateBoard({
 
   return (
     <section className={cn("rounded-xl border bg-card p-5", className)}>
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-x-6 gap-y-1">
         <div>
           <h2 className="font-heading text-base font-semibold tracking-tight">
             {title}
           </h2>
-          <p className="mt-0.5 max-w-2xl text-xs text-muted-foreground">
+          {/* Mesure bornée (< 80 caractères par ligne) : le sous-titre ne court
+              pas sur toute la largeur. */}
+          <p className="mt-0.5 max-w-[58ch] text-xs text-muted-foreground">
             {subtitle}
           </p>
         </div>
@@ -71,13 +73,19 @@ export function EstimateBoard({
         </span>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {/* Tuiles à plat : un seul niveau de carte (la section). En 4 colonnes,
+          des filets verticaux séparent les périodes ; en 2 colonnes, l'espace
+          suffit ; empilées sur mobile, des filets horizontaux. */}
+      <div className="grid max-sm:divide-y sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 xl:grid-cols-4 xl:gap-0 xl:divide-x">
         {PERIODS.map((p) => {
           const s = summaries[p];
           const r = s[line];
           return (
-            <div key={p} className="rounded-lg border bg-surface-2/40 p-4">
-              <div className="flex items-center justify-between gap-2">
+            <div
+              key={p}
+              className="max-sm:py-4 max-sm:first:pt-0 max-sm:last:pb-0 xl:px-5 xl:first:pl-0 xl:last:pr-0"
+            >
+              <div className="flex items-baseline justify-between gap-2">
                 <span className="text-xs font-medium text-muted-foreground">
                   {t(`period.${p}`)}
                 </span>
@@ -92,16 +100,16 @@ export function EstimateBoard({
                   high: fmtMoney(locale, r.high),
                 })}
               </p>
-              <p className="mt-2 text-[11px] text-muted-foreground">
+              <p className="mt-2 text-xs text-muted-foreground">
                 {t("streams", {
                   streams: fmtCompact(locale, s.streams),
                   payable: fmtCompact(locale, s.payableStreams),
                 })}
               </p>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {tc(`confidence.${s.confidence}`)}
               </p>
-              <dl className="mt-3 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 border-t pt-2 text-[11px]">
+              <dl className="mt-3 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 border-t pt-2 text-xs">
                 {LINES.map((l) => (
                   <div key={l} className="contents">
                     <dt

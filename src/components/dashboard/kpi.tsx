@@ -135,12 +135,13 @@ export function KpiCard({
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        {/* Badge en flux inline : il suit le dernier mot du libellé au lieu de
-            le comprimer sur trois lignes dans les grilles serrées. */}
+        {/* Badge en flux inline, calé sur la ligne de base du libellé : il suit
+            le dernier mot au lieu de le comprimer sur trois lignes dans les
+            grilles serrées. */}
         <span className="text-xs font-medium text-muted-foreground">
           {label}
           {provenance && (
-            <ProvenanceBadge provenance={provenance} className="ml-1.5 align-middle" />
+            <ProvenanceBadge provenance={provenance} className="ml-1.5 align-baseline" />
           )}
         </span>
         {delta !== undefined && <DeltaChip value={delta} />}
@@ -154,7 +155,7 @@ export function KpiCard({
         />
       </div>
       {deltaLabel && (
-        <span className="text-[11px] text-muted-foreground">{deltaLabel}</span>
+        <span className="text-xs text-muted-foreground">{deltaLabel}</span>
       )}
       {spark && spark.length > 1 && (
         <Sparkline data={spark} color={sparkColor} id={id} />

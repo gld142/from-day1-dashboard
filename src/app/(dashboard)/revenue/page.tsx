@@ -357,7 +357,7 @@ export default function RevenuePage() {
           <span className="text-2xl font-semibold tracking-tight">
             {data.sources[0] ? t(`sources.${data.sources[0].source}`) : "—"}
           </span>
-          <span className="num text-[11px] text-muted-foreground">
+          <span className="num text-xs text-muted-foreground">
             {fmtPct(locale, topShare * 100, 0)}
           </span>
         </div>
@@ -374,7 +374,7 @@ export default function RevenuePage() {
           </p>
           <p
             className={cn(
-              "text-[11px]",
+              "text-xs",
               topShare > 0.7 ? "text-warning" : "text-success",
             )}
           >
@@ -511,7 +511,8 @@ export default function RevenuePage() {
                     <p className="text-sm font-medium leading-tight">
                       {t(`sources.${s.source}`)}
                     </p>
-                    <p className="truncate text-[11px] text-muted-foreground">
+                    {/* La description s'enroule sur deux lignes plutôt que d'être tronquée. */}
+                    <p className="text-xs leading-snug text-muted-foreground">
                       {t(`sourceDescriptions.${s.source}`)}
                     </p>
                   </div>
@@ -596,7 +597,7 @@ export default function RevenuePage() {
                       </span>
                       <span
                         className={cn(
-                          "num block text-[11px]",
+                          "num block text-xs",
                           p.net >= 0 ? "text-success" : "text-destructive",
                         )}
                       >

@@ -185,7 +185,7 @@ export default function StreamsPage() {
             {topDsp ? t(`dsp.names.${topDsp.dsp}`) : "—"}
           </span>
           {topDsp && (
-            <span className="num text-[11px] text-muted-foreground">
+            <span className="num text-xs text-muted-foreground">
               {t("kpi.topDspShare", {
                 share: pct(total === 0 ? 0 : (topDsp.streams / total) * 100),
               })}

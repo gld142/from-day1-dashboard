@@ -26,7 +26,7 @@ export function ProvenanceBadge({
       <TooltipTrigger asChild>
         <span
           className={cn(
-            "inline-flex h-5 items-center rounded-full border bg-card px-1.5 text-[10px] font-medium uppercase tracking-wide",
+            "inline-flex h-5 items-center rounded-full border bg-card px-1.5 text-[11px] leading-none font-medium uppercase tracking-wide",
             TONE[provenance],
             className,
           )}
