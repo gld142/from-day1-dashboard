@@ -8,6 +8,30 @@
     "topSource": "Top source",
     "vsPrevYear": "vs previous 12 months"
   },
+  "estimate": {
+    "title": "Live estimate",
+    "subtitle": "What streams generate, day by day — gross master, artist share, songwriter royalties.",
+    "period": {
+      "day": "Yesterday",
+      "week": "7 days",
+      "month": "30 days",
+      "year": "12 months"
+    },
+    "gross": "Gross master",
+    "artist": "Artist share",
+    "publishing": "Songwriter royalties (publishing)",
+    "streams": "{streams} streams · {payable} payable",
+    "range": "{low} – {high}",
+    "calibrated": "Calibrated from statement",
+    "notCalibrated": "Default rates — import a statement to calibrate",
+    "byDsp": "By platform · 30 days",
+    "dspRate": "{rate} €/stream",
+    "colPlatform": "Platform",
+    "colProvenance": "Provenance",
+    "colStreams": "Streams",
+    "colRate": "Effective rate",
+    "colGross": "Gross master"
+  },
   "sources": {
     "streaming": "Streaming",
     "sacem": "SACEM",

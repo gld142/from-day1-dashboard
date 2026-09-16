@@ -31,15 +31,20 @@ import {
   KpiStaggerItem,
 } from "@/components/modules/signature/kpi-stagger";
 import { SunriseArc } from "@/components/modules/signature/sunrise-arc";
+import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
 import { StreamsAreaChart } from "@/components/modules/pilotage/streams-area-chart";
 import { TopMovers } from "@/components/modules/pilotage/top-movers";
 import {
   ARTISTS,
   CONTRACTS,
   dailyTotals,
+  estimateSummary,
   getArtist,
+  hasReal,
   labelTotals,
   monthlyRevenueTotals,
+  provenanceByDsp,
+  rosterEstimateSummary,
   rosterRows,
   streamsByDsp,
   streamsDelta,
@@ -48,8 +53,10 @@ import {
   tourDates,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
-import { fmtCompact, fmtDate, fmtInt, fmtPct } from "@/lib/format";
+import type { EstimatePeriod, EstimateSummary } from "@/lib/demo/api";
+import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { cn } from "@/lib/utils";
 
 const DAY_MS = 86_400_000;
 
@@ -73,6 +80,18 @@ function aggregatedDaily(days: number): Array<{ date: string; streams: number }>
   return Array.from(acc.entries())
     .sort(([x], [y]) => x.localeCompare(y))
     .map(([date, streams]) => ({ date, streams }));
+}
+
+const EST_PERIODS: EstimatePeriod[] = ["day", "week", "month", "year"];
+
+/** Les quatre résumés d'estimation (jour / semaine / mois / année) d'un coup. */
+function estimateSet(
+  summarize: (p: EstimatePeriod) => EstimateSummary,
+): Record<EstimatePeriod, EstimateSummary> {
+  return Object.fromEntries(EST_PERIODS.map((p) => [p, summarize(p)])) as Record<
+    EstimatePeriod,
+    EstimateSummary
+  >;
 }
 
 type Insight = {
@@ -118,6 +137,12 @@ export default function PulsePage() {
     const revSpark = monthly.slice(-8).map((m) => ({ value: m.amount }));
 
     const series90 = dailyTotals(artistId, 90);
+
+    /* Estimation € (couche réelle uniquement) + provenance du compteur du jour */
+    const est = hasReal(artistId)
+      ? estimateSet((p) => estimateSummary(artistId, p))
+      : null;
+    const streamsProvenance = provenanceByDsp(artistId, 1).spotify;
 
     /* Insights de la nuit */
     const night = streamsByDsp(artistId, 1);
@@ -204,6 +229,8 @@ export default function PulsePage() {
       revDelta,
       revSpark,
       series90,
+      est,
+      streamsProvenance,
       insights,
     };
   }, [showArtist, artistId, locale, t]);
@@ -229,6 +256,7 @@ export default function PulsePage() {
 
     const series90 = aggregatedDaily(90);
     const movers = [...rows].sort((a, b) => b.delta30d - a.delta30d).slice(0, 5);
+    const est = estimateSet(rosterEstimateSummary);
 
     /* Insights roster */
     const topMover = movers[0];
@@ -298,9 +326,13 @@ export default function PulsePage() {
       heroSpark,
       series90,
       movers,
+      est,
       insights,
     };
   }, [showArtist, locale, t]);
+
+  /* Cascade mise en avant : part artiste pour l'artiste, brut master pour le label. */
+  const line = persona === "artist" ? "artistShare" : "grossMaster";
 
   /* ───────────────────────────── Rendu ───────────────────────────── */
 
@@ -332,7 +364,12 @@ export default function PulsePage() {
       {artistView && (
         <div className="space-y-4">
           {/* Héro + KPIs */}
-          <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+          <KpiStagger
+            className={cn(
+              "grid gap-4 sm:grid-cols-2",
+              artistView.est ? "xl:grid-cols-7" : "xl:grid-cols-6",
+            )}
+          >
             <KpiStaggerItem className="relative sm:col-span-2 xl:col-span-2">
               <KpiCard
                 hero
@@ -344,6 +381,7 @@ export default function PulsePage() {
                 deltaLabel={t("hero.vsYesterday")}
                 spark={artistView.heroSpark}
                 sparkColor="var(--brand)"
+                provenance={artistView.streamsProvenance}
               />
               <SunriseArc />
             </KpiStaggerItem>
@@ -357,19 +395,54 @@ export default function PulsePage() {
                 spark={artistView.spark7}
               />
             </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-rev"
-                className="h-full"
-                label={t("kpis.revenueMonth")}
-                value={artistView.revMonth}
-                format="eur"
-                delta={artistView.revDelta}
-                deltaLabel={t("kpis.vsPrevMonth")}
-                spark={artistView.revSpark}
-                sparkColor="var(--chart-2)"
-              />
-            </KpiStaggerItem>
+            {artistView.est ? (
+              <>
+                {/* Gains estimés : hier + 7 jours, en fourchette et avec provenance */}
+                <KpiStaggerItem>
+                  <KpiCard
+                    id="pulse-earned-day"
+                    className="h-full"
+                    label={t("kpis.earnedYesterday")}
+                    value={Math.round(artistView.est.day[line].mid)}
+                    format="eur"
+                    deltaLabel={t("kpis.rangeHint", {
+                      low: fmtEur(locale, artistView.est.day[line].low),
+                      high: fmtEur(locale, artistView.est.day[line].high),
+                    })}
+                    provenance={artistView.est.day.provenance}
+                  />
+                </KpiStaggerItem>
+                <KpiStaggerItem>
+                  <KpiCard
+                    id="pulse-earned-week"
+                    className="h-full"
+                    label={t("kpis.earnedWeek")}
+                    value={Math.round(artistView.est.week[line].mid)}
+                    format="eur"
+                    deltaLabel={
+                      persona === "artist"
+                        ? t("kpis.artistShareHint")
+                        : t("kpis.grossHint")
+                    }
+                    provenance={artistView.est.week.provenance}
+                  />
+                </KpiStaggerItem>
+              </>
+            ) : (
+              <KpiStaggerItem>
+                <KpiCard
+                  id="pulse-rev"
+                  className="h-full"
+                  label={t("kpis.revenueMonth")}
+                  value={artistView.revMonth}
+                  format="eur"
+                  delta={artistView.revDelta}
+                  deltaLabel={t("kpis.vsPrevMonth")}
+                  spark={artistView.revSpark}
+                  sparkColor="var(--chart-2)"
+                />
+              </KpiStaggerItem>
+            )}
             <KpiStaggerItem>
               <KpiCard
                 id="pulse-listeners"
@@ -402,6 +475,16 @@ export default function PulsePage() {
               seriesLabel={t("chart.streams")}
             />
           </section>
+
+          {/* Ce que ça rapporte — estimation jour / semaine / mois / année */}
+          {artistView.est && (
+            <EstimateBoard
+              summaries={artistView.est}
+              line={line}
+              title={t("estimate.title")}
+              subtitle={t("estimate.subtitle")}
+            />
+          )}
 
           {/* Ce qui a changé cette nuit */}
           <section>
@@ -504,6 +587,14 @@ export default function PulsePage() {
               />
             </section>
           </div>
+
+          {/* Ce que le roster rapporte — estimation agrégée */}
+          <EstimateBoard
+            summaries={labelView.est}
+            line="grossMaster"
+            title={t("estimate.titleLabel")}
+            subtitle={t("estimate.subtitle")}
+          />
 
           {/* Ce qui a changé cette nuit — roster */}
           <section>

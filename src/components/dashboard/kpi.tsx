@@ -135,9 +135,13 @@ export function KpiCard({
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        {/* Badge en flux inline : il suit le dernier mot du libellé au lieu de
+            le comprimer sur trois lignes dans les grilles serrées. */}
+        <span className="text-xs font-medium text-muted-foreground">
           {label}
-          {provenance && <ProvenanceBadge provenance={provenance} />}
+          {provenance && (
+            <ProvenanceBadge provenance={provenance} className="ml-1.5 align-middle" />
+          )}
         </span>
         {delta !== undefined && <DeltaChip value={delta} />}
       </div>

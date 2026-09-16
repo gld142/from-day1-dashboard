@@ -12,6 +12,11 @@
     "streams7d": "Streams · 7 days",
     "revenueMonth": "Revenue this month",
     "vsPrevMonth": "vs previous month",
+    "earnedYesterday": "Estimated earnings yesterday",
+    "earnedWeek": "Estimated earnings · 7 days",
+    "rangeHint": "{low} – {high}",
+    "grossHint": "gross master, before split",
+    "artistShareHint": "artist share, per contract",
     "monthlyListeners": "Monthly listeners",
     "growthHint": "monthly trend",
     "day1Index": "Day 1 Index",
@@ -28,6 +33,11 @@
     "title": "Streams — last 90 days",
     "titleLabel": "Roster streams — last 90 days",
     "streams": "Streams"
+  },
+  "estimate": {
+    "title": "What it earns — live estimate",
+    "subtitle": "Payable streams × French rate (SNEP 2025), adjusted per platform, territory and Deezer's artist-centric model. An imported statement recalibrates everything.",
+    "titleLabel": "What the roster earns — live estimate"
   },
   "overnight": {
     "title": "What changed overnight",

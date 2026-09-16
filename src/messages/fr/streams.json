@@ -1,6 +1,7 @@
 {
   "title": "Streams live",
   "subtitle": "Performance multi-plateformes, territoires et titres — mise à jour quotidienne.",
+  "provenanceLegend": "Provenance par plateforme",
   "kpi": {
     "total": "Streams sur la période",
     "delta": "Évolution",

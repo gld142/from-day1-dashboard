@@ -1,6 +1,7 @@
 {
   "title": "Live streams",
   "subtitle": "Multi-platform performance, territories and tracks — updated daily.",
+  "provenanceLegend": "Provenance by platform",
   "kpi": {
     "total": "Streams this period",
     "delta": "Trend",
