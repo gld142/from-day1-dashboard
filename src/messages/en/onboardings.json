@@ -3,7 +3,7 @@
   "subtitle": "The pipeline that makes From Day 1 an industry standard — not just another tool.",
   "kpis": {
     "targeted": "Targeted partners",
-    "targetedHint": "7 channels, one owner each",
+    "targetedHint": "8 channels, one owner each",
     "inDiscussion": "In discussion",
     "inDiscussionHint": "Active conversations this month",
     "pilots": "Pilots targeted M+3",
@@ -65,6 +65,27 @@
     }
   },
   "partners": {
+    "universal": {
+      "name": "Universal Music France",
+      "tag": "Major",
+      "brings": "France's leading roster, direct DSP statements, the credibility of a major",
+      "weBring": "Artist statement transparency, contract alerts, DSP audit, co-branded artist portal",
+      "nextAction": "September 18 presentation — Dadju / Nono / Kiko demo on real data",
+      "pitch": "Universal holds the data, its artists can't see it, and every misunderstanding ends up as a contradictory audit. From Day 1 sits a transparency layer on top of the label: the artist sees their earnings continuously, the team sees deadlines, the label recovers what platforms underpay. Pilot on a targeted roster, 90 days, with real statements.",
+      "m3": "Pilot signed on a targeted roster, statements connected",
+      "m9": "Co-branded artist portal deployed, first DSP claim files",
+      "m18": "Extension to the France roster, contract & rights integration",
+      "risks": {
+        "r1": {
+          "risk": "The audit perceived as an audit of the label itself",
+          "mitigation": "Contractual scope: the gap is always attributed to the DSP; the label is the claimant, never the audited party"
+        },
+        "r2": {
+          "risk": "Long decision cycle, data security concerns",
+          "mitigation": "Capped pilot, France hosting, DPA from the pilot onward, data never resold"
+        }
+      }
+    },
     "believe": {
       "name": "Believe",
       "tag": "Distribution",
