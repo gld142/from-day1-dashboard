@@ -33,16 +33,21 @@ import {
 } from "lucide-react";
 import {
   ARTISTS,
+  dailyEstimates,
+  estimateSummary,
   getArtist,
+  hasReal,
   monthlyRevenueTotals,
   pnlByArtist,
+  provenanceByDsp,
   revenueBySource,
   revenueSeries,
 } from "@/lib/demo/api";
-import type { RevenueSource } from "@/lib/demo/types";
-import { REVENUE_SOURCES } from "@/lib/demo/types";
+import type { EstimatePeriod, EstimateSummary } from "@/lib/demo/api";
+import type { DSP, Provenance, RevenueSource } from "@/lib/demo/types";
+import { DSPS, REVENUE_SOURCES } from "@/lib/demo/types";
 import { downloadCsv, round2 } from "@/lib/export";
-import { artistColor, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
+import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
@@ -50,6 +55,16 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
+import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const SOURCE_COLOR: Record<RevenueSource, string> = {
   streaming: "var(--chart-1)",
@@ -84,6 +99,20 @@ const STACK_COLORS = [
   "var(--chart-3)",
 ];
 
+const EST_PERIODS: EstimatePeriod[] = ["day", "week", "month", "year"];
+
+/** Fenêtre du tableau « par plateforme » (jours). */
+const BY_DSP_DAYS = 30;
+
+type DspEstimateRow = {
+  dsp: DSP;
+  streams: number;
+  gross: number;
+  provenance: Provenance;
+  /** € brut master par stream sur la fenêtre. */
+  rate: number;
+};
+
 const TOOLTIP_STYLE = {
   background: "var(--popover)",
   border: "1px solid var(--border)",
@@ -93,8 +122,10 @@ const TOOLTIP_STYLE = {
 
 export default function RevenuePage() {
   const t = useTranslations("revenue");
+  const tDsp = useTranslations("streams.dsp.names");
   const locale = useLocale();
-  const { artistId, isLabel, focusedArtistId, setFocusedArtistId } = useRole();
+  const { persona, artistId, isLabel, focusedArtistId, setFocusedArtistId } =
+    useRole();
   const aggregated = isLabel && !focusedArtistId;
 
   const data = useMemo(() => {
@@ -166,6 +197,54 @@ export default function RevenuePage() {
     };
   }, [aggregated, artistId]);
 
+  /* ── Estimation live (couche réelle, un seul artiste en focus) ──────────── */
+  const est = useMemo<Record<EstimatePeriod, EstimateSummary> | null>(() => {
+    if (aggregated || !hasReal(artistId)) return null;
+    return Object.fromEntries(
+      EST_PERIODS.map((p) => [p, estimateSummary(artistId, p)]),
+    ) as Record<EstimatePeriod, EstimateSummary>;
+  }, [aggregated, artistId]);
+
+  /* Par plateforme sur 30 jours : streams, brut master (mid), provenance la plus
+   * faible de la fenêtre, taux effectif €/stream. Trié par brut décroissant.
+   * On découpe la même série de 365 j que les résumés (la reconstitution dépend
+   * de la longueur de fenêtre) pour que le total colle à la tuile « 30 jours ». */
+  const byDsp = useMemo<DspEstimateRow[]>(() => {
+    if (aggregated || !hasReal(artistId)) return [];
+    const prov = provenanceByDsp(artistId, BY_DSP_DAYS);
+    const streams: Partial<Record<DSP, number>> = {};
+    const gross: Partial<Record<DSP, number>> = {};
+    const seen: Partial<Record<DSP, Provenance>> = {};
+    for (const d of dailyEstimates(artistId, 365).slice(-BY_DSP_DAYS)) {
+      for (const dsp of DSPS) {
+        const v = d.byDsp[dsp];
+        if (!v) continue;
+        streams[dsp] = (streams[dsp] ?? 0) + v.streams;
+        gross[dsp] = (gross[dsp] ?? 0) + v.gross.mid;
+        seen[dsp] ??= v.provenance;
+      }
+    }
+    return DSPS.filter((dsp) => seen[dsp] !== undefined)
+      .map((dsp) => {
+        const st = streams[dsp] ?? 0;
+        const g = gross[dsp] ?? 0;
+        return {
+          dsp,
+          streams: st,
+          gross: g,
+          provenance: prov[dsp] ?? seen[dsp] ?? "estimated",
+          rate: st > 0 ? g / st : 0,
+        };
+      })
+      .sort((a, b) => b.gross - a.gross);
+  }, [aggregated, artistId]);
+
+  const fmtRate = (rate: number) =>
+    new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 4,
+      maximumFractionDigits: 4,
+    }).format(rate);
+
   const topShare =
     data.total12 === 0 ? 0 : (data.sources[0]?.amount ?? 0) / data.total12;
   const focused = focusedArtistId ? getArtist(focusedArtistId) : null;
@@ -202,6 +281,56 @@ export default function RevenuePage() {
           onExportCsv={exportMonthlyCsv}
         />
       </PageHeader>
+
+      {/* Estimation live — fourchettes jour / semaine / mois / année */}
+      {est && (
+        <EstimateBoard
+          className="rise-in mb-4"
+          summaries={est}
+          line={persona === "artist" ? "artistShare" : "grossMaster"}
+          title={t("estimate.title")}
+          subtitle={t("estimate.subtitle")}
+        />
+      )}
+
+      {/* Par plateforme · 30 jours — provenance, volume, taux effectif, brut */}
+      {byDsp.length > 0 && (
+        <section className="rise-in mb-4 rounded-xl border bg-card p-5">
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("estimate.byDsp")}
+          </h2>
+          <Table className="mt-3">
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t("estimate.colPlatform")}</TableHead>
+                <TableHead>{t("estimate.colProvenance")}</TableHead>
+                <TableHead className="text-right">{t("estimate.colStreams")}</TableHead>
+                <TableHead className="text-right">{t("estimate.colRate")}</TableHead>
+                <TableHead className="text-right">{t("estimate.colGross")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {byDsp.map((row) => (
+                <TableRow key={row.dsp}>
+                  <TableCell className="font-medium">{tDsp(row.dsp)}</TableCell>
+                  <TableCell>
+                    <ProvenanceBadge provenance={row.provenance} />
+                  </TableCell>
+                  <TableCell className="num text-right">
+                    {fmtCompact(locale, row.streams)}
+                  </TableCell>
+                  <TableCell className="num text-right text-muted-foreground">
+                    {t("estimate.dspRate", { rate: fmtRate(row.rate) })}
+                  </TableCell>
+                  <TableCell className="num text-right font-semibold">
+                    {fmtEur(locale, row.gross)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </section>
+      )}
 
       {/* KPIs */}
       <div className="rise-in grid grid-cols-2 gap-3 lg:grid-cols-4">
