@@ -71,5 +71,22 @@
     "rowsPerPage": "Lignes par page",
     "of": "sur",
     "noResults": "Aucun résultat"
+  },
+  "provenance": {
+    "measured": "Mesuré",
+    "reconstructed": "Reconstitué",
+    "estimated": "Estimé",
+    "simulated": "Simulé",
+    "tip": {
+      "measured": "Relevé sur les compteurs publics (Spotify, Kworb, YouTube) ou sur un relevé importé.",
+      "reconstructed": "Historique reconstitué à partir du total cumulé et du débit quotidien réel — la courbe est plausible, pas relevée jour par jour.",
+      "estimated": "Extrapolé depuis Spotify avec le mix DSP de l'artiste — aucune plateforme ne publie ces chiffres.",
+      "simulated": "Donnée de démonstration, inventée pour être cohérente avec le réel."
+    },
+    "confidence": {
+      "high": "Confiance élevée",
+      "medium": "Confiance moyenne",
+      "indicative": "Indicatif"
+    }
   }
 }

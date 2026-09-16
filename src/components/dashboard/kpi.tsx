@@ -8,6 +8,8 @@ import NumberFlow from "@number-flow/react";
 import { useLocale } from "next-intl";
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
+import type { Provenance } from "@/lib/demo/types";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { cn } from "@/lib/utils";
 
 export function DeltaChip({
@@ -92,6 +94,7 @@ type KpiCardProps = {
   id: string;
   hero?: boolean;
   className?: string;
+  provenance?: Provenance;
 };
 
 export function KpiCard({
@@ -105,6 +108,7 @@ export function KpiCard({
   id,
   hero,
   className,
+  provenance,
 }: KpiCardProps) {
   const locale = useLocale();
 
@@ -131,7 +135,10 @@ export function KpiCard({
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
+        <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          {label}
+          {provenance && <ProvenanceBadge provenance={provenance} />}
+        </span>
         {delta !== undefined && <DeltaChip value={delta} />}
       </div>
       <div className={cn("num font-semibold tracking-tight", hero ? "text-3xl" : "text-2xl")}>

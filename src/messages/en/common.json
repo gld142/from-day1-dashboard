@@ -71,5 +71,22 @@
     "rowsPerPage": "Rows per page",
     "of": "of",
     "noResults": "No results"
+  },
+  "provenance": {
+    "measured": "Measured",
+    "reconstructed": "Reconstructed",
+    "estimated": "Estimated",
+    "simulated": "Simulated",
+    "tip": {
+      "measured": "Read from public counters (Spotify, Kworb, YouTube) or from an imported statement.",
+      "reconstructed": "History rebuilt from the cumulative total and today's real daily rate — plausible, not read day by day.",
+      "estimated": "Extrapolated from Spotify with the artist's DSP mix — no platform publishes these figures.",
+      "simulated": "Demo data, invented to stay consistent with the real numbers."
+    },
+    "confidence": {
+      "high": "High confidence",
+      "medium": "Medium confidence",
+      "indicative": "Indicative"
+    }
   }
 }
