@@ -1,0 +1,129 @@
+{
+  "brand": "FROM DAY 1",
+  "url": "app.from-day1.fr/welcome?source={source}",
+  "cta": "Enter the dashboard",
+  "switchSource": "See another channel",
+  "valuesTitle": "What this onboarding solves",
+  "sidebarTitle": "Default sidebar",
+  "hiddenSuffix": "(hidden)",
+  "firstInsightLabel": "First insight delivered in 3 min",
+  "sources": {
+    "universal": {
+      "name": "Universal Music France",
+      "welcomeTitle": "Welcome, <accent>Universal</accent> teams — your artists finally see what you see",
+      "welcomeBody": "And you see what the platforms don't tell you. In 3 minutes, we connect the roster, map the contracts and deliver the first roster brief.",
+      "offer": "Pilot on a targeted roster — 90 days",
+      "steps": {
+        "1": {
+          "title": "Connect the Universal catalogue",
+          "desc": "Roster, contracts, half-yearly statements: secure import, role-based permissions (label, team, artist)."
+        },
+        "2": {
+          "title": "Map contracts & rights",
+          "desc": "Options, recoupments, period ends, splits, SACEM — every deadline becomes an alert, never a surprise."
+        },
+        "3": {
+          "title": "Receive the first roster brief",
+          "desc": "The label Pulse: growth signals, contractual alerts, DSP gaps to claim — calibrated on your data."
+        }
+      },
+      "firstInsight": "“Across the 3 pilot artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter — DSP claim file ready.”",
+      "values": {
+        "1": {
+          "promise": "Artist statement transparency",
+          "delivery": "Retention, fewer disputes — the artist understands their earnings, continuously"
+        },
+        "2": {
+          "promise": "Contractual alerts",
+          "delivery": "Options, recoupments, period ends: no deadline missed"
+        },
+        "3": {
+          "promise": "Continuous A&R signals",
+          "delivery": "Data-driven roster — momentum, concentration, drop-offs"
+        },
+        "4": {
+          "promise": "Label-side DSP audit",
+          "delivery": "Recover what the platforms underpay — substantiated claim, never an internal conflict"
+        },
+        "5": {
+          "promise": "Co-branded artist portal",
+          "delivery": "UNIVERSAL × FROM DAY 1: the artist view, with your logo"
+        }
+      }
+    },
+    "believe": {
+      "name": "Believe",
+      "welcomeTitle": "Welcome among the <accent>Believe artists</accent> on From Day 1",
+      "welcomeBody": "Ismaël Kané (Believe Music Publishing France) recommended the tool to you. In 3 minutes, we import your Believe catalogue and deliver your first strategic report.",
+      "offer": "3 months of Pro for free",
+      "steps": {
+        "1": {
+          "title": "Connect your Believe account",
+          "desc": "1-click OAuth. We automatically import your distributed tracks, your splits, your 12-month revenue."
+        },
+        "2": {
+          "title": "Check your splits and FR rights",
+          "desc": "We detect your co-writers and offer a sync with Sentric / Believe Music Publishing for your publishing."
+        },
+        "3": {
+          "title": "Receive your first Pulse",
+          "desc": "The daily strategic brief calibrated on your Believe data. Concrete action #1 to take today."
+        }
+      },
+      "firstInsight": "“We detected <accent>{gap}</accent> to recover on your latest statements (Spotify underpayment). Audit letter ready to send.”",
+      "values": {
+        "1": {
+          "promise": "Believe vs DistroKid differentiation",
+          "delivery": "Intelligence + FR rights + AI audit as an upsell"
+        },
+        "2": {
+          "promise": "Retention of artists > 50K listeners",
+          "delivery": "First money-saving insight in 3 min"
+        },
+        "3": {
+          "promise": "Distribution × publishing synergy",
+          "delivery": "Step 2: Sentric / Believe Publishing sync"
+        },
+        "4": {
+          "promise": "Co-branding visibility",
+          "delivery": "Believe logo in the header, “Believe Artist” badge"
+        }
+      }
+    },
+    "direct": {
+      "name": "From Day 1",
+      "welcomeTitle": "Welcome to <accent>From Day 1</accent>",
+      "welcomeBody": "Import your distributor statement, we deliver your first brief in 3 minutes.",
+      "offer": "Free to get started",
+      "steps": {
+        "1": {
+          "title": "Import your statement",
+          "desc": "DistroKid, TuneCore, Believe — one CSV, 100% local."
+        },
+        "2": {
+          "title": "Check your tracks and splits",
+          "desc": "We recognise your tracks and suggest the splits to sign."
+        },
+        "3": {
+          "title": "Receive your first Pulse",
+          "desc": "Streams, estimated earnings, gaps to claim."
+        }
+      },
+      "firstInsight": "“Your first brief is ready: <accent>{gap}</accent> of gap detected on your latest statement.”",
+      "values": {
+        "1": {
+          "promise": "See what your label sees",
+          "delivery": "360° view of streams / revenue / rights"
+        },
+        "2": {
+          "promise": "Recover what they forgot to pay you",
+          "delivery": "Royalty audit and ready-made letter"
+        },
+        "3": {
+          "promise": "Decide every morning",
+          "delivery": "The daily Pulse"
+        }
+      }
+    }
+  }
+}

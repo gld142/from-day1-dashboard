@@ -68,6 +68,8 @@ import frImporter from "./fr/importer.json";
 import enImporter from "./en/importer.json";
 import frAsk from "./fr/ask.json";
 import enAsk from "./en/ask.json";
+import frWelcome from "./fr/welcome.json";
+import enWelcome from "./en/welcome.json";
 import enSettings from "./en/settings.json";
 
 const MESSAGES = {
@@ -105,6 +107,7 @@ const MESSAGES = {
     importer: frImporter,
     brief: frBrief,
     ask: frAsk,
+    welcome: frWelcome,
   },
   en: {
     common: enCommon,
@@ -140,6 +143,7 @@ const MESSAGES = {
     importer: enImporter,
     brief: enBrief,
     ask: enAsk,
+    welcome: enWelcome,
   },
 } as const;
 

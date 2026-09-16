@@ -1,0 +1,129 @@
+{
+  "brand": "FROM DAY 1",
+  "url": "app.from-day1.fr/welcome?source={source}",
+  "cta": "Entrer dans le dashboard",
+  "switchSource": "Voir un autre canal",
+  "valuesTitle": "Ce que cet onboarding résout",
+  "sidebarTitle": "Sidebar par défaut",
+  "hiddenSuffix": "(caché)",
+  "firstInsightLabel": "Premier insight livré en 3 min",
+  "sources": {
+    "universal": {
+      "name": "Universal Music France",
+      "welcomeTitle": "Bienvenue, équipes <accent>Universal</accent> — vos artistes voient enfin ce que vous voyez",
+      "welcomeBody": "Et vous voyez ce que les plateformes ne vous disent pas. En 3 minutes, on connecte le roster, on cartographie les contrats et on livre le premier brief roster.",
+      "offer": "Pilote sur un roster ciblé — 90 jours",
+      "steps": {
+        "1": {
+          "title": "Connectez le catalogue Universal",
+          "desc": "Roster, contrats, relevés semestriels : import sécurisé, permissions par rôle (label, équipe, artiste)."
+        },
+        "2": {
+          "title": "Cartographie contrats & droits",
+          "desc": "Options, recoupements, fins de période, splits, SACEM — chaque échéance devient une alerte, jamais une surprise."
+        },
+        "3": {
+          "title": "Recevez le premier brief roster",
+          "desc": "Le Pulse label : signaux de croissance, alertes contractuelles, écarts DSP à réclamer — calibré sur vos données."
+        }
+      },
+      "firstInsight": "« Sur les 3 artistes du pilote, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos — dossier de réclamation DSP prêt. »",
+      "values": {
+        "1": {
+          "promise": "Transparence des relevés artistes",
+          "delivery": "Rétention, moins de litiges — l'artiste comprend ses gains, en continu"
+        },
+        "2": {
+          "promise": "Alertes contractuelles",
+          "delivery": "Options, recoupements, fins de période : aucune échéance ratée"
+        },
+        "3": {
+          "promise": "Signaux A&R en continu",
+          "delivery": "Roster piloté à la donnée — momentum, concentration, décrochages"
+        },
+        "4": {
+          "promise": "Audit DSP côté label",
+          "delivery": "Récupérer ce que les plateformes sous-paient — réclamation étayée, jamais un conflit interne"
+        },
+        "5": {
+          "promise": "Portail artiste co-brandé",
+          "delivery": "UNIVERSAL × FROM DAY 1 : la vue artiste, avec votre logo"
+        }
+      }
+    },
+    "believe": {
+      "name": "Believe",
+      "welcomeTitle": "Bienvenue parmi les <accent>artistes Believe</accent> sur From Day 1",
+      "welcomeBody": "Ismaël Kané (Believe Music Publishing France) t'a recommandé l'outil. En 3 minutes, on importe ton catalogue Believe et on te livre ton premier rapport stratégique.",
+      "offer": "3 mois Pro offerts",
+      "steps": {
+        "1": {
+          "title": "Connecte ton compte Believe",
+          "desc": "OAuth 1 clic. On importe automatiquement tes tracks distribués, tes splits, tes revenus 12 mois."
+        },
+        "2": {
+          "title": "Vérifie tes splits et droits FR",
+          "desc": "On détecte tes co-auteurs et propose la sync avec Sentric / Believe Music Publishing pour ton publishing."
+        },
+        "3": {
+          "title": "Reçois ton premier Pulse",
+          "desc": "Le brief stratégique du jour calibré sur ta data Believe. Action concrète n°1 à faire aujourd'hui."
+        }
+      },
+      "firstInsight": "« On a détecté <accent>{gap}</accent> à récupérer sur tes derniers relevés (sous-paiement Spotify). Lettre d'audit prête à envoyer. »",
+      "values": {
+        "1": {
+          "promise": "Différenciation Believe vs DistroKid",
+          "delivery": "Intelligence + droits FR + audit IA en upsell"
+        },
+        "2": {
+          "promise": "Rétention artistes > 50 K auditeurs",
+          "delivery": "Premier insight money-saving en 3 min"
+        },
+        "3": {
+          "promise": "Synergie distribution × publishing",
+          "delivery": "Étape 2 : sync Sentric / Believe Publishing"
+        },
+        "4": {
+          "promise": "Co-branding visibilité",
+          "delivery": "Logo Believe en header, badge « Artiste Believe »"
+        }
+      }
+    },
+    "direct": {
+      "name": "From Day 1",
+      "welcomeTitle": "Bienvenue sur <accent>From Day 1</accent>",
+      "welcomeBody": "Importe ton relevé distributeur, on te livre ton premier brief en 3 minutes.",
+      "offer": "Gratuit pour commencer",
+      "steps": {
+        "1": {
+          "title": "Importe ton relevé",
+          "desc": "DistroKid, TuneCore, Believe — un CSV, 100 % local."
+        },
+        "2": {
+          "title": "Vérifie tes titres et tes splits",
+          "desc": "On reconnaît tes titres et on te propose les splits à signer."
+        },
+        "3": {
+          "title": "Reçois ton premier Pulse",
+          "desc": "Streams, gains estimés, écarts à réclamer."
+        }
+      },
+      "firstInsight": "« Ton premier brief est prêt : <accent>{gap}</accent> d'écart détecté sur ton dernier relevé. »",
+      "values": {
+        "1": {
+          "promise": "Voir ce que ton label voit",
+          "delivery": "Vue 360° streams / revenus / droits"
+        },
+        "2": {
+          "promise": "Récupérer ce qu'on t'a oublié",
+          "delivery": "Audit royalties et lettre prête"
+        },
+        "3": {
+          "promise": "Décider chaque matin",
+          "delivery": "Le Pulse quotidien"
+        }
+      }
+    }
+  }
+}

@@ -56,6 +56,15 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
+      // Canal d'acquisition (/welcome → CTA) : `?persona=` force le persona et
+      // prime sur la valeur mémorisée — il sera persisté par l'effet suivant.
+      const fromUrl = new URLSearchParams(window.location.search).get("persona");
+      if (fromUrl === "artist" || fromUrl === "label") {
+        setPersonaState(fromUrl);
+        setFocusedArtistId(null);
+        setHydrated(true);
+        return;
+      }
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw) as {
