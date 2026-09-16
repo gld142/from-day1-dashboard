@@ -1,33 +1,33 @@
 {
   "date": "2026-09-16",
   "spotify": {
-    "monthlyListeners": 24222,
+    "monthlyListeners": 24000,
     "followers": 22615,
     "topTracks": [
       {
         "name": "Odjo",
         "spotifyId": "7mdQBTYooLfkpVuI41efuN",
-        "playcount": 204156
+        "playcount": 204474
       },
       {
         "name": "Business class",
         "spotifyId": "2knf3OaX4adOi2OhE10yvL",
-        "playcount": 122561
+        "playcount": 122874
       },
       {
         "name": "One in a million",
         "spotifyId": "7aNwUVanTfC4twYXfMNMbW",
-        "playcount": 124577
+        "playcount": 124880
       },
       {
         "name": "Rayon de soleil",
         "spotifyId": "0jaCOkFpwUIDjKjzJ8ZijL",
-        "playcount": 70064
+        "playcount": 70296
       },
       {
         "name": "Ding Deng Dong",
         "spotifyId": "650AKFNGe0muA8a5tgZMpo",
-        "playcount": 91556
+        "playcount": 91706
       }
     ]
   },
@@ -84,37 +84,37 @@
         "videoId": "kAZemdOXMwc",
         "title": "Kiko - Odjo (Clip Officiel)",
         "channel": "official",
-        "views": 1435402
+        "views": 1437608
       },
       {
         "videoId": "6MEhlDvRi1Y",
         "title": "Kiko - Business Class (Clip Officiel)",
         "channel": "official",
-        "views": 423023
+        "views": 425151
       },
       {
         "videoId": "SuYvD4b5-0A",
         "title": "Kiko - One in a Million (Performance Video)",
         "channel": "official",
-        "views": 532496
+        "views": 533083
       },
       {
         "videoId": "01OPuODYWdc",
         "title": "Kiko - Ding Deng Dong (Clip Officiel)",
         "channel": "official",
-        "views": 268741
+        "views": 268928
       },
       {
         "videoId": "iLd3rKsMUcY",
         "title": "NIKANOR feat. KIKO - Rayon de soleil (Clip Officiel)",
         "channel": "official",
-        "views": 1106294
+        "views": 1107210
       },
       {
         "videoId": "DPoGSe392z4",
         "title": "Kiko - Agama feat. Folidjanta & Conii Gangster (Clip Officiel)",
         "channel": "official",
-        "views": 4462864
+        "views": 4464036
       }
     ]
   },
@@ -122,27 +122,27 @@
     {
       "city": "Lomé",
       "country": "TG",
-      "listeners": 4565
+      "listeners": 4523
     },
     {
       "city": "Abidjan",
       "country": "CI",
-      "listeners": 2686
+      "listeners": 2677
     },
     {
       "city": "Cotonou",
       "country": "BJ",
-      "listeners": 1269
+      "listeners": 1258
     },
     {
       "city": "Kinshasa",
       "country": "CD",
-      "listeners": 985
+      "listeners": 981
     },
     {
       "city": "Conakry",
       "country": "GN",
-      "listeners": 755
+      "listeners": 749
     }
   ]
 }

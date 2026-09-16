@@ -1,33 +1,33 @@
 {
   "date": "2026-09-16",
   "spotify": {
-    "monthlyListeners": 6473478,
+    "monthlyListeners": 6469578,
     "followers": 8868674,
     "topTracks": [
       {
         "name": "Reine",
         "spotifyId": "1bxP4M9ICllcg7mel8kH89",
-        "playcount": 229039778
+        "playcount": 229125817
       },
       {
         "name": "I love you",
         "spotifyId": "6jDe94y1dbLDU53Q1NPxLH",
-        "playcount": 165243315
+        "playcount": 165314373
       },
       {
         "name": "Compliqué",
         "spotifyId": "6VtG4p0It4nM0aStU46hEl",
-        "playcount": 155720730
+        "playcount": 155805092
       },
       {
         "name": "Par amour",
         "spotifyId": "7vaHVmMKvajDN4IwtNslnI",
-        "playcount": 139295415
+        "playcount": 139368098
       },
       {
         "name": "Grand bain",
         "spotifyId": "0W4MOQ2kTOm1y7ooahgQP1",
-        "playcount": 186892178
+        "playcount": 186956457
       }
     ]
   },
@@ -1233,7 +1233,7 @@
     ]
   },
   "deezer": {
-    "fans": 3276631,
+    "fans": 3277077,
     "topTracks": [
       {
         "title": "Reine",
@@ -1284,31 +1284,31 @@
         "videoId": "tVKaN_H35xs",
         "title": "DADJU - Reine (Clip Officiel)",
         "channel": "official",
-        "views": 439774498
+        "views": 439838702
       },
       {
         "videoId": "ReK5Z0RCbSY",
         "title": "Soolking feat. Dadju - Meleğim [Clip Officiel] Prod by Nyadjiko",
         "channel": "official",
-        "views": 340630655
+        "views": 340652641
       },
       {
         "videoId": "NPSvCJ9v7vI",
         "title": "DADJU - Grand Bain ft. Ninho (Clip Officiel)",
         "channel": "official",
-        "views": 91056965
+        "views": 91066327
       },
       {
         "videoId": "bFEP26jCtsQ",
         "title": "DADJU - Compliqué (Clip Officiel)",
         "channel": "official",
-        "views": 124479884
+        "views": 124513461
       },
       {
         "videoId": "254EHfv9RvM",
         "title": "DADJU - Jaloux (Clip Officiel)",
         "channel": "official",
-        "views": 384759031
+        "views": 384811139
       }
     ]
   },
@@ -1316,27 +1316,27 @@
     {
       "city": "Paris",
       "country": "FR",
-      "listeners": 307056
+      "listeners": 309665
     },
     {
       "city": "Abidjan",
       "country": "CI",
-      "listeners": 131308
+      "listeners": 131237
     },
     {
       "city": "Montreal",
       "country": "CA",
-      "listeners": 124835
+      "listeners": 124988
     },
     {
       "city": "Marseille",
       "country": "FR",
-      "listeners": 97572
+      "listeners": 97924
     },
     {
       "city": "Lyon",
       "country": "FR",
-      "listeners": 94071
+      "listeners": 94985
     }
   ]
 }
