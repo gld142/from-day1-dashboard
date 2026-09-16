@@ -94,6 +94,28 @@ export function EstimateBoard({
           <span className="text-xs text-muted-foreground">
             {summaries.month.calibrated ? t("calibrated") : t("notCalibrated")}
           </span>
+          {/* D'où viennent les cascades : simulées (contrat inventé) ou renseignées
+              par l'artiste. Une seule ligne pour le board — même provenance
+              sur toutes les périodes. Deux badges si part et droits diffèrent. */}
+          <span
+            data-testid="cascades-provenance"
+            className="flex flex-wrap items-center justify-end gap-x-1.5 gap-y-1 text-xs text-muted-foreground"
+          >
+            {summaries.month.sharesProvenance === summaries.month.publishingProvenance ? (
+              <>
+                {t("cascades")}
+                <ProvenanceBadge provenance={summaries.month.sharesProvenance} />
+              </>
+            ) : (
+              <>
+                {t("artist")}
+                <ProvenanceBadge provenance={summaries.month.sharesProvenance} />
+                <span aria-hidden>·</span>
+                {t("publishing")}
+                <ProvenanceBadge provenance={summaries.month.publishingProvenance} />
+              </>
+            )}
+          </span>
         </div>
       </div>
 

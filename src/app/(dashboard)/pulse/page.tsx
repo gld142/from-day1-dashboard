@@ -34,6 +34,7 @@ import {
   KpiStaggerItem,
 } from "@/components/modules/signature/kpi-stagger";
 import { SunriseArc } from "@/components/modules/signature/sunrise-arc";
+import { SharesPanel } from "@/components/modules/finances/shares-panel";
 import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
 import { StreamsAreaChart } from "@/components/modules/pilotage/streams-area-chart";
 import { TopMovers } from "@/components/modules/pilotage/top-movers";
@@ -62,6 +63,7 @@ import type { TikTokSignal } from "@/lib/demo/api";
 import type { Provenance } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { cn } from "@/lib/utils";
 
 const DAY_MS = 86_400_000;
@@ -139,6 +141,8 @@ export default function PulsePage() {
     useRole();
 
   const showArtist = persona === "artist" || focusedArtistId !== null;
+  /* Parts renseignées : les cascades des estimations en dépendent. */
+  const sharesKey = useSharesSnapshot();
 
   const dateChip = fmtDate(locale, DEMO_TODAY.toISOString(), {
     weekday: "long",
@@ -149,6 +153,7 @@ export default function PulsePage() {
   /* ───────────── Vue artiste (persona artiste ou label zoomé) ───────────── */
 
   const artistView = useMemo(() => {
+    void sharesKey;
     if (!showArtist) return null;
     const artist = getArtist(artistId);
 
@@ -274,11 +279,12 @@ export default function PulsePage() {
       streamsProvenance,
       insights,
     };
-  }, [showArtist, artistId, locale, t]);
+  }, [showArtist, artistId, locale, t, sharesKey]);
 
   /* ───────────── Vue label agrégée (focusedArtistId === null) ───────────── */
 
   const labelView = useMemo(() => {
+    void sharesKey;
     if (showArtist) return null;
 
     const totals = labelTotals();
@@ -382,7 +388,7 @@ export default function PulsePage() {
       est,
       insights,
     };
-  }, [showArtist, locale, t]);
+  }, [showArtist, locale, t, sharesKey]);
 
   /* Cascade mise en avant : part artiste pour l'artiste, brut master pour le label. */
   const line = persona === "artist" ? "artistShare" : "grossMaster";
@@ -548,6 +554,11 @@ export default function PulsePage() {
               subtitle={t("estimate.subtitle")}
               actions={detailLink}
             />
+          )}
+
+          {/* Ta part, c'est ton contrat — rappel en une ligne, l'édition se fait sur Revenus. */}
+          {artistView.est && persona === "artist" && (
+            <SharesPanel variant="compact" artistId={artistId} gross={artistView.est.day.grossMaster.mid} />
           )}
 
           {/* Ce qui a changé cette nuit */}

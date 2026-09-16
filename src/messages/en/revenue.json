@@ -26,6 +26,7 @@
     "range": "{low} – {high}",
     "calibrated": "Calibrated from statement",
     "notCalibrated": "Default rates: import a statement to calibrate",
+    "cascades": "Artist share and songwriter royalties",
     "byDspPeriod": "By platform · {period}",
     "selectPeriod": "Estimate period",
     "dspRate": "{rate} €/stream",
@@ -34,6 +35,52 @@
     "colStreams": "Streams",
     "colRate": "Effective rate",
     "colGross": "Gross master"
+  },
+  "shares": {
+    "title": "Your share is your contract",
+    "lead": "{gross} generated yesterday by your streams is the gross master: what platforms pay out before any split. What you actually receive depends on your contract — and we don't make it up.",
+    "statusSimulated": "Right now your share is <b>simulated</b> (<num>{pct}%</num>) for the demo.",
+    "statusDeclared": "Your share is declared: <num>{pct}%</num> of the master, {author}.",
+    "authorYes": "songwriter at {apct}%",
+    "authorUnknown": "songwriter (share to be specified)",
+    "authorNo": "not a songwriter",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "tabs": {
+      "label": "How to declare your share",
+      "percent": "Enter my percentages",
+      "upload": "Import my contract",
+      "request": "Ask my label for my contract"
+    },
+    "fields": {
+      "master": "Artist share on the master (%)",
+      "masterHelp": "The royalty rate in your artist or licence contract (often 15–25% on an artist deal, 50–100% on distribution).",
+      "isAuthor": "I am a songwriter and/or composer",
+      "author": "My share of the songwriter royalties on my tracks (%)",
+      "authorHelp": "Check your SACEM statements: it's your share on each work.",
+      "save": "Save",
+      "saved": "Saved — the cascades are up to date."
+    },
+    "upload": {
+      "label": "Choose my contract (PDF or Word)",
+      "imported": "{name} imported — read locally, never sent. Now enter the percentages you read in it:",
+      "hint": "The file stays on your device: nothing is transmitted. You simply copy the percentages from your contract."
+    },
+    "request": {
+      "lead": "You are entitled to a copy of your contract and your statements. Here is a letter ready to send.",
+      "letterLabel": "Letter to the label",
+      "copy": "Copy",
+      "copied": "Copied",
+      "open": "Open in my email app",
+      "subject": "Request for a copy of my contract and royalty statements",
+      "body": "Subject: request for a copy of my contract and royalty statements\n\nHello,\n\nAs part of tracking my income, I would be grateful if you could send me:\n– a copy of my current artist / licence contract, including any amendments;\n– my royalty statements for the last four half-years, broken down by platform and territory.\n\nThank you in advance.\n\n{artistName}"
+    },
+    "compact": {
+      "text": "Your artist share is simulated (<num>{pct}%</num>). Enter your percentages or import your contract to know what you really receive.",
+      "textDeclared": "Your share is declared: <num>{pct}%</num> of the master, {author}.",
+      "cta": "Declare my share",
+      "ctaEdit": "Edit my share"
+    }
   },
   "sources": {
     "streaming": "Streaming",

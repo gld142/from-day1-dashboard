@@ -26,6 +26,7 @@
     "range": "{low} – {high}",
     "calibrated": "Calibré par relevé",
     "notCalibrated": "Taux par défaut : importez un relevé pour calibrer",
+    "cascades": "Part artiste et droits d'auteur",
     "byDspPeriod": "Par plateforme · {period}",
     "selectPeriod": "Période de l'estimation",
     "dspRate": "{rate} €/stream",
@@ -34,6 +35,52 @@
     "colStreams": "Streams",
     "colRate": "Taux effectif",
     "colGross": "Brut master"
+  },
+  "shares": {
+    "title": "Ta part, c'est ton contrat",
+    "lead": "{gross} générés hier par tes streams, c'est le brut master : ce que les plateformes reversent avant partage. Ce que tu touches dépend de ton contrat — et on ne l'invente pas.",
+    "statusSimulated": "Aujourd'hui, ta part est <b>simulée</b> (<num>{pct} %</num>) pour la démo.",
+    "statusDeclared": "Ta part est renseignée : <num>{pct} %</num> du master, {author}.",
+    "authorYes": "auteur/compositeur à {apct} %",
+    "authorUnknown": "auteur/compositeur (part à préciser)",
+    "authorNo": "pas auteur",
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "tabs": {
+      "label": "Comment renseigner ta part",
+      "percent": "Renseigner mes pourcentages",
+      "upload": "Importer mon contrat",
+      "request": "Demander mon contrat au label"
+    },
+    "fields": {
+      "master": "Part artiste sur le master (%)",
+      "masterHelp": "Le % de royalties de ton contrat d'artiste ou de licence (souvent 15–25 % en contrat d'artiste, 50–100 % en distribution).",
+      "isAuthor": "Je suis auteur et/ou compositeur",
+      "author": "Ma part dans les droits d'auteur de mes titres (%)",
+      "authorHelp": "Regarde tes bulletins SACEM : c'est ta part sur chaque œuvre.",
+      "save": "Enregistrer",
+      "saved": "Enregistré — les cascades sont à jour."
+    },
+    "upload": {
+      "label": "Choisir mon contrat (PDF ou Word)",
+      "imported": "{name} importé — lu localement, jamais envoyé. Reporte maintenant les pourcentages que tu y lis :",
+      "hint": "Le fichier reste sur ton appareil : rien n'est transmis. Tu recopies simplement les pourcentages de ton contrat."
+    },
+    "request": {
+      "lead": "Tu as le droit d'obtenir une copie de ton contrat et de tes relevés. Voici un courrier prêt à envoyer.",
+      "letterLabel": "Courrier au label",
+      "copy": "Copier",
+      "copied": "Copié",
+      "open": "Ouvrir dans ma messagerie",
+      "subject": "Demande de copie de mon contrat et de mes relevés de redevances",
+      "body": "Objet : demande de copie de mon contrat et de mes relevés de redevances\n\nBonjour,\n\nDans le cadre du suivi de mes revenus, je vous remercie de bien vouloir me transmettre :\n– une copie de mon contrat d'artiste / de licence en cours, y compris ses avenants ;\n– mes relevés de redevances des quatre derniers semestres, détaillés par plateforme et par territoire.\n\nJe vous en remercie par avance.\n\n{artistName}"
+    },
+    "compact": {
+      "text": "Ta part artiste est simulée (<num>{pct} %</num>). Renseigne tes pourcentages ou importe ton contrat pour connaître ce que tu touches vraiment.",
+      "textDeclared": "Ta part est renseignée : <num>{pct} %</num> du master, {author}.",
+      "cta": "Renseigner ma part",
+      "ctaEdit": "Modifier ma part"
+    }
   },
   "sources": {
     "streaming": "Streaming",

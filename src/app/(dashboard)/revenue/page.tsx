@@ -52,12 +52,14 @@ import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { useUrlParam } from "@/lib/url-param";
+import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { cn } from "@/lib/utils";
 import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
+import { SharesPanel } from "@/components/modules/finances/shares-panel";
 import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -200,11 +202,15 @@ export default function RevenuePage() {
     };
   }, [aggregated, artistId]);
 
-  /* ── Estimation live (couche réelle) : l'artiste en focus, ou le roster ──── */
+  /* ── Estimation live (couche réelle) : l'artiste en focus, ou le roster ────
+   * Les parts renseignées (panneau « Ta part ») changent les cascades : la clé
+   * du store est une dépendance, le memo se recalcule à chaque enregistrement. */
+  const sharesKey = useSharesSnapshot();
   const est = useMemo<Record<EstimatePeriod, EstimateSummary> | null>(() => {
+    void sharesKey;
     if (aggregated) return rosterEstimateSummaries();
     return hasReal(artistId) ? estimateSummaries(artistId) : null;
-  }, [aggregated, artistId]);
+  }, [aggregated, artistId, sharesKey]);
 
   /* Par plateforme sur la période choisie : streams, brut master (mid),
    * provenance la plus faible, taux effectif €/stream — la somme des lignes
@@ -279,6 +285,12 @@ export default function RevenuePage() {
             </Tabs>
           }
         />
+      )}
+
+      {/* Ta part, c'est ton contrat — un artiste (persona artiste ou label zoomé),
+          jamais le roster agrégé : les pourcentages sont propres à chacun. */}
+      {est && !aggregated && (
+        <SharesPanel className="rise-in mb-4" artistId={artistId} gross={est.day.grossMaster.mid} />
       )}
 
       {/* Par plateforme · période — provenance, volume, taux effectif, brut */}
