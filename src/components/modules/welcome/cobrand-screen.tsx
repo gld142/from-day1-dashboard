@@ -14,8 +14,9 @@ import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fmtEur } from "@/lib/format";
+import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
-import { SOURCE_IDS, SOURCES, type SourceConfig } from "./sources";
+import { SOURCE_IDS, type SourceConfig } from "./sources";
 
 const STEPS = [1, 2, 3] as const;
 
@@ -29,6 +30,7 @@ export function CobrandScreen({
   const t = useTranslations("welcome");
   const tn = useTranslations("nav.items");
   const locale = useLocale();
+  const { setPersona } = useRole();
   const k = `sources.${source.id}`;
   const accent = (chunks: ReactNode) => (
     <span className="text-brand">{chunks}</span>
@@ -39,15 +41,17 @@ export function CobrandScreen({
     <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8 md:py-14">
       {/* ─── Fenêtre navigateur factice ─── */}
       <section className="rise-in overflow-hidden rounded-xl border bg-card shadow-sm">
-        <div className="relative flex h-9 items-center border-b bg-surface-2/60 px-3">
-          <div className="flex items-center gap-1.5" aria-hidden>
+        <div className="flex h-9 items-center gap-3 border-b bg-surface-2/60 px-3">
+          <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
             <span className="size-2.5 rounded-full bg-destructive/70" />
             <span className="size-2.5 rounded-full bg-warning/70" />
             <span className="size-2.5 rounded-full bg-success/70" />
           </div>
-          <div className="num absolute left-1/2 -translate-x-1/2 rounded-md bg-background/70 px-3 py-0.5 text-[11px] text-muted-foreground">
+          <div className="num mx-auto min-w-0 truncate rounded-md bg-background/70 px-3 py-0.5 text-[11px] text-muted-foreground">
             {t("url", { source: source.id })}
           </div>
+          {/* Contrepoids des 3 points : l'URL reste centrée optiquement. */}
+          <div className="hidden w-[42px] shrink-0 sm:block" aria-hidden />
         </div>
 
         <div className="bg-gradient-to-b from-card to-surface-2/40 p-6 md:p-10">
@@ -117,10 +121,15 @@ export function CobrandScreen({
             </p>
           </div>
 
-          {/* CTA */}
+          {/* CTA — le persona est appliqué au clic (navigation client : le
+              RoleProvider ne se remonte pas) ET porté par l'URL (lien partagé,
+              rechargement : lu au montage par RoleProvider). */}
           <div className="mt-7 flex justify-center">
             <Button asChild size="lg" className="px-5">
-              <Link href={`${source.landing}?persona=${source.persona}`}>
+              <Link
+                href={`${source.landing}?persona=${source.persona}`}
+                onClick={() => setPersona(source.persona)}
+              >
                 {t("cta")}
                 <ArrowRight data-icon="inline-end" aria-hidden />
               </Link>
@@ -197,7 +206,7 @@ export function CobrandScreen({
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
-            {t(`sources.${SOURCES[id].id}.name`)}
+            {t(`sources.${id}.name`)}
           </Link>
         ))}
       </nav>
