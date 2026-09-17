@@ -10,6 +10,7 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   ARTISTS,
   PROJECTS,
+  dailyTotals,
   getArtist,
   provenanceByDsp,
   tiktokSignal,
@@ -32,6 +33,7 @@ import {
   combinedDailyTotals,
 } from "@/components/modules/data/derive";
 import { DspBreakdown } from "@/components/modules/data/dsp-breakdown";
+import { ListeningCalendar } from "@/components/modules/data/listening-calendar";
 import { RosterCompare } from "@/components/modules/data/roster-compare";
 import { StreamsTrendChart } from "@/components/modules/data/streams-trend-chart";
 import {
@@ -113,6 +115,13 @@ export default function StreamsPage() {
   }, [ids, days, total]);
 
   const countries = useMemo(() => combinedCountries(ids, days), [ids, days]);
+
+  /* Calendrier 365 jours : un seul artiste, indépendant de la période choisie
+   * (c'est l'année entière, toujours). Absent en vue roster agrégée. */
+  const year = useMemo(
+    () => (aggregate ? null : dailyTotals(artistId, 365)),
+    [aggregate, artistId],
+  );
 
   /* Provenance par plateforme (couche réelle, un seul artiste) — même ordre que
    * le tableau de répartition (par volume), sur la fenêtre affichée. Vide en vue
@@ -222,6 +231,21 @@ export default function StreamsPage() {
           <StreamsTrendChart data={chartData} />
         </div>
       </section>
+
+      {/* 365 jours d'écoute — un carré par jour (un seul artiste) */}
+      {year && (
+        <section className="mt-4 rounded-xl border bg-card p-5">
+          <header>
+            <h2 className="font-heading text-base font-semibold tracking-tight">
+              {t("calendar.title")}
+            </h2>
+            <p className="mt-0.5 text-sm text-muted-foreground">
+              {t("calendar.subtitle")}
+            </p>
+          </header>
+          <ListeningCalendar days={year} className="mt-4" />
+        </section>
+      )}
 
       {/* Comparateur roster (vue label agrégée) */}
       {aggregate && (
