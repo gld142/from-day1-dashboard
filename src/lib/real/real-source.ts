@@ -236,9 +236,11 @@ function allocateResidual(tracks: Array<{ name: string; total: number }>, residu
 /* ─── Spotify par titre ─── */
 
 /**
- * Branche Kworb : débit d'aujourd'hui = débit Kworb (un vrai débit quotidien)
- * > débit du delta Spotify entre les deux derniers relevés > résidu de
- * `dailyStreams` réparti au prorata du total entre les titres sans débit.
+ * Branche Kworb : débit d'aujourd'hui = delta Spotify entre les deux derniers
+ * relevés quand il est valide (un rafraîchissement = un jour, mesuré aujourd'hui)
+ * > débit Kworb (vrai débit quotidien, mais Kworb peut rester plusieurs jours
+ * sans se rafraîchir — mesuré : « Last updated 2026/09/13 » le 17/09) > résidu
+ * de `dailyStreams` réparti au prorata du total entre les titres sans débit.
  * Jours antérieurs : débit du delta Spotify, sinon débit Kworb du relevé.
  */
 function kworbDailyByTrack(ctx: Ctx, days: number, kworb: NonNullable<Snapshot["kworb"]>): Map<string, ReconstructedDay[]> {
@@ -249,7 +251,7 @@ function kworbDailyByTrack(ctx: Ctx, days: number, kworb: NonNullable<Snapshot["
   );
   const out = new Map<string, ReconstructedDay[]>();
   for (const t of kworb.tracks) {
-    const dailyNow = t.daily ?? latestPlaycountRate(ctx, t.name)?.perDay ?? residual.get(t.name) ?? 0;
+    const dailyNow = latestPlaycountRate(ctx, t.name)?.perDay ?? t.daily ?? residual.get(t.name) ?? 0;
     const measured = measuredDays(
       ctx,
       (prev, last) => playcountRate(prev, last, t.name),

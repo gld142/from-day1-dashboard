@@ -229,17 +229,17 @@ describe("Spotify : relevés rapprochés ou espacés", () => {
     expect(today).toMatchObject({ streams: 150_000, provenance: "measured" });
   });
 
-  it("(b) 30 h d'écart, delta 171 455 = un jour de streams : il couvre le 15 = aujourd'hui, ancré sur Kworb ; le 14 garde son daily Kworb", () => {
+  it("(b) 30 h d'écart, delta 171 455 = un jour de streams : il couvre le 15 = aujourd'hui (le delta prime sur Kworb) ; le 14 garde son daily Kworb", () => {
     const { prev, last } = dadjuPair(30, 171_455, "2026-09-15T06:00:00Z"); // prev le 14 à 00:00Z → last le 15 à 06:00Z
     expect(prev.date).toBe("2026-09-14");
     const byTrack = spotifyDailyByTrack("dadju", 30, TODAY, { dadju: [prev, last] });
     const reine = byTrack.get("Reine")!;
-    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 171_455, provenance: "measured" });
     expect(reine[28]).toMatchObject({ date: "2026-09-14", streams: 80_000, provenance: "measured" });
   });
 
-  it("(b') 50 h d'écart, delta 171 455 = deux jours : le 14 reçoit delta / 2, aujourd'hui reste ancré sur Kworb", () => {
-    // prev le 13 à 00:00Z → last le 15 à 02:00Z : deux rafraîchissements → les 2 derniers jours (14, 15) à 85 728 ; le 15 = aujourd'hui, ancré.
+  it("(b') 50 h d'écart, delta 171 455 = deux jours : le 14 et le 15 reçoivent delta / 2", () => {
+    // prev le 13 à 00:00Z → last le 15 à 02:00Z : deux rafraîchissements → les 2 derniers jours (14, 15) à 85 728 ; le 15 = aujourd'hui = le delta.
     const { prev, last } = dadjuPair(50, 171_455, "2026-09-15T02:00:00Z");
     expect(prev.date).toBe("2026-09-13");
     const prevNoKworb: Snapshot = { ...prev, kworb: { ...prev.kworb!, tracks: [] } };
@@ -247,7 +247,7 @@ describe("Spotify : relevés rapprochés ou espacés", () => {
     const reine = byTrack.get("Reine")!;
     expect(reine[28]).toMatchObject({ date: "2026-09-14", streams: 85_728, provenance: "measured" });
     expect(reine[27]).toMatchObject({ date: "2026-09-13", provenance: "reconstructed" });
-    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 85_728, provenance: "measured" });
   });
 
   it("(b'') 30 h d'écart sur deux dates non consécutives : un seul jour de streams, attribué au 15 (aujourd'hui) ; le 14 n'est pas mesuré", () => {
@@ -256,12 +256,12 @@ describe("Spotify : relevés rapprochés ou espacés", () => {
     const prevNoKworb: Snapshot = { ...prev, kworb: { ...prev.kworb!, tracks: [] } };
     const reine = spotifyDailyByTrack("dadju", 30, TODAY, { dadju: [prevNoKworb, last] }).get("Reine")!;
     expect(reine[28]).toMatchObject({ date: "2026-09-14", provenance: "reconstructed" });
-    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 171_455, provenance: "measured" });
   });
 
   it("trois relevés : la paire la plus récente l'emporte sur un jour couvert deux fois", () => {
     // 11 (22:00Z) → 14 (00:00Z) : 50 h, +171 455 → 2 jours (13, 14) à 85 728 ;
-    // 14 (00:00Z) → 15 (12:30Z) : 36,5 h, +60 000 → 2 jours (14, 15) à 30 000 ; le 15 = aujourd'hui, ancré sur Kworb.
+    // 14 (00:00Z) → 15 (12:30Z) : 36,5 h, +60 000 → 2 jours (14, 15) à 30 000 ; le 15 = aujourd'hui = le delta.
     const withReine = (base: Snapshot, date: string, capturedAt: string, playcount: number): Snapshot => ({
       ...base,
       date,
@@ -275,7 +275,7 @@ describe("Spotify : relevés rapprochés ou espacés", () => {
     const reine = spotifyDailyByTrack("dadju", 30, TODAY, { dadju: [first, mid, last] }).get("Reine")!;
     expect(reine[27]).toMatchObject({ date: "2026-09-13", streams: 85_728, provenance: "measured" });
     expect(reine[28]).toMatchObject({ date: "2026-09-14", streams: 30_000, provenance: "measured" });
-    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 30_000, provenance: "measured" });
     expect(reine[26]).toMatchObject({ date: "2026-09-12", provenance: "reconstructed" });
   });
 
