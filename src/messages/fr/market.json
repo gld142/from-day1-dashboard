@@ -1,0 +1,109 @@
+{
+  "title": "Marché",
+  "subtitle": "Parts du Top 200 Spotify France par groupe, artiste et genre — le relevé du matin, labels lus sur Spotify.",
+  "header": {
+    "chartDate": "Classement Spotify France du {date}",
+    "captured": "relevé le {date} à {time}",
+    "scope": "Périmètre : les streams Spotify France des 200 titres du classement quotidien (kworb.net) — pas le marché total. Le groupe vient des lignes ℗ / © de la page Spotify de chaque titre : un label distribué sous licence sans le dire dans son ℗ apparaît en « Indé / autre »."
+  },
+  "legend": {
+    "title": "Provenance",
+    "measured": "streams Kworb, lignes ℗ / © Spotify",
+    "declared": "genre renseigné à la main",
+    "estimated": "sans ligne ℗ / © lue, ou lecture automatique"
+  },
+  "kpi": {
+    "universal": "Universal",
+    "sony": "Sony",
+    "warner": "Warner",
+    "indies": "Grands indés",
+    "indiesHint": "Believe, Because, Play Two, Wagram…",
+    "other": "Autres labels",
+    "otherHint": "℗ sans groupe cité",
+    "vs7d": "{delta} pts vs 7 jours",
+    "identified": "{share} des streams citent un groupe dans leur ℗ / ©",
+    "unknownLabels": "{count, plural, =0 {toutes les pages Spotify lues} one {# titre sans ligne ℗ / © lue} other {# titres sans ligne ℗ / © lue}}"
+  },
+  "controls": {
+    "dims": "Dimensions",
+    "dimsHint": "Coche une ou plusieurs dimensions : la première groupe le tableau, la suivante détaille chaque ligne.",
+    "metric": "Métrique"
+  },
+  "dims": {
+    "group": "Groupe",
+    "artist": "Artiste",
+    "genre": "Genre"
+  },
+  "metric": {
+    "streams": "Aujourd'hui",
+    "streams7d": "7 jours"
+  },
+  "bar": {
+    "title": "Répartition par groupe",
+    "subtitle": "{tracks} titres · {streams} streams · {metric}"
+  },
+  "groups": {
+    "universal": "Universal",
+    "sony": "Sony",
+    "warner": "Warner",
+    "believe": "Believe",
+    "because": "Because",
+    "playtwo": "Play Two",
+    "wagram": "Wagram",
+    "idol": "Idol",
+    "kuroneko": "Kuroneko",
+    "other": "Indé / autre",
+    "unknown": "Non identifié"
+  },
+  "groupsHint": {
+    "other": "℗ sans groupe cité : auto-produit, ou distribué sous licence sans le dire",
+    "unknown": "page Spotify sans ligne ℗ / © lue"
+  },
+  "genres": {
+    "rap": "Rap",
+    "pop": "Pop",
+    "variete": "Variété",
+    "electro": "Électro",
+    "rnb": "R&B",
+    "afro": "Afro",
+    "rock": "Rock",
+    "latin": "Latin",
+    "international": "International",
+    "autre": "Autre",
+    "unknown": "Non renseigné"
+  },
+  "table": {
+    "title": "Parts par {dims}",
+    "subtitle": "Part = part des streams des 200 titres, sur la métrique choisie ; sous-lignes limitées aux {limit} premières.",
+    "rank": "#",
+    "name": "Nom",
+    "streams": "Streams",
+    "share": "Part",
+    "delta": "vs 7 j",
+    "tracks": "Titres",
+    "topTrack": "Meilleur titre",
+    "provenance": "Provenance",
+    "roster": "Day One",
+    "showAll": "Voir les {count} lignes restantes",
+    "showLess": "Réduire",
+    "separator": " ▸ "
+  },
+  "reading": {
+    "title": "Lecture du matin",
+    "badge": "Estimé · règles",
+    "majors": "{leader} porte {leaderShare} des streams du Top 200 France aujourd'hui ({leaderDelta} pts vs 7 jours), devant {second} {secondShare} et {third} {thirdShare}.",
+    "indies": "Les grands indés (Believe, Because, Play Two, Wagram…) pèsent {share} ; les autres labels — ℗ sans groupe cité — {other}.",
+    "unknown": "{count, plural, =0 {Toutes les pages Spotify ont livré une ligne ℗ / ©.} one {# titre sans ligne ℗ / © lue ({share} des streams).} other {# titres sans ligne ℗ / © lue ({share} des streams).}}",
+    "genre": "Le rap représente {rap} des streams du Top 200.",
+    "genreTop": "Premier genre : {genre} ({share}).",
+    "leader": "En tête : {artist} — {title}, {streams} streams.",
+    "rosterTitle": "Roster Day One",
+    "rosterPresent": "{name} — {count, plural, one {# titre} other {# titres}}, meilleur rang {rank} ({title})",
+    "rosterAbsent": "{name} — absent du Top 200",
+    "method": "Lecture automatique à base de règles sur les parts mesurées — aucun modèle de langage."
+  },
+  "empty": {
+    "title": "Aucun relevé marché",
+    "hint": "Lance « npm run snapshot:market » pour capter le Top 200 Spotify France du jour et les labels de chaque titre."
+  }
+}

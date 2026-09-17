@@ -22,7 +22,7 @@ describe("navForPersona — structure (label)", () => {
   it("suit le parcours structure : rituel → data → finances → business → intelligence → croissance → compte", () => {
     expect(hrefs(nav)).toEqual([
       ["sections.daily", ["/roster", "/pulse", "/overview"]],
-      ["sections.data", ["/streams", "/revenue", "/audience", "/algo-position"]],
+      ["sections.data", ["/streams", "/market", "/revenue", "/audience", "/algo-position"]],
       ["sections.finances", ["/finances", "/valuation"]],
       ["sections.rights", ["/contracts", "/splits", "/rights", "/urssaf"]],
       ["sections.intelligence", ["/audit", "/ar-watch", "/day1-index", "/copilot"]],
@@ -53,6 +53,7 @@ describe("navForPersona — structure (label)", () => {
   it("une section dont toutes les pages sont masquées disparaît", () => {
     const nav2 = navForPersona("label", {
       "/streams": false,
+      "/market": false,
       "/revenue": false,
       "/audience": false,
       "/algo-position": false,

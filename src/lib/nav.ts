@@ -87,6 +87,13 @@ export const NAV_SECTIONS: NavSection[] = [
     labelKey: "sections.data",
     items: [
       { href: "/streams", labelKey: "items.streams", icon: AudioWaveform },
+      {
+        // Parts du Top 200 Spotify France par groupe / artiste / genre, relevé chaque matin.
+        href: "/market",
+        labelKey: "items.market",
+        icon: PieChart,
+        badgeKey: "new",
+      },
       { href: "/revenue", labelKey: "items.revenue", icon: CircleDollarSign },
       { href: "/audience", labelKey: "items.audience", icon: Globe2 },
       {
@@ -220,7 +227,7 @@ const LABEL_LAYOUT: ReadonlyArray<{ labelKey: string; hrefs: string[] }> = [
   { labelKey: "sections.daily", hrefs: ["/roster", "/pulse", "/overview"] },
   {
     labelKey: "sections.data",
-    hrefs: ["/streams", "/revenue", "/audience", "/algo-position"],
+    hrefs: ["/streams", "/market", "/revenue", "/audience", "/algo-position"],
   },
   {
     labelKey: "sections.finances",

@@ -13,11 +13,32 @@ export { ESTIMATE_PERIODS, PERIOD_DAYS, estimateDay, summarize, weakest, type De
 export { calibrationFromUserData, type Calibration } from "./calibration";
 export { auditGap, simulatedStatement } from "./audit-gap";
 export { tiktokSignal } from "./tiktok-signal";
+export {
+  groupOf as marketGroupOf,
+  marketDates,
+  marketMeta,
+  marketSnapshot,
+  morningReading,
+  sharesBy as marketSharesBy,
+  type MarketDimension,
+  type MarketMeta,
+  type MarketMetric,
+  type MarketShareRow,
+  type MarketWithin,
+  type MorningReading,
+  type RosterPresence,
+  type RosterRef,
+} from "./market";
+export { INDIES as MARKET_INDIES, MAJORS as MARKET_MAJORS, MARKET_GROUPS, classifyLabel } from "./market/groups";
 export type {
   Confidence,
   DailyEstimate,
   EstimatePeriod,
   EstimateSummary,
+  MarketGenre,
+  MarketGroup,
+  MarketSnapshot,
+  MarketTrack,
   Provenance,
   Range,
   Snapshot,
@@ -25,3 +46,4 @@ export type {
   TikTokSnapshot,
   TikTokSound,
 } from "./types";
+export { MARKET_GENRES } from "./types";

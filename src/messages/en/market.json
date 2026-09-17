@@ -1,0 +1,109 @@
+{
+  "title": "Market",
+  "subtitle": "Spotify France Top 200 shares by group, artist and genre — the morning capture, labels read from Spotify.",
+  "header": {
+    "chartDate": "Spotify France chart of {date}",
+    "captured": "captured {date} at {time}",
+    "scope": "Scope: Spotify France streams of the 200 tracks in the daily chart (kworb.net) — not the whole market. The group comes from the ℗ / © lines of each track's Spotify page: a label distributed under licence without saying so in its ℗ shows up as “Indie / other”."
+  },
+  "legend": {
+    "title": "Provenance",
+    "measured": "Kworb streams, Spotify ℗ / © lines",
+    "declared": "genre filled in by hand",
+    "estimated": "no ℗ / © line read, or automatic reading"
+  },
+  "kpi": {
+    "universal": "Universal",
+    "sony": "Sony",
+    "warner": "Warner",
+    "indies": "Major indies",
+    "indiesHint": "Believe, Because, Play Two, Wagram…",
+    "other": "Other labels",
+    "otherHint": "℗ without a group",
+    "vs7d": "{delta} pts vs 7 days",
+    "identified": "{share} of streams name a group in their ℗ / ©",
+    "unknownLabels": "{count, plural, =0 {every Spotify page read} one {# track without a ℗ / © line} other {# tracks without a ℗ / © line}}"
+  },
+  "controls": {
+    "dims": "Dimensions",
+    "dimsHint": "Check one or more dimensions: the first one groups the table, the next one breaks each row down.",
+    "metric": "Metric"
+  },
+  "dims": {
+    "group": "Group",
+    "artist": "Artist",
+    "genre": "Genre"
+  },
+  "metric": {
+    "streams": "Today",
+    "streams7d": "7 days"
+  },
+  "bar": {
+    "title": "Breakdown by group",
+    "subtitle": "{tracks} tracks · {streams} streams · {metric}"
+  },
+  "groups": {
+    "universal": "Universal",
+    "sony": "Sony",
+    "warner": "Warner",
+    "believe": "Believe",
+    "because": "Because",
+    "playtwo": "Play Two",
+    "wagram": "Wagram",
+    "idol": "Idol",
+    "kuroneko": "Kuroneko",
+    "other": "Indie / other",
+    "unknown": "Unidentified"
+  },
+  "groupsHint": {
+    "other": "℗ without a group: self-released, or distributed under licence without saying so",
+    "unknown": "Spotify page without a ℗ / © line"
+  },
+  "genres": {
+    "rap": "Rap",
+    "pop": "Pop",
+    "variete": "French variety",
+    "electro": "Electronic",
+    "rnb": "R&B",
+    "afro": "Afro",
+    "rock": "Rock",
+    "latin": "Latin",
+    "international": "International",
+    "autre": "Other",
+    "unknown": "Not filled in"
+  },
+  "table": {
+    "title": "Shares by {dims}",
+    "subtitle": "Share = share of the 200 tracks' streams, on the selected metric; sub-rows capped at the top {limit}.",
+    "rank": "#",
+    "name": "Name",
+    "streams": "Streams",
+    "share": "Share",
+    "delta": "vs 7 d",
+    "tracks": "Tracks",
+    "topTrack": "Top track",
+    "provenance": "Provenance",
+    "roster": "Day One",
+    "showAll": "Show the {count} remaining rows",
+    "showLess": "Show less",
+    "separator": " ▸ "
+  },
+  "reading": {
+    "title": "Morning reading",
+    "badge": "Estimated · rules",
+    "majors": "{leader} carries {leaderShare} of today's Top 200 France streams ({leaderDelta} pts vs 7 days), ahead of {second} {secondShare} and {third} {thirdShare}.",
+    "indies": "Major indies (Believe, Because, Play Two, Wagram…) weigh {share}; other labels — ℗ without a group — {other}.",
+    "unknown": "{count, plural, =0 {Every Spotify page delivered a ℗ / © line.} one {# track without a ℗ / © line ({share} of streams).} other {# tracks without a ℗ / © line ({share} of streams).}}",
+    "genre": "Rap accounts for {rap} of Top 200 streams.",
+    "genreTop": "Top genre: {genre} ({share}).",
+    "leader": "Leading: {artist} — {title}, {streams} streams.",
+    "rosterTitle": "Day One roster",
+    "rosterPresent": "{name} — {count, plural, one {# track} other {# tracks}}, best rank {rank} ({title})",
+    "rosterAbsent": "{name} — not in the Top 200",
+    "method": "Automatic rule-based reading of the measured shares — no language model."
+  },
+  "empty": {
+    "title": "No market capture",
+    "hint": "Run “npm run snapshot:market” to capture today's Spotify France Top 200 and each track's label."
+  }
+}

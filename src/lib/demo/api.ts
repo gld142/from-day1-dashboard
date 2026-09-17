@@ -47,11 +47,20 @@ import {
   simulatedStatement,
   summarize,
   tiktokSignal as realTiktokSignal,
+  marketMeta as realMarketMeta,
+  marketSharesBy,
+  morningReading,
   weakest,
   type Confidence,
   type DailyEstimate,
   type EstimatePeriod,
   type EstimateSummary,
+  type MarketDimension,
+  type MarketMeta,
+  type MarketMetric,
+  type MarketShareRow,
+  type MarketWithin,
+  type MorningReading,
   type Provenance,
   type Range,
   type TikTokSignal,
@@ -86,6 +95,7 @@ import { DSPS } from "./types";
 export { ARTISTS, CONTRACTS, EMERGING, LABEL, PROJECTS, SPLITS, TEAM, TRACKS };
 export type { ForecastPoint };
 export type { DailyEstimate, EstimatePeriod, EstimateSummary, TikTokSignal };
+export type { MarketDimension, MarketMeta, MarketMetric, MarketShareRow, MarketWithin, MorningReading };
 export { ESTIMATE_PERIODS, PERIOD_DAYS };
 
 /* ─────────────── Fiches artistes (démo + profil utilisateur) ─────────────── */
@@ -315,6 +325,32 @@ export function rosterTiktokSignal(): TikTokSignal | null {
     trendingRankFr: ranks.length > 0 ? Math.min(...ranks) : null,
     provenance: weakest(parts.map((p) => p.provenance)),
   };
+}
+
+/* ─────────────── Marché : Top 200 Spotify France (couche réelle seule) ─────────────── */
+
+/**
+ * Parts du Top 200 France par groupe / artiste / genre — relevé le plus
+ * récent par défaut. Vide sans relevé marché (état vide sur la page).
+ */
+export function marketShares(
+  dim: MarketDimension,
+  opts: { date?: string; metric?: MarketMetric; within?: MarketWithin[] } = {},
+): MarketShareRow[] {
+  return marketSharesBy(dim, opts);
+}
+
+/** Lecture du matin (règles, pas de LLM) : le roster repéré est celui de la démo. */
+export function marketReading(date?: string): MorningReading | null {
+  return morningReading(
+    ARTISTS.map((a) => ({ id: a.id, name: a.name, spotifyId: a.spotifyId })),
+    date,
+  );
+}
+
+/** Date, instant de capture, date du classement, titres sans label lu… null sans relevé. */
+export function marketMeta(date?: string): MarketMeta | null {
+  return realMarketMeta(date);
 }
 
 /* ─────────────── Séries — utilisateur > réel > démo ─────────────── */

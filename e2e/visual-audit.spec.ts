@@ -11,8 +11,8 @@ import {
 } from "./helpers";
 
 /**
- * Audit visuel automatisé : 30 routes × 3 thèmes (persona label), plus les
- * 5 pages du parcours de démo en persona artiste. Desktop 1440×900.
+ * Audit visuel automatisé : 31 routes × 3 thèmes (persona label), plus les
+ * 6 pages du parcours de démo en persona artiste. Desktop 1440×900.
  * Pour chaque combinaison :
  *  - seed localStorage (thème + rôle) AVANT le goto (addInitScript),
  *  - attend le h1 visible et le thème appliqué,
@@ -27,6 +27,7 @@ const ROUTES = [
   "overview",
   "roster",
   "streams",
+  "market",
   "revenue",
   "audience",
   "algo-position",
@@ -57,7 +58,7 @@ const ROUTES = [
 ] as const;
 
 /** Pages du parcours de démo : couvertes aussi en persona artiste. */
-const ARTIST_ROUTES = ["pulse", "revenue", "streams", "audit", "roster"] as const;
+const ARTIST_ROUTES = ["pulse", "revenue", "streams", "market", "audit", "roster"] as const;
 
 function audit(route: string, persona: Persona) {
   const withPersona = route.includes("?") ? `${route}&persona=${persona}` : `${route}?persona=${persona}`;
