@@ -30,8 +30,10 @@ const pulse = frMessages<{ backToRoster: string }>("pulse");
 const common = frMessages<{ roles: { artist: string; label: string; switchTo: string } }>("common");
 const revenue = frMessages<{
   estimate: { period: Record<string, string> };
-  shares: { tabs: Record<string, string> };
+  shares: { title: string; label: { title: string; tabs: Record<string, string> } };
 }>("revenue");
+/* Vue structure zoomée sur Dadju : le panneau « part » parle à la 3e personne. */
+const sharesLabel = revenue.shares.label;
 
 const LABEL_NAME = "Day 1 Dashboard Pro";
 /** La topbar (le PageHeader est aussi un <header>). */
@@ -110,6 +112,8 @@ for (const vp of VIEWPORTS) {
         await page.goto("/revenue?period=day", { waitUntil: "domcontentloaded" });
         await ready(page, theme);
         await expect(page.locator('[data-period="day"][aria-current]')).toBeVisible();
+        await expect(page.locator("#ma-part-title")).toHaveText(sharesLabel.title);
+        await expect(page.locator("main")).not.toContainText(revenue.shares.title);
         await step("revenue-day");
 
         /* 6b. Onglet « 30 jours » → l'URL suit, la tuile « 30 jours » est cernée. */
@@ -120,14 +124,14 @@ for (const vp of VIEWPORTS) {
         await step("revenue-month");
 
         /* 6c. Panneau « part » : onglets importer / demander au label. */
-        await page.getByRole("tab", { name: revenue.shares.tabs.upload }).click();
+        await page.getByRole("tab", { name: sharesLabel.tabs.upload }).click();
         await page.waitForTimeout(300);
         await step("shares-upload");
-        await page.getByRole("tab", { name: revenue.shares.tabs.request }).click();
+        await page.getByRole("tab", { name: sharesLabel.tabs.request }).click();
         await expect(page.getByRole("textbox")).toBeVisible();
         await page.waitForTimeout(300);
         await step("shares-request");
-        await page.getByRole("tab", { name: revenue.shares.tabs.percent }).click();
+        await page.getByRole("tab", { name: sharesLabel.tabs.percent }).click();
 
         /* 7. /audit (Dadju). */
         await page.goto("/audit", { waitUntil: "domcontentloaded" });
