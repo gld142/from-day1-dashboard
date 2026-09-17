@@ -1,10 +1,15 @@
 "use client";
 
 /**
- * Micro-motion d'entrée des KpiCards, une seule fois au mount, désactivé si
- * prefers-reduced-motion. La signature dépend de la skin :
+ * Micro-motion d'entrée des KpiCards, une seule fois par navigation client,
+ * désactivé si prefers-reduced-motion. La signature dépend de la skin :
  *  - structure : opacité seule (aucune translation), décalage 40 ms ;
  *  - artiste : fondu + montée de 12 px, décalage 60 ms.
+ *
+ * Jamais au chargement initial : l'état « hidden » (opacity: 0) partait dans
+ * le HTML serveur et cachait les tuiles jusqu'à l'hydratation + le décalage —
+ * le LCP du Pulse (le libellé de la 4e tuile) attendait ~1,9 s. Les tuiles
+ * sont désormais visibles dès le HTML serveur (cf. useEntryReveal).
  *
  * Usage :
  *   <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -12,7 +17,7 @@
  *   </KpiStagger>
  */
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { useSkin, type Skin } from "@/lib/skin";
+import { useEntryReveal, useSkin, type Skin } from "@/lib/skin";
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
@@ -45,11 +50,12 @@ export function KpiStagger({
 }) {
   const reduceMotion = useReducedMotion();
   const skin = useSkin();
+  const entry = useEntryReveal();
   return (
     <motion.div
       className={className}
       variants={GROUP[skin]}
-      initial={reduceMotion ? false : "hidden"}
+      initial={reduceMotion || !entry ? false : "hidden"}
       animate="show"
     >
       {children}
