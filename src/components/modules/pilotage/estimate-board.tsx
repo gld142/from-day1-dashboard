@@ -13,10 +13,12 @@
  * (90 jours) s'affiche en bandeau compact sous la grille.
  */
 import type { ReactNode } from "react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import type { EstimatePeriod, EstimateSummary } from "@/lib/demo/api";
 import { fmtCompact, fmtEur } from "@/lib/format";
+import { useEntryReveal, useSkin } from "@/lib/skin";
 import { cn } from "@/lib/utils";
 
 /** Les quatre tuiles ; le trimestre n'en a pas (grille de 4 colonnes). */
@@ -33,6 +35,20 @@ const LINE_KEY: Record<Line, "gross" | "artist" | "publishing"> = {
   grossMaster: "gross",
   artistShare: "artist",
   publishing: "publishing",
+};
+
+/**
+ * Signature artiste : les tuiles entrent l'une après l'autre (fondu + montée
+ * de 8 px, décalage 60 ms) aux navigations client. En skin structure et sous
+ * prefers-reduced-motion, aucune animation — les tuiles sont là, point.
+ */
+const TILES_GROUP: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+};
+const TILE: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
 };
 
 /** Au-delà de ce seuil, on passe en notation compacte (« 479,6 k € », « 5,8 M € »). */
@@ -71,6 +87,12 @@ export function EstimateBoard({
   const t = useTranslations("revenue.estimate");
   const tc = useTranslations("common.provenance");
   const locale = useLocale();
+  const skin = useSkin();
+  const reduceMotion = useReducedMotion();
+  /* Navigation client seulement : au chargement initial, les tuiles sont
+     visibles dès le HTML serveur. */
+  const entry = useEntryReveal();
+  const staggered = skin === "artist" && !reduceMotion && entry;
 
   /* Période en relief sans tuile (90 jours) : bandeau compact sous la grille. */
   const banner =
@@ -122,14 +144,20 @@ export function EstimateBoard({
       {/* Tuiles à plat : un seul niveau de carte (la section). En 4 colonnes,
           des filets verticaux séparent les périodes ; en 2 colonnes, l'espace
           suffit ; empilées sur mobile, des filets horizontaux. */}
-      <div className="grid max-sm:divide-y sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 xl:grid-cols-4 xl:gap-0 xl:divide-x">
+      <motion.div
+        className="grid max-sm:divide-y sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 xl:grid-cols-4 xl:gap-0 xl:divide-x"
+        variants={TILES_GROUP}
+        initial={staggered ? "hidden" : false}
+        animate="show"
+      >
         {TILE_PERIODS.map((p) => {
           const s = summaries[p];
           const r = s[line];
           const focused = p === focus;
           return (
-            <div
+            <motion.div
               key={p}
+              variants={staggered ? TILE : undefined}
               className="max-sm:py-4 max-sm:first:pt-0 max-sm:last:pb-0 xl:px-5 xl:first:pl-0 xl:last:pr-0"
             >
               {/* La tuile cernée déborde dans la gouttière (marges négatives)
@@ -200,10 +228,10 @@ export function EstimateBoard({
                   ))}
                 </dl>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Bandeau « 90 jours : 1,2 M € (1,0 – 1,4 M €) » quand la période en
           relief n'a pas de tuile. */}

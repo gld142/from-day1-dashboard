@@ -40,6 +40,16 @@
     "status": "Status",
     "total": "Total"
   },
+  "sign": {
+    "cta": "Sign",
+    "title": "Sign the split for “{track}”",
+    "hint": "Sign with your mouse or finger. The signature stays on this device: nothing is sent.",
+    "pad": "Signature area",
+    "typed": "Or type your name",
+    "confirm": "Confirm signature",
+    "clear": "Clear",
+    "signedOn": "Signed on {date}"
+  },
   "labelView": {
     "meta": "{tracks, plural, one {# track} other {# tracks}} · {pending, plural, =0 {everything is signed} one {# split to sign} other {# splits to sign}}"
   },

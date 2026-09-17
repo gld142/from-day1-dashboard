@@ -63,6 +63,7 @@ import type { TikTokSignal } from "@/lib/demo/api";
 import type { Provenance } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { useEntryReveal, useSkin } from "@/lib/skin";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { cn } from "@/lib/utils";
 
@@ -142,6 +143,10 @@ export default function PulsePage() {
   const locale = useLocale();
   const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId } =
     useRole();
+  const skin = useSkin();
+  /* La salutation fond en 300 ms aux navigations client ; au chargement
+     initial, elle est là dès le HTML serveur (LCP). */
+  const entry = useEntryReveal();
 
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
@@ -442,6 +447,19 @@ export default function PulsePage() {
 
       {artistView && (
         <div className="space-y-4">
+          {/* Salutation (skin artiste) : « Bonjour Dadju », texte brut, simple
+              fondu. En structure, le sous-titre suffit. */}
+          {skin === "artist" && (
+            <p
+              data-greeting
+              className={cn(
+                "font-heading text-lg font-medium tracking-tight text-foreground",
+                entry && "fade-in",
+              )}
+            >
+              {t("greeting", { name: artistView.artist.name })}
+            </p>
+          )}
           {/* Héro + KPIs */}
           <KpiStagger
             className={cn(

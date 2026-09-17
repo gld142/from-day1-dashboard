@@ -1,5 +1,6 @@
 "use client";
 
+import { MotionConfig } from "framer-motion";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RoleProvider } from "@/lib/role";
@@ -14,11 +15,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem={false}
       disableTransitionOnChange
     >
-      <RoleProvider>
-        <PrefsProvider>
-          <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
-        </PrefsProvider>
-      </RoleProvider>
+      {/* prefers-reduced-motion : framer-motion coupe transformations et
+          animations de layout, ne garde que les fondus. */}
+      <MotionConfig reducedMotion="user">
+        <RoleProvider>
+          <PrefsProvider>
+            <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
+          </PrefsProvider>
+        </RoleProvider>
+      </MotionConfig>
     </ThemeProvider>
   );
 }

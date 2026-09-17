@@ -9,14 +9,27 @@
  */
 
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fmtEur } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { skinFor, useHydrated } from "@/lib/skin";
 import { cn } from "@/lib/utils";
 import { SOURCE_IDS, type SourceConfig } from "./sources";
+
+/**
+ * Dégradé animé derrière le bandeau co-brandé (variante artiste) : WebGL
+ * chargé à la demande, jamais rendu côté serveur ni embarqué pour les canaux
+ * structure.
+ */
+const WelcomeGlow = dynamic(
+  () => import("./welcome-glow").then((m) => m.WelcomeGlow),
+  { ssr: false },
+);
 
 const STEPS = [1, 2, 3] as const;
 
@@ -31,6 +44,11 @@ export function CobrandScreen({
   const tn = useTranslations("nav.items");
   const locale = useLocale();
   const { setPersona } = useRole();
+  /* Skin du canal : structure (label) ou artiste — tokens + variante de mouvement. */
+  const skin = skinFor(source.persona);
+  const reduceMotion = useReducedMotion();
+  const hydrated = useHydrated();
+  const glow = hydrated && skin === "artist" && !reduceMotion;
   const k = `sources.${source.id}`;
   const accent = (chunks: ReactNode) => (
     <span className="text-brand">{chunks}</span>
@@ -42,7 +60,10 @@ export function CobrandScreen({
   const values = Array.from({ length: source.values }, (_, i) => i + 1);
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8 md:py-14">
+    <div
+      data-skin={skin}
+      className="mx-auto w-full max-w-5xl px-4 py-8 md:px-8 md:py-14"
+    >
       {/* ─── Fenêtre navigateur factice ─── */}
       <section className="rise-in overflow-hidden rounded-xl border bg-card shadow-sm">
         <div className="flex items-center gap-3 border-b bg-surface-2/60 px-3 py-2">
@@ -58,90 +79,95 @@ export function CobrandScreen({
           <div className="hidden w-[42px] shrink-0 sm:block" aria-hidden />
         </div>
 
-        <div className="p-6 md:p-10">
-          {/* En-tête co-marque */}
-          <div className="flex items-center justify-center gap-4">
-            {source.logo ? (
-              <>
-                <span
-                  className="rounded-lg px-3.5 py-1.5 text-[13px] font-extrabold tracking-tight"
-                  style={{ background: source.logoBg, color: source.logoFg }}
-                >
-                  {source.logo}
-                </span>
-                <span className="text-base font-bold text-muted-foreground" aria-hidden>
-                  ×
-                </span>
-              </>
-            ) : null}
-            <span className="rounded-lg bg-gradient-to-r from-brand to-chart-2 px-3.5 py-1.5 text-[13px] font-extrabold tracking-tight text-background">
-              {t("brand")}
-            </span>
-          </div>
-
-          {/* Promesse */}
-          <div className="mx-auto mt-7 max-w-2xl text-center">
-            <h1 className="font-heading text-2xl font-bold leading-tight md:text-[28px]">
-              {t.rich(`${k}.welcomeTitle`, { accent })}
-            </h1>
-            <p className="mx-auto mt-3 max-w-[60ch] text-[13px] leading-relaxed text-muted-foreground">
-              {t(`${k}.welcomeBody`)}
-            </p>
-            <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-1.5 text-xs font-bold text-brand-foreground">
-              {t(`${k}.offer`)}
-            </span>
-          </div>
-
-          {/* 3 étapes : une grille séparée par des filets, pas trois cartes
-              dans la carte. Le numéro reste le repère de marque. */}
-          <ol className="mt-9 grid max-md:divide-y md:grid-cols-3 md:divide-x">
-            {STEPS.map((n) => (
-              <li
-                key={n}
-                className="max-md:py-4 max-md:first:pt-0 max-md:last:pb-0 md:px-6 md:first:pl-0 md:last:pr-0"
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="num inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-brand-foreground">
-                    {n}
+        <div className="relative p-6 md:p-10">
+          {/* Variante artiste : souffle de couleur derrière la co-marque —
+              couche absolue, le contenu positionné passe devant. */}
+          {glow && <WelcomeGlow />}
+          <div className="relative">
+            {/* En-tête co-marque */}
+            <div className="flex items-center justify-center gap-4">
+              {source.logo ? (
+                <>
+                  <span
+                    className="rounded-lg px-3.5 py-1.5 text-[13px] font-extrabold tracking-tight"
+                    style={{ background: source.logoBg, color: source.logoFg }}
+                  >
+                    {source.logo}
                   </span>
-                  <h2 className="text-[13px] font-semibold leading-tight">
-                    {t(`${k}.steps.${n}.title`)}
-                  </h2>
-                </div>
-                <p className="mt-2 text-xs leading-snug text-muted-foreground">
-                  {t(`${k}.steps.${n}.desc`)}
-                </p>
-              </li>
-            ))}
-          </ol>
+                  <span className="text-base font-bold text-muted-foreground" aria-hidden>
+                    ×
+                  </span>
+                </>
+              ) : null}
+              <span className="rounded-lg bg-gradient-to-r from-brand to-chart-2 px-3.5 py-1.5 text-[13px] font-extrabold tracking-tight text-background">
+                {t("brand")}
+              </span>
+            </div>
 
-          {/* Premier insight (montant réel) : une citation entre deux filets,
-              le chiffre porte la couleur de marque. Pas de boîte dans la boîte. */}
-          <figure className="mx-auto mt-8 max-w-[60ch] border-y py-5 text-center">
-            <blockquote className="text-[15px] font-semibold leading-snug md:text-base">
-              {t.rich(`${k}.firstInsight`, {
-                accent: figure,
-                gap: fmtEur(locale, gapEur),
-              })}
-            </blockquote>
-            <figcaption className="mt-3 text-[11px] font-bold uppercase tracking-widest text-brand">
-              {t("firstInsightLabel")}
-            </figcaption>
-          </figure>
+            {/* Promesse */}
+            <div className="mx-auto mt-7 max-w-2xl text-center">
+              <h1 className="font-heading text-2xl font-bold leading-tight md:text-[28px]">
+                {t.rich(`${k}.welcomeTitle`, { accent })}
+              </h1>
+              <p className="mx-auto mt-3 max-w-[60ch] text-[13px] leading-relaxed text-muted-foreground">
+                {t(`${k}.welcomeBody`)}
+              </p>
+              <span className="mt-4 inline-block rounded-lg bg-brand px-4 py-1.5 text-xs font-bold text-brand-foreground">
+                {t(`${k}.offer`)}
+              </span>
+            </div>
 
-          {/* CTA — le persona est appliqué au clic (navigation client : le
-              RoleProvider ne se remonte pas) ET porté par l'URL (lien partagé,
-              rechargement : lu au montage par RoleProvider). */}
-          <div className="mt-7 flex justify-center">
-            <Button asChild size="lg" className="px-5">
-              <Link
-                href={`${source.landing}?persona=${source.persona}`}
-                onClick={() => setPersona(source.persona)}
-              >
-                {t("cta")}
-                <ArrowRight data-icon="inline-end" aria-hidden />
-              </Link>
-            </Button>
+            {/* 3 étapes : une grille séparée par des filets, pas trois cartes
+                dans la carte. Le numéro reste le repère de marque. */}
+            <ol className="mt-9 grid max-md:divide-y md:grid-cols-3 md:divide-x">
+              {STEPS.map((n) => (
+                <li
+                  key={n}
+                  className="max-md:py-4 max-md:first:pt-0 max-md:last:pb-0 md:px-6 md:first:pl-0 md:last:pr-0"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="num inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-brand-foreground">
+                      {n}
+                    </span>
+                    <h2 className="text-[13px] font-semibold leading-tight">
+                      {t(`${k}.steps.${n}.title`)}
+                    </h2>
+                  </div>
+                  <p className="mt-2 text-xs leading-snug text-muted-foreground">
+                    {t(`${k}.steps.${n}.desc`)}
+                  </p>
+                </li>
+              ))}
+            </ol>
+
+            {/* Premier insight (montant réel) : une citation entre deux filets,
+                le chiffre porte la couleur de marque. Pas de boîte dans la boîte. */}
+            <figure className="mx-auto mt-8 max-w-[60ch] border-y py-5 text-center">
+              <blockquote className="text-[15px] font-semibold leading-snug md:text-base">
+                {t.rich(`${k}.firstInsight`, {
+                  accent: figure,
+                  gap: fmtEur(locale, gapEur),
+                })}
+              </blockquote>
+              <figcaption className="mt-3 text-[11px] font-bold uppercase tracking-widest text-brand">
+                {t("firstInsightLabel")}
+              </figcaption>
+            </figure>
+
+            {/* CTA — le persona est appliqué au clic (navigation client : le
+                RoleProvider ne se remonte pas) ET porté par l'URL (lien partagé,
+                rechargement : lu au montage par RoleProvider). */}
+            <div className="mt-7 flex justify-center">
+              <Button asChild size="lg" className="px-5">
+                <Link
+                  href={`${source.landing}?persona=${source.persona}`}
+                  onClick={() => setPersona(source.persona)}
+                >
+                  {t("cta")}
+                  <ArrowRight data-icon="inline-end" aria-hidden />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

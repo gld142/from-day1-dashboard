@@ -2,13 +2,17 @@
 
 /**
  * Carte split d'un titre : barre segmentée des parts, ayants droit,
- * relance de signature (démo) et dialog de détail.
+ * relance de signature (démo), dialog de détail — et, en vue artiste, le
+ * bouton « Signer » quand le split n'est pas signé. Une signature locale
+ * (store signatures) passe la carte en « Signé le {date} » avec son aperçu.
  */
 import { useState } from "react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { BellRing, Check, Clock, FileText } from "lucide-react";
 import type { Project, SplitShare, Track, TrackSplit } from "@/lib/demo/types";
 import { fmtDate } from "@/lib/format";
+import type { SplitSignature } from "@/lib/userdata/signatures-store";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SignSplitDialog } from "./sign-split-dialog";
 
 /** Clés i18n (sans accents) pour les rôles du modèle de données. */
 const ROLE_KEYS: Record<SplitShare["role"], string> = {
@@ -81,10 +86,17 @@ export function SplitTrackCard({
   track,
   project,
   split,
+  signature = null,
+  canSign = false,
 }: {
   track: Track;
   project: Project;
+  /** Split effectif (statut et parts déjà surchargés par la signature locale, le cas échéant). */
   split: TrackSplit;
+  /** Signature locale du titre, s'il a été signé sur cet appareil. */
+  signature?: SplitSignature | null;
+  /** Vue artiste : peut signer un split non signé. La vue label ne voit que le statut. */
+  canSign?: boolean;
 }) {
   const t = useTranslations("splits");
   const locale = useLocale();
@@ -130,10 +142,33 @@ export function SplitTrackCard({
       </ul>
 
       <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
-        <span className="text-[11px] text-muted-foreground">
-          {t("card.updatedAt", { date: fmtDate(locale, split.updatedAt) })}
-        </span>
+        {signature ? (
+          <span
+            data-testid="split-signed"
+            className="flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground"
+          >
+            {/* Aperçu de la signature (24 px) : PNG local, jamais optimisé côté serveur. */}
+            <Image
+              src={signature.dataUrl}
+              alt=""
+              width={64}
+              height={24}
+              unoptimized
+              className="h-6 w-auto max-w-16 shrink-0 object-contain"
+            />
+            {/* Passe à la ligne comme « Mis à jour le », plutôt que de se tronquer
+                quand « Relancer » reste (un co-signataire en attente). */}
+            <span className="min-w-0">
+              {t("sign.signedOn", { date: fmtDate(locale, signature.signedAt) })}
+            </span>
+          </span>
+        ) : (
+          <span className="text-[11px] text-muted-foreground">
+            {t("card.updatedAt", { date: fmtDate(locale, split.updatedAt) })}
+          </span>
+        )}
         <div className="flex items-center gap-1.5">
+          {canSign && split.status !== "signed" && <SignSplitDialog track={track} />}
           {hasPending && (
             <Button
               size="sm"

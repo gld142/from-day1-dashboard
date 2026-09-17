@@ -40,6 +40,16 @@
     "status": "Statut",
     "total": "Total"
   },
+  "sign": {
+    "cta": "Signer",
+    "title": "Signer le partage de « {track} »",
+    "hint": "Signe avec la souris ou le doigt. La signature reste sur cet appareil : rien n'est envoyé.",
+    "pad": "Zone de signature",
+    "typed": "Ou tape ton nom",
+    "confirm": "Confirmer la signature",
+    "clear": "Effacer",
+    "signedOn": "Signé le {date}"
+  },
   "labelView": {
     "meta": "{tracks, plural, one {# titre} other {# titres}} · {pending, plural, =0 {tout est signé} one {# split à signer} other {# splits à signer}}"
   },

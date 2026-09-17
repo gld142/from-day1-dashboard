@@ -2,20 +2,30 @@
 
 /**
  * /splits — répartition des droits par titre.
- * Persona artiste : ses titres. Persona label : groupé par artiste.
+ * Persona artiste : ses titres, et il peut signer ceux qui ne le sont pas
+ * (signature locale à l'appareil). Persona label : groupé par artiste, statut
+ * seulement.
  */
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ARTISTS, PROJECTS, SPLITS, TRACKS, getArtist } from "@/lib/demo/api";
 import type { Project, Track, TrackSplit } from "@/lib/demo/types";
 import { useRole } from "@/lib/role";
+import { getSignature, type SplitSignature } from "@/lib/userdata/signatures-store";
+import { useSignaturesSnapshot } from "@/lib/userdata/use-signatures";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { SplitTrackCard } from "@/components/modules/droits/split-card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-type SplitItem = { track: Track; project: Project; split: TrackSplit };
+type SplitItem = {
+  track: Track;
+  project: Project;
+  /** Split effectif : statut « signed » et part de l'artiste signée si une signature locale existe. */
+  split: TrackSplit;
+  signature: SplitSignature | null;
+};
 type StatusFilter = "all" | TrackSplit["status"];
 
 const STATUS_ORDER: Record<TrackSplit["status"], number> = {
@@ -24,13 +34,31 @@ const STATUS_ORDER: Record<TrackSplit["status"], number> = {
   signed: 2,
 };
 
+/**
+ * Surcharge locale du statut de démo : un split signé sur cet appareil passe
+ * en « signed » et la part de l'artiste lui-même est cochée.
+ */
+function withSignature(split: TrackSplit, signature: SplitSignature | null, artistName: string): TrackSplit {
+  if (!signature) return split;
+  return {
+    ...split,
+    status: "signed",
+    shares: split.shares.map((s) => (s.name === artistName ? { ...s, signed: true } : s)),
+  };
+}
+
 function itemsFor(artistId: string): SplitItem[] {
+  const artistName = getArtist(artistId).name;
   return TRACKS.filter((t) => t.artistId === artistId)
-    .map((track) => ({
-      track,
-      project: PROJECTS.find((p) => p.id === track.projectId)!,
-      split: SPLITS.find((s) => s.trackId === track.id)!,
-    }))
+    .map((track) => {
+      const signature = getSignature(track.id);
+      return {
+        track,
+        project: PROJECTS.find((p) => p.id === track.projectId)!,
+        split: withSignature(SPLITS.find((s) => s.trackId === track.id)!, signature, artistName),
+        signature,
+      };
+    })
     .sort(
       (a, b) =>
         STATUS_ORDER[a.split.status] - STATUS_ORDER[b.split.status] ||
@@ -40,14 +68,17 @@ function itemsFor(artistId: string): SplitItem[] {
 
 export default function SplitsPage() {
   const t = useTranslations("splits");
-  const { isLabel, artistId, focusedArtistId } = useRole();
+  const { isLabel, artistId, focusedArtistId, persona } = useRole();
   const grouped = isLabel && !focusedArtistId;
   const [filter, setFilter] = useState<StatusFilter>("all");
+  /* Signatures locales : les items se recalculent à chaque signature. */
+  const signaturesKey = useSignaturesSnapshot();
 
   const groups = useMemo(() => {
+    void signaturesKey;
     const ids = grouped ? ARTISTS.map((a) => a.id) : [artistId];
     return ids.map((id) => ({ artist: getArtist(id), items: itemsFor(id) }));
-  }, [grouped, artistId]);
+  }, [grouped, artistId, signaturesKey]);
 
   const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
 
@@ -131,6 +162,8 @@ export default function SplitsPage() {
                       track={item.track}
                       project={item.project}
                       split={item.split}
+                      signature={item.signature}
+                      canSign={persona === "artist"}
                     />
                   ))}
                 </div>

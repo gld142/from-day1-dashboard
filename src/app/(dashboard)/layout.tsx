@@ -1,3 +1,4 @@
+import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
 
@@ -7,7 +8,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-svh w-full">
+    <DashboardShell>
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />
@@ -15,6 +16,6 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-    </div>
+    </DashboardShell>
   );
 }

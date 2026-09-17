@@ -75,7 +75,8 @@
   --popover-foreground: var(--foreground);
   --primary: oklch(0.62 0.19 285);
   --primary-foreground: oklch(0.98 0.005 285);
-  --brand: oklch(0.62 0.19 285);
+  --brand-base: oklch(0.62 0.19 285);
+  --brand: var(--brand-base);
   --brand-foreground: oklch(0.98 0.005 285);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -121,7 +122,8 @@
   --popover-foreground: var(--foreground);
   --primary: oklch(0.72 0.15 40);
   --primary-foreground: oklch(0.18 0.03 40);
-  --brand: oklch(0.72 0.15 40);
+  --brand-base: oklch(0.72 0.15 40);
+  --brand: var(--brand-base);
   --brand-foreground: oklch(0.18 0.03 40);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -167,7 +169,8 @@
   --popover-foreground: var(--foreground);
   --primary: oklch(0.23 0.014 260);
   --primary-foreground: oklch(0.985 0 0);
-  --brand: oklch(0.51 0.19 282);
+  --brand-base: oklch(0.51 0.19 282);
+  --brand: var(--brand-base);
   --brand-foreground: oklch(0.985 0 0);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -195,6 +198,69 @@
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: oklch(0.91 0.005 250);
   --sidebar-ring: var(--ring);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SKINS — « structure » (persona label) et « artiste » (persona artiste)
+   Posées en data-skin sur le shell du dashboard (et sur /welcome). Elles ne
+   retouchent que des tokens : rayon, accent (dérivé de --brand-base du thème
+   courant), intensité du halo. Thème-agnostiques : le thème fixe --brand-base,
+   la skin le module.
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+  --glow: 1;
+}
+
+[data-skin="structure"] {
+  /* Rayon 8 px, aucune lueur : la précision avant la chaleur. */
+  --radius: 0.5rem;
+  --glow: 0;
+}
+/* --glow: 0 rend le halo transparent ; on retire aussi l'ombre elle-même
+   (les détecteurs statiques lisent la règle, pas l'alpha calculé). */
+[data-skin="structure"] .brand-glow {
+  box-shadow: none;
+}
+
+[data-skin="artist"] {
+  /* Rayon 14 px, halo doux conservé sur le héros. */
+  --radius: 0.875rem;
+  --glow: 1;
+}
+
+/* Accent : violet désaturé (−15 % de chroma) en structure, plus chaud
+   (+8° de teinte, +10 % de chroma) en artiste. Syntaxe de couleur relative :
+   les navigateurs sans support gardent l'accent du thème tel quel. */
+@supports (color: oklch(from red l c h)) {
+  [data-skin="structure"] {
+    --brand: oklch(from var(--brand-base) l calc(c * 0.85) h);
+  }
+  [data-skin="artist"] {
+    --brand: oklch(from var(--brand-base) l calc(c * 1.1) calc(h + 8));
+  }
+}
+
+/* Rampe séquentielle de la marque — une seule teinte, clarté monotone —
+   pour les graphiques porteurs de données (calendrier d'écoute, donut par
+   plateforme). Ancrée sur la surface (sombre en nuit / aube, claire en jour) :
+   « plus c'est marqué, plus c'est proche de la marque ». Dérivée de --brand,
+   elle suit la skin (désaturée en structure, plus chaude en artiste).
+   --heat-* : 5 quantiles du calendrier (le cran 0 reste visible : c'est une
+   donnée, pas un vide). --ramp-* : 6 crans ordinaux du donut, plancher à
+   40 % pour que la plus petite part reste lisible sur la carte. */
+:root {
+  --seq-anchor: var(--surface-3);
+  --heat-0: color-mix(in oklch, var(--brand) 18%, var(--seq-anchor));
+  --heat-1: color-mix(in oklch, var(--brand) 38%, var(--seq-anchor));
+  --heat-2: color-mix(in oklch, var(--brand) 58%, var(--seq-anchor));
+  --heat-3: color-mix(in oklch, var(--brand) 78%, var(--seq-anchor));
+  --heat-4: var(--brand);
+  --ramp-1: var(--brand);
+  --ramp-2: color-mix(in oklch, var(--brand) 88%, var(--seq-anchor));
+  --ramp-3: color-mix(in oklch, var(--brand) 76%, var(--seq-anchor));
+  --ramp-4: color-mix(in oklch, var(--brand) 64%, var(--seq-anchor));
+  --ramp-5: color-mix(in oklch, var(--brand) 52%, var(--seq-anchor));
+  --ramp-6: color-mix(in oklch, var(--brand) 40%, var(--seq-anchor));
 }
 
 @layer base {
@@ -236,10 +302,11 @@
   /* Hairline de séparation premium */
   .hairline-t { box-shadow: inset 0 1px 0 0 var(--border); }
   .hairline-b { box-shadow: inset 0 -1px 0 0 var(--border); }
-  /* Halo de marque (hero, KPI en avant) */
+  /* Halo de marque (hero, KPI en avant) — intensité pilotée par --glow
+     (1 = plein, 0 = aucun : la skin structure l'éteint). */
   .brand-glow {
-    box-shadow: 0 0 0 1px color-mix(in oklch, var(--brand) 25%, transparent),
-      0 8px 40px -12px color-mix(in oklch, var(--brand) 35%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklch, var(--brand) calc(25% * var(--glow)), transparent),
+      0 8px 40px -12px color-mix(in oklch, var(--brand) calc(35% * var(--glow)), transparent);
   }
   /* Entrées de page */
   @keyframes rise-in {
@@ -249,7 +316,21 @@
   .rise-in {
     animation: rise-in 0.5s var(--ease-out-expo) both;
   }
+  /* Fondu sobre (opacité seule, 300 ms) : salutation du Pulse artiste. */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .fade-in {
+    animation: fade-in 0.3s ease-out both;
+  }
+  /* Calendrier d'écoute : l'année se remplit de gauche à droite (8 ms par
+     semaine, ~0,4 s en tout) — chaque cellule porte sa colonne dans --col. */
+  .listening-grid > span {
+    animation: fade-in 0.3s ease-out both;
+    animation-delay: calc(var(--col, 0) * 8ms);
+  }
   @media (prefers-reduced-motion: reduce) {
-    .rise-in { animation: none; }
+    .rise-in, .fade-in, .listening-grid > span { animation: none; }
   }
 }

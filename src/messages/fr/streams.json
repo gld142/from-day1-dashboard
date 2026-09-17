@@ -20,6 +20,14 @@
     "streams": "Streams",
     "rosterNote": "Roster agrégé — {count} artistes"
   },
+  "calendar": {
+    "title": "365 jours d'écoute",
+    "subtitle": "Un carré par jour, tous DSP confondus — plus c'est foncé, plus ça a tourné.",
+    "tooltip": "{streams} streams",
+    "aria": "{total} streams sur 365 jours, meilleure journée le {date} avec {best} streams",
+    "less": "Moins",
+    "more": "Plus"
+  },
   "compare": {
     "title": "Comparateur roster",
     "subtitle": "Streams quotidiens par artiste — top {count} de la période",
@@ -33,6 +41,8 @@
     "streams": "Streams",
     "delta": "Delta",
     "share": "Part",
+    "centerTotal": "streams",
+    "leading": "{dsp} en tête · {share}",
     "names": {
       "spotify": "Spotify",
       "apple": "Apple Music",

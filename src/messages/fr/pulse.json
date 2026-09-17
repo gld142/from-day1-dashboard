@@ -3,6 +3,7 @@
   "subtitle": "Votre rituel du matin — l'essentiel en 30 secondes.",
   "subtitleLabel": "Le pouls du roster ce matin — tous artistes confondus.",
   "backToRoster": "Vue roster",
+  "greeting": "Bonjour {name}",
   "hero": {
     "today": "Streams aujourd'hui",
     "todayLabel": "Streams du roster aujourd'hui",

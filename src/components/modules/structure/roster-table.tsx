@@ -3,8 +3,12 @@
 /**
  * LE tableau roster — comparatif dense façon Bloomberg.
  * Tri simple sur 3 colonnes, ligne cliquable = zoom dashboard sur l'artiste.
+ * Signature structure : au tri, les lignes glissent vers leur nouvelle place
+ * (transition de layout framer-motion, 250 ms ease-out, pas de fondu) ;
+ * désactivé sous prefers-reduced-motion.
  */
 import { useMemo, useState } from "react";
+import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowDown, ArrowUp, ArrowUpDown, Focus } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -32,6 +36,10 @@ const STAGE_TONE: Record<CareerStage, string> = {
   peak: "bg-muted text-muted-foreground",
 };
 
+/** TableRow animable : `ref` est une prop ordinaire en React 19, motion la transmet au <tr>. */
+const MotionTableRow = motion.create(TableRow);
+const ROW_LAYOUT_TRANSITION = { layout: { duration: 0.25, ease: "easeOut" } } as const;
+
 export function RosterTable({
   rows,
   focusedArtistId,
@@ -45,6 +53,7 @@ export function RosterTable({
   const locale = useLocale();
   const [sortKey, setSortKey] = useState<SortKey>("revenue12m");
   const [desc, setDesc] = useState(true);
+  const reduceMotion = useReducedMotion();
 
   const sorted = useMemo(
     () =>
@@ -112,73 +121,77 @@ export function RosterTable({
               <SortHead column="day1Index" label={t("table.index")} className="pr-5" />
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {sorted.map((r) => {
-              const focused = focusedArtistId === r.id;
-              return (
-                <TableRow
-                  key={r.id}
-                  onClick={() => onFocus(focused ? null : r.id)}
-                  aria-selected={focused}
-                  className={cn(
-                    "cursor-pointer",
-                    focused && "bg-brand/5 hover:bg-brand/10",
-                  )}
-                >
-                  <TableCell className="pl-5">
-                    <span className="flex items-center gap-2">
-                      <ArtistBadge artist={r} meta={r.genre} />
-                      {focused && (
-                        <Badge variant="outline" className="gap-1 border-brand/40 text-brand">
-                          <Focus aria-hidden />
-                          {t("table.focused")}
-                        </Badge>
-                      )}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={cn("border-transparent", STAGE_TONE[r.careerStage])}>
-                      {t(`stage.${r.careerStage}`)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="num text-right font-medium">
-                    {fmtCompact(locale, r.streams30d)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DeltaChip value={r.delta30d} />
-                  </TableCell>
-                  <TableCell className="num text-right font-medium">
-                    {fmtEur(locale, r.revenue12m, { compact: true })}
-                  </TableCell>
-                  <TableCell
+          <LayoutGroup>
+            <TableBody>
+              {sorted.map((r) => {
+                const focused = focusedArtistId === r.id;
+                return (
+                  <MotionTableRow
+                    key={r.id}
+                    layout={reduceMotion ? false : "position"}
+                    transition={ROW_LAYOUT_TRANSITION}
+                    onClick={() => onFocus(focused ? null : r.id)}
+                    aria-selected={focused}
                     className={cn(
-                      "num text-right font-semibold",
-                      r.net12m >= 0 ? "text-success" : "text-destructive",
+                      "cursor-pointer",
+                      focused && "bg-brand/5 hover:bg-brand/10",
                     )}
                   >
-                    {fmtEur(locale, r.net12m, { compact: true })}
-                  </TableCell>
-                  <TableCell className="num text-right text-muted-foreground">
-                    {fmtPct(locale, r.margin)}
-                  </TableCell>
-                  <TableCell className="num text-right text-muted-foreground">
-                    {fmtEur(locale, r.valuationMid, { compact: true })}
-                  </TableCell>
-                  <TableCell className="num pr-5 text-right">
-                    <span className="inline-flex items-center gap-2">
-                      <span className="h-1.5 w-10 overflow-hidden rounded-full bg-muted">
-                        <span
-                          className="block h-full rounded-full bg-brand"
-                          style={{ width: `${r.day1Index}%` }}
-                        />
+                    <TableCell className="pl-5">
+                      <span className="flex items-center gap-2">
+                        <ArtistBadge artist={r} meta={r.genre} />
+                        {focused && (
+                          <Badge variant="outline" className="gap-1 border-brand/40 text-brand">
+                            <Focus aria-hidden />
+                            {t("table.focused")}
+                          </Badge>
+                        )}
                       </span>
-                      <span className="font-medium">{r.day1Index}</span>
-                    </span>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={cn("border-transparent", STAGE_TONE[r.careerStage])}>
+                        {t(`stage.${r.careerStage}`)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="num text-right font-medium">
+                      {fmtCompact(locale, r.streams30d)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DeltaChip value={r.delta30d} />
+                    </TableCell>
+                    <TableCell className="num text-right font-medium">
+                      {fmtEur(locale, r.revenue12m, { compact: true })}
+                    </TableCell>
+                    <TableCell
+                      className={cn(
+                        "num text-right font-semibold",
+                        r.net12m >= 0 ? "text-success" : "text-destructive",
+                      )}
+                    >
+                      {fmtEur(locale, r.net12m, { compact: true })}
+                    </TableCell>
+                    <TableCell className="num text-right text-muted-foreground">
+                      {fmtPct(locale, r.margin)}
+                    </TableCell>
+                    <TableCell className="num text-right text-muted-foreground">
+                      {fmtEur(locale, r.valuationMid, { compact: true })}
+                    </TableCell>
+                    <TableCell className="num pr-5 text-right">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="h-1.5 w-10 overflow-hidden rounded-full bg-muted">
+                          <span
+                            className="block h-full rounded-full bg-brand"
+                            style={{ width: `${r.day1Index}%` }}
+                          />
+                        </span>
+                        <span className="font-medium">{r.day1Index}</span>
+                      </span>
+                    </TableCell>
+                  </MotionTableRow>
+                );
+              })}
+            </TableBody>
+          </LayoutGroup>
         </Table>
       </div>
     </div>

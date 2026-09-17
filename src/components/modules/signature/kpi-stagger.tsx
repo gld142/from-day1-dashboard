@@ -1,8 +1,15 @@
 "use client";
 
 /**
- * Micro-motion d'entrée des KpiCards : stagger 40 ms par card, une seule
- * fois au mount, désactivé si prefers-reduced-motion.
+ * Micro-motion d'entrée des KpiCards, une seule fois par navigation client,
+ * désactivé si prefers-reduced-motion. La signature dépend de la skin :
+ *  - structure : opacité seule (aucune translation), décalage 40 ms ;
+ *  - artiste : fondu + montée de 12 px, décalage 60 ms.
+ *
+ * Jamais au chargement initial : l'état « hidden » (opacity: 0) partait dans
+ * le HTML serveur et cachait les tuiles jusqu'à l'hydratation + le décalage —
+ * le LCP du Pulse (le libellé de la 4e tuile) attendait ~1,9 s. Les tuiles
+ * sont désormais visibles dès le HTML serveur (cf. useEntryReveal).
  *
  * Usage :
  *   <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -10,20 +17,27 @@
  *   </KpiStagger>
  */
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useEntryReveal, useSkin, type Skin } from "@/lib/skin";
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
-const groupVariants: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.04 } },
+const GROUP: Record<Skin, Variants> = {
+  structure: { hidden: {}, show: { transition: { staggerChildren: 0.04 } } },
+  artist: { hidden: {}, show: { transition: { staggerChildren: 0.06 } } },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: EASE_OUT_EXPO },
+const ITEM: Record<Skin, Variants> = {
+  structure: {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" } },
+  },
+  artist: {
+    hidden: { opacity: 0, y: 12 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.45, ease: EASE_OUT_EXPO },
+    },
   },
 };
 
@@ -35,11 +49,13 @@ export function KpiStagger({
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
+  const skin = useSkin();
+  const entry = useEntryReveal();
   return (
     <motion.div
       className={className}
-      variants={groupVariants}
-      initial={reduceMotion ? false : "hidden"}
+      variants={GROUP[skin]}
+      initial={reduceMotion || !entry ? false : "hidden"}
       animate="show"
     >
       {children}
@@ -54,8 +70,9 @@ export function KpiStaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
+  const skin = useSkin();
   return (
-    <motion.div className={className} variants={itemVariants}>
+    <motion.div className={className} variants={ITEM[skin]}>
       {children}
     </motion.div>
   );
