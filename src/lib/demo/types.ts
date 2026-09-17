@@ -184,6 +184,14 @@ export type RightsStatement = {
   expected: number; // EUR estimé par Day 1
   received: number; // EUR reçu
   status: "received" | "pending" | "gap-detected";
+  /**
+   * D'où vient l'attendu : « estimated » quand il sort de l'estimateur (artistes
+   * réels : part auteur de l'édition sur le brut master), « simulated » sinon.
+   * Optionnel : l'ancien code qui construit des relevés reste valide.
+   */
+  expectedProvenance?: Provenance;
+  /** Le reçu est un relevé simulé pour la démo — jusqu'à l'import d'un vrai relevé de répartition. */
+  receivedProvenance?: Provenance;
 };
 
 export type AuditFinding = {

@@ -21,18 +21,25 @@ import {
   getArtist as getDemoArtist,
 } from "./data";
 import {
+  RIGHTS_ORGANISMS,
+  RIGHTS_ORG_SCALE,
+  RIGHTS_PENDING_PERIOD,
+  RIGHTS_PERIODS,
   auditFindings as genAuditFindings,
   countryBreakdown as genCountryBreakdown,
   expensesFor as genExpensesFor,
   fanSegments as genFanSegments,
   revenueForecast as genRevenueForecast,
   revenueSeries as genRevenueSeries,
+  rightsGapFindings,
   rightsStatements as genRightsStatements,
+  simulatedReceipt,
   streamSeries as genStreamSeries,
   tourDates as genTourDates,
   type ForecastPoint,
 } from "./generators";
-import { DEMO_TODAY, isoMonth } from "./seed";
+import { DEMO_TODAY, isoMonth, rngFor } from "./seed";
+import { AUTHOR_SHARE_OF_PUBLISHING, PUBLISHING_SHARE_OF_DSP } from "@/lib/real/params";
 import {
   ESTIMATE_PERIODS,
   PERIOD_DAYS,
@@ -97,6 +104,7 @@ export type { ForecastPoint };
 export type { DailyEstimate, EstimatePeriod, EstimateSummary, TikTokSignal };
 export type { MarketDimension, MarketMeta, MarketMetric, MarketShareRow, MarketWithin, MorningReading };
 export { ESTIMATE_PERIODS, PERIOD_DAYS };
+export { RIGHTS_PENDING_PERIOD, RIGHTS_PERIODS };
 
 /* ─────────────── Fiches artistes (démo + profil utilisateur) ─────────────── */
 
@@ -404,14 +412,55 @@ export function countryBreakdown(artistId: string, days = 30): CountryStreams[] 
   return genCountryBreakdown(artistId, days);
 }
 
-export function rightsStatements(artistId: string): RightsStatement[] {
-  if (isUserArtist(artistId)) return [];
-  return genRightsStatements(artistId);
-}
-
 /** Trimestre ISO « YYYY-Tn » d'une date ISO. */
 function quarterOf(date: string): string {
   return `${date.slice(0, 4)}-T${Math.ceil(Number(date.slice(5, 7)) / 3)}`;
+}
+
+/**
+ * Relevés de droits FR (SACEM, ADAMI, SPEDIDAM, SPRE) par trimestre.
+ *
+ * Artistes réels : l'attendu SACEM d'un trimestre est la part auteur de
+ * l'édition sur le brut master estimé de ses jours — mêmes constantes que la
+ * ligne « droits d'auteur » de Revenus (brut DSP × part édition × part auteur),
+ * donc les deux pages racontent le même chiffre. ADAMI, SPEDIDAM et SPRE en
+ * proportion (RIGHTS_ORG_SCALE, ± 12 % seedés) : provenance « estimé ». Le reçu
+ * reste un relevé simulé (règle du générateur, seedée par artiste + organisme
+ * + période) — jusqu'à l'import d'un vrai relevé de répartition.
+ */
+export function rightsStatements(artistId: string): RightsStatement[] {
+  if (isUserArtist(artistId)) return [];
+  if (!hasRealData(artistId)) return genRightsStatements(artistId);
+
+  const grossByQuarter = new Map<string, number>();
+  for (const d of dailyEstimates(artistId, 730)) {
+    const q = quarterOf(d.date);
+    grossByQuarter.set(q, (grossByQuarter.get(q) ?? 0) + d.grossMaster.mid);
+  }
+  const authorShare = PUBLISHING_SHARE_OF_DSP * AUTHOR_SHARE_OF_PUBLISHING;
+  const out: RightsStatement[] = [];
+  let i = 0;
+  for (const organism of RIGHTS_ORGANISMS) {
+    for (const period of RIGHTS_PERIODS) {
+      const sacem = (grossByQuarter.get(period) ?? 0) * authorShare;
+      // Droits voisins : ratio d'échelle sur la SACEM, légèrement bruité (déterministe)
+      // pour ne pas afficher quatre colonnes exactement proportionnelles.
+      const jitter =
+        organism === "sacem" ? 1 : 0.88 + rngFor(`${artistId}:rights:scale:${organism}:${period}`)() * 0.24;
+      const expected = Math.round((sacem * RIGHTS_ORG_SCALE[organism] * jitter) / RIGHTS_ORG_SCALE.sacem);
+      out.push({
+        id: `${artistId}-rs-${i++}`,
+        artistId,
+        organism,
+        period,
+        expected,
+        ...simulatedReceipt(artistId, organism, period, expected),
+        expectedProvenance: "estimated",
+        receivedProvenance: "simulated",
+      });
+    }
+  }
+  return out;
 }
 
 /** Premier jour d'un trimestre « YYYY-Tn ». */
@@ -421,9 +470,10 @@ function quarterStart(quarter: string): string {
 }
 
 /**
- * Écarts d'audit. Artistes réels : les écarts de droits générés sont conservés,
- * mais l'écart « label » synthétique laisse place aux écarts estimé / déclaré par
- * DSP et par trimestre clos — toujours attribués au DSP (audit-gap.ts).
+ * Écarts d'audit. Artistes réels : les écarts de droits viennent des relevés de
+ * la façade (attendu estimé, reçu simulé), et l'écart « label » synthétique
+ * laisse place aux écarts estimé / déclaré par DSP et par trimestre clos —
+ * toujours attribués au DSP (audit-gap.ts).
  */
 export function auditFindings(artistId: string): AuditFinding[] {
   if (isUserArtist(artistId)) return [];
@@ -445,7 +495,8 @@ export function auditFindings(artistId: string): AuditFinding[] {
     }
   }
   const closed = Array.from(lines.values());
-  const rights = genAuditFindings(artistId).filter((f) => !f.id.endsWith("-af-label"));
+  // Les mêmes relevés que /rights : un écart de droits y vaut le même montant ici.
+  const rights = rightsGapFindings(artistId, rightsStatements(artistId));
   return [...auditGap(artistId, closed, simulatedStatement(artistId, closed)), ...rights];
 }
 

@@ -1,6 +1,7 @@
 {
   "title": "French rights",
   "subtitle": "Your author and neighbouring rights in France: what Day 1 estimates, what the societies pay, and the gaps we detect.",
+  "subtitleLabel": "{scope, select, roster {The roster's} other {{name}'s}} author and neighbouring rights: what Day 1 estimates, what the societies pay, the gaps detected.",
   "kpis": {
     "received12m": "Received over 12 months",
     "expected": "Expected (in progress)",
@@ -13,9 +14,9 @@
   },
   "chart": {
     "heading": "Expected vs received by period",
-    "sub": "Day 1 estimates cross-checked against statements actually received, all societies combined.",
-    "expected": "Expected",
-    "received": "Received"
+    "sub": "Day 1 estimate (author share of publishing on the master gross) cross-checked against statements received — simulated for the demo —, all societies combined.",
+    "expected": "Expected ({provenance, select, estimated {estimated} other {simulated}})",
+    "received": "Received ({provenance, select, simulated {simulated statement} declared {imported statement} other {statement}})"
   },
   "periodShort": "Q{q} {year}",
   "organisms": {

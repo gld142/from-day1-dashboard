@@ -6,10 +6,11 @@
  */
 import { useLocale, useTranslations } from "next-intl";
 import { CalendarDays, Check, Clock, TriangleAlert } from "lucide-react";
-import type { RightsOrganism, RightsStatement } from "@/lib/demo/types";
+import type { Provenance, RightsOrganism, RightsStatement } from "@/lib/demo/types";
 import { fmtDate, fmtEur } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import {
   Table,
   TableBody,
@@ -25,6 +26,9 @@ export type RightsRow = {
   expected: number;
   received: number;
   status: RightsStatement["status"];
+  /** La plus faible des provenances agrégées (roster) : « estimé » ou « simulé ». */
+  expectedProvenance: Provenance;
+  receivedProvenance: Provenance;
 };
 
 export const ORGANISM_ORDER: RightsOrganism[] = ["sacem", "adami", "spedidam", "spre"];
@@ -72,10 +76,13 @@ export function OrganismCard({
   organism,
   rows,
   received12m,
+  receivedProvenance,
 }: {
   organism: RightsOrganism;
   rows: RightsRow[];
   received12m: number;
+  /** Badge à côté de « Reçu 12 mois » : le reçu est un relevé simulé tant qu'aucun vrai relevé n'est importé. */
+  receivedProvenance?: Provenance;
 }) {
   const t = useTranslations("rights");
   const locale = useLocale();
@@ -101,7 +108,10 @@ export function OrganismCard({
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="text-[11px] text-muted-foreground">{t("orgCard.received12m")}</p>
+          <p className="flex items-center justify-end gap-1.5 text-[11px] text-muted-foreground">
+            {t("orgCard.received12m")}
+            {receivedProvenance && <ProvenanceBadge provenance={receivedProvenance} />}
+          </p>
           <p className="num text-lg font-semibold">{fmtEur(locale, received12m)}</p>
         </div>
       </div>

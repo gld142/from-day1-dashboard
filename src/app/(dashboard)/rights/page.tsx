@@ -3,6 +3,11 @@
 /**
  * /rights — droits d'auteur & droits voisins FR (SACEM, ADAMI, SPEDIDAM, SPRE).
  * Persona artiste : ses relevés. Persona label : agrégé roster (ou artiste zoomé).
+ *
+ * Chaque chiffre porte sa provenance : l'attendu vient de l'estimateur (part
+ * auteur de l'édition sur le brut master — « estimé »), le reçu est un relevé
+ * simulé pour la démo (« simulé ») tant qu'aucun vrai relevé de répartition
+ * n'est importé ; les écarts comparent l'un à l'autre.
  */
 import { useMemo } from "react";
 import Link from "next/link";
@@ -18,10 +23,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ARTISTS, rightsStatements } from "@/lib/demo/api";
+import { ARTISTS, RIGHTS_PERIODS, getArtist, rightsStatements } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
-import type { RightsOrganism, RightsStatement } from "@/lib/demo/types";
+import type { Provenance, RightsOrganism, RightsStatement } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur } from "@/lib/format";
+import { weakest } from "@/lib/real";
 import { useRole } from "@/lib/role";
 import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -35,7 +41,7 @@ import {
 } from "@/components/modules/droits/rights-widgets";
 import { Button } from "@/components/ui/button";
 
-const PERIODS = ["2025-T1", "2025-T2", "2025-T3", "2025-T4", "2026-T1", "2026-T2"];
+const PERIODS = RIGHTS_PERIODS;
 const LAST_4 = new Set(PERIODS.slice(-4));
 
 /** Calendrier des répartitions à venir (déterministe, relatif à DEMO_TODAY). */
@@ -55,6 +61,8 @@ export default function RightsPage() {
   const locale = useLocale();
   const { isLabel, artistId, focusedArtistId } = useRole();
   const grouped = isLabel && !focusedArtistId;
+  const scope = grouped ? "roster" : "artist";
+  const artistName = getArtist(artistId).name;
 
   /** Relevés agrégés par (organisme, période) sur le périmètre courant. */
   const rows = useMemo<RightsRow[]>(() => {
@@ -71,9 +79,14 @@ export default function RightsPage() {
             expected: 0,
             received: 0,
             status: "received" as RightsStatement["status"],
+            expectedProvenance: s.expectedProvenance ?? "simulated",
+            receivedProvenance: s.receivedProvenance ?? "simulated",
           } satisfies RightsRow);
         cur.expected += s.expected;
         cur.received += s.received;
+        // Plusieurs artistes agrégés : la provenance la plus faible l'emporte.
+        cur.expectedProvenance = weakest([cur.expectedProvenance, s.expectedProvenance ?? "simulated"]);
+        cur.receivedProvenance = weakest([cur.receivedProvenance, s.receivedProvenance ?? "simulated"]);
         if (s.status === "gap-detected") cur.status = "gap-detected";
         else if (s.status === "pending" && cur.status !== "gap-detected")
           cur.status = "pending";
@@ -94,6 +107,15 @@ export default function RightsPage() {
     const gapTotal = gapRows.reduce((s, r) => s + Math.max(0, r.expected - r.received), 0);
     return { received12m, expectedPending, gapTotal, gapCount: gapRows.length };
   }, [rows]);
+
+  /** Provenance affichée sur les tuiles : la plus faible du périmètre (sans relevé : simulé). */
+  const provenance = useMemo<{ expected: Provenance; received: Provenance }>(
+    () => ({
+      expected: weakest(rows.map((r) => r.expectedProvenance)),
+      received: weakest(rows.map((r) => r.receivedProvenance)),
+    }),
+    [rows],
+  );
 
   const payments = useMemo<ScheduledPayment[]>(() => {
     const pendingByOrg = new Map<RightsOrganism, number>();
@@ -132,7 +154,10 @@ export default function RightsPage() {
 
   return (
     <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <PageHeader
+        title={t("title")}
+        subtitle={isLabel ? t("subtitleLabel", { scope, name: artistName }) : t("subtitle")}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
@@ -141,6 +166,7 @@ export default function RightsPage() {
           value={kpis.received12m}
           format="eur"
           deltaLabel={t("kpis.last4Quarters")}
+          provenance={provenance.received}
         />
         <KpiCard
           id="rights-expected"
@@ -148,6 +174,7 @@ export default function RightsPage() {
           value={kpis.expectedPending}
           format="eur"
           deltaLabel={t("kpis.pendingPeriod")}
+          provenance={provenance.expected}
         />
         <KpiCard
           id="rights-gaps"
@@ -155,12 +182,14 @@ export default function RightsPage() {
           value={kpis.gapTotal}
           format="eur"
           deltaLabel={t("kpis.gapsHint")}
+          provenance={provenance.expected}
         />
         <KpiCard
           id="rights-upcoming"
           label={t("kpis.upcoming")}
           value={upcoming6m.length}
           format="int"
+          provenance="simulated"
           deltaLabel={
             upcoming6m[0]
               ? t("kpis.nextOn", { date: fmtDate(locale, upcoming6m[0].date) })
@@ -223,7 +252,7 @@ export default function RightsPage() {
               <Legend wrapperStyle={{ fontSize: 12 }} iconType="circle" iconSize={8} />
               <Bar
                 dataKey="expected"
-                name={t("chart.expected")}
+                name={t("chart.expected", { provenance: provenance.expected })}
                 fill="var(--chart-2)"
                 fillOpacity={0.45}
                 radius={[4, 4, 0, 0]}
@@ -231,7 +260,7 @@ export default function RightsPage() {
               />
               <Bar
                 dataKey="received"
-                name={t("chart.received")}
+                name={t("chart.received", { provenance: provenance.received })}
                 fill="var(--chart-1)"
                 radius={[4, 4, 0, 0]}
                 animationDuration={600}
@@ -255,6 +284,7 @@ export default function RightsPage() {
               organism={organism}
               rows={orgRows}
               received12m={received12m}
+              receivedProvenance={provenance.received}
             />
           );
         })}

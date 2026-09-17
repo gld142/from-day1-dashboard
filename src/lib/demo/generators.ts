@@ -14,6 +14,7 @@ import type {
   FanSegment,
   RevenuePoint,
   RevenueSource,
+  RightsOrganism,
   RightsStatement,
   StreamPoint,
   TourDate,
@@ -361,39 +362,63 @@ export function countryBreakdown(artistId: string, days = 30): CountryStreams[] 
 
 /* ─────────────────────────── Droits FR ─────────────────────────── */
 
+export const RIGHTS_ORGANISMS: RightsOrganism[] = ["sacem", "adami", "spedidam", "spre"];
+
+/** Trimestres affichés ; le dernier est celui dont la répartition est en cours de traitement. */
+export const RIGHTS_PERIODS = ["2025-T1", "2025-T2", "2025-T3", "2025-T4", "2026-T1", "2026-T2"];
+export const RIGHTS_PENDING_PERIOD = RIGHTS_PERIODS[RIGHTS_PERIODS.length - 1];
+
+/**
+ * Échelle relative des organismes — HYPOTHÈSE : ADAMI ≈ SACEM / 3, SPEDIDAM
+ * ≈ 0,6 × ADAMI, SPRE ≈ 0,4 × ADAMI. Partagée avec la façade api.ts, qui
+ * dérive l'attendu SACEM des artistes réels de l'estimateur et garde ces ratios.
+ */
+export const RIGHTS_ORG_SCALE: Record<RightsOrganism, number> = {
+  sacem: 3,
+  adami: 1,
+  spedidam: 0.6,
+  spre: 0.4,
+};
+
+/**
+ * Reçu simulé à partir d'un attendu : 18 % des relevés clos sont sous-versés
+ * (55–80 % de l'attendu), les autres tombent à 93–103 %. Le trimestre en cours
+ * de traitement n'a pas encore de reçu. Seedé par artiste + organisme +
+ * période : le motif d'écarts ne bouge pas quand l'attendu est recalculé
+ * (nouveau relevé quotidien, recalibrage).
+ */
+export function simulatedReceipt(
+  artistId: string,
+  organism: RightsOrganism,
+  period: string,
+  expected: number,
+): Pick<RightsStatement, "received" | "status"> {
+  if (period === RIGHTS_PENDING_PERIOD) return { received: 0, status: "pending" };
+  const rand = rngFor(`${artistId}:rights:${organism}:${period}`);
+  const hasGap = rand() < 0.18;
+  const factor = hasGap ? 0.55 + rand() * 0.25 : 0.93 + rand() * 0.1;
+  return { received: Math.round(expected * factor), status: hasGap ? "gap-detected" : "received" };
+}
+
+/** Relevés entièrement simulés (artistes sans relevé réel) : attendu ∝ auditeurs mensuels. */
 export function rightsStatements(artistId: string): RightsStatement[] {
   const rand = rngFor(`${artistId}:rights`);
-  const organisms: Array<RightsStatement["organism"]> = [
-    "sacem",
-    "adami",
-    "spedidam",
-    "spre",
-  ];
-  const periods = ["2025-T1", "2025-T2", "2025-T3", "2025-T4", "2026-T1", "2026-T2"];
   const a = getArtist(artistId);
   const base = a.monthlyListeners * 0.0011;
   const out: RightsStatement[] = [];
   let i = 0;
-  for (const organism of organisms) {
-    const orgScale =
-      organism === "sacem" ? 3 : organism === "adami" ? 1 : organism === "spedidam" ? 0.6 : 0.4;
-    for (const period of periods) {
-      const expected = Math.round(base * orgScale * (0.8 + rand() * 0.5));
-      const isPending = period === "2026-T2";
-      const hasGap = !isPending && rand() < 0.18;
-      const received = isPending
-        ? 0
-        : hasGap
-          ? Math.round(expected * (0.55 + rand() * 0.25))
-          : Math.round(expected * (0.93 + rand() * 0.1));
+  for (const organism of RIGHTS_ORGANISMS) {
+    for (const period of RIGHTS_PERIODS) {
+      const expected = Math.round(base * RIGHTS_ORG_SCALE[organism] * (0.8 + rand() * 0.5));
       out.push({
         id: `${artistId}-rs-${i++}`,
         artistId,
         organism,
         period,
         expected,
-        received,
-        status: isPending ? "pending" : hasGap ? "gap-detected" : "received",
+        ...simulatedReceipt(artistId, organism, period, expected),
+        expectedProvenance: "simulated",
+        receivedProvenance: "simulated",
       });
     }
   }
@@ -402,21 +427,30 @@ export function rightsStatements(artistId: string): RightsStatement[] {
 
 /* ─────────────────────────── Audit IA ─────────────────────────── */
 
-export function auditFindings(artistId: string): AuditFinding[] {
-  const statements = rightsStatements(artistId).filter(
-    (s) => s.status === "gap-detected",
-  );
+/**
+ * Un signalement d'audit par relevé de droits en écart, dans l'ordre des
+ * relevés ; le premier a déjà sa lettre. Reçoit les relevés (générés ici, ou
+ * ceux de la façade pour les artistes réels) pour que /audit et /rights
+ * montrent exactement les mêmes montants.
+ */
+export function rightsGapFindings(artistId: string, statements: RightsStatement[]): AuditFinding[] {
   const rand = rngFor(`${artistId}:audit`);
-  const fromRights: AuditFinding[] = statements.map((s, i) => ({
-    id: `${artistId}-af-${i}`,
-    artistId,
-    source: s.organism.toUpperCase(),
-    period: s.period,
-    expected: s.expected,
-    reported: s.received,
-    confidence: 0.7 + rand() * 0.25,
-    status: i === 0 ? "letter-generated" : "open",
-  }));
+  return statements
+    .filter((s) => s.status === "gap-detected")
+    .map((s, i) => ({
+      id: `${artistId}-af-${i}`,
+      artistId,
+      source: s.organism.toUpperCase(),
+      period: s.period,
+      expected: s.expected,
+      reported: s.received,
+      confidence: 0.7 + rand() * 0.25,
+      status: i === 0 ? "letter-generated" : "open",
+    }));
+}
+
+export function auditFindings(artistId: string): AuditFinding[] {
+  const fromRights = rightsGapFindings(artistId, rightsStatements(artistId));
   // Écart label sur le streaming (le "feature killer" du doc stratégie).
   const a = getArtist(artistId);
   if (a.dealType === "licence") {

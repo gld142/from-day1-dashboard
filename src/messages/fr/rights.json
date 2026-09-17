@@ -1,6 +1,7 @@
 {
   "title": "Droits FR",
   "subtitle": "Vos droits d'auteur et droits voisins en France : ce que Day 1 estime, ce que les organismes versent, et les écarts détectés.",
+  "subtitleLabel": "Les droits d'auteur et droits voisins {scope, select, roster {du roster} other {de {name}}} : ce que Day 1 estime, ce que les organismes versent, les écarts détectés.",
   "kpis": {
     "received12m": "Reçu sur 12 mois",
     "expected": "Attendu (en cours)",
@@ -13,9 +14,9 @@
   },
   "chart": {
     "heading": "Attendu vs reçu par période",
-    "sub": "Estimation Day 1 croisée avec les relevés effectivement reçus, tous organismes confondus.",
-    "expected": "Attendu",
-    "received": "Reçu"
+    "sub": "Estimation Day 1 (part auteur de l'édition sur le brut master) croisée avec les relevés reçus — simulés pour la démo —, tous organismes confondus.",
+    "expected": "Attendu ({provenance, select, estimated {estimé} other {simulé}})",
+    "received": "Reçu ({provenance, select, simulated {relevé simulé} declared {relevé importé} other {relevé}})"
   },
   "periodShort": "T{q} {year}",
   "organisms": {
