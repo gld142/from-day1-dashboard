@@ -108,5 +108,40 @@
     "tiktok": "TikTok",
     "amazon": "Amazon Music",
     "other": "Other"
+  },
+  "algo": {
+    "title": "Algo position & trends",
+    "subtitle": "Where the algorithm puts {name} this morning — and the sound that broke through.",
+    "platforms": "Algo position per platform",
+    "platform": {
+      "spotify": "Spotify",
+      "apple": "Apple Music",
+      "deezer": "Deezer",
+      "youtube": "YouTube",
+      "tiktok": "TikTok",
+      "instagram": "Instagram"
+    },
+    "rank": "#{rank}",
+    "deltaNote": "Places gained over 7 days.",
+    "breakout": {
+      "kicker": "The sound that broke through",
+      "since": "broke on {date} around {time}",
+      "videos": "≈ {videos} videos, {delta} yesterday",
+      "trend": "#{rank} trending sound in France",
+      "noTrend": "not yet trending in France"
+    },
+    "creators": {
+      "title": "Top 3 creators this week",
+      "line": "{followers} followers · {videos} video(s) · {views} views"
+    },
+    "impact": {
+      "title": "Impact on streams",
+      "streams7": "Spotify streams, D+7",
+      "streams14": "Spotify streams, D+14",
+      "saves": "Spotify saves from TikTok",
+      "savesApple": "Apple Music saves from TikTok",
+      "playlists": "Editorial playlist adds"
+    },
+    "note": "Demo simulation: ranks, creators and saves will be measured in production (Soundcharts, connected accounts)."
   }
 }

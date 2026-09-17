@@ -108,5 +108,40 @@
     "tiktok": "TikTok",
     "amazon": "Amazon Music",
     "other": "Autres"
+  },
+  "algo": {
+    "title": "Position algo & tendances",
+    "subtitle": "Où l'algorithme place {name} ce matin — et le son qui a percé.",
+    "platforms": "Position algo par plateforme",
+    "platform": {
+      "spotify": "Spotify",
+      "apple": "Apple Music",
+      "deezer": "Deezer",
+      "youtube": "YouTube",
+      "tiktok": "TikTok",
+      "instagram": "Instagram"
+    },
+    "rank": "n° {rank}",
+    "deltaNote": "Places gagnées sur 7 jours.",
+    "breakout": {
+      "kicker": "Le son qui a percé",
+      "since": "percée le {date} vers {time}",
+      "videos": "≈ {videos} vidéos, {delta} hier",
+      "trend": "n° {rank} des sons en tendance France",
+      "noTrend": "pas encore dans les tendances France"
+    },
+    "creators": {
+      "title": "Top 3 créateurs de la semaine",
+      "line": "{followers} abonnés · {videos} vidéo(s) · {views} vues"
+    },
+    "impact": {
+      "title": "Impact sur les streams",
+      "streams7": "Streams Spotify, J+7",
+      "streams14": "Streams Spotify, J+14",
+      "saves": "Ajouts Spotify depuis TikTok",
+      "savesApple": "Ajouts Apple Music depuis TikTok",
+      "playlists": "Entrées en playlists éditoriales"
+    },
+    "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés)."
   }
 }

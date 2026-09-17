@@ -35,6 +35,7 @@ import {
 } from "@/components/modules/signature/kpi-stagger";
 import { SunriseArc } from "@/components/modules/signature/sunrise-arc";
 import { SharesPanel } from "@/components/modules/finances/shares-panel";
+import { AlgoTrendPanel } from "@/components/modules/pilotage/algo-trend-panel";
 import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
 import { StreamsAreaChart } from "@/components/modules/pilotage/streams-area-chart";
 import { TopMovers } from "@/components/modules/pilotage/top-movers";
@@ -572,6 +573,9 @@ export default function PulsePage() {
               seriesLabel={t("chart.streams")}
             />
           </section>
+
+          {/* Position algo & tendances — simulation de démo */}
+          <AlgoTrendPanel artistId={artistId} artistName={artistView.artist.name} />
 
           {/* Ce que ça rapporte — estimation jour / semaine / mois / année */}
           {artistView.est && (
