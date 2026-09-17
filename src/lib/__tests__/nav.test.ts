@@ -31,7 +31,7 @@ describe("navForPersona — structure (label)", () => {
     ]);
   });
 
-  it("n'affiche ni la section pitch (interne), ni le fractional par défaut", () => {
+  it("n'affiche ni la section pitch (interne), ni le fractional (retiré)", () => {
     const all = flat(nav);
     expect(nav.map((s) => s.labelKey)).not.toContain("sections.pitch");
     expect(all).not.toContain("/comparatif");
@@ -43,7 +43,8 @@ describe("navForPersona — structure (label)", () => {
   it("un choix utilisateur réactive une page à sa place dans le parcours", () => {
     const withFractional = navForPersona("label", { "/fractional": true });
     const finances = withFractional.find((s) => s.labelKey === "sections.finances");
-    expect(finances?.items.map((i) => i.href)).toEqual(["/finances", "/valuation", "/calculator", "/fractional"]);
+    // /fractional est interne : même explicitement activé, il n'apparaît pas.
+    expect(finances?.items.map((i) => i.href)).toEqual(["/finances", "/valuation", "/calculator"]);
     const withPitch = navForPersona("label", { "/onboardings": true });
     expect(withPitch.find((s) => s.labelKey === "sections.pitch")?.items.map((i) => i.href)).toEqual([
       "/onboardings",
@@ -86,16 +87,18 @@ describe("navForPersona — artiste", () => {
           s.labelKey,
           s.items
             .filter((i) => !i.personas || i.personas.includes("artist"))
+            .filter((i) => !i.internal && !(i.defaultHidden === "all" || i.defaultHidden?.includes("artist")))
             .map((i) => i.href),
         ] as const,
     ).filter(([, items]) => items.length > 0);
     expect(hrefs(nav)).toEqual(expected);
   });
 
-  it("voit le simulateur et le fractional, jamais la section pitch", () => {
+  it("voit le simulateur mais ni la valorisation (structure) ni le fractional (retiré), jamais la section pitch", () => {
     const all = flat(nav);
     expect(all).toContain("/calculator");
-    expect(all).toContain("/fractional");
+    expect(all).not.toContain("/fractional");
+    expect(all).not.toContain("/valuation");
     expect(all).not.toContain("/roster");
     expect(all).not.toContain("/ar-watch");
     expect(nav.map((s) => s.labelKey)).not.toContain("sections.pitch");

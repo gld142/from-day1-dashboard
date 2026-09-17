@@ -17,7 +17,6 @@ import {
   Calculator,
   CircleDollarSign,
   Clapperboard,
-  Coins,
   Crosshair,
   FileText,
   FileUp,
@@ -122,16 +121,11 @@ export const NAV_SECTIONS: NavSection[] = [
         badgeKey: "new",
       },
       {
+        // Back catalogue et estimation : réservés à la structure (Gaël, 17/09).
         href: "/valuation",
         labelKey: "items.valuation",
         icon: TrendingUp,
-      },
-      {
-        href: "/fractional",
-        labelKey: "items.fractional",
-        icon: Coins,
-        badgeKey: "soon",
-        defaultHidden: ["label"],
+        defaultHidden: ["artist"],
       },
     ],
   },
@@ -230,7 +224,7 @@ const LABEL_LAYOUT: ReadonlyArray<{ labelKey: string; hrefs: string[] }> = [
   },
   {
     labelKey: "sections.finances",
-    hrefs: ["/finances", "/valuation", "/calculator", "/fractional"],
+    hrefs: ["/finances", "/valuation", "/calculator"],
   },
   {
     labelKey: "sections.rights",

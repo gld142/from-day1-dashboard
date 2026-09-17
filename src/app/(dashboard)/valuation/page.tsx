@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
+import { ExactValuePanel } from "@/components/modules/finances/exact-value-panel";
 
 const EUR_COMPACT = {
   style: "currency",
@@ -74,6 +75,8 @@ export default function ValuationPage() {
       >
         {!aggregated && isLabel && <ArtistBadge artist={artist} size="md" />}
       </PageHeader>
+
+      {!aggregated && isLabel && <ExactValuePanel artist={artist} valuation={v} />}
 
       {aggregated ? (
         /* ─── Vue portefeuille label ─── */

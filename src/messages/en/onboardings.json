@@ -3,7 +3,7 @@
   "subtitle": "The pipeline that makes From Day 1 an industry standard — not just another tool.",
   "kpis": {
     "targeted": "Targeted partners",
-    "targetedHint": "10 channels, one owner each",
+    "targetedHint": "9 channels, one owner each",
     "inDiscussion": "In discussion",
     "inDiscussionHint": "Active conversations this month",
     "pilots": "Pilots targeted M+3",
@@ -192,27 +192,6 @@
         "r2": {
           "risk": "Perceived competition with their own tools",
           "mitigation": "Position as a member companion, never as a replacement for their systems"
-        }
-      }
-    },
-    "bolero": {
-      "name": "Bolero / Anote",
-      "tag": "Fractional — V3 rail",
-      "brings": "Fractional catalog investment infrastructure",
-      "weBring": "A flow of properly valued artists, proprietary valuation data",
-      "nextAction": "Exploratory call — catalog listing API",
-      "pitch": "Bolero and Anote built the fractional investment rail for music — but their bottleneck is sourcing properly valued catalogs. We have real-time NPS × multiple valuation on every artist. We plug our flow into their rail: they gain qualified deal flow, we activate fractional V3 without building the regulated infrastructure.",
-      "m3": "Exploratory call done, API scope defined",
-      "m9": "3 roster catalogs listed in test",
-      "m18": "Fractional rail integrated in the V3 product",
-      "risks": {
-        "r1": {
-          "risk": "AMF regulatory framework still moving",
-          "mitigation": "Leave the regulatory risk with the regulated partner; stay a data provider"
-        },
-        "r2": {
-          "risk": "Deal volume too low to interest them",
-          "mitigation": "Arrive at the first call with 10 pre-valued, consenting catalogs"
         }
       }
     },

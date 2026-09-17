@@ -48,5 +48,24 @@
     "title": "Et demain ?",
     "description": "Avec la croissance projetée de tes revenus sur 12 mois, ta valorisation médiane pourrait atteindre {future} d'ici un an.",
     "cta": "Voir la projection complète"
+  },
+  "exact": {
+    "title": "La valeur exacte, c'est la vôtre",
+    "lead": "Day 1 estime le back catalogue de {name} à {mid} ({low} – {high}) — méthode revenus nets × multiple. Ce n'est pas la valeur retenue par la structure : renseignez-la, elle remplace l'estimation.",
+    "declared": "Valeur exacte renseignée : {value} par {source}, le {date}.",
+    "edit": "Modifier",
+    "fields": {
+      "value": "Valeur exacte du back catalogue (€)",
+      "source": "Renseignée par",
+      "sourcePlaceholder": "DAF, expert-comptable, cabinet…",
+      "save": "Enregistrer",
+      "saved": "Enregistré — la valeur exacte remplace l'estimation."
+    },
+    "ask": {
+      "cta": "Demander la valeur exacte à la DAF",
+      "subject": "Valeur exacte du back catalogue de {name}",
+      "body": "Bonjour,\n\nJ'ai vu sur Day One que l'estimation du back catalogue de {name} est à {mid}. Peux-tu renseigner la valeur exacte avec ton compte sur le dashboard ?\n\nMerci."
+    },
+    "note": "Renseigné localement sur cet appareil ; l'artiste ne voit ni l'estimation ni la valeur exacte."
   }
 }

@@ -3,7 +3,7 @@
   "subtitle": "Le pipeline qui fait de From Day 1 un standard de place — pas juste un outil de plus.",
   "kpis": {
     "targeted": "Partenaires ciblés",
-    "targetedHint": "10 canaux, un owner chacun",
+    "targetedHint": "9 canaux, un owner chacun",
     "inDiscussion": "En discussion",
     "inDiscussionHint": "Conversations actives ce mois-ci",
     "pilots": "Pilotes visés M+3",
@@ -192,27 +192,6 @@
         "r2": {
           "risk": "Perception de concurrence avec leurs propres outils",
           "mitigation": "Se positionner en complément sociétaire, jamais en remplacement de leurs systèmes"
-        }
-      }
-    },
-    "bolero": {
-      "name": "Bolero / Anote",
-      "tag": "Fractional — rail V3",
-      "brings": "Infrastructure d'investissement fractionné dans les catalogues",
-      "weBring": "Le flux d'artistes valorisés, données de valorisation propres",
-      "nextAction": "Call exploratoire — API de listing des catalogues",
-      "pitch": "Bolero et Anote ont construit le rail de l'investissement fractionné en musique — mais leur goulot, c'est le sourcing de catalogues valorisés proprement. Nous, on a la valorisation NPS × multiple en temps réel sur chaque artiste. On branche notre flux sur leur rail : eux gagnent du deal flow qualifié, nous on active la V3 fractional sans construire l'infra réglementée.",
-      "m3": "Call exploratoire fait, périmètre API défini",
-      "m9": "3 catalogues du roster listés en test",
-      "m18": "Rail fractional intégré dans le produit V3",
-      "risks": {
-        "r1": {
-          "risk": "Cadre réglementaire AMF encore mouvant",
-          "mitigation": "Laisser le risque réglementaire chez le partenaire régulé, rester fournisseur de données"
-        },
-        "r2": {
-          "risk": "Volume de deals trop faible pour les intéresser",
-          "mitigation": "Arriver avec 10 catalogues pré-valorisés et consentis dès le premier call"
         }
       }
     },

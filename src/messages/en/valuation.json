@@ -48,5 +48,24 @@
     "title": "What about tomorrow?",
     "description": "With your projected 12-month revenue growth, your median valuation could reach {future} within a year.",
     "cta": "See the full projection"
+  },
+  "exact": {
+    "title": "The exact value is yours",
+    "lead": "Day 1 estimates {name}'s back catalogue at {mid} ({low} – {high}) — net revenue × multiple. That is not the value your company holds: enter it, it replaces the estimate.",
+    "declared": "Exact value entered: {value} by {source}, on {date}.",
+    "edit": "Edit",
+    "fields": {
+      "value": "Exact back-catalogue value (€)",
+      "source": "Entered by",
+      "sourcePlaceholder": "CFO, accountant, firm…",
+      "save": "Save",
+      "saved": "Saved — the exact value replaces the estimate."
+    },
+    "ask": {
+      "cta": "Ask the CFO for the exact value",
+      "subject": "Exact back-catalogue value for {name}",
+      "body": "Hello,\n\nI saw on Day One that {name}'s back catalogue is estimated at {mid}. Could you enter the exact value with your account on the dashboard?\n\nThanks."
+    },
+    "note": "Stored locally on this device; the artist sees neither the estimate nor the exact value."
   }
 }

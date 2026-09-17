@@ -16,7 +16,6 @@ Day One veut devenir un **réflexe** — pas une addiction, un réflexe : celui 
 
 ## 3. Puis l'actif — parce qu'un catalogue vaut quelque chose
 *Notre but va au-delà du tableau de bord :* donner à l'artiste des armes pour faire valoir son actif. *Quand il porte un projet entrepreneurial,* il doit pouvoir montrer un historique, un prévisionnel, une valorisation — un dossier qui a une valeur pour une banque ou un partenaire. *C'est le « dossier financeur »*, construit avec l'éditeur qui atteste le flux de droits *(à construire — proposé à UMPG)*.
-*Dans le même esprit,* un partenariat avec Bolero est à l'étude *(en cours d'évaluation, ne rien promettre)*.
 *Côté fiscal,* il ne faut pas l'oublier : beaucoup d'artistes ne se positionnent pas fiscalement, jusqu'au jour où on le leur demande. *Ce jour-là,* Day One tient l'ensemble des chiffres bruts disponibles, exportables, lisibles par un expert-comptable. *Ce qu'on peut dire honnêtement :* il n'existe pas de « validation par Bercy » d'un logiciel d'analytics ; il existe des exports conformes (FEC), la compatibilité avec la facturation électronique 2026-2027, et une reconnaissance possible par le CNM ou la SACEM. *C'est ce qu'on vise.*
 
 ## 4. Enfin, le monde

@@ -54,7 +54,6 @@ export type PartnerId =
   | "believe"
   | "adami"
   | "sacem"
-  | "bolero"
   | "qonto"
   | "mama"
   | "schools";
@@ -128,14 +127,6 @@ export const PARTNERS: Partner[] = [
     initials: "SA",
     ownerId: "gael",
     due: "2026-09-04",
-    riskCount: 2,
-    initialStatus: "toContact",
-  },
-  {
-    id: "bolero",
-    initials: "BA",
-    ownerId: "ines",
-    due: "2026-08-17",
     riskCount: 2,
     initialStatus: "toContact",
   },
