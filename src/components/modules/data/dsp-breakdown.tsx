@@ -1,8 +1,10 @@
 "use client";
 
 /**
- * Répartition par plateforme : small multiples (sparkline par DSP)
- * + tableau parts de marché avec Progress.
+ * Répartition par plateforme : donut « part par plateforme » (une teinte, la
+ * marque) avec le tableau des parts en légende, puis small multiples
+ * (sparkline par DSP). Les pastilles du tableau et des tuiles reprennent la
+ * couleur de la part dans le donut (rampe de marque, fixe par plateforme).
  */
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -20,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { aggregateWeekly, type DayPoint } from "./derive";
+import { DspShareDonut, dspColor } from "./dsp-share-donut";
 
 type DspRow = {
   dsp: DSP;
@@ -65,10 +68,10 @@ export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
     });
     base.sort((a, b) => b.total - a.total);
     const grand = base.reduce((s, r) => s + r.total, 0);
-    return base.map((r, i) => ({
+    return base.map((r) => ({
       ...r,
       share: grand === 0 ? 0 : (r.total / grand) * 100,
-      color: `var(--chart-${(i % 5) + 1})`,
+      color: dspColor(r.dsp),
     }));
   }, [ids, days]);
 
@@ -83,8 +86,55 @@ export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
         <p className="mt-0.5 text-sm text-muted-foreground">{t("dsp.subtitle")}</p>
       </header>
 
-      {/* Small multiples — une sparkline par DSP */}
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-7">
+      {/* Donut à gauche (≤ 260 px), tableau des parts en légende à droite ;
+          empilés sur mobile. */}
+      <div className="mt-4 grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-center">
+        <DspShareDonut rows={rows} />
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t("dsp.platform")}</TableHead>
+              <TableHead className="text-right">{t("dsp.streams")}</TableHead>
+              <TableHead className="text-right">{t("dsp.delta")}</TableHead>
+              <TableHead className="w-44 text-right">{t("dsp.share")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((r) => (
+              <TableRow key={r.dsp}>
+                <TableCell>
+                  <span className="flex items-center gap-2 font-medium">
+                    <span
+                      aria-hidden
+                      className="size-2 rounded-full"
+                      style={{ background: r.color }}
+                    />
+                    {t(`dsp.names.${r.dsp}`)}
+                  </span>
+                </TableCell>
+                <TableCell className="num text-right">
+                  {fmtCompact(locale, r.total)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DeltaChip value={r.delta} />
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-end gap-2">
+                    <Progress value={r.share} className="w-24" />
+                    <span className="num w-12 text-right text-xs">
+                      {pct(r.share)}
+                    </span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Tendance — small multiples, une sparkline par DSP */}
+      <h3 className="mt-6 text-xs font-medium text-muted-foreground">{t("dsp.trend")}</h3>
+      <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-7">
         {rows.map((r) => (
           <div key={r.dsp} className="rounded-lg border bg-surface-2/30 p-3">
             <div className="flex items-center justify-between gap-1">
@@ -110,48 +160,6 @@ export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
           </div>
         ))}
       </div>
-
-      {/* Tableau des parts */}
-      <Table className="mt-5">
-        <TableHeader>
-          <TableRow>
-            <TableHead>{t("dsp.platform")}</TableHead>
-            <TableHead className="text-right">{t("dsp.streams")}</TableHead>
-            <TableHead className="text-right">{t("dsp.delta")}</TableHead>
-            <TableHead className="w-44 text-right">{t("dsp.share")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((r) => (
-            <TableRow key={r.dsp}>
-              <TableCell>
-                <span className="flex items-center gap-2 font-medium">
-                  <span
-                    aria-hidden
-                    className="size-2 rounded-full"
-                    style={{ background: r.color }}
-                  />
-                  {t(`dsp.names.${r.dsp}`)}
-                </span>
-              </TableCell>
-              <TableCell className="num text-right">
-                {fmtCompact(locale, r.total)}
-              </TableCell>
-              <TableCell className="text-right">
-                <DeltaChip value={r.delta} />
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-end gap-2">
-                  <Progress value={r.share} className="w-24" />
-                  <span className="num w-12 text-right text-xs">
-                    {pct(r.share)}
-                  </span>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
     </section>
   );
 }

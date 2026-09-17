@@ -41,6 +41,8 @@
     "streams": "Streams",
     "delta": "Delta",
     "share": "Share",
+    "centerTotal": "streams",
+    "leading": "{dsp} leads · {share}",
     "names": {
       "spotify": "Spotify",
       "apple": "Apple Music",
