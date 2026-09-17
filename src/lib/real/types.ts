@@ -18,7 +18,14 @@ export type TikTokSnapshot = { sounds: TikTokSound[]; trendingRankFr: number | n
 
 /** Un relevé quotidien d'un artiste — fichier src/lib/real/snapshots/<id>/<date>.json */
 export type Snapshot = {
-  date: string; // YYYY-MM-DD
+  date: string; // YYYY-MM-DD (jour local Europe/Paris du relevé)
+  /**
+   * Instant de la capture, ISO 8601 UTC. Optionnel : les anciens fichiers et
+   * les fixtures restent valides sans lui (deux relevés à dates consécutives
+   * sont alors supposés espacés de 24 h exactement). Sert à normaliser les
+   * deltas de compteurs cumulés (play counts, vues) par le temps écoulé.
+   */
+  capturedAt?: string;
   spotify: {
     monthlyListeners: number | null;
     followers: number | null;

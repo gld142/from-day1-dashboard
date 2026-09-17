@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   hasRealData,
+  playcountRate,
   realCountryBreakdown,
   realDailyEstimates,
   realStreamSeries,
@@ -14,6 +15,7 @@ const TODAY = new Date("2026-09-15T00:00:00Z");
 // dailyStreams volontairement bas : le résidu (150 000 − 82 112 − 55 787 = 12 101) va au titre sans débit, Reine reste n°1
 const dadju: Snapshot = {
   date: "2026-09-15",
+  capturedAt: "2026-09-15T12:00:00Z",
   spotify: { monthlyListeners: 6_481_936, followers: null, topTracks: [{ name: "Reine", spotifyId: null, playcount: 228_869_436 }] },
   kworb: {
     totalStreams: 4_633_277_280,
@@ -34,12 +36,14 @@ const dadju: Snapshot = {
 const dadjuPrev: Snapshot = {
   ...dadju,
   date: "2026-09-14",
+  capturedAt: "2026-09-14T12:00:00Z",
   spotify: { ...dadju.spotify, topTracks: [{ name: "Reine", spotifyId: null, playcount: 228_787_324 }] },
   kworb: { ...dadju.kworb!, tracks: [{ name: "Reine", total: 228_787_324, daily: 80_000 }, { name: "Meleğim", total: 206_366_573, daily: 55_000 }] },
   youtube: { subscribers: 8_000_000, videos: [{ videoId: "tVKaN_H35xs", title: "Reine", channel: "official", views: 439_000_000 }] },
 };
 const kiko: Snapshot = {
   date: "2026-09-15",
+  capturedAt: "2026-09-15T12:00:00Z",
   spotify: {
     monthlyListeners: 24_468,
     followers: null,
@@ -61,11 +65,11 @@ describe("real-source", () => {
     expect(hasRealData("inconnu", SNAPS)).toBe(false);
   });
 
-  it("Kworb : le quotidien par titre est mesuré pour les jours couverts, reconstitué avant ; le delta Spotify prime sur Kworb", () => {
+  it("Kworb : le quotidien par titre est mesuré pour les jours couverts, reconstitué avant ; le daily Kworb ancre aujourd'hui", () => {
     const byTrack = spotifyDailyByTrack("dadju", 30, TODAY, SNAPS);
     const reine = byTrack.get("Reine")!;
     expect(reine).toHaveLength(30);
-    // Delta de playcount Spotify 14→15 = 82 112 : c'est la valeur mesurée d'aujourd'hui (elle vaut ici le daily Kworb).
+    // Aujourd'hui = daily Kworb (82 112), un vrai débit quotidien ; le delta 14→15 (82 112 sur 24 h) ne sert qu'aux jours antérieurs.
     expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
     expect(reine[28]).toMatchObject({ date: "2026-09-14", streams: 80_000, provenance: "measured" });
     expect(reine[0].provenance).toBe("reconstructed");
@@ -121,5 +125,188 @@ describe("real-source", () => {
 
   it("est déterministe", () => {
     expect(JSON.stringify(realDailyEstimates("dadju", 10, TODAY, SNAPS))).toBe(JSON.stringify(realDailyEstimates("dadju", 10, TODAY, SNAPS)));
+  });
+});
+
+/* ─── Deltas de compteurs normalisés par le temps écoulé ─── */
+
+/** Deux relevés Dadju à `hours` heures d'écart (le dernier capturé à `lastAt`), play count de Reine +`delta`. */
+function dadjuPair(hours: number, delta: number, lastAt = "2026-09-15T01:00:00Z"): { prev: Snapshot; last: Snapshot } {
+  const lastMs = Date.parse(lastAt);
+  const prevMs = lastMs - hours * 3.6e6;
+  const prevDate = new Date(prevMs).toISOString().slice(0, 10);
+  const last: Snapshot = {
+    ...dadju,
+    capturedAt: new Date(lastMs).toISOString(),
+    spotify: {
+      ...dadju.spotify,
+      topTracks: [
+        { name: "Reine", spotifyId: null, playcount: 228_869_436 },
+        { name: "Meleğim", spotifyId: null, playcount: 206_422_360 },
+        { name: "Vieux titre", spotifyId: null, playcount: 1_000_000 },
+      ],
+    },
+  };
+  const prev: Snapshot = {
+    ...dadjuPrev,
+    date: prevDate,
+    capturedAt: new Date(prevMs).toISOString(),
+    spotify: {
+      ...dadjuPrev.spotify,
+      topTracks: [
+        { name: "Reine", spotifyId: null, playcount: 228_869_436 - delta },
+        { name: "Meleğim", spotifyId: null, playcount: 206_422_360 },
+        { name: "Vieux titre", spotifyId: null, playcount: 1_000_000 },
+      ],
+    },
+  };
+  return { prev, last };
+}
+
+describe("playcountRate", () => {
+  it("normalise le delta par les heures écoulées : 171 455 sur 30 h → 137 164 / jour sur 1,25 jour", () => {
+    const { prev, last } = dadjuPair(30, 171_455);
+    expect(playcountRate(prev, last, "Reine")).toEqual({ perDay: 137_164, days: 1.25 });
+  });
+
+  it("delta nul ou négatif → null (Spotify n'a pas rafraîchi son compteur : ce n'est pas une mesure)", () => {
+    expect(playcountRate(dadjuPair(24, 0).prev, dadjuPair(24, 0).last, "Reine")).toBeNull();
+    expect(playcountRate(dadjuPair(24, -5).prev, dadjuPair(24, -5).last, "Reine")).toBeNull();
+  });
+
+  it("moins de 18 h entre les captures → null (trop court pour un débit quotidien)", () => {
+    const { prev, last } = dadjuPair(2, 5_000);
+    expect(playcountRate(prev, last, "Reine")).toBeNull();
+    expect(playcountRate(dadjuPair(17.9, 5_000).prev, dadjuPair(17.9, 5_000).last, "Reine")).toBeNull();
+    expect(playcountRate(dadjuPair(18, 18_000).prev, dadjuPair(18, 18_000).last, "Reine")).toEqual({ perDay: 24_000, days: 0.75 });
+  });
+
+  it("titre absent d'un des deux relevés → null", () => {
+    const { prev, last } = dadjuPair(24, 1_000);
+    expect(playcountRate(prev, last, "Inconnu")).toBeNull();
+  });
+
+  it("sans capturedAt : 24 h exactement si les dates sont consécutives, sinon null", () => {
+    const { prev, last } = dadjuPair(24, 82_112);
+    const prevNoTime: Snapshot = { ...prev, capturedAt: undefined };
+    const lastNoTime: Snapshot = { ...last, capturedAt: undefined };
+    expect(playcountRate(prevNoTime, lastNoTime, "Reine")).toEqual({ perDay: 82_112, days: 1 });
+    expect(playcountRate({ ...prevNoTime, date: "2026-09-12" }, lastNoTime, "Reine")).toBeNull();
+    // Un seul des deux horodatages ne suffit pas non plus.
+    expect(playcountRate(prevNoTime, { ...lastNoTime, date: "2026-09-14" }, "Reine")).toBeNull();
+    expect(playcountRate(prev, { ...lastNoTime, date: "2026-09-13" }, "Reine")).toBeNull();
+  });
+});
+
+describe("Spotify : relevés rapprochés ou espacés", () => {
+  it("(a) deux relevés à 2 h d'écart, play counts identiques : aujourd'hui = daily Kworb, la veille n'est pas « mesurée » à 0 par le delta", () => {
+    const { prev, last } = dadjuPair(2, 0); // prev le 14 à 23:00Z, last le 15 à 01:00Z
+    const snaps = { dadju: [prev, last] };
+    const byTrack = spotifyDailyByTrack("dadju", 30, TODAY, snaps);
+    // Aujourd'hui : le daily Kworb reste l'ancre.
+    expect(byTrack.get("Reine")![29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+    expect(byTrack.get("Meleğim")![29]).toMatchObject({ streams: 55_787, provenance: "measured" });
+    // La veille : le daily Kworb du relevé précédent, pas le delta (0).
+    expect(byTrack.get("Reine")![28]).toMatchObject({ date: "2026-09-14", streams: 80_000, provenance: "measured" });
+    expect(byTrack.get("Meleğim")![28]).toMatchObject({ streams: 55_000, provenance: "measured" });
+    // Titre sans daily Kworb la veille : reconstitué, jamais « mesuré » à 0.
+    const vieux = byTrack.get("Vieux titre")!;
+    expect(vieux[28].provenance).toBe("reconstructed");
+    expect(vieux[28].streams).toBeGreaterThan(0);
+    // Total Spotify du jour = dailyStreams Kworb.
+    const today = realStreamSeries("dadju", 1, TODAY, snaps).find((p) => p.dsp === "spotify")!;
+    expect(today).toMatchObject({ streams: 150_000, provenance: "measured" });
+  });
+
+  it("(b) 30 h d'écart sur deux dates consécutives : le débit normalisé ne couvre que ]14, 15] = aujourd'hui, ancré sur Kworb ; le 14 garde son daily Kworb", () => {
+    const { prev, last } = dadjuPair(30, 171_455, "2026-09-15T06:00:00Z"); // prev le 14 à 00:00Z → last le 15 à 06:00Z
+    expect(prev.date).toBe("2026-09-14");
+    const byTrack = spotifyDailyByTrack("dadju", 30, TODAY, { dadju: [prev, last] });
+    const reine = byTrack.get("Reine")!;
+    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+    expect(reine[28]).toMatchObject({ date: "2026-09-14", streams: 80_000, provenance: "measured" });
+  });
+
+  it("(b') 30 h d'écart sur deux dates non consécutives : le jour entre les deux prend le débit normalisé", () => {
+    // prev le 13 à 18:00Z → last le 15 à 00:00Z : ]13, 15[ = le 14 reçoit 137 164 / jour.
+    const { prev, last } = dadjuPair(30, 171_455, "2026-09-15T00:00:00Z");
+    expect(prev.date).toBe("2026-09-13");
+    const prevNoKworb: Snapshot = { ...prev, kworb: { ...prev.kworb!, tracks: [] } };
+    const byTrack = spotifyDailyByTrack("dadju", 30, TODAY, { dadju: [prevNoKworb, last] });
+    const reine = byTrack.get("Reine")!;
+    expect(reine[28]).toMatchObject({ date: "2026-09-14", streams: 137_164, provenance: "measured" });
+    expect(reine[27]).toMatchObject({ date: "2026-09-13", provenance: "reconstructed" });
+    expect(reine[29]).toMatchObject({ date: "2026-09-15", streams: 82_112, provenance: "measured" });
+  });
+
+  it("titre sans daily Kworb : le débit normalisé du delta sert d'ancre du jour à la place du résidu", () => {
+    const { prev, last } = dadjuPair(24, 82_112, "2026-09-15T12:00:00Z");
+    const withDelta: Snapshot = {
+      ...last,
+      spotify: { ...last.spotify, topTracks: last.spotify.topTracks.map((t) => (t.name === "Vieux titre" ? { ...t, playcount: 1_030_000 } : t)) },
+    };
+    const byTrack = spotifyDailyByTrack("dadju", 30, TODAY, { dadju: [prev, withDelta] });
+    expect(byTrack.get("Vieux titre")![29]).toMatchObject({ date: "2026-09-15", streams: 30_000, provenance: "measured" });
+  });
+
+  it("(c) Kiko sans Kworb : 2 h d'écart et play counts identiques → estimation auditeurs, aujourd'hui « reconstructed »", () => {
+    const prev: Snapshot = { ...kiko, date: "2026-09-14", capturedAt: "2026-09-14T23:00:00Z" };
+    const last: Snapshot = { ...kiko, capturedAt: "2026-09-15T01:00:00Z" };
+    const byTrack = spotifyDailyByTrack("kiko", 30, TODAY, { kiko: [prev, last] });
+    const odjo = byTrack.get("Odjo")!;
+    expect(odjo[29].provenance).toBe("reconstructed");
+    // 24 468 × 2,6 / 30 × 0,8 × (203 809 / 326 063) ≈ 1 060, jamais 0.
+    expect(odjo[29].streams).toBeGreaterThan(500);
+    expect(odjo[29].streams).toBeLessThan(2_000);
+    const today = realStreamSeries("kiko", 1, TODAY, { kiko: [prev, last] }).find((p) => p.dsp === "spotify")!;
+    expect(today.provenance).toBe("reconstructed");
+    expect(today.streams).toBeGreaterThan(1_500);
+  });
+
+  it("(c') Kiko sans Kworb : 24 h d'écart, delta 665 → 665 mesuré aujourd'hui", () => {
+    const prev: Snapshot = {
+      ...kiko,
+      date: "2026-09-14",
+      capturedAt: "2026-09-14T12:00:00Z",
+      spotify: { ...kiko.spotify, topTracks: [{ name: "Odjo", spotifyId: null, playcount: 203_809 - 665 }, kiko.spotify.topTracks[1]] },
+    };
+    const byTrack = spotifyDailyByTrack("kiko", 30, TODAY, { kiko: [prev, kiko] });
+    expect(byTrack.get("Odjo")![29]).toMatchObject({ date: "2026-09-15", streams: 665, provenance: "measured" });
+    // « Business class » n'a pas bougé : estimation, pas 0 mesuré.
+    expect(byTrack.get("Business class")![29].provenance).toBe("reconstructed");
+    expect(byTrack.get("Business class")![29].streams).toBeGreaterThan(0);
+  });
+
+  it("(c'') Kiko : 30 h d'écart, delta 665 → 532 / jour", () => {
+    const prev: Snapshot = {
+      ...kiko,
+      date: "2026-09-14",
+      capturedAt: "2026-09-14T06:00:00Z",
+      spotify: { ...kiko.spotify, topTracks: [{ name: "Odjo", spotifyId: null, playcount: 203_809 - 665 }, kiko.spotify.topTracks[1]] },
+    };
+    const byTrack = spotifyDailyByTrack("kiko", 30, TODAY, { kiko: [prev, kiko] });
+    expect(byTrack.get("Odjo")![29]).toMatchObject({ streams: 532, provenance: "measured" });
+  });
+});
+
+describe("YouTube : deltas de vues normalisés", () => {
+  it("(d) delta sur 2 h ignoré : repli « Σ vues × 0,05 % », provenance « reconstructed »", () => {
+    const { prev, last } = dadjuPair(2, 0);
+    const today = realStreamSeries("dadju", 1, TODAY, { dadju: [prev, last] }).find((p) => p.dsp === "youtube")!;
+    expect(today).toMatchObject({ streams: Math.round(439_698_165 * 0.0005), provenance: "reconstructed" });
+  });
+
+  it("delta 698 165 sur 30 h → 558 532 / jour mesuré", () => {
+    const { prev, last } = dadjuPair(30, 0, "2026-09-15T06:00:00Z");
+    const today = realStreamSeries("dadju", 1, TODAY, { dadju: [prev, last] }).find((p) => p.dsp === "youtube")!;
+    expect(today).toMatchObject({ streams: 558_532, provenance: "measured" });
+  });
+
+  it("vues identiques (delta 0) sur 24 h → repli, pas 0 mesuré", () => {
+    const { prev, last } = dadjuPair(24, 0, "2026-09-15T12:00:00Z");
+    const same: Snapshot = { ...prev, youtube: last.youtube };
+    const today = realStreamSeries("dadju", 1, TODAY, { dadju: [same, last] }).find((p) => p.dsp === "youtube")!;
+    expect(today.provenance).toBe("reconstructed");
+    expect(today.streams).toBeGreaterThan(0);
   });
 });

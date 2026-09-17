@@ -7,13 +7,19 @@
  * Volume : une requête par source et par artiste (Spotify SSR + page rendue,
  * Kworb, Deezer ×2, YouTube : une page par clip connu). Pas de proxy, pas de login.
  *
- * Usage : npm run snapshot            (date du jour, UTC)
+ * Usage : npm run snapshot            (date du jour, heure de Paris)
  *         npm run snapshot -- 2026-09-16
+ *         npm run snapshot -- --force  (écrase un relevé déjà présent pour cette date)
+ *
+ * Chaque relevé porte `capturedAt` (instant UTC de la capture) : les deltas de
+ * compteurs cumulés (play counts Spotify, vues YouTube) sont normalisés par le
+ * temps réellement écoulé entre deux relevés. Un relevé existant pour la même
+ * date n'est jamais écrasé en silence (le delta serait perdu) : `--force`.
  *
  * Variables : YOUTUBE_API_KEY (optionnelle) → abonnés + 50 dernières vidéos de la chaîne.
  */
 import { spawnSync } from "node:child_process";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
@@ -46,7 +52,8 @@ const UA =
 const UA_PLAIN = "from-day1-snapshot/1.0";
 // Date locale Europe/Paris (un relevé lancé à 01:00 à Paris est encore la veille en UTC).
 const parisToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
-const date = process.argv[2] ?? parisToday();
+const force = process.argv.includes("--force");
+const date = process.argv.slice(2).find((a) => !a.startsWith("--")) ?? parisToday();
 const YT_KEY = process.env.YOUTUBE_API_KEY ?? null;
 
 if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
@@ -281,6 +288,19 @@ async function youtube(channelId, knownVideos) {
 /* ── Fichiers ── */
 const isSnapFile = (f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f);
 
+const exists = (path) =>
+  access(path).then(
+    () => true,
+    () => false,
+  );
+
+/** Relevés déjà présents pour `date` parmi les artistes (chemins). */
+async function existingSnapshots(artists) {
+  const paths = artists.map((a) => join(SNAP_DIR, a.id, `${date}.json`));
+  const flags = await Promise.all(paths.map(exists));
+  return paths.filter((_, i) => flags[i]);
+}
+
 /** Dernier relevé strictement antérieur à `date`, ou null. */
 async function previousSnapshot(id) {
   let files;
@@ -339,7 +359,14 @@ async function writeIndex() {
 /* ── main ── */
 async function main() {
   const artists = JSON.parse(await readFile(ARTISTS_FILE, "utf8"));
-  console.log(`Relevé du ${date} — ${artists.length} artistes${YT_KEY ? " (YouTube API)" : " (YouTube sans clé : pages publiques)"}`);
+  // Un second relevé le même jour écraserait le premier : on perdrait sa capture
+  // (et donc le delta de la veille). Refus explicite, sauf --force.
+  const already = await existingSnapshots(artists);
+  if (already.length && !force) {
+    warn(`relevé du ${date} déjà présent (${already.map((p) => p.slice(SNAP_DIR.length + 1)).join(", ")}) — rien écrit. Relancer avec --force pour écraser.`);
+    process.exit(1);
+  }
+  console.log(`Relevé du ${date} — ${artists.length} artistes${YT_KEY ? " (YouTube API)" : " (YouTube sans clé : pages publiques)"}${already.length ? " — --force : écrase le relevé existant" : ""}`);
   const browser = await chromium.launch();
   try {
     for (const a of artists) {
@@ -355,6 +382,8 @@ async function main() {
         warn(`${label} ${a.id} : ${e.message.split("\n")[0]}`);
         return fallback;
       };
+      // Instant de la capture (UTC) : sert à normaliser les deltas par le temps écoulé.
+      const capturedAt = new Date().toISOString();
       const [stat, rend, kw, dz, yt] = await Promise.all([
         spotifyStatic(a.spotifyId).catch(fail("spotify statique", { monthlyListeners: null, topTracks: [] })),
         spotifyRendered(browser, a.spotifyId).catch(fail("spotify rendu", { topTracks: [], topCities: null, followers: null, monthlyListeners: null })),
@@ -367,6 +396,7 @@ async function main() {
       const topTracks = stat.topTracks.length ? stat.topTracks : rend.topTracks;
       const snapshot = {
         date,
+        capturedAt,
         spotify: {
           monthlyListeners: stat.monthlyListeners ?? rend.monthlyListeners ?? null,
           followers: rend.followers,

@@ -2,11 +2,14 @@
  * Adaptateur « données réelles » : transforme les relevés publics committés
  * (snapshots) en séries au format attendu par src/lib/demo/api.ts.
  *
- * - Spotify : Kworb donne total + débit quotidien par titre ; quand deux relevés
- *   consécutifs portent le play count Spotify d'un titre, leur delta est plus
- *   précis que le débit Kworb (qui retarde de ~2 jours) et prime. Sans Kworb
- *   (Kiko), on reconstitue à partir des play counts et des auditeurs mensuels.
- * - YouTube : delta de vues entre relevés consécutifs.
+ * - Spotify : Kworb donne total + débit quotidien par titre ; c'est l'ancre du
+ *   jour. Entre deux relevés consécutifs, le delta de play count Spotify d'un
+ *   titre, normalisé par le temps écoulé (`capturedAt`), mesure les jours
+ *   intermédiaires — et sert d'ancre quand Kworb ne donne pas de débit. Sans
+ *   Kworb (Kiko), on reconstitue à partir des play counts et des auditeurs
+ *   mensuels. Spotify ne rafraîchit ses compteurs publics qu'environ une fois
+ *   par jour : un delta nul, ou pris sur moins de 18 h, n'est pas une mesure.
+ * - YouTube : delta de vues entre relevés consécutifs, même normalisation.
  * - Autres DSP : estimés à partir du mix artiste (dsp-mix.ts). TikTok n'est
  *   jamais émis (pas un stream rémunéré).
  *
@@ -39,6 +42,13 @@ const PUBLIC_SHARE = 0.8;
 const CATALOGUE_DAYS = 400;
 /** Vues quotidiennes YouTube en fraction du cumul, sans relevé précédent — HYPOTHÈSE. */
 const YOUTUBE_DAILY_SHARE = 0.0005;
+/**
+ * Durée minimale entre deux captures pour qu'un delta de compteur vaille un
+ * débit quotidien. Spotify rafraîchit ses play counts publics ~1×/jour : deux
+ * relevés à 2 h d'écart lisent le même compteur (delta 0), et un delta sur
+ * quelques heures extrapolé à 24 h serait du bruit — HYPOTHÈSE.
+ */
+const MIN_RATE_HOURS = 18;
 /** DSP estimés depuis le mix (ni Spotify ni YouTube, mesurés ; jamais TikTok). */
 const ESTIMATED_DSPS: DSP[] = DSPS.filter((d) => d !== "spotify" && d !== "youtube" && d !== "tiktok");
 
@@ -48,8 +58,6 @@ type Ctx = {
   snaps: Snapshot[];
   last: Snapshot;
   today: Date;
-  /** Par relevé : titre → play count Spotify. */
-  counts: Map<string, number>[];
   /** Par relevé : titre → débit Kworb (null si Kworb ne le donne pas). */
   kworbDaily: Map<string, number | null>[];
 };
@@ -62,20 +70,93 @@ function makeCtx(artistId: string, today: Date, snapshots: Snaps): Ctx {
     snaps,
     last: snaps[snaps.length - 1],
     today,
-    counts: snaps.map((s) => new Map(s.spotify.topTracks.map((t) => [t.name, t.playcount]))),
     kworbDaily: snaps.map((s) => new Map((s.kworb?.tracks ?? []).map((t) => [t.name, t.daily]))),
   };
 }
 
-/** Delta ≥ 0 d'un compteur cumulé ; null si absent d'un des deux relevés ou négatif. */
-function positiveDelta(now: number | undefined, before: number | undefined): number | null {
-  if (now === undefined || before === undefined) return null;
-  return now - before >= 0 ? now - before : null;
+/* ─── Deltas de compteurs cumulés → débit quotidien ─── */
+
+/** Débit déduit d'un delta de compteur : `perDay` streams/jour, mesuré sur `days` jours (= heures / 24). */
+export type CounterRate = { perDay: number; days: number };
+
+const DAY_MS = 86_400_000;
+
+/**
+ * Heures écoulées entre deux captures. Sans `capturedAt` (anciens relevés,
+ * fixtures), deux dates consécutives valent 24 h exactement ; sinon null.
+ */
+function hoursBetween(prev: Snapshot, last: Snapshot): number | null {
+  if (prev.capturedAt !== undefined && last.capturedAt !== undefined) {
+    const h = (Date.parse(last.capturedAt) - Date.parse(prev.capturedAt)) / 3.6e6;
+    return Number.isFinite(h) ? h : null;
+  }
+  const dayGap = (Date.parse(`${last.date}T00:00:00Z`) - Date.parse(`${prev.date}T00:00:00Z`)) / DAY_MS;
+  return dayGap === 1 ? 24 : null;
 }
 
-/** Delta de play count Spotify d'un titre entre le relevé `i` et son prédécesseur. */
-function playcountDelta(ctx: Ctx, name: string, i: number): number | null {
-  return i >= 1 ? positiveDelta(ctx.counts[i].get(name), ctx.counts[i - 1].get(name)) : null;
+/**
+ * Débit quotidien porté par un delta de compteur entre deux relevés, ou null
+ * quand ce delta n'est pas une mesure : compteur non rafraîchi (delta ≤ 0),
+ * captures trop rapprochées (< 18 h), durée indéterminable.
+ */
+function counterRate(prev: Snapshot, last: Snapshot, delta: number | null): CounterRate | null {
+  if (delta === null || delta <= 0) return null;
+  const hours = hoursBetween(prev, last);
+  if (hours === null || hours < MIN_RATE_HOURS) return null;
+  return { perDay: Math.round((delta * 24) / hours), days: hours / 24 };
+}
+
+function playcountOf(s: Snapshot, name: string): number | undefined {
+  return s.spotify.topTracks.find((t) => t.name === name)?.playcount;
+}
+
+/** Débit Spotify d'un titre entre deux relevés (delta de play count normalisé), ou null. */
+export function playcountRate(prev: Snapshot, last: Snapshot, name: string): CounterRate | null {
+  const before = playcountOf(prev, name);
+  const now = playcountOf(last, name);
+  return before === undefined || now === undefined ? null : counterRate(prev, last, now - before);
+}
+
+/**
+ * Jours mesurés par les débits entre relevés consécutifs : un débit valide
+ * entre `prev` et `last` couvre chaque jour de ]prev.date, last.date] — sauf
+ * aujourd'hui, ancré séparément sur `dailyNow`. Rempli dans l'ordre des paires,
+ * puis complété par `fill(i)` pour la date du relevé `i` quand aucun débit ne la
+ * couvre (débit Kworb du relevé, dans la branche Kworb).
+ */
+function measuredDays(
+  ctx: Ctx,
+  rate: (prev: Snapshot, last: Snapshot) => CounterRate | null,
+  fill?: (i: number) => number | null,
+): Record<string, number> {
+  const todayIso = isoDay(ctx.today);
+  const measured: Record<string, number> = {};
+  for (let i = 1; i < ctx.snaps.length; i++) {
+    const prev = ctx.snaps[i - 1];
+    const last = ctx.snaps[i];
+    const r = rate(prev, last);
+    if (r === null) continue;
+    const d = new Date(`${prev.date}T00:00:00Z`);
+    for (d.setUTCDate(d.getUTCDate() + 1); isoDay(d) <= last.date; d.setUTCDate(d.getUTCDate() + 1)) {
+      const date = isoDay(d);
+      if (date < todayIso) measured[date] = r.perDay;
+    }
+  }
+  if (fill) {
+    for (let i = 0; i < ctx.snaps.length - 1; i++) {
+      const date = ctx.snaps[i].date;
+      if (measured[date] !== undefined || date >= todayIso) continue;
+      const v = fill(i);
+      if (v !== null) measured[date] = v;
+    }
+  }
+  return measured;
+}
+
+/** Débit Spotify d'un titre entre les deux derniers relevés, ou null (un seul relevé, delta invalide). */
+function latestPlaycountRate(ctx: Ctx, name: string): CounterRate | null {
+  const n = ctx.snaps.length;
+  return n >= 2 ? playcountRate(ctx.snaps[n - 2], ctx.last, name) : null;
 }
 
 /** Les `days` dates ISO de la fenêtre, croissantes, terminées à `today` (même calcul que reconstruct.ts). */
@@ -102,7 +183,8 @@ function releaseDateOf(artistId: string, title: string): string | undefined {
  * faute de second relevé, pseudo-titre catalogue, repli YouTube « Σ vues ×
  * 0,05 % » — l'afficher comme mesuré tromperait l'utilisateur : la valeur est
  * ancrée sur un chiffre mesuré (auditeurs mensuels, cumul de vues) mais reste
- * une reconstruction. Sans effet dès qu'on a deux relevés consécutifs.
+ * une reconstruction. Sans effet dès que deux relevés consécutifs portent un
+ * delta valide (cf. `counterRate`).
  */
 function markTodayReconstructed(series: ReconstructedDay[]): ReconstructedDay[] {
   if (series.length > 0) series[series.length - 1].provenance = "reconstructed";
@@ -131,12 +213,12 @@ function allocateResidual(tracks: Array<{ name: string; total: number }>, residu
 /* ─── Spotify par titre ─── */
 
 /**
- * Branche Kworb : débit d'aujourd'hui = delta Spotify > débit Kworb > résidu de
+ * Branche Kworb : débit d'aujourd'hui = débit Kworb (un vrai débit quotidien)
+ * > delta Spotify normalisé entre les deux derniers relevés > résidu de
  * `dailyStreams` réparti au prorata du total entre les titres sans débit.
- * Jours antérieurs relevés : delta Spotify, sinon débit Kworb du relevé.
+ * Jours antérieurs : delta Spotify normalisé, sinon débit Kworb du relevé.
  */
 function kworbDailyByTrack(ctx: Ctx, days: number, kworb: NonNullable<Snapshot["kworb"]>): Map<string, ReconstructedDay[]> {
-  const n = ctx.snaps.length;
   const knownDaily = kworb.tracks.reduce((s, t) => s + (t.daily ?? 0), 0);
   const residual = allocateResidual(
     kworb.tracks.filter((t) => t.daily === null),
@@ -144,12 +226,12 @@ function kworbDailyByTrack(ctx: Ctx, days: number, kworb: NonNullable<Snapshot["
   );
   const out = new Map<string, ReconstructedDay[]>();
   for (const t of kworb.tracks) {
-    const dailyNow = playcountDelta(ctx, t.name, n - 1) ?? t.daily ?? residual.get(t.name) ?? 0;
-    const measured: Record<string, number> = {};
-    for (let i = 0; i < n - 1; i++) {
-      const v = playcountDelta(ctx, t.name, i) ?? ctx.kworbDaily[i].get(t.name) ?? null;
-      if (v !== null) measured[ctx.snaps[i].date] = v;
-    }
+    const dailyNow = t.daily ?? latestPlaycountRate(ctx, t.name)?.perDay ?? residual.get(t.name) ?? 0;
+    const measured = measuredDays(
+      ctx,
+      (prev, last) => playcountRate(prev, last, t.name),
+      (i) => ctx.kworbDaily[i].get(t.name) ?? null,
+    );
     out.set(
       t.name,
       reconstructTrack({
@@ -168,25 +250,21 @@ function kworbDailyByTrack(ctx: Ctx, days: number, kworb: NonNullable<Snapshot["
 
 /**
  * Branche sans Kworb : les play counts des top tracks donnent le total ; le
- * débit vient du delta entre relevés, sinon de la cible « auditeurs × 2,6 / 30 »
- * répartie au prorata des play counts. Un pseudo-titre catalogue porte le reste.
+ * débit vient du delta normalisé entre les deux derniers relevés, sinon de la
+ * cible « auditeurs × 2,6 / 30 » répartie au prorata des play counts. Un
+ * pseudo-titre catalogue porte le reste.
  */
 function playcountDailyByTrack(ctx: Ctx, days: number): Map<string, ReconstructedDay[]> {
-  const n = ctx.snaps.length;
   const tops = ctx.last.spotify.topTracks;
   const sumPlay = tops.reduce((s, t) => s + t.playcount, 0);
   const listeners = ctx.last.spotify.monthlyListeners ?? getArtist(ctx.artistId).monthlyListeners;
   const dailyTarget = (listeners * STREAMS_PER_LISTENER_MONTH) / 30;
   const out = new Map<string, ReconstructedDay[]>();
   for (const t of tops) {
-    const delta = playcountDelta(ctx, t.name, n - 1);
+    const rate = latestPlaycountRate(ctx, t.name);
     const share = sumPlay > 0 ? t.playcount / sumPlay : 1 / tops.length;
-    const dailyNow = delta ?? Math.round(dailyTarget * PUBLIC_SHARE * share);
-    const measured: Record<string, number> = {};
-    for (let i = 1; i < n - 1; i++) {
-      const v = playcountDelta(ctx, t.name, i);
-      if (v !== null) measured[ctx.snaps[i].date] = v;
-    }
+    const dailyNow = rate?.perDay ?? Math.round(dailyTarget * PUBLIC_SHARE * share);
+    const measured = measuredDays(ctx, (prev, last) => playcountRate(prev, last, t.name));
     const series = reconstructTrack({
       key: `${ctx.artistId}:${t.name}`,
       total: t.playcount,
@@ -196,7 +274,7 @@ function playcountDailyByTrack(ctx: Ctx, days: number): Map<string, Reconstructe
       releaseDate: releaseDateOf(ctx.artistId, t.name),
       measured,
     });
-    out.set(t.name, delta === null ? markTodayReconstructed(series) : series);
+    out.set(t.name, rate === null ? markTodayReconstructed(series) : series);
   }
   const catalogueDaily = Math.round(dailyTarget * (1 - PUBLIC_SHARE));
   out.set(
@@ -221,18 +299,23 @@ function dailyByTrack(ctx: Ctx, days: number): Map<string, ReconstructedDay[]> {
 /* ─── YouTube ─── */
 
 /** Σ des deltas de vues ≥ 0 sur les vidéos présentes dans les deux relevés ; null si aucune. */
-function viewsDelta(now: Snapshot, before: Snapshot): number | null {
-  const prev = new Map((before.youtube?.videos ?? []).map((v) => [v.videoId, v.views]));
+function viewsDelta(prev: Snapshot, last: Snapshot): number | null {
+  const before = new Map((prev.youtube?.videos ?? []).map((v) => [v.videoId, v.views]));
   let sum = 0;
   let any = false;
-  for (const v of now.youtube?.videos ?? []) {
-    const d = positiveDelta(v.views, prev.get(v.videoId));
-    if (d !== null) {
-      sum += d;
+  for (const v of last.youtube?.videos ?? []) {
+    const b = before.get(v.videoId);
+    if (b !== undefined && v.views >= b) {
+      sum += v.views - b;
       any = true;
     }
   }
   return any ? sum : null;
+}
+
+/** Vues quotidiennes YouTube entre deux relevés (delta normalisé), ou null. */
+function viewsRate(prev: Snapshot, last: Snapshot): CounterRate | null {
+  return counterRate(prev, last, viewsDelta(prev, last));
 }
 
 function youtubeSeries(ctx: Ctx, days: number): ReconstructedDay[] | null {
@@ -240,21 +323,16 @@ function youtubeSeries(ctx: Ctx, days: number): ReconstructedDay[] | null {
   if (videos.length === 0) return null;
   const n = ctx.snaps.length;
   const total = videos.reduce((s, v) => s + v.views, 0);
-  const delta = n >= 2 ? viewsDelta(ctx.last, ctx.snaps[n - 2]) : null;
-  const measured: Record<string, number> = {};
-  for (let i = 1; i < n - 1; i++) {
-    const v = viewsDelta(ctx.snaps[i], ctx.snaps[i - 1]);
-    if (v !== null) measured[ctx.snaps[i].date] = v;
-  }
+  const rate = n >= 2 ? viewsRate(ctx.snaps[n - 2], ctx.last) : null;
   const series = reconstructTrack({
     key: `${ctx.artistId}:youtube`,
     total,
-    dailyNow: delta ?? Math.round(total * YOUTUBE_DAILY_SHARE),
+    dailyNow: rate?.perDay ?? Math.round(total * YOUTUBE_DAILY_SHARE),
     days,
     today: ctx.today,
-    measured,
+    measured: measuredDays(ctx, viewsRate),
   });
-  return delta === null ? markTodayReconstructed(series) : series;
+  return rate === null ? markTodayReconstructed(series) : series;
 }
 
 /** Part des vues portée par les art tracks « Topic » (0 si aucune vidéo). */
