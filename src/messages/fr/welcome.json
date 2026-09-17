@@ -8,6 +8,49 @@
   "hiddenSuffix": "(caché)",
   "firstInsightLabel": "Premier insight livré en 3 min",
   "sources": {
+    "capitol": {
+      "name": "Capitol Music France",
+      "welcomeTitle": "Bienvenue, équipes <accent>Capitol</accent> — la réponse avant la réunion",
+      "welcomeBody": "Vos DA ouvrent une seule app : streams cumulés et par plateforme, signal TikTok, échéances de contrat, ce que gagne chaque artiste. Et vos artistes voient enfin ce que vous voyez.",
+      "offer": "Pilote 90 jours — 3 artistes, 3 DA",
+      "steps": {
+        "1": {
+          "title": "Connectez le roster Capitol",
+          "desc": "Les artistes apparaissent dès le premier jour avec leurs streams publics ; les relevés et contrats, quand vous les partagez, calibrent tout."
+        },
+        "2": {
+          "title": "Cartographie contrats & droits",
+          "desc": "Options, fins de période, recoupements, splits, SACEM : chaque échéance devient une alerte pour le DA, pas une surprise pour le juridique."
+        },
+        "3": {
+          "title": "Le brief du matin, par DA",
+          "desc": "Pulse roster : ce qui a bougé cette nuit, titre moteur, plateforme en tête, TikTok, écart à réclamer — avant la réunion, pas pendant."
+        }
+      },
+      "firstInsight": "« Sur les 3 artistes du pilote, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos : la réclamation est prête, et c'est la plateforme qu'on interroge, jamais le label. »",
+      "values": {
+        "1": {
+          "promise": "Six onglets pour une question",
+          "delivery": "Une app : cumulé, par plateforme, en euros, avec la provenance de chaque chiffre"
+        },
+        "2": {
+          "promise": "Les échéances découvertes trop tard",
+          "delivery": "Alertes contractuelles sur le roster : option, fin de période, clause inhabituelle"
+        },
+        "3": {
+          "promise": "« Je touche combien ? »",
+          "delivery": "Portail artiste CAPITOL × FROM DAY 1 : gains estimés, sa part, ses droits — sans appeler le label"
+        },
+        "4": {
+          "promise": "Ce que les plateformes sous-paient",
+          "delivery": "Écart estimé / déclaré par DSP, dossier de réclamation prêt — le label est le demandeur, pas l'audité"
+        },
+        "5": {
+          "promise": "Sessions studio réservées et gâchées",
+          "delivery": "Wavely : crédit studio annuel, réservation directe par les DA et les artistes, facturation via UniPort, sessions contrôlées"
+        }
+      }
+    },
     "universal": {
       "name": "Universal Music France",
       "welcomeTitle": "Bienvenue, équipes <accent>Universal</accent> — vos artistes voient enfin ce que vous voyez",

@@ -3,7 +3,7 @@
   "subtitle": "Le pipeline qui fait de From Day 1 un standard de place — pas juste un outil de plus.",
   "kpis": {
     "targeted": "Partenaires ciblés",
-    "targetedHint": "8 canaux, un owner chacun",
+    "targetedHint": "9 canaux, un owner chacun",
     "inDiscussion": "En discussion",
     "inDiscussionHint": "Conversations actives ce mois-ci",
     "pilots": "Pilotes visés M+3",
@@ -65,6 +65,27 @@
     }
   },
   "partners": {
+    "capitol": {
+      "name": "Capitol Music France",
+      "tag": "Label (Universal)",
+      "brings": "Un roster n° 1 en France, des DA qui décident chaque jour, la porte d'Universal",
+      "weBring": "La réponse avant la réunion : Pulse roster par DA, alertes contrats, audit DSP, portail artiste co-brandé, Wavely via UniPort",
+      "nextAction": "Rendez-vous du 18/09 — pilote 3 artistes / 3 DA",
+      "pitch": "Les DA de Capitol ouvrent six outils pour répondre à une question d'artiste. Day One les met sur une ligne, en euros, avec les échéances de contrat, et donne aux artistes le portail que le label n'a jamais eu le temps de construire. Pilote 90 jours sur 3 artistes et 3 DA, sans aucune donnée Capitol pour démarrer.",
+      "m3": "Pilote signé, 3 DA actifs ≥ 3 matins par semaine",
+      "m9": "Une décision prise avec un chiffre Day One ; première réclamation DSP documentée",
+      "m18": "Extension à tous les sous-labels Capitol, Wavely inscrit dans UniPort",
+      "risks": {
+        "r1": {
+          "risk": "Le DA ne change pas ses habitudes",
+          "mitigation": "Pulse par mail chaque matin pendant le pilote, un référent Day One par DA"
+        },
+        "r2": {
+          "risk": "Données confidentielles",
+          "mitigation": "Démarrage sans donnée Capitol, relevés en local, hébergement France, DPA dès le pilote"
+        }
+      }
+    },
     "universal": {
       "name": "Universal Music France",
       "tag": "Major",

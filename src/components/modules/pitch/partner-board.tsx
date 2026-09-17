@@ -48,6 +48,7 @@ export const PARTNER_STATUSES: PartnerStatus[] = [
 ];
 
 export type PartnerId =
+  | "capitol"
   | "universal"
   | "believe"
   | "adami"
@@ -73,6 +74,16 @@ export type Partner = {
 };
 
 export const PARTNERS: Partner[] = [
+  {
+    id: "capitol",
+    initials: "CA",
+    ownerId: "gael",
+    due: "2026-09-18",
+    priority: true,
+    pilotM3: true,
+    riskCount: 2,
+    initialStatus: "discussion",
+  },
   {
     id: "universal",
     initials: "UM",

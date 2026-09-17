@@ -3,7 +3,7 @@
   "subtitle": "The pipeline that makes From Day 1 an industry standard — not just another tool.",
   "kpis": {
     "targeted": "Targeted partners",
-    "targetedHint": "8 channels, one owner each",
+    "targetedHint": "9 channels, one owner each",
     "inDiscussion": "In discussion",
     "inDiscussionHint": "Active conversations this month",
     "pilots": "Pilots targeted M+3",
@@ -65,6 +65,27 @@
     }
   },
   "partners": {
+    "capitol": {
+      "name": "Capitol Music France",
+      "tag": "Label (Universal)",
+      "brings": "France's #1 roster, A&R who decide every day, the door into Universal",
+      "weBring": "The answer before the meeting: roster Pulse by A&R, contract alerts, DSP audit, co-branded artist portal, Wavely via UniPort",
+      "nextAction": "September 18 meeting — pilot on 3 artists / 3 A&R",
+      "pitch": "Capitol's A&R open six tools to answer one artist question. Day One puts it all on one line, in euros, with contract deadlines, and gives artists the portal the label never had time to build. 90-day pilot on 3 artists and 3 A&R, starting with zero Capitol data.",
+      "m3": "Pilot signed, 3 A&R active ≥ 3 mornings a week",
+      "m9": "A decision made with a Day One number; first documented DSP claim",
+      "m18": "Extension to all Capitol sub-labels, Wavely registered in UniPort",
+      "risks": {
+        "r1": {
+          "risk": "The A&R doesn't change their habits",
+          "mitigation": "Daily Pulse email during the pilot, one Day One point of contact per A&R"
+        },
+        "r2": {
+          "risk": "Confidential data",
+          "mitigation": "Starts with zero Capitol data, statements kept local, France hosting, DPA from the pilot onward"
+        }
+      }
+    },
     "universal": {
       "name": "Universal Music France",
       "tag": "Major",

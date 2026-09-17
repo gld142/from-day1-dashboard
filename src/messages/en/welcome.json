@@ -8,6 +8,49 @@
   "hiddenSuffix": "(hidden)",
   "firstInsightLabel": "First insight delivered in 3 min",
   "sources": {
+    "capitol": {
+      "name": "Capitol Music France",
+      "welcomeTitle": "Welcome, <accent>Capitol</accent> teams — the answer before the meeting",
+      "welcomeBody": "Your A&R teams open a single app: cumulative and per-platform streams, TikTok signal, contract deadlines, what each artist earns. And your artists finally see what you see.",
+      "offer": "90-day pilot — 3 artists, 3 A&R",
+      "steps": {
+        "1": {
+          "title": "Connect the Capitol roster",
+          "desc": "Artists appear from day one with their public streams; statements and contracts, once you share them, calibrate everything."
+        },
+        "2": {
+          "title": "Map contracts & rights",
+          "desc": "Options, period ends, recoupments, splits, SACEM: every deadline becomes an alert for the A&R, never a surprise for legal."
+        },
+        "3": {
+          "title": "The morning brief, by A&R",
+          "desc": "Roster Pulse: what moved overnight, lead track, top platform, TikTok, gap to claim — before the meeting, not during it."
+        }
+      },
+      "firstInsight": "“Across the 3 pilot artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter: the claim is ready, and it's the platform being questioned, never the label.”",
+      "values": {
+        "1": {
+          "promise": "Six tabs for one question",
+          "delivery": "One app: cumulative, per platform, in euros, with the source of every number"
+        },
+        "2": {
+          "promise": "Deadlines discovered too late",
+          "delivery": "Contractual alerts across the roster: option, period end, unusual clause"
+        },
+        "3": {
+          "promise": "“How much am I earning?”",
+          "delivery": "CAPITOL × FROM DAY 1 artist portal: estimated earnings, their share, their rights — without calling the label"
+        },
+        "4": {
+          "promise": "What the platforms underpay",
+          "delivery": "Estimated vs. reported gap by DSP, claim file ready — the label is the claimant, not the audited party"
+        },
+        "5": {
+          "promise": "Studio sessions booked and wasted",
+          "delivery": "Wavely: annual studio credit, direct booking by A&R and artists, invoiced through UniPort, controlled sessions"
+        }
+      }
+    },
     "universal": {
       "name": "Universal Music France",
       "welcomeTitle": "Welcome, <accent>Universal</accent> teams — your artists finally see what you see",
