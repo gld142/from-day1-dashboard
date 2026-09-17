@@ -330,7 +330,7 @@ describe("Spotify : relevés rapprochés ou espacés", () => {
 });
 
 describe("YouTube : deltas de vues normalisés", () => {
-  it("(d) delta sur 2 h (< 6 h) ignoré : repli « Σ vues × 0,05 % », provenance « reconstructed »", () => {
+  it("(d) delta sur 2 h (< 20 h) ignoré : repli « Σ vues × 0,05 % », provenance « reconstructed »", () => {
     const { prev, last } = dadjuPair(2, 0);
     const today = realStreamSeries("dadju", 1, TODAY, { dadju: [prev, last] }).find((p) => p.dsp === "youtube")!;
     expect(today).toMatchObject({ streams: Math.round(439_698_165 * 0.0005), provenance: "reconstructed" });
@@ -338,10 +338,16 @@ describe("YouTube : deltas de vues normalisés", () => {
     expect(realStreamSeries("dadju", 1, TODAY, { dadju: [five.prev, five.last] }).find((p) => p.dsp === "youtube")!.provenance).toBe("reconstructed");
   });
 
-  it("les vues avancent en continu : delta 698 165 sur 12 h → 1 396 330 / jour mesuré", () => {
+  it("fenêtre de 12 h (< 20 h) : trop bruyante, repli sur le dernier débit valide s'il existe, sinon sur l'estimation", () => {
     const { prev, last } = dadjuPair(12, 0);
     const today = realStreamSeries("dadju", 1, TODAY, { dadju: [prev, last] }).find((p) => p.dsp === "youtube")!;
-    expect(today).toMatchObject({ streams: 1_396_330, provenance: "measured" });
+    expect(today).toMatchObject({ streams: Math.round(439_698_165 * 0.0005), provenance: "reconstructed" });
+    // Trois relevés : 30 h valides (558 532 / j) puis 12 h trop courtes → on reporte 558 532, reconstitué.
+    const older: Snapshot = { ...prev, date: "2026-09-13", capturedAt: "2026-09-13T12:00:00Z", youtube: { subscribers: null, videos: [{ videoId: "tVKaN_H35xs", title: "Reine", channel: "official", views: 439_000_000 - 698_165 }] } };
+    const mid: Snapshot = { ...prev, date: "2026-09-14", capturedAt: "2026-09-14T18:00:00Z" };
+    const short: Snapshot = { ...last, capturedAt: "2026-09-15T06:00:00Z" };
+    const t3 = realStreamSeries("dadju", 1, TODAY, { dadju: [older, mid, short] }).find((p) => p.dsp === "youtube")!;
+    expect(t3).toMatchObject({ streams: 558_532, provenance: "reconstructed" });
   });
 
   it("delta 698 165 sur 30 h → 558 532 / jour mesuré", () => {

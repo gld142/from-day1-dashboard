@@ -49,7 +49,9 @@ const YOUTUBE_DAILY_SHARE = 0.0005;
  * à 24 h (les vues avancent en continu, mais quelques minutes seraient du
  * bruit) — HYPOTHÈSE.
  */
-const YOUTUBE_MIN_RATE_HOURS = 6;
+// Les compteurs publics YouTube avancent par paliers (cache) : sous 20 h, un delta
+// extrapolé à 24 h est trop bruyant (mesuré le 17/09 : ×1,9 entre deux fenêtres voisines).
+const YOUTUBE_MIN_RATE_HOURS = 20;
 /** DSP estimés depuis le mix (ni Spotify ni YouTube, mesurés ; jamais TikTok). */
 const ESTIMATED_DSPS: DSP[] = DSPS.filter((d) => d !== "spotify" && d !== "youtube" && d !== "tiktok");
 
@@ -345,10 +347,16 @@ function youtubeSeries(ctx: Ctx, days: number): ReconstructedDay[] | null {
   const n = ctx.snaps.length;
   const total = videos.reduce((s, v) => s + v.views, 0);
   const rate = n >= 2 ? viewsRate(ctx.snaps[n - 2], ctx.last) : null;
+  // Fenêtre trop courte pour la dernière paire : on reporte le dernier débit valide
+  // (un débit d'hier vaut mieux qu'une extrapolation sur 11 h), marqué reconstitué.
+  let carried: CounterRate | null = null;
+  for (let i = n - 2; i >= 1 && rate === null && carried === null; i--) {
+    carried = viewsRate(ctx.snaps[i - 1], ctx.snaps[i]);
+  }
   const series = reconstructTrack({
     key: `${ctx.artistId}:youtube`,
     total,
-    dailyNow: rate?.perDay ?? Math.round(total * YOUTUBE_DAILY_SHARE),
+    dailyNow: rate?.perDay ?? carried?.perDay ?? Math.round(total * YOUTUBE_DAILY_SHARE),
     days,
     today: ctx.today,
     measured: measuredDays(ctx, viewsRate),

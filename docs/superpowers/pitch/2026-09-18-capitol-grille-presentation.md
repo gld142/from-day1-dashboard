@@ -117,4 +117,4 @@ Repartir avec : les 2-3 noms d'artistes, les 2-3 DA, une date de démarrage, le 
 ---
 
 ## Après la réunion — la V2 par profil (à concevoir, pas à promettre)
-Le dashboard s'adapte au **compte** (la structure qui possède le compte, ses accès et ses connexions) et au **profil** de la personne : DA, label manager, DAF, artiste signé, artiste indé, **auteur-compositeur qui ne fait que de la synchro**, **producteur crédité artiste principal**, manager. Chaque profil a sa sidebar, son Pulse, ses alertes, et le parcours d'onboarding pose la question dès l'entrée (« tu es… ») pour ne montrer que ce qui le concerne. Point ouvert : « Day Two » — à préciser par Gaël avant d'en parler.
+Le dashboard s'adapte au **compte** (la structure qui possède le compte, ses accès et ses connexions) et au **profil** de la personne : DA, label manager, DAF, artiste signé, artiste indé, **auteur-compositeur qui ne fait que de la synchro**, **producteur crédité artiste principal**, manager. Chaque profil a sa sidebar, son Pulse, ses alertes, et le parcours d'onboarding pose la question dès l'entrée (« tu es… ») pour ne montrer que ce qui le concerne.
