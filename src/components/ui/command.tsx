@@ -59,7 +59,10 @@ function CommandDialog({
         )}
         showCloseButton={showCloseButton}
       >
-        {children}
+        {/* Racine cmdk : sans elle, CommandInput / CommandList lisent un contexte
+            vide (« Cannot read properties of undefined (reading 'subscribe') »)
+            et la palette ne rend rien. */}
+        <Command>{children}</Command>
       </DialogContent>
     </Dialog>
   )
