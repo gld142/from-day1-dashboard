@@ -114,13 +114,12 @@ export const NAV_SECTIONS: NavSection[] = [
         badgeKey: "new",
       },
       {
-        // Simulateur de scénarios, pas une saisie de dépenses réelles : la
-        // structure a « Dépenses & P&L » pour ça.
+        // Simulateur de scénarios (deals, projections) — visible par défaut
+        // pour les deux personas, désactivable dans Réglages → Modules.
         href: "/calculator",
         labelKey: "items.calculator",
         icon: Calculator,
         badgeKey: "new",
-        defaultHidden: ["label"],
       },
       {
         href: "/valuation",

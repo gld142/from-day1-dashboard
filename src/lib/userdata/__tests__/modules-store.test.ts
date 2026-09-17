@@ -46,8 +46,8 @@ describe("modules-store (navigateur)", () => {
     expect(store.getModuleOverrides()).toEqual({});
     expect(store.modulesSnapshot()).toBe("{}");
     // Le calculateur est un simulateur : masqué par défaut pour la structure, visible pour l'artiste.
-    expect(store.getModuleVisibility("/calculator", "label")).toBe(false);
-    expect(store.getModuleVisibility("/calculator", "artist")).toBe(true);
+    expect(store.getModuleVisibility("/fractional", "label")).toBe(false);
+    expect(store.getModuleVisibility("/fractional", "artist")).toBe(true);
     // Pages internes : masquées pour tous.
     expect(store.getModuleVisibility("/comparatif", "label")).toBe(false);
     expect(store.getModuleVisibility("/onboardings", "label")).toBe(false);
@@ -58,11 +58,11 @@ describe("modules-store (navigateur)", () => {
   });
 
   it("aller-retour set → get, persisté sous la clé versionnée", () => {
-    store.setModuleVisibility("/calculator", true);
-    expect(store.getModuleOverride("/calculator")).toBe(true);
-    expect(store.getModuleVisibility("/calculator", "label")).toBe(true);
+    store.setModuleVisibility("/fractional", true);
+    expect(store.getModuleOverride("/fractional")).toBe(true);
+    expect(store.getModuleVisibility("/fractional", "label")).toBe(true);
     const raw = JSON.parse(window.localStorage.getItem("day1-modules") ?? "{}");
-    expect(raw).toEqual({ version: 1, overrides: { "/calculator": true } });
+    expect(raw).toEqual({ version: 1, overrides: { "/fractional": true } });
   });
 
   it("un choix explicite prime sur le défaut, dans les deux sens", () => {
@@ -73,11 +73,11 @@ describe("modules-store (navigateur)", () => {
   });
 
   it("reset oublie tous les choix : retour aux défauts", () => {
-    store.setModuleVisibility("/calculator", true);
+    store.setModuleVisibility("/fractional", true);
     store.setModuleVisibility("/streams", false);
     store.resetModules();
     expect(store.getModuleOverrides()).toEqual({});
-    expect(store.getModuleVisibility("/calculator", "label")).toBe(false);
+    expect(store.getModuleVisibility("/fractional", "label")).toBe(false);
     expect(store.getModuleVisibility("/streams", "artist")).toBe(true);
     expect(JSON.parse(window.localStorage.getItem("day1-modules") ?? "{}")).toEqual({
       version: 1,
@@ -88,38 +88,38 @@ describe("modules-store (navigateur)", () => {
   it("subscribe : notifié à chaque set et reset, pas pour une écriture identique, plus après désabonnement", () => {
     const fn = vi.fn();
     const unsub = store.subscribeModules(fn);
-    store.setModuleVisibility("/calculator", true);
-    store.setModuleVisibility("/calculator", true); // identique : pas de notification
+    store.setModuleVisibility("/fractional", true);
+    store.setModuleVisibility("/fractional", true); // identique : pas de notification
     store.resetModules();
     store.resetModules(); // déjà vide : pas de notification
     expect(fn).toHaveBeenCalledTimes(2);
     unsub();
-    store.setModuleVisibility("/calculator", false);
+    store.setModuleVisibility("/fractional", false);
     expect(fn).toHaveBeenCalledTimes(2);
   });
 
   it("modulesSnapshot change quand les choix changent (clé de memo), stable sinon", () => {
     const before = store.modulesSnapshot();
-    store.setModuleVisibility("/calculator", true);
+    store.setModuleVisibility("/fractional", true);
     const after = store.modulesSnapshot();
     expect(after).not.toBe(before);
     expect(store.modulesSnapshot()).toBe(after);
   });
 
   it("avant hydrateModules, un module frais ne lit pas localStorage (rendu d'hydratation = serveur)", async () => {
-    store.setModuleVisibility("/calculator", true);
+    store.setModuleVisibility("/fractional", true);
     const reloaded = await freshStore();
     expect(reloaded.getModuleOverrides()).toEqual({});
-    expect(reloaded.getModuleVisibility("/calculator", "label")).toBe(false);
+    expect(reloaded.getModuleVisibility("/fractional", "label")).toBe(false);
   });
 
   it("hydrateModules relit localStorage une fois et notifie (persistance entre rechargements)", async () => {
-    store.setModuleVisibility("/calculator", true);
+    store.setModuleVisibility("/fractional", true);
     const reloaded = await freshStore();
     const fn = vi.fn();
     reloaded.subscribeModules(fn);
     reloaded.hydrateModules();
-    expect(reloaded.getModuleVisibility("/calculator", "label")).toBe(true);
+    expect(reloaded.getModuleVisibility("/fractional", "label")).toBe(true);
     expect(fn).toHaveBeenCalledTimes(1);
     reloaded.hydrateModules();
     expect(fn).toHaveBeenCalledTimes(1);
@@ -136,8 +136,8 @@ describe("modules-store (navigateur)", () => {
   it("setModuleVisibility hydrate d'abord : n'écrase pas un choix encore non relu", async () => {
     store.setModuleVisibility("/streams", false);
     const reloaded = await freshStore();
-    reloaded.setModuleVisibility("/calculator", true);
-    expect(reloaded.getModuleOverrides()).toEqual({ "/streams": false, "/calculator": true });
+    reloaded.setModuleVisibility("/fractional", true);
+    expect(reloaded.getModuleOverrides()).toEqual({ "/streams": false, "/fractional": true });
   });
 
   it("reprend une fois les masquages de l'ancien PrefsProvider (day1-prefs.hiddenModules)", async () => {
@@ -163,7 +163,7 @@ describe("modules-store (navigateur)", () => {
 
     window.localStorage.setItem(
       "day1-modules",
-      JSON.stringify({ version: 1, overrides: { "/calculator": "oui" } }),
+      JSON.stringify({ version: 1, overrides: { "/fractional": "oui" } }),
     );
     const bad = await freshStore();
     bad.hydrateModules();
@@ -179,6 +179,6 @@ describe("modules-store (serveur, sans window)", () => {
     expect(() => store.hydrateModules()).not.toThrow();
     expect(store.getModuleOverrides()).toEqual({});
     expect(store.modulesSnapshot()).toBe("{}");
-    expect(store.getModuleVisibility("/calculator", "label")).toBe(false);
+    expect(store.getModuleVisibility("/fractional", "label")).toBe(false);
   });
 });

@@ -23,7 +23,7 @@ describe("navForPersona — structure (label)", () => {
     expect(hrefs(nav)).toEqual([
       ["sections.daily", ["/roster", "/pulse", "/overview"]],
       ["sections.data", ["/streams", "/market", "/revenue", "/audience", "/algo-position"]],
-      ["sections.finances", ["/finances", "/valuation"]],
+      ["sections.finances", ["/finances", "/valuation", "/calculator"]],
       ["sections.rights", ["/contracts", "/splits", "/rights", "/urssaf"]],
       ["sections.intelligence", ["/audit", "/ar-watch", "/day1-index", "/copilot"]],
       ["sections.growth", ["/fans", "/tour", "/catalog", "/discovery", "/sync"]],
@@ -31,19 +31,19 @@ describe("navForPersona — structure (label)", () => {
     ]);
   });
 
-  it("n'affiche ni la section pitch (interne), ni le simulateur, ni le fractional par défaut", () => {
+  it("n'affiche ni la section pitch (interne), ni le fractional par défaut", () => {
     const all = flat(nav);
     expect(nav.map((s) => s.labelKey)).not.toContain("sections.pitch");
     expect(all).not.toContain("/comparatif");
     expect(all).not.toContain("/onboardings");
-    expect(all).not.toContain("/calculator");
+    expect(all).toContain("/calculator");
     expect(all).not.toContain("/fractional");
   });
 
   it("un choix utilisateur réactive une page à sa place dans le parcours", () => {
-    const withCalc = navForPersona("label", { "/calculator": true });
-    const finances = withCalc.find((s) => s.labelKey === "sections.finances");
-    expect(finances?.items.map((i) => i.href)).toEqual(["/finances", "/valuation", "/calculator"]);
+    const withFractional = navForPersona("label", { "/fractional": true });
+    const finances = withFractional.find((s) => s.labelKey === "sections.finances");
+    expect(finances?.items.map((i) => i.href)).toEqual(["/finances", "/valuation", "/calculator", "/fractional"]);
     const withPitch = navForPersona("label", { "/onboardings": true });
     expect(withPitch.find((s) => s.labelKey === "sections.pitch")?.items.map((i) => i.href)).toEqual([
       "/onboardings",
