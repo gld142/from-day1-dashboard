@@ -54,6 +54,62 @@
     "body": "Day 1 cross-checks your streams and airplay against received statements. Open the Audit module to review each gap and generate claim letters.",
     "cta": "Open audit"
   },
+  "import": {
+    "title": "Your statements, your call",
+    "lead": "The amount received shown here is simulated for the demo. For the real thing: import your SACEM distribution statement (PDF or CSV from your member area) — we match each work against the estimate and flag what is missing.",
+    "cta": {
+      "import": "Import my SACEM statement",
+      "imported": "{file} imported — reconciliation coming soon",
+      "request": "Request my statement",
+      "audit": "See the audit"
+    },
+    "dialog": {
+      "title": "Import a distribution statement",
+      "lead": "The file stays on your device: nothing is sent. For now we keep its name; the work-by-work reconciliation comes next.",
+      "formatTitle": "What we expect",
+      "format": {
+        "kind": "A distribution statement — not a membership fee notice or a payment reminder.",
+        "period": "The period covered: distribution quarter or half-year.",
+        "perWork": "The amount per work, with its source: streaming, radio, TV, live."
+      },
+      "fileLabel": "Choose the file (PDF or CSV)",
+      "hint": "Export from the SACEM or ADAMI member area.",
+      "done": "{file} imported — reconciliation coming soon.",
+      "close": "Close"
+    },
+    "request": {
+      "subject": "Request for distribution statements",
+      "body": "Dear Sir or Madam,\n\nAs a member of your society, I would like to obtain my detailed distribution statements — per work, per period and per source of exploitation — for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to me as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
+    },
+    "label": {
+      "title": "{scope, select, roster {The roster's statements} other {{name}'s statements}}",
+      "lead": "The amount received shown here is simulated for the demo. For the real thing: import {scope, select, roster {the roster's SACEM distribution statements} other {{name}'s SACEM distribution statement}} (PDF or CSV from the member area) — we match each work against the estimate and flag what is missing.",
+      "cta": {
+        "import": "{scope, select, roster {Import the roster's statements} other {Import {name}'s statement}}",
+        "imported": "{file} imported — reconciliation coming soon",
+        "request": "{scope, select, roster {Request the statements} other {Request {name}'s statement}}",
+        "audit": "See the audit"
+      },
+      "dialog": {
+        "title": "Import a distribution statement",
+        "lead": "The file stays on your device: nothing is sent. For now we keep its name; the work-by-work reconciliation comes next.",
+        "formatTitle": "What we expect",
+        "format": {
+          "kind": "A distribution statement — not a membership fee notice or a payment reminder.",
+          "period": "The period covered: distribution quarter or half-year.",
+          "perWork": "The amount per work, with its source: streaming, radio, TV, live."
+        },
+        "fileLabel": "Choose the file (PDF or CSV)",
+        "hint": "Export from the SACEM or ADAMI member area.",
+        "done": "{file} imported — reconciliation coming soon.",
+        "close": "Close"
+      },
+      "request": {
+        "subject": "Request for distribution statements",
+        "body": "Dear Sir or Madam,\n\nWe represent {scope, select, roster {the artists of our roster} other {{name}}} and would like to obtain {scope, select, roster {their} other {his or her}} detailed distribution statements — per work, per period and per source of exploitation — for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to us as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
+      }
+    }
+  },
   "timeline": {
     "heading": "Upcoming payments",
     "sub": "Distribution calendar: SACEM quarterly, ADAMI and SPEDIDAM every six months.",

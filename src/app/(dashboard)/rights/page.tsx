@@ -23,12 +23,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { ARTISTS, RIGHTS_PERIODS, getArtist, rightsStatements } from "@/lib/demo/api";
+import { ARTISTS, LABEL, RIGHTS_PERIODS, getArtist, rightsStatements } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
 import type { Provenance, RightsOrganism, RightsStatement } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur } from "@/lib/format";
 import { weakest } from "@/lib/real";
 import { useRole } from "@/lib/role";
+import { ROSTER_SCOPE } from "@/lib/userdata/rights-store";
 import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import {
@@ -39,6 +40,7 @@ import {
   type RightsRow,
   type ScheduledPayment,
 } from "@/components/modules/droits/rights-widgets";
+import { StatementsPanel } from "@/components/modules/droits/statements-panel";
 import { Button } from "@/components/ui/button";
 
 const PERIODS = RIGHTS_PERIODS;
@@ -197,6 +199,15 @@ export default function RightsPage() {
           }
         />
       </div>
+
+      {/* Le reçu est simulé : voici comment passer au vrai (import, demande, audit). */}
+      <StatementsPanel
+        className="mt-6"
+        scopeId={grouped ? ROSTER_SCOPE : artistId}
+        scope={scope}
+        name={artistName}
+        signer={isLabel ? LABEL.name : artistName}
+      />
 
       {kpis.gapCount > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-warning/30 bg-warning/6 p-4">

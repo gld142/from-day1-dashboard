@@ -54,6 +54,62 @@
     "body": "Day 1 croise vos streams et diffusions avec les relevés reçus. Ouvrez le module Audit pour vérifier chaque écart et générer les courriers de réclamation.",
     "cta": "Ouvrir l'audit"
   },
+  "import": {
+    "title": "Vos relevés, c'est vous",
+    "lead": "Le reçu affiché est simulé pour la démo. Pour le vrai : importez votre relevé de répartition SACEM (PDF ou CSV depuis votre espace membre) — on rapproche chaque œuvre de l'estimation et on signale ce qui manque.",
+    "cta": {
+      "import": "Importer mon relevé SACEM",
+      "imported": "{file} importé — rapprochement à venir",
+      "request": "Demander mon relevé",
+      "audit": "Voir l'audit"
+    },
+    "dialog": {
+      "title": "Importer un relevé de répartition",
+      "lead": "Le fichier reste sur votre appareil : rien n'est transmis. Pour l'instant, on retient son nom ; le rapprochement œuvre par œuvre arrive ensuite.",
+      "formatTitle": "Ce qu'on attend",
+      "format": {
+        "kind": "Un relevé de répartition — pas un bulletin de cotisation ni un avis d'échéance.",
+        "period": "La période couverte : trimestre ou semestre de répartition.",
+        "perWork": "Le montant par œuvre, avec la source : streaming, radio, TV, concerts."
+      },
+      "fileLabel": "Choisir le fichier (PDF ou CSV)",
+      "hint": "Export depuis l'espace membre SACEM ou ADAMI.",
+      "done": "{file} importé — rapprochement à venir.",
+      "close": "Fermer"
+    },
+    "request": {
+      "subject": "Demande de relevés de répartition",
+      "body": "Madame, Monsieur,\n\nMembre de votre société, je souhaite obtenir mes relevés de répartition détaillés — par œuvre, par période et par source d'exploitation — pour les quatre derniers trimestres, ainsi que le détail des sommes en cours de traitement.\n\nVous pouvez me les adresser au format PDF ou CSV, en réponse à ce message.\n\nJe vous remercie par avance.\n\nBien cordialement,\n{signer}"
+    },
+    "label": {
+      "title": "{scope, select, roster {Les relevés du roster} other {Les relevés de {name}}}",
+      "lead": "Le reçu affiché est simulé pour la démo. Pour le vrai : importez {scope, select, roster {les relevés de répartition SACEM du roster} other {le relevé de répartition SACEM de {name}}} (PDF ou CSV depuis l'espace membre) — on rapproche chaque œuvre de l'estimation et on signale ce qui manque.",
+      "cta": {
+        "import": "{scope, select, roster {Importer les relevés du roster} other {Importer le relevé de {name}}}",
+        "imported": "{file} importé — rapprochement à venir",
+        "request": "{scope, select, roster {Demander les relevés} other {Demander le relevé de {name}}}",
+        "audit": "Voir l'audit"
+      },
+      "dialog": {
+        "title": "Importer un relevé de répartition",
+        "lead": "Le fichier reste sur votre appareil : rien n'est transmis. Pour l'instant, on retient son nom ; le rapprochement œuvre par œuvre arrive ensuite.",
+        "formatTitle": "Ce qu'on attend",
+        "format": {
+          "kind": "Un relevé de répartition — pas un bulletin de cotisation ni un avis d'échéance.",
+          "period": "La période couverte : trimestre ou semestre de répartition.",
+          "perWork": "Le montant par œuvre, avec la source : streaming, radio, TV, concerts."
+        },
+        "fileLabel": "Choisir le fichier (PDF ou CSV)",
+        "hint": "Export depuis l'espace membre SACEM ou ADAMI.",
+        "done": "{file} importé — rapprochement à venir.",
+        "close": "Fermer"
+      },
+      "request": {
+        "subject": "Demande de relevés de répartition",
+        "body": "Madame, Monsieur,\n\nNous représentons {scope, select, roster {les artistes de notre roster} other {{name}}} et souhaitons obtenir {scope, select, roster {leurs} other {ses}} relevés de répartition détaillés — par œuvre, par période et par source d'exploitation — pour les quatre derniers trimestres, ainsi que le détail des sommes en cours de traitement.\n\nVous pouvez nous les adresser au format PDF ou CSV, en réponse à ce message.\n\nNous vous remercions par avance.\n\nBien cordialement,\n{signer}"
+      }
+    }
+  },
   "timeline": {
     "heading": "Prochains versements",
     "sub": "Calendrier des répartitions : SACEM au trimestre, ADAMI et SPEDIDAM au semestre.",
