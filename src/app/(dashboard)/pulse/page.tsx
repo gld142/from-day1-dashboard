@@ -121,13 +121,16 @@ function fmtSigned(locale: string, n: number): string {
 function tiktokBody(
   t: ReturnType<typeof useTranslations<"pulse">>,
   locale: string,
-  ns: "overnight.tiktok" | "overnight.tiktokRoster",
+  ns: "overnight.tiktok" | "overnight.tiktokLabel" | "overnight.tiktokRoster",
   s: TikTokSignal,
+  /** Nom de l'artiste (variante « label zoomé » : « les sons de Dadju »). */
+  name = "",
 ): string {
   const params = {
     videos: fmtCompact(locale, s.videos),
     delta: fmtSigned(locale, s.deltaYesterday),
     sound: s.topSound ?? "—",
+    name,
   };
   return s.trendingRankFr === null
     ? t(`${ns}.body`, params)
@@ -226,11 +229,18 @@ export default function PulsePage() {
     });
     if (tiktok) {
       // Signal de viralité, pas un revenu : badge de provenance + note explicite.
+      // « tes sons » pour l'artiste, « les sons de Dadju » pour le label zoomé.
       insights.push({
         key: "tiktok",
         icon: Music2,
         kicker: t("overnight.tiktok.kicker"),
-        body: tiktokBody(t, locale, "overnight.tiktok", tiktok),
+        body: tiktokBody(
+          t,
+          locale,
+          persona === "label" ? "overnight.tiktokLabel" : "overnight.tiktok",
+          tiktok,
+          artist.name,
+        ),
         tone: "brand",
         badge: tiktok.provenance,
         footnote: t("overnight.tiktok.note"),
@@ -279,7 +289,7 @@ export default function PulsePage() {
       streamsProvenance,
       insights,
     };
-  }, [showArtist, artistId, locale, t, sharesKey]);
+  }, [showArtist, artistId, locale, t, sharesKey, persona]);
 
   /* ───────────── Vue label agrégée (focusedArtistId === null) ───────────── */
 

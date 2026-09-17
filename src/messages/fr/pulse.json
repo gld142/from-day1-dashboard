@@ -60,6 +60,10 @@
       "bodyWithTrend": "≈ {videos} vidéos utilisent tes sons, {delta} hier. Titre le plus repris : « {sound} », n° {rank} des tendances France.",
       "note": "Signal de viralité, pas un stream rémunéré."
     },
+    "tiktokLabel": {
+      "body": "≈ {videos} vidéos utilisent les sons de {name}, {delta} hier. Titre le plus repris : « {sound} ».",
+      "bodyWithTrend": "≈ {videos} vidéos utilisent les sons de {name}, {delta} hier. Titre le plus repris : « {sound} », n° {rank} des tendances France."
+    },
     "nextShow": {
       "kicker": "Prochaine date",
       "body": "{venue}, {city} dans {days} j — {sold} / {capacity} billets vendus."

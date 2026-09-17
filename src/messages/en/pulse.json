@@ -60,6 +60,10 @@
       "bodyWithTrend": "≈ {videos} videos use your sounds, {delta} yesterday. Most reused track: “{sound}”, #{rank} in France trends.",
       "note": "Virality signal, not a paid stream."
     },
+    "tiktokLabel": {
+      "body": "≈ {videos} videos use {name}'s sounds, {delta} yesterday. Most reused track: “{sound}”.",
+      "bodyWithTrend": "≈ {videos} videos use {name}'s sounds, {delta} yesterday. Most reused track: “{sound}”, #{rank} in France trends."
+    },
     "nextShow": {
       "kicker": "Next show",
       "body": "{venue}, {city} in {days} d — {sold} / {capacity} tickets sold."

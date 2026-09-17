@@ -2,6 +2,7 @@
   "title": "Revenus",
   "subtitle": "Tous tes revenus, toutes sources confondues — enfin lisibles.",
   "subtitleLabel": "Les revenus du roster, consolidés en un seul endroit.",
+  "subtitleFocused": "Tous les revenus de {name}, toutes sources confondues — enfin lisibles.",
   "kpis": {
     "total12m": "Revenus 12 mois",
     "monthlyAvg": "Moyenne mensuelle",
@@ -80,6 +81,46 @@
       "textDeclared": "Ta part est renseignée : <num>{pct} %</num> du master, {author}.",
       "cta": "Renseigner ma part",
       "ctaEdit": "Modifier ma part"
+    },
+    "label": {
+      "title": "Sa part, c'est son contrat",
+      "lead": "{gross} générés hier par les streams de {artist}, c'est le brut master : ce que les plateformes reversent avant partage. Ce que {artist} touche dépend de son contrat — et on ne l'invente pas.",
+      "statusSimulated": "Aujourd'hui, la part de {artist} est <b>simulée</b> (<num>{pct} %</num>) pour la démo.",
+      "statusDeclared": "La part de {artist} est renseignée : <num>{pct} %</num> du master, {author}.",
+      "authorYes": "auteur/compositeur à {apct} %",
+      "authorUnknown": "auteur/compositeur (part à préciser)",
+      "authorNo": "pas auteur",
+      "edit": "Modifier",
+      "cancel": "Annuler",
+      "tabs": {
+        "label": "Comment renseigner sa part",
+        "percent": "Renseigner ses pourcentages",
+        "upload": "Importer son contrat",
+        "request": "Courrier de demande de contrat"
+      },
+      "fields": {
+        "master": "Part artiste sur le master (%)",
+        "masterHelp": "Le % de royalties de son contrat d'artiste ou de licence (souvent 15–25 % en contrat d'artiste, 50–100 % en distribution).",
+        "isAuthor": "{artist} est auteur et/ou compositeur",
+        "author": "Sa part dans les droits d'auteur de ses titres (%)",
+        "authorHelp": "Ses bulletins SACEM font foi : c'est sa part sur chaque œuvre.",
+        "save": "Enregistrer",
+        "saved": "Enregistré — les cascades sont à jour."
+      },
+      "upload": {
+        "label": "Choisir son contrat (PDF ou Word)",
+        "imported": "{name} importé — lu localement, jamais envoyé. Reportez maintenant les pourcentages que vous y lisez :",
+        "hint": "Le fichier reste sur votre appareil : rien n'est transmis. Vous recopiez simplement les pourcentages du contrat."
+      },
+      "request": {
+        "lead": "{artist} a le droit d'obtenir une copie de son contrat et de ses relevés. Voici le courrier qu'il peut envoyer.",
+        "letterLabel": "Courrier au label",
+        "copy": "Copier",
+        "copied": "Copié",
+        "open": "Ouvrir dans ma messagerie",
+        "subject": "Demande de copie de mon contrat et de mes relevés de redevances",
+        "body": "Objet : demande de copie de mon contrat et de mes relevés de redevances\n\nBonjour,\n\nDans le cadre du suivi de mes revenus, je vous remercie de bien vouloir me transmettre :\n– une copie de mon contrat d'artiste / de licence en cours, y compris ses avenants ;\n– mes relevés de redevances des quatre derniers semestres, détaillés par plateforme et par territoire.\n\nJe vous en remercie par avance.\n\n{artistName}"
+      }
     }
   },
   "sources": {
@@ -125,8 +166,8 @@
     "month": "Mois"
   },
   "insight": {
-    "diversification": "{count, plural, one {# source active} other {# sources actives}} — {top} représente {share} de tes revenus",
-    "concentrated": "Attention : plus de 70 % de tes revenus viennent d'une seule source",
+    "diversification": "{count, plural, one {# source active} other {# sources actives}} — {top} représente {share} des revenus",
+    "concentrated": "Attention : plus de 70 % des revenus viennent d'une seule source",
     "balanced": "Bonne diversification — aucun canal ne dépasse 70 %"
   }
 }

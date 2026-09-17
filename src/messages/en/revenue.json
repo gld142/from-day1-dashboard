@@ -2,6 +2,7 @@
   "title": "Revenue",
   "subtitle": "All your revenue, every source — finally readable.",
   "subtitleLabel": "Your roster's revenue, consolidated in one place.",
+  "subtitleFocused": "All of {name}'s revenue, every source combined — finally readable.",
   "kpis": {
     "total12m": "Revenue (12mo)",
     "monthlyAvg": "Monthly average",
@@ -80,6 +81,46 @@
       "textDeclared": "Your share is declared: <num>{pct}%</num> of the master, {author}.",
       "cta": "Declare my share",
       "ctaEdit": "Edit my share"
+    },
+    "label": {
+      "title": "Their share is their contract",
+      "lead": "{gross} generated yesterday by {artist}'s streams is the gross master: what platforms pay out before any split. What {artist} actually receives depends on their contract — and we don't make it up.",
+      "statusSimulated": "Right now {artist}'s share is <b>simulated</b> (<num>{pct}%</num>) for the demo.",
+      "statusDeclared": "{artist}'s share is declared: <num>{pct}%</num> of the master, {author}.",
+      "authorYes": "songwriter at {apct}%",
+      "authorUnknown": "songwriter (share to be specified)",
+      "authorNo": "not a songwriter",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "tabs": {
+        "label": "How to declare their share",
+        "percent": "Enter their percentages",
+        "upload": "Import their contract",
+        "request": "Contract request letter"
+      },
+      "fields": {
+        "master": "Artist share on the master (%)",
+        "masterHelp": "The royalty rate in their artist or licence contract (often 15–25% on an artist deal, 50–100% on distribution).",
+        "isAuthor": "{artist} is a songwriter and/or composer",
+        "author": "Their share of the songwriter royalties on their tracks (%)",
+        "authorHelp": "Their SACEM statements are the reference: it's their share on each work.",
+        "save": "Save",
+        "saved": "Saved — the cascades are up to date."
+      },
+      "upload": {
+        "label": "Choose their contract (PDF or Word)",
+        "imported": "{name} imported — read locally, never sent. Now enter the percentages you read in it:",
+        "hint": "The file stays on your device: nothing is transmitted. You simply copy the percentages from the contract."
+      },
+      "request": {
+        "lead": "{artist} is entitled to a copy of their contract and statements. Here is the letter they can send.",
+        "letterLabel": "Letter to the label",
+        "copy": "Copy",
+        "copied": "Copied",
+        "open": "Open in my email app",
+        "subject": "Request for a copy of my contract and royalty statements",
+        "body": "Subject: request for a copy of my contract and royalty statements\n\nHello,\n\nAs part of tracking my income, I would be grateful if you could send me:\n– a copy of my current artist / licence contract, including any amendments;\n– my royalty statements for the last four half-years, broken down by platform and territory.\n\nThank you in advance.\n\n{artistName}"
+      }
     }
   },
   "sources": {
@@ -125,8 +166,8 @@
     "month": "Month"
   },
   "insight": {
-    "diversification": "{count, plural, one {# active source} other {# active sources}} — {top} accounts for {share} of your revenue",
-    "concentrated": "Heads up: over 70% of your revenue comes from a single source",
+    "diversification": "{count, plural, one {# active source} other {# active sources}} — {top} accounts for {share} of revenue",
+    "concentrated": "Heads up: over 70% of revenue comes from a single source",
     "balanced": "Healthy diversification — no channel exceeds 70%"
   }
 }

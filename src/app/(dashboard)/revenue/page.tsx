@@ -252,7 +252,13 @@ export default function RevenuePage() {
       <PrintStyles />
       <PageHeader
         title={t("title")}
-        subtitle={aggregated ? t("subtitleLabel") : t("subtitle")}
+        subtitle={
+          aggregated
+            ? t("subtitleLabel")
+            : focused
+              ? t("subtitleFocused", { name: focused.name })
+              : t("subtitle")
+        }
       >
         {focused && <ArtistBadge artist={focused} size="md" />}
         <ExportMenu

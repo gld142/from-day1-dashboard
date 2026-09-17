@@ -2,6 +2,9 @@
 
 /**
  * « Ta part, c'est ton contrat » — l'artiste renseigne ce qui lui revient.
+ * En vue structure (label zoomé sur un artiste), les mêmes textes à la
+ * troisième personne : « Sa part, c'est son contrat », « la part de Dadju est
+ * simulée… » — namespace `revenue.shares.label`, miroir de `revenue.shares`.
  *
  * L'estimateur sait ce que les streams génèrent (brut master) ; il ne sait pas
  * ce que l'artiste touche : ça dépend de SON contrat, et on ne l'invente pas.
@@ -31,6 +34,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { getArtist } from "@/lib/demo/api";
 import { fmtEur } from "@/lib/format";
 import { DEAL_SHARE } from "@/lib/real/params";
+import { useRole } from "@/lib/role";
 import { getShares, saveShares, type ArtistShares } from "@/lib/userdata/shares-store";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { cn } from "@/lib/utils";
@@ -56,9 +60,17 @@ function fmtPctValue(locale: string, n: number): string {
 /** Balise <num> des messages : le chiffre en mono tabulaire, la phrase en texte courant. */
 const num = (chunks: ReactNode) => <span className="num">{chunks}</span>;
 
+type SharesNs = "revenue.shares" | "revenue.shares.label";
+
+/** Textes du panneau : à la 2e personne pour l'artiste, à la 3e en vue structure. */
+function useSharesNs(): SharesNs {
+  const { persona } = useRole();
+  return persona === "label" ? "revenue.shares.label" : "revenue.shares";
+}
+
 /** « auteur/compositeur à 50 % » / « auteur/compositeur (part à préciser) » / « pas auteur ». */
-function useAuthorText() {
-  const t = useTranslations("revenue.shares");
+function useAuthorText(ns: SharesNs) {
+  const t = useTranslations(ns);
   const locale = useLocale();
   return (s: ArtistShares) =>
     !s.isAuthor
@@ -80,9 +92,12 @@ export function SharesPanel({
   variant?: "full" | "compact";
   className?: string;
 }) {
-  const t = useTranslations("revenue.shares");
+  const ns = useSharesNs();
+  const t = useTranslations(ns);
+  /* Le rappel compact (Pulse) ne s'affiche qu'en persona artiste : textes de base. */
+  const tCompact = useTranslations("revenue.shares.compact");
   const locale = useLocale();
-  const authorText = useAuthorText();
+  const authorText = useAuthorText(ns);
   // Abonnement au store : re-rendu à chaque enregistrement et après hydratation.
   const snapshot = useSharesSnapshot();
   const artist = getArtist(artistId);
@@ -111,17 +126,17 @@ export function SharesPanel({
           <ProvenanceBadge provenance={declared ? "declared" : "simulated"} />
           <span>
             {declared && stored
-              ? t.rich("compact.textDeclared", {
+              ? tCompact.rich("textDeclared", {
                   pct: fmtPctValue(locale, stored.masterSharePct ?? 0),
                   author: authorText(stored),
                   num,
                 })
-              : t.rich("compact.text", { pct: simulatedPct, num })}
+              : tCompact.rich("text", { pct: simulatedPct, num })}
           </span>
         </p>
         <Button asChild variant={declared ? "outline" : "default"} size="sm">
           <Link href={SHARES_HREF}>
-            {declared ? t("compact.ctaEdit") : t("compact.cta")}
+            {declared ? tCompact("ctaEdit") : tCompact("cta")}
             <ArrowRight aria-hidden />
           </Link>
         </Button>
@@ -143,7 +158,7 @@ export function SharesPanel({
             {t("title")}
           </h2>
           <p className="mt-1 max-w-[64ch] text-sm text-muted-foreground">
-            {t("lead", { gross: fmtEur(locale, Math.round(gross)) })}
+            {t("lead", { gross: fmtEur(locale, Math.round(gross)), artist: artist.name })}
           </p>
         </div>
         <ProvenanceBadge provenance={declared ? "declared" : "simulated"} />
@@ -156,10 +171,12 @@ export function SharesPanel({
             ? t.rich("statusDeclared", {
                 pct: fmtPctValue(locale, stored.masterSharePct ?? 0),
                 author: authorText(stored),
+                artist: artist.name,
                 num,
               })
             : t.rich("statusSimulated", {
                 pct: simulatedPct,
+                artist: artist.name,
                 b: (chunks) => <strong className="font-semibold text-foreground">{chunks}</strong>,
                 num,
               })}
@@ -178,6 +195,7 @@ export function SharesPanel({
         <SharesEditor
           // Remonté à chaque enregistrement / hydratation : le formulaire repart des valeurs stockées.
           key={`${artistId}:${snapshot}`}
+          ns={ns}
           artistId={artistId}
           artistName={artist.name}
           stored={stored}
@@ -196,6 +214,7 @@ export function SharesPanel({
 /* ─────────────────────────── Éditeur (3 onglets) ─────────────────────────── */
 
 function SharesEditor({
+  ns,
   artistId,
   artistName,
   stored,
@@ -203,6 +222,7 @@ function SharesEditor({
   onSaved,
   onCancel,
 }: {
+  ns: SharesNs;
   artistId: string;
   artistName: string;
   stored: ArtistShares | null;
@@ -210,7 +230,7 @@ function SharesEditor({
   onSaved: () => void;
   onCancel: () => void;
 }) {
-  const t = useTranslations("revenue.shares");
+  const t = useTranslations(ns);
   const ids = useId();
   const [tab, setTab] = useState<Tab>(stored?.contractFileName ? "upload" : "percent");
   const [master, setMaster] = useState(stored?.masterSharePct == null ? "" : String(stored.masterSharePct));
@@ -292,7 +312,7 @@ function SharesEditor({
       <div className="flex flex-col gap-1.5">
         <div className="flex h-8 items-center gap-2">
           <Switch id={`${ids}-author`} checked={isAuthor} onCheckedChange={setIsAuthor} />
-          <Label htmlFor={`${ids}-author`}>{t("fields.isAuthor")}</Label>
+          <Label htmlFor={`${ids}-author`}>{t("fields.isAuthor", { artist: artistName })}</Label>
         </div>
         {isAuthor && (
           <>
@@ -399,7 +419,9 @@ function SharesEditor({
 
       {/* 3 — Courrier au label */}
       <TabsContent value="request" className="pt-3">
-        <p className="max-w-[64ch] text-sm text-muted-foreground">{t("request.lead")}</p>
+        <p className="max-w-[64ch] text-sm text-muted-foreground">
+          {t("request.lead", { artist: artistName })}
+        </p>
         <Label htmlFor={`${ids}-letter`} className="sr-only">
           {t("request.letterLabel")}
         </Label>
