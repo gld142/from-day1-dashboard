@@ -6,9 +6,7 @@
  * Label : mêmes rituels agrégés roster + top movers cliquables.
  */
 import { useMemo } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowLeft,
@@ -27,7 +25,6 @@ import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Button } from "@/components/ui/button";
-import { LetterCascade } from "@/components/ui/letter-cascade";
 import {
   InsightCard,
   type InsightTone,
@@ -66,18 +63,9 @@ import type { TikTokSignal } from "@/lib/demo/api";
 import type { Provenance } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
-import { useHydrated, useSkin } from "@/lib/skin";
+import { useEntryReveal, useSkin } from "@/lib/skin";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { cn } from "@/lib/utils";
-
-/**
- * Fond WebGL du héros (skin artiste) : chargé à la demande, jamais rendu
- * côté serveur ni embarqué dans le bundle de la skin structure.
- */
-const HeroAurora = dynamic(
-  () => import("@/components/modules/signature/hero-aurora").then((m) => m.HeroAurora),
-  { ssr: false },
-);
 
 const DAY_MS = 86_400_000;
 
@@ -156,11 +144,9 @@ export default function PulsePage() {
   const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId } =
     useRole();
   const skin = useSkin();
-  const reduceMotion = useReducedMotion();
-  const hydrated = useHydrated();
-  /* Aurora du héros : skin artiste seulement, jamais sous reduced-motion,
-     et seulement après hydratation (pas d'équivalent HTML côté serveur). */
-  const aurora = hydrated && skin === "artist" && !reduceMotion;
+  /* La salutation fond en 300 ms aux navigations client ; au chargement
+     initial, elle est là dès le HTML serveur (LCP). */
+  const entry = useEntryReveal();
 
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
@@ -461,23 +447,17 @@ export default function PulsePage() {
 
       {artistView && (
         <div className="space-y-4">
-          {/* Salutation (skin artiste) : « Bonjour Dadju » en cascade de
-              lettres, une fois au montage. En structure, le sous-titre suffit. */}
+          {/* Salutation (skin artiste) : « Bonjour Dadju », texte brut, simple
+              fondu. En structure, le sous-titre suffit. */}
           {skin === "artist" && (
             <p
               data-greeting
-              className="font-heading text-lg font-medium tracking-tight text-foreground"
+              className={cn(
+                "font-heading text-lg font-medium tracking-tight text-foreground",
+                entry && "fade-in",
+              )}
             >
-              <LetterCascade
-                text={t("greeting", { name: artistView.artist.name })}
-                autoPlay
-                autoPlayDelay={0.5}
-                interactive={false}
-                staggerDuration={0.03}
-                stiffness={170}
-                damping={20}
-                className="justify-start"
-              />
+              {t("greeting", { name: artistView.artist.name })}
             </p>
           )}
           {/* Héro + KPIs */}
@@ -500,7 +480,6 @@ export default function PulsePage() {
                 sparkColor="var(--brand)"
                 provenance={artistView.streamsProvenance}
               />
-              {aurora && <HeroAurora />}
               <SunriseArc />
             </KpiStaggerItem>
             <KpiStaggerItem>

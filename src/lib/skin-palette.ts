@@ -1,5 +1,5 @@
 /**
- * Palette hex des couches WebGL (SilkAurora, AnimatedGradient) : les shaders
+ * Palette hex de la couche WebGL du bandeau /welcome (AnimatedGradient) : les shaders
  * ne lisent pas les tokens oklch de globals.css, on leur donne l'équivalent
  * sRGB de l'accent « artiste » de chaque thème (--brand-base +8° / +10 % de
  * chroma) et d'une teinte claire de la même famille (sheen).
@@ -33,11 +33,4 @@ function isThemeId(theme: string | undefined): theme is ThemeId {
 /** Palette du thème courant ; nuit par défaut (thème inconnu ou pas encore monté). */
 export function paletteFor(theme: string | undefined): WebglPalette {
   return WEBGL_PALETTE[isThemeId(theme) ? theme : "night"];
-}
-
-/** Inverse d'une couleur hex (#rrggbb) : sert au thème clair (filter: invert). */
-export function invertHex(hex: string): string {
-  const n = parseInt(hex.replace("#", ""), 16);
-  const inv = 0xffffff - n;
-  return `#${inv.toString(16).padStart(6, "0")}`;
 }

@@ -6,7 +6,7 @@
  *  - "structure" (persona label) : précision, retenue — rayons 8 px, accent
  *    désaturé, aucune lueur, mouvements sobres (opacité, glissements de layout).
  *  - "artist" (persona artiste) : chaleur, souffle — rayons 14 px, accent plus
- *    chaud, halo doux, entrées décalées, aurora sur le héros.
+ *    chaud, halo doux, entrées décalées, salutation en fondu.
  *
  * La skin est posée en `data-skin` sur le shell du dashboard (DashboardShell) ;
  * elle ne change QUE des tokens CSS (globals.css) et la signature de mouvement.
@@ -51,7 +51,7 @@ const noopSubscribe = () => () => {};
 
 /**
  * Faux pendant le rendu serveur et l'hydratation, vrai ensuite : pour monter
- * ce qui n'a pas d'équivalent HTML (couches WebGL) sans divergence
+ * ce qui n'a pas d'équivalent HTML (couche WebGL de /welcome) sans divergence
  * serveur / client.
  */
 export function useHydrated(): boolean {

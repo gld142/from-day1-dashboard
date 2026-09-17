@@ -16,7 +16,7 @@ Une **skin** dérivée de la persona (`label` → `structure`, `artist` → `art
 
 ## Skin « artiste » — chaleur, souffle
 - Tokens : rayon 14 px, accent violet plus chaud (+8° de teinte, +10 % de saturation), `brand-glow` doux conservé sur le héros.
-- Pulse artiste : fond du héros en `SilkAurora` (WebGL, opacité 0,18, teintes de la marque, désactivé si reduced-motion ou si WebGL indisponible → fond plat), ligne de salutation « Bonjour Dadju » en `LetterCascade`.
+- Pulse artiste : salutation « Bonjour Dadju » en texte brut, simple fondu de 300 ms aux navigations client. **V2 (17/09)** : l'aurora WebGL (`SilkAurora`) et la cascade de lettres (`LetterCascade`) de la V1 sont retirées — verdict de Gaël : coût (LCP, bundle) supérieur à l'effet, et les améliorations jugées timides sur les graphiques. La signature artiste se porte désormais sur des graphiques porteurs de données : calendrier « 365 jours d'écoute » et donut « part par plateforme » sur `/streams` (rampe monochrome de la marque, plus chaude via l'accent de la skin), et signature locale des splits sur `/splits`.
 - Titres de page : `TextMorph` à la bascule d'artiste (le nom se transforme), sinon `KineticTextReveal` doux (caractères, 400 ms).
 - Board d'estimation : tuiles en entrée décalée (stagger 60 ms) ; badges de provenance inchangés.
 - Welcome (`/welcome`, vue artiste) : `AnimatedGradient` très léger derrière le bandeau co-brandé.
@@ -27,4 +27,4 @@ Split Flap Display (gadget, illisible pour un label), Matrix Rain, Image Ripple/
 ## Garde-fous
 - Aucun changement sur `main`/prod avant validation : branche `motion-skins`, déploiement **preview** Vercel.
 - Tests et audit visuel Playwright verts ; détecteur impeccable rejoué sur Pulse / Roster / Revenus / Welcome : les signalements « dark-glow », « ai-color-palette » ne doivent pas augmenter en skin structure.
-- Budget performance : Pulse artiste ≤ +150 ms de TTI sur un MacBook ; WebGL uniquement sur le héros.
+- Budget performance : Pulse artiste ≤ +150 ms de TTI sur un MacBook ; V2 : LCP du Pulse artiste à ±20 ms de la prod `demo-universal` (plus aucun WebGL sur le dashboard ; seul le bandeau `/welcome` en garde un, discret).
