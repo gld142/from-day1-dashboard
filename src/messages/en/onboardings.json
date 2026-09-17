@@ -3,7 +3,7 @@
   "subtitle": "The pipeline that makes From Day 1 an industry standard — not just another tool.",
   "kpis": {
     "targeted": "Targeted partners",
-    "targetedHint": "9 channels, one owner each",
+    "targetedHint": "10 channels, one owner each",
     "inDiscussion": "In discussion",
     "inDiscussionHint": "Active conversations this month",
     "pilots": "Pilots targeted M+3",
@@ -83,6 +83,27 @@
         "r2": {
           "risk": "Confidential data",
           "mitigation": "Starts with zero Capitol data, statements kept local, France hosting, DPA from the pilot onward"
+        }
+      }
+    },
+    "umpg": {
+      "name": "Universal Music Publishing France",
+      "tag": "Publisher (Universal)",
+      "brings": "The songwriters of France's #1 publisher, the publishing statements, legitimacy on the work",
+      "weBring": "The song view: continuous writer's share, France Rights, splits, funder's file with publisher attestation",
+      "nextAction": "Meeting with Bertil David — pilot on 3 songwriters / 1 A&R",
+      "pitch": "A songwriter signed with UMPG lives with 18 months of delay on their own music and a bank that can't read their rights. Day One tracks the work every day, reconciles SACEM statements, signs the splits, and produces the funder's file that turns the catalog into an asset — with the publisher as the third party attesting the flow. 90-day pilot on 3 songwriters.",
+      "m3": "Pilot signed, 3 songwriters tracked, one SACEM statement imported and reconciled",
+      "m9": "Song-level view delivered; first funder's file accepted by a partner bank",
+      "m18": "Extension to the UMPG France roster; publisher attestation built into the journey",
+      "risks": {
+        "r1": {
+          "risk": "The publisher sees a tool that pushes songwriters to file claims",
+          "mitigation": "The gap is always attributed to the platform; the publisher is the trusted third party who attests, never the audited party"
+        },
+        "r2": {
+          "risk": "SACEM royalty-distribution mandates don't allow pledging as collateral",
+          "mitigation": "SACEM bylaws checked with UMPG legal before any promise; the funder's file stays useful without collateral"
         }
       }
     },

@@ -51,6 +51,49 @@
         }
       }
     },
+    "umpg": {
+      "name": "Universal Music Publishing France",
+      "welcomeTitle": "Bienvenue, auteurs <accent>Universal Music Publishing</accent> — votre œuvre, en continu",
+      "welcomeBody": "Vos droits arrivent avec 6 à 18 mois de retard. Day One suit ce que vos œuvres génèrent chaque jour, votre part d'auteur, vos relevés SACEM — et prépare le dossier qui montre votre catalogue comme un actif.",
+      "offer": "Pilote 90 jours — 3 auteurs, 1 A&R",
+      "steps": {
+        "1": {
+          "title": "Connectez vos œuvres",
+          "desc": "Vos titres, vos interprètes, vos splits : les streams publics arrivent dès le premier jour ; vos relevés SACEM et d'édition, quand vous les importez, calibrent votre part."
+        },
+        "2": {
+          "title": "Suivez votre part d'auteur",
+          "desc": "Chaque jour : brut généré par les plateformes, part édition, part auteur selon vos splits — en fourchette, avec la provenance de chaque chiffre."
+        },
+        "3": {
+          "title": "Montrez votre catalogue comme un actif",
+          "desc": "Historique 24 mois, prévisionnel 12 mois, valorisation en fourchette, attestation de votre éditeur : le dossier financeur que votre banque sait lire."
+        }
+      },
+      "firstInsight": "« Sur les 3 artistes de la démo, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos — sur les œuvres comme sur les masters, c'est la plateforme qu'on interroge, jamais l'éditeur. »",
+      "values": {
+        "1": {
+          "promise": "18 mois de retard sur ses propres droits",
+          "delivery": "Estimation quotidienne de la part d'auteur, réconciliée à chaque relevé SACEM"
+        },
+        "2": {
+          "promise": "Des splits flous, des œuvres non déclarées",
+          "delivery": "Splits signés par œuvre, Droits FR : attendu vs reçu, œuvres à déclarer"
+        },
+        "3": {
+          "promise": "« Vos revenus ne sont pas stables »",
+          "delivery": "Dossier financeur : historique, prévisionnel, valorisation, attestation éditeur — pour la banque"
+        },
+        "4": {
+          "promise": "Un outil pensé master, jamais œuvre",
+          "delivery": "Vue par œuvre construite avec vous : interprètes, enregistrements, plateformes, syncs"
+        },
+        "5": {
+          "promise": "Un abonnement de plus",
+          "delivery": "Déductible en frais réels ; déployable par l'éditeur dans un programme CNM de transition numérique"
+        }
+      }
+    },
     "universal": {
       "name": "Universal Music France",
       "welcomeTitle": "Bienvenue, équipes <accent>Universal</accent> — vos artistes voient enfin ce que vous voyez",

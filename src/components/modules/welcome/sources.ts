@@ -4,7 +4,7 @@
  * `/welcome?source=<id>`. Les textes vivent dans messages/<locale>/welcome.json ;
  * ici, uniquement la configuration structurelle (logo, persona, sidebar).
  */
-export type WelcomeSource = "capitol" | "universal" | "believe" | "direct";
+export type WelcomeSource = "capitol" | "umpg" | "universal" | "believe" | "direct";
 
 export type SourceConfig = {
   id: WelcomeSource;
@@ -35,6 +35,17 @@ export const SOURCES: Record<WelcomeSource, SourceConfig> = {
     hidden: ["urssaf", "fractional"],
     persona: "label",
     landing: "/roster",
+  },
+  umpg: {
+    id: "umpg",
+    logo: "UNIVERSAL MUSIC PUBLISHING",
+    logoBg: "#1d1d1f",
+    logoFg: "#ffffff",
+    values: 5,
+    sidebar: ["pulse", "revenue", "rights", "splits", "valuation", "audit", "day1index", "contracts"],
+    hidden: ["arwatch", "fractional"],
+    persona: "artist",
+    landing: "/pulse",
   },
   universal: {
     id: "universal",

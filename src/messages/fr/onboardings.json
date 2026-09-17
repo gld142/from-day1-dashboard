@@ -3,7 +3,7 @@
   "subtitle": "Le pipeline qui fait de From Day 1 un standard de place — pas juste un outil de plus.",
   "kpis": {
     "targeted": "Partenaires ciblés",
-    "targetedHint": "9 canaux, un owner chacun",
+    "targetedHint": "10 canaux, un owner chacun",
     "inDiscussion": "En discussion",
     "inDiscussionHint": "Conversations actives ce mois-ci",
     "pilots": "Pilotes visés M+3",
@@ -83,6 +83,27 @@
         "r2": {
           "risk": "Données confidentielles",
           "mitigation": "Démarrage sans donnée Capitol, relevés en local, hébergement France, DPA dès le pilote"
+        }
+      }
+    },
+    "umpg": {
+      "name": "Universal Music Publishing France",
+      "tag": "Éditeur (Universal)",
+      "brings": "Les auteurs-compositeurs du premier éditeur de France, les relevés d'édition, la légitimité sur l'œuvre",
+      "weBring": "La vue œuvre : part d'auteur en continu, Droits FR, splits, dossier financeur avec attestation éditeur",
+      "nextAction": "Rendez-vous avec Bertil David — pilote 3 auteurs / 1 A&R",
+      "pitch": "Un auteur signé chez UMPG vit avec 18 mois de retard sur sa propre musique et une banque qui ne sait pas lire ses droits. Day One suit l'œuvre chaque jour, réconcilie les relevés SACEM, signe les splits, et produit le dossier financeur qui fait du catalogue un actif — avec l'éditeur comme tiers qui atteste le flux. Pilote 90 jours sur 3 auteurs.",
+      "m3": "Pilote signé, 3 auteurs suivis, un relevé SACEM importé et rapproché",
+      "m9": "Vue par œuvre livrée ; premier dossier financeur accepté par une banque partenaire",
+      "m18": "Extension au roster UMPG France ; attestation éditeur intégrée au parcours",
+      "risks": {
+        "r1": {
+          "risk": "L'éditeur y voit un outil qui pousse les auteurs à réclamer",
+          "mitigation": "L'écart est toujours attribué à la plateforme ; l'éditeur est le tiers de confiance qui atteste, jamais l'audité"
+        },
+        "r2": {
+          "risk": "Les délégations de répartition SACEM ne permettent pas le nantissement",
+          "mitigation": "Vérification des statuts SACEM avec le juridique UMPG avant toute promesse ; le dossier financeur reste utile sans sûreté"
         }
       }
     },
