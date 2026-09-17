@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Fractional ownership — préversion Bolero/Anote.
+ * Fractional ownership — préversion (page non listée).
  * Simulateur : vendre N % de ses royalties futures sur 2/3/5 ans,
  * calculé depuis la valorisation catalogue + le forecast de revenus.
  */
