@@ -151,12 +151,14 @@ export function SplitTrackCard({
             <Image
               src={signature.dataUrl}
               alt=""
-              width={72}
+              width={64}
               height={24}
               unoptimized
-              className="h-6 w-auto max-w-20 shrink-0 object-contain"
+              className="h-6 w-auto max-w-16 shrink-0 object-contain"
             />
-            <span className="truncate">
+            {/* Passe à la ligne comme « Mis à jour le », plutôt que de se tronquer
+                quand « Relancer » reste (un co-signataire en attente). */}
+            <span className="min-w-0">
               {t("sign.signedOn", { date: fmtDate(locale, signature.signedAt) })}
             </span>
           </span>
