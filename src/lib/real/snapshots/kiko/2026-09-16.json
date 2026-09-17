@@ -1,34 +1,34 @@
 {
   "date": "2026-09-16",
-  "capturedAt": "2026-09-16T22:50:00Z",
+  "capturedAt": "2026-09-16T13:10:00Z",
   "spotify": {
-    "monthlyListeners": 24000,
+    "monthlyListeners": 24222,
     "followers": 22615,
     "topTracks": [
       {
         "name": "Odjo",
         "spotifyId": "7mdQBTYooLfkpVuI41efuN",
-        "playcount": 204474
+        "playcount": 204156
       },
       {
         "name": "Business class",
         "spotifyId": "2knf3OaX4adOi2OhE10yvL",
-        "playcount": 122874
+        "playcount": 122561
       },
       {
         "name": "One in a million",
         "spotifyId": "7aNwUVanTfC4twYXfMNMbW",
-        "playcount": 124880
+        "playcount": 124577
       },
       {
         "name": "Rayon de soleil",
         "spotifyId": "0jaCOkFpwUIDjKjzJ8ZijL",
-        "playcount": 70296
+        "playcount": 70064
       },
       {
         "name": "Ding Deng Dong",
         "spotifyId": "650AKFNGe0muA8a5tgZMpo",
-        "playcount": 91706
+        "playcount": 91556
       }
     ]
   },
@@ -85,37 +85,37 @@
         "videoId": "kAZemdOXMwc",
         "title": "Kiko - Odjo (Clip Officiel)",
         "channel": "official",
-        "views": 1437608
+        "views": 1435402
       },
       {
         "videoId": "6MEhlDvRi1Y",
         "title": "Kiko - Business Class (Clip Officiel)",
         "channel": "official",
-        "views": 425151
+        "views": 423023
       },
       {
         "videoId": "SuYvD4b5-0A",
         "title": "Kiko - One in a Million (Performance Video)",
         "channel": "official",
-        "views": 533083
+        "views": 532496
       },
       {
         "videoId": "01OPuODYWdc",
         "title": "Kiko - Ding Deng Dong (Clip Officiel)",
         "channel": "official",
-        "views": 268928
+        "views": 268741
       },
       {
         "videoId": "iLd3rKsMUcY",
         "title": "NIKANOR feat. KIKO - Rayon de soleil (Clip Officiel)",
         "channel": "official",
-        "views": 1107210
+        "views": 1106294
       },
       {
         "videoId": "DPoGSe392z4",
         "title": "Kiko - Agama feat. Folidjanta & Conii Gangster (Clip Officiel)",
         "channel": "official",
-        "views": 4464036
+        "views": 4462864
       }
     ]
   },
@@ -123,27 +123,27 @@
     {
       "city": "Lomé",
       "country": "TG",
-      "listeners": 4523
+      "listeners": 4565
     },
     {
       "city": "Abidjan",
       "country": "CI",
-      "listeners": 2677
+      "listeners": 2686
     },
     {
       "city": "Cotonou",
       "country": "BJ",
-      "listeners": 1258
+      "listeners": 1269
     },
     {
       "city": "Kinshasa",
       "country": "CD",
-      "listeners": 981
+      "listeners": 985
     },
     {
       "city": "Conakry",
       "country": "GN",
-      "listeners": 749
+      "listeners": 755
     }
   ]
 }

@@ -11,10 +11,10 @@
  *         npm run snapshot -- 2026-09-16
  *         npm run snapshot -- --force  (écrase un relevé déjà présent pour cette date)
  *
- * Chaque relevé porte `capturedAt` (instant UTC de la capture) : les deltas de
- * compteurs cumulés (play counts Spotify, vues YouTube) sont normalisés par le
- * temps réellement écoulé entre deux relevés. Un relevé existant pour la même
- * date n'est jamais écrasé en silence (le delta serait perdu) : `--force`.
+ * Chaque relevé porte `capturedAt` (instant UTC de la capture) : il sert à
+ * compter les rafraîchissements Spotify (un par jour, d'un bloc) et à
+ * extrapoler les vues YouTube entre deux relevés. Un relevé existant pour la
+ * même date n'est jamais écrasé en silence (sa capture serait perdue) : `--force`.
  *
  * Variables : YOUTUBE_API_KEY (optionnelle) → abonnés + 50 dernières vidéos de la chaîne.
  */
