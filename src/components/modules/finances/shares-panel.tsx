@@ -336,7 +336,13 @@ function SharesEditor({
 
   return (
     <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)} className="mt-4">
-      <TabsList aria-label={t("tabs.label")} className="h-auto flex-wrap">
+      {/* Sur mobile les trois onglets s'empilent : la liste doit grandir avec
+          eux (la hauteur fixe `h-8` de la variante horizontale primait sur
+          `h-auto` et les onglets repliés recouvraient le formulaire). */}
+      <TabsList
+        aria-label={t("tabs.label")}
+        className="h-auto flex-wrap group-data-horizontal/tabs:h-auto"
+      >
         <TabsTrigger value="percent" className="text-xs">
           <Percent aria-hidden />
           {t("tabs.percent")}
