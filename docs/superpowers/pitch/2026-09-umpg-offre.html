@@ -1,0 +1,128 @@
+<title>Day One × Universal Music Publishing</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #fbfbfd; --surface: #ffffff; --ink: #17171d; --muted: #666676; --line: #e4e3ec;
+    --accent: #6a5ae6; --accent-ink: #ffffff; --accent-soft: #efedfc;
+    --measured: #1f8a5b; --estimated: #b7791f; --simulated: #6b6b78;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Geist", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --display: "Instrument Sans", "Geist", -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e0e13; --surface: #16161d; --ink: #ececf2; --muted: #9a9aa8; --line: #26262f;
+      --accent: #8f82ff; --accent-ink: #0e0e13; --accent-soft: #1d1a33;
+      --measured: #4ec58f; --estimated: #e0a84a; --simulated: #8b8b99;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e0e13; --surface: #16161d; --ink: #ececf2; --muted: #9a9aa8; --line: #26262f;
+    --accent: #8f82ff; --accent-ink: #0e0e13; --accent-soft: #1d1a33;
+    --measured: #4ec58f; --estimated: #e0a84a; --simulated: #8b8b99;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.55; }
+  main { max-width: 74ch; margin: 0 auto; padding: 48px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+  .chip { font-family: var(--display); font-weight: 700; letter-spacing: .08em; font-size: 12px; padding: 7px 11px; border-radius: 6px; }
+  .chip.capitol { background: #1d1d1f; color: #fff; }
+  .chip.fd1 { background: var(--accent); color: var(--accent-ink); }
+  .brand .x { color: var(--muted); font-size: 14px; }
+  .brand .meta { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  h1 { font-family: var(--display); font-weight: 600; font-size: 34px; line-height: 1.12; letter-spacing: -.02em; margin: 0 0 12px; text-wrap: balance; }
+  .lede { font-size: 17px; color: var(--muted); max-width: 62ch; margin: 0 0 40px; text-wrap: pretty; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -.01em; margin: 44px 0 14px; padding-top: 22px; border-top: 1px solid var(--line); text-wrap: balance; }
+  h2 .no { font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--muted); margin-right: 10px; letter-spacing: .04em; }
+  p { margin: 0 0 12px; max-width: 68ch; }
+  .quote { border-left: 2px solid var(--accent); padding: 4px 0 4px 16px; color: var(--ink); font-family: var(--display); font-size: 17px; margin: 18px 0 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  .scroll { overflow-x: auto; margin: 14px 0 6px; }
+  th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid currentColor; line-height: 1.5; white-space: nowrap; }
+  .pill.m { color: var(--measured); } .pill.e { color: var(--estimated); } .pill.s { color: var(--simulated); }
+  .steps { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 0; }
+  .steps li { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .steps .when { font-family: var(--mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+  .steps strong { font-weight: 600; display: block; margin-bottom: 2px; }
+  .offer { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+  .tier { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; background: var(--surface); display: grid; grid-template-columns: 1fr auto; gap: 8px 18px; align-items: start; }
+  .tier.lead { border-color: var(--accent); background: var(--accent-soft); }
+  .tier h3 { margin: 0; font-family: var(--display); font-size: 16px; font-weight: 600; }
+  .tier .price { font-family: var(--mono); font-size: 15px; white-space: nowrap; text-align: right; }
+  .tier .price small { display: block; font-size: 11px; color: var(--muted); font-family: var(--sans); }
+  .tier p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 14px; }
+  ul.ask { padding-left: 18px; margin: 12px 0 0; }
+  ul.ask li { margin-bottom: 6px; }
+  .cta { margin-top: 40px; padding: 20px 22px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; }
+  .cta a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .cta a:hover, .cta a:focus-visible { text-decoration: underline; outline: none; }
+  .cta code { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .foot { margin-top: 36px; font-size: 12.5px; color: var(--muted); max-width: 68ch; }
+  @media (max-width: 560px) { .steps li { grid-template-columns: 1fr; gap: 4px; } .tier { grid-template-columns: 1fr; } .tier .price { text-align: left; } .brand .meta { margin-left: 0; } }
+</style>
+<main>
+  <div class="brand">
+    <span class="chip capitol">UNIVERSAL MUSIC PUBLISHING</span><span class="x">×</span><span class="chip fd1">FROM DAY 1</span>
+    <span class="meta">Proposition de pilote · septembre 2026</span>
+  </div>
+
+  <h1>Votre œuvre, en continu</h1>
+  <p class="lede">Un auteur signé vit avec 6 à 18 mois de retard sur sa propre musique, et une banque qui ne sait pas lire ses droits. Day One suit l'œuvre chaque jour, réconcilie les relevés, signe les splits — et fait du catalogue un actif que l'éditeur atteste.</p>
+
+  <h2><span class="no">01</span>Ce que vivent vos auteurs et vos A&amp;R</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Qui</th><th>Aujourd'hui</th><th>Ce qu'on entend</th></tr></thead>
+    <tbody>
+      <tr><td><strong>L'auteur-compositeur</strong></td><td>Ses droits arrivent par la SACEM (trimestriels, décalés), par l'éditeur (semestriels), par les syncs (ponctuels). Il ne sait ni ce qu'il a gagné ce mois-ci, ni ce que vaut son catalogue.</td><td>« Je vis avec 18 mois de retard sur ma propre musique. »</td></tr>
+      <tr><td><strong>L'A&amp;R publishing</strong></td><td>Il suit ses auteurs dans des outils pensés master : l'artiste, pas l'œuvre. Aucune vue « quels titres, chez quels interprètes, sur quelles plateformes ».</td><td>« Je sais ce que fait l'artiste, pas ce que fait l'œuvre. »</td></tr>
+      <tr><td><strong>L'éditeur</strong></td><td>Les avances sont des paris à recoupement lent ; les auteurs en demandent quand ils ont besoin de trésorerie, pas quand le catalogue le justifie.</td><td>« On finance des carrières avec des avances, personne ne finance des catalogues. »</td></tr>
+      <tr><td><strong>La banque de l'auteur</strong></td><td>Un BNC irrégulier, sans fiche de paie, des « droits d'auteur » que le conseiller ne sait pas lire.</td><td>« Vos revenus ne sont pas stables. »</td></tr>
+    </tbody>
+  </table></div>
+  <p class="quote">L'œuvre génère de l'argent partout. Personne ne la voit comme un actif — ni l'auteur, ni sa banque.</p>
+
+  <h2><span class="no">02</span>Ce que Day One montre</h2>
+  <p>Chaque chiffre porte sa provenance — <span class="pill m">mesuré</span> sur les compteurs publics, <span class="pill e">estimé</span> par notre modèle, <span class="pill s">simulé</span> pour la démonstration.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Pour</th><th>Écran</th><th>Ce qu'il donne</th><th>Provenance</th></tr></thead>
+    <tbody>
+      <tr><td>L'auteur</td><td>Pulse · Revenus</td><td>Ce que ses œuvres génèrent chaque jour, sa part d'auteur selon ses splits — en fourchette, avant le relevé SACEM.</td><td><span class="pill e">estimé</span></td></tr>
+      <tr><td>L'auteur</td><td>Droits FR · Splits</td><td>SACEM, ADAMI, SPEDIDAM : attendu vs reçu, œuvres à déclarer ; splits signés par œuvre, gelés tant qu'ils ne le sont pas.</td><td><span class="pill s">simulé</span> jusqu'aux relevés réels</td></tr>
+      <tr><td>L'auteur</td><td>Dossier financeur</td><td>Historique 24 mois, prévisionnel 12 mois, valorisation en fourchette, attestation de l'éditeur : le dossier que sa banque sait lire.</td><td>à construire avec vous</td></tr>
+      <tr><td>L'A&amp;R</td><td>Roster · Pulse roster</td><td>Chaque auteur sur une ligne : ce qui bouge cette nuit, où, sur quel titre.</td><td><span class="pill m">mesuré</span></td></tr>
+      <tr><td>L'A&amp;R</td><td>Audit</td><td>Ce que les plateformes sous-paient sur les œuvres. L'écart est attribué à la plateforme, jamais à l'éditeur.</td><td><span class="pill e">estimé</span></td></tr>
+      <tr><td>La direction</td><td>Contrats · Exports</td><td>Recoupement des avances, échéances, options — plus de tableur.</td><td><span class="pill s">simulé</span> jusqu'aux contrats réels</td></tr>
+    </tbody>
+  </table></div>
+  <p>Ce qui manque aujourd'hui pour être vraiment « publishing », et qu'on construit avec vous, pas contre vous : la vue par œuvre (une œuvre, ses interprètes, ses enregistrements, ses plateformes), l'import des relevés de répartition SACEM, l'historique des syncs.</p>
+
+  <h2><span class="no">03</span>Le catalogue comme actif — ce qui tient, ce qui reste à vérifier</h2>
+  <p>Les redevances sont des créances : elles peuvent être nanties, y compris les créances futures (art. 2355 et s. du Code civil ; art. 2357). C'est déjà la logique des avances d'éditeur et des cessions de catalogue. Ce qui n'existe pas pour un auteur français, c'est le prêt bancaire adossé à ses droits — parce qu'il manque un dossier lisible et un tiers qui confirme le flux.</p>
+  <p>Ce que Day One propose de construire avec UMPG : le <strong>dossier financeur</strong> — revenus par source sur 24 mois, part récurrente du catalogue, prévisionnel 12 mois en fourchette, valorisation avec sa méthode, et l'<strong>attestation de l'éditeur</strong> confirmant le flux de droits. Une banque partenaire, pas le marché entier.</p>
+  <p>À vérifier avec votre juridique avant toute promesse : ce que les statuts de la SACEM permettent en matière de délégation et de nantissement des répartitions. Et deux choses vraies, prudentes, que l'auteur peut entendre dès maintenant : son abonnement est déductible en frais réels ; sa structure peut inscrire le déploiement dans une aide CNM à la transition numérique.</p>
+
+  <h2><span class="no">04</span>Le pilote — 90 jours</h2>
+  <ol class="steps">
+    <li><span class="when">Semaine 1</span><div><strong>Trois auteurs apparaissent</strong>Streams publics de leurs interprètes mesurés chaque jour, part d'auteur estimée en fourchette, portail co-brandé.</div></li>
+    <li><span class="when">Semaines 2–4</span><div><strong>Relevés et contrat d'édition</strong>Un relevé de répartition SACEM importé et rapproché ; les splits renseignés ; l'estimation devient une mesure.</div></li>
+    <li><span class="when">Semaines 5–12</span><div><strong>Vue par œuvre et dossier financeur</strong>Construits avec un A&amp;R référent ; premier dossier présenté à une banque partenaire.</div></li>
+    <li><span class="when">Ce qu'on mesure</span><div><strong>M+1</strong> un relevé SACEM rapproché. <strong>M+3</strong> la vue par œuvre livrée ; un dossier financeur accepté.</div></li>
+  </ol>
+
+  <h2><span class="no">05</span>Ce qu'on vous demande pour démarrer</h2>
+  <ul class="ask">
+    <li>Les noms de 2–3 auteurs et d'un A&amp;R référent.</li>
+    <li>Un relevé de répartition SACEM par auteur (anonymisé si besoin) et un contrat d'édition type.</li>
+    <li>Une lecture de votre juridique sur les délégations SACEM.</li>
+    <li>Un logo pour le co-branding.</li>
+  </ul>
+
+  <div class="cta">
+    <a href="https://deploy-one-tawny-59.vercel.app/welcome?source=umpg">Ouvrir l'écran Universal Music Publishing × From Day 1</a>
+    <code>deploy-one-tawny-59.vercel.app/welcome?source=umpg</code>
+  </div>
+  <p class="foot">Day One est édité par From Day 1. Cette proposition est documentaire : les points juridiques et fiscaux (nantissement, déductibilité, aides CNM) sont à valider par un conseil avant d'être présentés comme des engagements. Les chiffres de la démonstration sont ceux de trois artistes réels relevés chaque jour ; contrats, splits et relevés de la démonstration sont simulés et signalés comme tels.</p>
+</main>
