@@ -110,4 +110,20 @@ describe("navItemByHref", () => {
     expect(navItemByHref("/calculator")?.labelKey).toBe("items.calculator");
     expect(navItemByHref("/nulle-part")).toBeNull();
   });
+
+  it("chaque page a une description dans settings.modules.desc (fr et en)", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { fileURLToPath } = await import("node:url");
+    for (const locale of ["fr", "en"]) {
+      const file = fileURLToPath(new URL(`../../messages/${locale}/settings.json`, import.meta.url));
+      const desc = (JSON.parse(readFileSync(file, "utf-8")) as { modules: { desc: Record<string, string> } })
+        .modules.desc;
+      for (const s of NAV_SECTIONS) {
+        for (const i of s.items) {
+          const key = i.labelKey.replace(/^items\./, "");
+          expect(desc[key], `${locale}: settings.modules.desc.${key}`).toBeTypeOf("string");
+        }
+      }
+    }
+  });
 });

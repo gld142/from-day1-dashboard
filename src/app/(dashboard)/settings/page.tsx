@@ -7,7 +7,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useTransition } from "react";
-import { Building2, Lock, MicVocal, Moon, RotateCcw, Sun, Sunrise } from "lucide-react";
+import { Building2, EyeOff, Lock, MicVocal, Moon, RotateCcw, Sun, Sunrise } from "lucide-react";
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
 import { LOCKED_MODULES } from "@/lib/nav";
@@ -53,7 +53,7 @@ export default function SettingsPage() {
               {t("modules.title")}
             </h2>
             <p className="mt-1 max-w-xl text-[13px] text-muted-foreground">
-              {t("modules.description")}
+              {t("modules.subtitle")}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -68,7 +68,7 @@ export default function SettingsPage() {
                 onClick={reset}
               >
                 <RotateCcw className="size-3" aria-hidden />
-                {t("modules.resetAll")}
+                {t("modules.reset")}
               </Button>
             )}
           </div>
@@ -84,6 +84,7 @@ export default function SettingsPage() {
                 {section.items.map((item) => {
                   const locked = LOCKED_MODULES.has(item.href);
                   const visible = isVisible(item);
+                  const key = item.labelKey.replace(/^items\./, "");
                   const Icon = item.icon;
                   return (
                     <li
@@ -104,7 +105,19 @@ export default function SettingsPage() {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm">{tn(item.labelKey)}</span>
+                          {item.internal && (
+                            <Badge
+                              variant="outline"
+                              className="h-5 rounded-full border-warning/50 px-2 text-[10px] text-warning"
+                            >
+                              <EyeOff className="mr-1 size-2.5" aria-hidden />
+                              {t("modules.internal")}
+                            </Badge>
+                          )}
                         </div>
+                        <p className="text-xs text-muted-foreground">
+                          {t(`modules.desc.${key}`)}
+                        </p>
                       </div>
                       {locked ? (
                         <Badge
