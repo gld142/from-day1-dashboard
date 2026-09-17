@@ -255,7 +255,7 @@ export default function RevenuePage() {
         subtitle={
           aggregated
             ? t("subtitleLabel")
-            : focused
+            : isLabel && focused
               ? t("subtitleFocused", { name: focused.name })
               : t("subtitle")
         }

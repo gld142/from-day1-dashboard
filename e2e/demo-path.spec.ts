@@ -29,6 +29,7 @@ const welcome = frMessages<{ cta: string }>("welcome");
 const pulse = frMessages<{ backToRoster: string }>("pulse");
 const common = frMessages<{ roles: { artist: string; label: string; switchTo: string } }>("common");
 const revenue = frMessages<{
+  subtitle: string;
   estimate: { period: Record<string, string> };
   shares: { title: string; label: { title: string; tabs: Record<string, string> } };
 }>("revenue");
@@ -145,6 +146,13 @@ for (const vp of VIEWPORTS) {
         await ready(page, theme);
         await expect(topbar(page)).not.toContainText(LABEL_NAME);
         await step("pulse-artist-dadju");
+
+        /* 8b. /revenue en persona artiste : textes à la 2e personne. */
+        await page.goto("/revenue?period=day", { waitUntil: "domcontentloaded" });
+        await ready(page, theme);
+        await expect(page.locator("main")).toContainText(revenue.subtitle);
+        await expect(page.locator("#ma-part-title")).toHaveText(revenue.shares.title);
+        await step("revenue-artist-dadju");
 
         /* 9. Retour structure → /roster → clic Kiko → /pulse (Kiko). */
         await switchPersona(page, "label");
