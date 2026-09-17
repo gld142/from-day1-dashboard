@@ -25,6 +25,8 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    // distDir de la QA e2e (build de prod servi par Playwright) : jamais linté.
+    ".next-e2e/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
