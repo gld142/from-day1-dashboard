@@ -129,7 +129,7 @@ export function KpiCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col gap-1 rounded-xl border bg-card p-4 transition-colors",
+        "group @container relative flex flex-col gap-1 rounded-xl border bg-card p-4 transition-colors",
         hero && "brand-glow bg-gradient-to-b from-card to-surface-2",
         className,
       )}
@@ -146,7 +146,18 @@ export function KpiCard({
         </span>
         {delta !== undefined && <DeltaChip value={delta} />}
       </div>
-      <div className={cn("num font-semibold tracking-tight", hero ? "text-3xl" : "text-2xl")}>
+      {/* Le chiffre rétrécit avec la tuile (container query sur la content-box,
+          padding exclu) : dans la rangée de 7 KPIs de Pulse entre 1280 et
+          1536 px, « 113,9 k € » en 24 px débordait de sa carte. Seuils calés
+          sur ce chiffre, le plus large : 128 px en 24 px, 107 en 20, 96 en 18. */}
+      <div
+        className={cn(
+          "num font-semibold tracking-tight",
+          hero
+            ? "text-3xl"
+            : "text-2xl @max-[8rem]:text-xl @max-[6.75rem]:text-lg @max-[6rem]:text-base",
+        )}
+      >
         <NumberFlow
           value={value}
           format={numberFormat}
