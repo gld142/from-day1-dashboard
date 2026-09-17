@@ -216,6 +216,11 @@
   --radius: 0.5rem;
   --glow: 0;
 }
+/* --glow: 0 rend le halo transparent ; on retire aussi l'ombre elle-même
+   (les détecteurs statiques lisent la règle, pas l'alpha calculé). */
+[data-skin="structure"] .brand-glow {
+  box-shadow: none;
+}
 
 [data-skin="artist"] {
   /* Rayon 14 px, halo doux conservé sur le héros. */
