@@ -12,7 +12,7 @@
  * elle ne change QUE des tokens CSS (globals.css) et la signature de mouvement.
  * Les trois thèmes (nuit / aube / jour) restent indépendants.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRole, type Persona } from "@/lib/role";
 
 export type Skin = "structure" | "artist";
@@ -45,4 +45,19 @@ export function useEntryReveal(): boolean {
     hydratedOnce = true;
   }, []);
   return enabled;
+}
+
+const noopSubscribe = () => () => {};
+
+/**
+ * Faux pendant le rendu serveur et l'hydratation, vrai ensuite : pour monter
+ * ce qui n'a pas d'équivalent HTML (couches WebGL) sans divergence
+ * serveur / client.
+ */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
 }
