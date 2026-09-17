@@ -37,7 +37,10 @@ export function Sidebar() {
         </div>
       </div>
 
-      <ScrollArea className="min-h-0 flex-1 px-2 pb-4">
+      {/* Le viewport Radix enveloppe le contenu dans un `display: table` qui
+          s'élargit au texte non tronqué : les badges sortaient du cadre. En
+          bloc, la largeur suit la sidebar et les libellés se tronquent. */}
+      <ScrollArea className="min-h-0 flex-1 px-2 pb-4 [&_[data-slot=scroll-area-viewport]>div]:block!">
         <nav className="flex flex-col gap-4 pt-2">
           {sections.map((section) => (
             <div key={section.labelKey}>
@@ -59,6 +62,8 @@ export function Sidebar() {
                       )}
                       <Link
                         href={item.href}
+                        // Libellé complet au survol quand il est tronqué par un badge.
+                        title={t(item.labelKey)}
                         className={cn(
                           "relative z-10 flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors",
                           active
