@@ -408,7 +408,7 @@ export function PartnerBoard({
         {PARTNER_STATUSES.map((col) => {
           const items = PARTNERS.filter((p) => statuses[p.id] === col);
           return (
-            <div key={col} className="rounded-xl border bg-surface-2/50 p-3">
+            <div key={col} className="min-w-0 rounded-xl border bg-surface-2/50 p-3">
               <div className="mb-3 flex items-center justify-between px-0.5">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   {t(`board.columns.${col}`)}

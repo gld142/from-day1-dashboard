@@ -31,7 +31,11 @@ export function PageHeader({
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{subtitle}</p>
         )}
       </div>
-      {children && <div className="flex shrink-0 items-center gap-2">{children}</div>}
+      {/* Les actions passent à la ligne entre elles si l'écran est étroit
+          (badge artiste + onglets de période sur mobile). */}
+      {children && (
+        <div className="flex max-w-full shrink-0 flex-wrap items-center gap-2">{children}</div>
+      )}
     </header>
   );
 }

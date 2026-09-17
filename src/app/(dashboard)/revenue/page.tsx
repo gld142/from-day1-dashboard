@@ -445,8 +445,9 @@ export default function RevenuePage() {
       </section>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-5">
-        {/* Donut */}
-        <section className="rise-in rounded-xl border bg-card p-5 lg:col-span-2">
+        {/* Donut — min-w-0 : la colonne de grille ne s'élargit pas au
+            contenu minimal de la liste voisine (débordement sur mobile). */}
+        <section className="rise-in min-w-0 rounded-xl border bg-card p-5 lg:col-span-2">
           <h2 className="mb-1 flex items-center gap-2 font-heading text-base font-semibold">
             <PieIcon className="size-4 text-brand" aria-hidden />
             {t("breakdown.title")}
@@ -484,7 +485,7 @@ export default function RevenuePage() {
         </section>
 
         {/* Liste par source */}
-        <section className="rise-in rounded-xl border bg-card p-5 lg:col-span-3">
+        <section className="rise-in min-w-0 rounded-xl border bg-card p-5 lg:col-span-3">
           <h2 className="mb-3 font-heading text-base font-semibold">
             {t("breakdown.source")}
           </h2>

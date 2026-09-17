@@ -64,18 +64,20 @@ export function Topbar() {
       {/* Sélecteur d'identité : qui suis-je / qui je regarde */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-9 gap-2 px-2">
+          {/* Seul élément compressible de la topbar : sur mobile, le nom
+              (« Day 1 Dashboard Pro ») se tronque au lieu de faire déborder la page. */}
+          <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2">
             {persona === "artist" ? (
               <>
                 <ArtistAvatar artist={artist} size="sm" />
-                <span className="text-sm font-medium">{artist.name}</span>
+                <span className="truncate text-sm font-medium">{artist.name}</span>
               </>
             ) : (
               <>
-                <span className="flex size-6 items-center justify-center rounded-md bg-brand/15 text-brand">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand/15 text-brand">
                   <Building2 className="size-3.5" aria-hidden />
                 </span>
-                <span className="text-sm font-medium">
+                <span className="truncate text-sm font-medium">
                   {focused ? focused.name : LABEL.name}
                 </span>
               </>
