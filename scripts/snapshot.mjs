@@ -17,12 +17,16 @@
  * même date n'est jamais écrasé en silence (sa capture serait perdue) : `--force`.
  *
  * Variables : YOUTUBE_API_KEY (optionnelle) → abonnés + 50 dernières vidéos de la chaîne.
+ *
+ * En fin de course, le relevé marché (Top 200 Spotify France + labels,
+ * scripts/snapshot-market.mjs) est lancé avec la même date ; son échec est
+ * signalé mais ne remet pas en cause les relevés artistes déjà écrits.
  */
 import { spawnSync } from "node:child_process";
 import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { chromium } from "@playwright/test";
+import { ROOT, SNAP_DIR, isSnapFile, writeIndex } from "./snapshot-index.mjs";
 
 /*
  * Mesuré le 15/09/2026 : avec NODE_USE_SYSTEM_CA=1 (trousseau macOS), Node refuse la
@@ -38,8 +42,6 @@ if (process.env.NODE_USE_SYSTEM_CA === "1") {
   process.exit(r.status ?? 1);
 }
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SNAP_DIR = join(ROOT, "src/lib/real/snapshots");
 const ARTISTS_FILE = join(ROOT, "scripts/artists.json");
 /** UA navigateur : YouTube, Kworb, Deezer et la page Spotify rendue. */
 const UA =
@@ -286,8 +288,6 @@ async function youtube(channelId, knownVideos) {
 }
 
 /* ── Fichiers ── */
-const isSnapFile = (f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f);
-
 const exists = (path) =>
   access(path).then(
     () => true,
@@ -317,43 +317,6 @@ async function previousSnapshot(id) {
     .at(-1);
   if (!prev) return null;
   return JSON.parse(await readFile(join(SNAP_DIR, id, `${prev}.json`), "utf8"));
-}
-
-/** Régénère src/lib/real/snapshots/index.ts à partir des fichiers présents. */
-async function writeIndex() {
-  const dirs = (await readdir(SNAP_DIR, { withFileTypes: true }))
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name)
-    .sort();
-  const imports = [];
-  const entries = [];
-  let latest = "";
-  for (const id of dirs) {
-    const dates = (await readdir(join(SNAP_DIR, id))).filter(isSnapFile).map((f) => f.slice(0, 10)).sort();
-    if (!dates.length) continue;
-    const names = [];
-    for (const d of dates) {
-      const ident = `${id}_${d}`.replace(/[^A-Za-z0-9_]/g, "_");
-      imports.push(`import ${ident} from "./${id}/${d}.json";`);
-      names.push(ident);
-      if (d > latest) latest = d;
-    }
-    entries.push(`  "${id}": [${names.join(", ")}] as Snapshot[],`);
-  }
-  const src = [
-    "/* Généré par scripts/snapshot.mjs — ne pas éditer à la main. */",
-    'import type { Snapshot } from "../types";',
-    ...imports,
-    "",
-    "/** Relevés par artiste, triés par date croissante. */",
-    "export const SNAPSHOTS: Record<string, Snapshot[]> = {",
-    ...entries,
-    "};",
-    "",
-    `export const LATEST_DATE = "${latest}";`,
-    "",
-  ].join("\n");
-  await writeFile(join(SNAP_DIR, "index.ts"), src);
 }
 
 /* ── main ── */
@@ -430,8 +393,16 @@ async function main() {
   } finally {
     await browser.close();
   }
-  await writeIndex();
-  console.log(`\nIndex régénéré : ${join(SNAP_DIR, "index.ts")}`);
+  console.log(`\nIndex régénéré : ${await writeIndex()}`);
+
+  // Relevé marché (Top 200 France + labels) : même date, même --force.
+  console.log("");
+  const market = spawnSync(
+    process.execPath,
+    ["--no-warnings", join(ROOT, "scripts/snapshot-market.mjs"), date, ...(force ? ["--force"] : [])],
+    { stdio: "inherit", env: process.env },
+  );
+  if (market.status !== 0) warn(`relevé marché en échec (code ${market.status ?? "?"}) — relevés artistes conservés`);
 }
 
 main().catch((e) => {

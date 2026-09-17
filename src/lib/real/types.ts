@@ -1,6 +1,7 @@
 import type { DSP, Provenance } from "@/lib/demo/types";
+import type { MarketGroup } from "./market/groups";
 
-export type { Provenance };
+export type { MarketGroup, Provenance };
 
 export type SnapshotTrack = { name: string; total: number; daily: number | null };
 export type SnapshotVideo = {
@@ -41,6 +42,72 @@ export type Snapshot = {
   topCities: SnapshotCity[] | null;
   /** Optionnel : les fichiers JSON existants restent valides sans ce champ. */
   tiktok?: TikTokSnapshot | null;
+};
+
+/* ─── Marché : Top 200 Spotify France (Kworb) + labels mesurés ─── */
+
+/**
+ * Genres de la table manuelle src/lib/real/market/genres.json (provenance
+ * « declared ») ; « unknown » = artiste non renseigné dans la table.
+ */
+export const MARKET_GENRES = [
+  "rap",
+  "pop",
+  "variete",
+  "electro",
+  "rnb",
+  "afro",
+  "rock",
+  "latin",
+  "international",
+  "autre",
+  "unknown",
+] as const;
+export type MarketGenre = (typeof MARKET_GENRES)[number];
+
+/** Une ligne du Top 200 : chiffres Kworb (mesurés) + label Spotify + groupe + genre. */
+export type MarketTrack = {
+  rank: number;
+  /** Variation de rang (« P+ ») ; null = entrée (NEW) ou retour (RE). */
+  delta: number | null;
+  trackId: string;
+  artistId: string | null;
+  /** Artiste principal (premier lien Kworb). */
+  artist: string;
+  title: string;
+  /** Artistes invités (« w/ … »). */
+  featuring: string[];
+  /** Jours de présence dans le classement. */
+  days: number;
+  peak: number;
+  /** Jours passés au pic (colonne « (x?) »), null si absent. */
+  peakDays: number | null;
+  /** Streams du jour du classement (`chartDate`). */
+  streams: number;
+  streamsDelta: number | null;
+  streams7d: number;
+  streams7dDelta: number | null;
+  total: number;
+  label: {
+    /** Lignes ℗ / © lues sur la page Spotify (vides si non obtenues). */
+    lines: string[];
+    group: MarketGroup;
+    provenance: Provenance;
+    evidence: string | null;
+  };
+  genre: MarketGenre;
+};
+
+/** Un relevé du marché — fichier src/lib/real/snapshots/market/<date>.json */
+export type MarketSnapshot = {
+  /** Jour du relevé (Europe/Paris). */
+  date: string;
+  capturedAt: string;
+  /** Date du classement telle qu'affichée par Kworb (J-2 en général), null si non lue. */
+  chartDate: string | null;
+  country: "FR";
+  source: string;
+  tracks: MarketTrack[];
 };
 
 /**
