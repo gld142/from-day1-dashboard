@@ -77,7 +77,7 @@ export const PARTNERS: Partner[] = [
     id: "universal",
     initials: "UM",
     ownerId: "gael",
-    due: "2026-09-18",
+    due: "2026-09-19",
     priority: true,
     pilotM3: true,
     riskCount: 2,
@@ -215,16 +215,20 @@ function PartnerCard({
                 aria-hidden
               />
             </div>
-            <span className="block truncate text-[11px] text-muted-foreground">
-              {t(`partners.${partner.id}.tag`)}
-            </span>
+            {/* Le badge Priorité vit sur la ligne du tag : à côté du nom, il
+                le tronquait (« Un… ») dans les colonnes du kanban à 1440 px. */}
+            <div className="flex items-center gap-1.5">
+              <span className="truncate text-[11px] text-muted-foreground">
+                {t(`partners.${partner.id}.tag`)}
+              </span>
+              {partner.priority && (
+                <Badge className="h-4 shrink-0 gap-1 bg-brand/15 px-1.5 text-[10px] text-brand">
+                  <Flame aria-hidden />
+                  {t("board.priority")}
+                </Badge>
+              )}
+            </div>
           </div>
-          {partner.priority && (
-            <Badge className="shrink-0 gap-1 bg-brand/15 text-brand">
-              <Flame aria-hidden />
-              {t("board.priority")}
-            </Badge>
-          )}
         </div>
 
         <dl className="mt-2.5 flex flex-col gap-1.5">
