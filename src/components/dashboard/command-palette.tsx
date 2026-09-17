@@ -4,10 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
-import { navForPersona } from "@/lib/nav";
 import { ARTISTS } from "@/lib/demo/api";
-import { usePrefs } from "@/lib/prefs";
 import { useRole } from "@/lib/role";
+import { useModules } from "@/lib/userdata/use-modules";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -25,8 +24,8 @@ export function CommandPalette() {
   const router = useRouter();
   const t = useTranslations("nav");
   const tc = useTranslations("common");
-  const { persona, isLabel, setFocusedArtistId } = useRole();
-  const { isHidden } = usePrefs();
+  const { isLabel, setFocusedArtistId } = useRole();
+  const { sections } = useModules();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -46,8 +45,6 @@ export function CommandPalette() {
     },
     [router],
   );
-
-  const sections = navForPersona(persona, isHidden);
 
   return (
     <>

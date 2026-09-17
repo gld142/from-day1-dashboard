@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Préférences utilisateur : visibilité des modules dans la navigation.
- * L'utilisateur choisit ce qu'il veut voir ou pas voir sur SON compte.
+ * Préférences utilisateur légères : date de dernière ouverture du brief du jour.
+ * (La visibilité des modules vit dans userdata/modules-store.ts.)
  * Persisté en localStorage (en prod : profil utilisateur côté serveur).
  */
 
@@ -15,13 +15,7 @@ import {
   useState,
 } from "react";
 
-/** Modules toujours visibles (cœur du produit, non masquables). */
-export const CORE_MODULES = new Set(["/pulse", "/overview", "/settings"]);
-
 type PrefsContextValue = {
-  hiddenModules: string[];
-  isHidden: (href: string) => boolean;
-  toggleModule: (href: string) => void;
   briefOpenedOn: string | null;
   markBriefOpened: (day: string) => void;
 };
@@ -31,7 +25,6 @@ const PrefsContext = createContext<PrefsContextValue | null>(null);
 const STORAGE_KEY = "day1-prefs";
 
 export function PrefsProvider({ children }: { children: React.ReactNode }) {
-  const [hiddenModules, setHiddenModules] = useState<string[]>([]);
   const [briefOpenedOn, setBriefOpenedOn] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
@@ -39,13 +32,7 @@ export function PrefsProvider({ children }: { children: React.ReactNode }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const saved = JSON.parse(raw) as {
-          hiddenModules?: string[];
-          briefOpenedOn?: string | null;
-        };
-        if (Array.isArray(saved.hiddenModules)) {
-          setHiddenModules(saved.hiddenModules.filter((h) => !CORE_MODULES.has(h)));
-        }
+        const saved = JSON.parse(raw) as { briefOpenedOn?: string | null };
         if (saved.briefOpenedOn) setBriefOpenedOn(saved.briefOpenedOn);
       }
     } catch {
@@ -57,34 +44,23 @@ export function PrefsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      window.localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ hiddenModules, briefOpenedOn }),
-      );
+      // On ne réécrit que notre champ : l'ancien `hiddenModules` reste lisible
+      // par modules-store tant qu'il n'a pas été repris.
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const prev = raw ? (JSON.parse(raw) as Record<string, unknown>) : {};
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...prev, briefOpenedOn }));
     } catch {
       /* noop */
     }
-  }, [hiddenModules, briefOpenedOn, hydrated]);
-
-  const isHidden = useCallback(
-    (href: string) => hiddenModules.includes(href),
-    [hiddenModules],
-  );
-
-  const toggleModule = useCallback((href: string) => {
-    if (CORE_MODULES.has(href)) return;
-    setHiddenModules((cur) =>
-      cur.includes(href) ? cur.filter((h) => h !== href) : [...cur, href],
-    );
-  }, []);
+  }, [briefOpenedOn, hydrated]);
 
   const markBriefOpened = useCallback((day: string) => {
     setBriefOpenedOn(day);
   }, []);
 
   const value = useMemo(
-    () => ({ hiddenModules, isHidden, toggleModule, briefOpenedOn, markBriefOpened }),
-    [hiddenModules, isHidden, toggleModule, briefOpenedOn, markBriefOpened],
+    () => ({ briefOpenedOn, markBriefOpened }),
+    [briefOpenedOn, markBriefOpened],
   );
 
   return <PrefsContext.Provider value={value}>{children}</PrefsContext.Provider>;

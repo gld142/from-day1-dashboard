@@ -5,9 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Menu, Sunrise } from "lucide-react";
-import { navForPersona } from "@/lib/nav";
-import { usePrefs } from "@/lib/prefs";
-import { useRole } from "@/lib/role";
+import { useModules } from "@/lib/userdata/use-modules";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,9 +22,7 @@ export function MobileNav() {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tc = useTranslations("common");
-  const { persona } = useRole();
-  const { isHidden } = usePrefs();
-  const sections = navForPersona(persona, isHidden);
+  const { sections } = useModules();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

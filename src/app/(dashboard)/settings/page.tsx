@@ -10,9 +10,9 @@ import { useEffect, useState, useTransition } from "react";
 import { Building2, Lock, MicVocal, Moon, RotateCcw, Sun, Sunrise } from "lucide-react";
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
-import { NAV_SECTIONS } from "@/lib/nav";
-import { CORE_MODULES, usePrefs } from "@/lib/prefs";
+import { LOCKED_MODULES } from "@/lib/nav";
 import { useRole } from "@/lib/role";
+import { useModules } from "@/lib/userdata/use-modules";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,8 +31,12 @@ export default function SettingsPage() {
   const tc = useTranslations("common");
   const locale = useLocale();
   const { theme, setTheme } = useTheme();
-  const { persona, isLabel } = useRole();
-  const { hiddenModules, isHidden, toggleModule } = usePrefs();
+  const { persona } = useRole();
+  const { catalog, isVisible, setVisible, reset, hasOverrides } = useModules();
+  const hiddenCount = catalog.reduce(
+    (n, s) => n + s.items.filter((i) => !isVisible(i)).length,
+    0,
+  );
   const [mounted, setMounted] = useState(false);
   const [, startTransition] = useTransition();
   useEffect(() => setMounted(true), []);
@@ -54,14 +58,14 @@ export default function SettingsPage() {
           </div>
           <div className="flex items-center gap-2">
             <span className="num text-xs text-muted-foreground">
-              {t("modules.hiddenCount", { count: hiddenModules.length })}
+              {t("modules.hiddenCount", { count: hiddenCount })}
             </span>
-            {hiddenModules.length > 0 && (
+            {hasOverrides && (
               <Button
                 variant="outline"
                 size="sm"
                 className="h-7 gap-1.5 text-xs"
-                onClick={() => hiddenModules.forEach((h) => toggleModule(h))}
+                onClick={reset}
               >
                 <RotateCcw className="size-3" aria-hidden />
                 {t("modules.resetAll")}
@@ -71,63 +75,58 @@ export default function SettingsPage() {
         </div>
 
         <div className="flex flex-col">
-          {NAV_SECTIONS.filter((s) => s.labelKey !== "sections.account").map(
-            (section) => (
-              <div key={section.labelKey} className="hairline-t px-5 py-4">
-                <h3 className="pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
-                  {tn(section.labelKey)}
-                </h3>
-                <ul className="flex flex-col gap-1">
-                  {section.items.map((item) => {
-                    const core = CORE_MODULES.has(item.href);
-                    const labelOnly = item.personas?.includes("label");
-                    const disabled = core || (labelOnly && !isLabel);
-                    const Icon = item.icon;
-                    return (
-                      <li
-                        key={item.href}
+          {catalog.map((section) => (
+            <div key={section.labelKey} className="hairline-t px-5 py-4">
+              <h3 className="pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
+                {tn(section.labelKey)}
+              </h3>
+              <ul className="flex flex-col gap-1">
+                {section.items.map((item) => {
+                  const locked = LOCKED_MODULES.has(item.href);
+                  const visible = isVisible(item);
+                  const Icon = item.icon;
+                  return (
+                    <li
+                      key={item.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-2 py-2 transition-colors",
+                        !locked && "hover:bg-surface-2",
+                        !visible && "text-muted-foreground",
+                      )}
+                    >
+                      <Icon
                         className={cn(
-                          "flex items-center gap-3 rounded-lg px-2 py-2 transition-colors",
-                          !disabled && "hover:bg-surface-2",
+                          "size-4 shrink-0",
+                          visible ? "text-muted-foreground" : "text-muted-foreground/60",
                         )}
-                      >
-                        <Icon
-                          className="size-4 text-muted-foreground"
-                          aria-hidden
+                        aria-hidden
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm">{tn(item.labelKey)}</span>
+                        </div>
+                      </div>
+                      {locked ? (
+                        <Badge
+                          variant="outline"
+                          className="h-5 shrink-0 rounded-full border-brand/40 px-2 text-[10px] text-brand"
+                        >
+                          <Lock className="mr-1 size-2.5" aria-hidden />
+                          {t("modules.coreHint")}
+                        </Badge>
+                      ) : (
+                        <Switch
+                          checked={visible}
+                          onCheckedChange={(v) => setVisible(item.href, v)}
+                          aria-label={tn(item.labelKey)}
                         />
-                        <span className="flex-1 text-sm">{tn(item.labelKey)}</span>
-                        {labelOnly && (
-                          <Badge
-                            variant="outline"
-                            className="h-5 rounded-full px-2 text-[10px] text-muted-foreground"
-                          >
-                            <Building2 className="mr-1 size-2.5" aria-hidden />
-                            {t("modules.labelOnly")}
-                          </Badge>
-                        )}
-                        {core ? (
-                          <Badge
-                            variant="outline"
-                            className="h-5 rounded-full border-brand/40 px-2 text-[10px] text-brand"
-                          >
-                            <Lock className="mr-1 size-2.5" aria-hidden />
-                            {t("modules.coreHint")}
-                          </Badge>
-                        ) : (
-                          <Switch
-                            checked={!isHidden(item.href)}
-                            onCheckedChange={() => toggleModule(item.href)}
-                            disabled={disabled}
-                            aria-label={tn(item.labelKey)}
-                          />
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ),
-          )}
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 
