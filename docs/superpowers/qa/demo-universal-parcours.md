@@ -34,3 +34,11 @@ Les chiffres ci-dessous sont ceux du 17/09 ; ils bougeront avec le snapshot du 1
 
 ## Répétition
 Chronométrer le parcours complet (objectif 8 minutes). Noter le temps ici : ______
+
+## Ajouts du 17/09 (après-midi) — à intégrer au parcours
+| Écran | Ce qu'on montre | Le chiffre | Provenance / phrase |
+|---|---|---|---|
+| `/market` (vue structure) | Parts du Top 200 Spotify France par groupe / artiste / genre, cases à cocher, lecture du matin | Warner 18 %, Sony 10 %, Universal 5 %, Believe 11 %, « indés / autres » 53 % ; Nono n° 20, Dadju n° 189 | « Le ℗ Spotify nomme le label, pas le distributeur : avec vos données de distribution, on rend ça exact. » |
+| `/streams` (un artiste) | Calendrier 365 jours d'écoute (heatmap) + camembert par plateforme | Dadju : Spotify ≈ 52 % | mesuré / estimé |
+| `/splits` (vue artiste) | Signer un split à la main (souris, doigt), stocké en local | — | « La signature reste sur l'appareil. » |
+| `/settings` | Modules activables / désactivables ; « Stratégie & pitch » et Revenue Calculator masqués par défaut en vue structure | — | — |
