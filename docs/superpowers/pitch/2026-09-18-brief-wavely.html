@@ -1,0 +1,96 @@
+<title>Brief Wavely</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #fbfbfd; --surface: #ffffff; --ink: #17171d; --muted: #666676; --line: #e4e3ec;
+    --accent: #6a5ae6; --accent-ink: #ffffff; --accent-soft: #efedfc;
+    --measured: #1f8a5b; --estimated: #b7791f; --simulated: #6b6b78;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Geist", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --display: "Instrument Sans", "Geist", -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e0e13; --surface: #16161d; --ink: #ececf2; --muted: #9a9aa8; --line: #26262f;
+      --accent: #8f82ff; --accent-ink: #0e0e13; --accent-soft: #1d1a33;
+      --measured: #4ec58f; --estimated: #e0a84a; --simulated: #8b8b99;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e0e13; --surface: #16161d; --ink: #ececf2; --muted: #9a9aa8; --line: #26262f;
+    --accent: #8f82ff; --accent-ink: #0e0e13; --accent-soft: #1d1a33;
+    --measured: #4ec58f; --estimated: #e0a84a; --simulated: #8b8b99;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.55; }
+  main { max-width: 74ch; margin: 0 auto; padding: 48px 24px 80px; }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; flex-wrap: wrap; }
+  .chip { font-family: var(--display); font-weight: 700; letter-spacing: .08em; font-size: 12px; padding: 7px 11px; border-radius: 6px; }
+  .chip.capitol { background: #111; color: #fff; }
+  .chip.fd1 { background: var(--accent); color: var(--accent-ink); }
+  .brand .x { color: var(--muted); font-size: 14px; }
+  .brand .meta { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  h1 { font-family: var(--display); font-weight: 600; font-size: 34px; line-height: 1.12; letter-spacing: -.02em; margin: 0 0 12px; text-wrap: balance; }
+  .lede { font-size: 17px; color: var(--muted); max-width: 62ch; margin: 0 0 40px; text-wrap: pretty; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -.01em; margin: 44px 0 14px; padding-top: 22px; border-top: 1px solid var(--line); text-wrap: balance; }
+  h2 .no { font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--muted); margin-right: 10px; letter-spacing: .04em; }
+  p { margin: 0 0 12px; max-width: 68ch; }
+  .quote { border-left: 2px solid var(--accent); padding: 4px 0 4px 16px; color: var(--ink); font-family: var(--display); font-size: 17px; margin: 18px 0 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  .scroll { overflow-x: auto; margin: 14px 0 6px; }
+  th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 12px 10px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid currentColor; line-height: 1.5; white-space: nowrap; }
+  .pill.m { color: var(--measured); } .pill.e { color: var(--estimated); } .pill.s { color: var(--simulated); }
+  .steps { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 0; }
+  .steps li { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .steps .when { font-family: var(--mono); font-size: 12px; color: var(--accent); padding-top: 3px; }
+  .steps strong { font-weight: 600; display: block; margin-bottom: 2px; }
+  .offer { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+  .tier { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; background: var(--surface); display: grid; grid-template-columns: 1fr auto; gap: 8px 18px; align-items: start; }
+  .tier.lead { border-color: var(--accent); background: var(--accent-soft); }
+  .tier h3 { margin: 0; font-family: var(--display); font-size: 16px; font-weight: 600; }
+  .tier .price { font-family: var(--mono); font-size: 15px; white-space: nowrap; text-align: right; }
+  .tier .price small { display: block; font-size: 11px; color: var(--muted); font-family: var(--sans); }
+  .tier p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 14px; }
+  ul.ask { padding-left: 18px; margin: 12px 0 0; }
+  ul.ask li { margin-bottom: 6px; }
+  .cta { margin-top: 40px; padding: 20px 22px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; }
+  .cta a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .cta a:hover, .cta a:focus-visible { text-decoration: underline; outline: none; }
+  .cta code { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .foot { margin-top: 36px; font-size: 12.5px; color: var(--muted); max-width: 68ch; }
+  @media (max-width: 560px) { .steps li { grid-template-columns: 1fr; gap: 4px; } .tier { grid-template-columns: 1fr; } .tier .price { text-align: left; } .brand .meta { margin-left: 0; } }
+
+  ol.brief { padding-left: 22px; margin: 10px 0 16px; display: grid; gap: 10px; }
+  ol.brief li { padding-left: 4px; }
+  ol.brief li::marker { font-family: var(--mono); color: var(--accent); }
+  em { font-style: italic; color: var(--muted); }
+  h1.brief { margin-bottom: 6px; }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 28px; }
+</style>
+<main>
+  <div class="brand"><span class="chip capitol" style="background:#ff6a1f;color:#111">WAVELY</span><span class="x">×</span><span class="chip fd1">FROM DAY 1</span><span class="meta">Brief de présentation · 18 septembre 2026</span></div>
+  <h1 class="brief">Wavely</h1>
+  <p class="kicker">Réservation, gestion, facturation des sessions studio · pour les labels</p>
+<p class="foot"><em>Pour Universal / Capitol / UMPG. Phrases prêtes à dire, connecteurs en italique. Ce qui est une promesse produit est signalé « à construire ».</em></p>
+<h2>L'idée en une phrase</h2>
+<p>Wavely, c'est la réservation de studio pour les professionnels — <strong>avec, intégrés, la gestion, la facturation et le suivi</strong> que les labels font aujourd'hui à la main.</p>
+<h2>Le problème, dans vos murs</h2>
+<p><em>Aujourd'hui,</em> un label réserve des sessions studio pour son roster sans vue d'ensemble. <em>Résultat :</em> des créneaux de quatre heures réservés et non tenus, des séances ajoutées « par-ci par-là », des factures qui arrivent en retard, parfois perdues, parfois oubliées — et un suivi qui se fait dans UniPort à la dernière minute.</p>
+<p><em>Et UniPort n'y est pour rien :</em> c'est l'outil obligatoire, volontairement simple — une ligne comptable, quatre champs : prod, nom, prénom, montant payé. Il trace et valide. Il n'a jamais été fait pour piloter des sessions.</p>
+<h2>Ce que Wavely change — sans rien casser</h2>
+<p><em>Le principe est simple :</em> <strong>Wavely n'ajoute pas une étape, il en supprime.</strong> Aucune rupture d'usage, aucune double saisie, aucun nouvel outil imposé aux équipes : tout continue de passer par UniPort — Wavely l'alimente.</p>
+<ol class="brief">
+<li><strong>Un budget annuel de sessions, réparti par artiste.</strong> Le DA ou le responsable du roster voit son enveloppe, la répartit, la suit en temps réel sur son profil. <em>Concrètement :</em> il décide mieux parce qu'il voit.</li>
+<li><strong>Des sessions contrôlées.</strong> Réservation, présence, durée réelle, livrable. <em>Plus de</em> créneaux réservés dans le vent, <em>plus de</em> séances gonflées ou surfacturées, <em>plus de</em> séances oubliées. Le budget est mieux géré, <em>donc</em> les dépenses baissent.</li>
+<li><strong>Une analyse partageable.</strong> Par artiste, par mois, par année : sessions, coûts, factures. Un rendu graphique que le DA transmet à la direction ou aux collaborateurs en un clic. <em>Et pour les subventions et les aides,</em> la traçabilité complète des sessions — par artiste, par mois, par année — est un game changer : le dossier est déjà prêt. <em>Ces mêmes dépenses remontent dans Day One,</em> dans Dépenses &amp; P&amp;L, par artiste et par projet : Wavely et le dashboard pro sont un seul système.</li>
+<li><strong>La comptabilité qui se transfère.</strong> <em>C'est le point clé :</em> une API Wavely vers UniPort — un onglet à rafraîchir, et la comptabilité saisie et détaillée dans Wavely arrive dans UniPort, ligne par ligne, au format qu'il attend. <em>On ne remplace personne :</em> l'humain valide, comme aujourd'hui. On enlève la saisie, le retard et l'oubli. <em>(À construire avec vos équipes UniPort : format d'import, fréquence, contrôle.)</em></li>
+</ol>
+<h2>Pourquoi maintenant, pourquoi vous</h2>
+<p><em>Vous avez déjà</em> vos studios ; <em>vous réservez aussi</em> à l'extérieur pour d'autres artistes, et quand vos studios sont pleins. Wavely met tout ça dans un seul compte, avec les mêmes règles, la même facture, la même ligne UniPort. <em>Pour la DAF,</em> c'est un fournisseur au lieu de vingt. <em>Pour le DA,</em> c'est un budget qu'il pilote. <em>Pour l'artiste,</em> c'est un studio réservé en deux minutes, avec un crédit qu'il voit.</p>
+<h2>La phrase de fin</h2>
+<p>« On ne vient pas changer votre fonctionnement. On vient l'améliorer, et lui donner les données qu'il n'a jamais eues. »</p>
+<p class="foot"><em>Mots à préférer à « friction » : rupture d'usage, double saisie, charge nouvelle, couche de plus. La formule : « Wavely n'ajoute pas une étape, il en supprime. »</em></p>
+</main>
