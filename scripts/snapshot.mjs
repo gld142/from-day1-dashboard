@@ -44,7 +44,9 @@ const UA =
  * client sans UA Chrome/Safari ; avec un UA navigateur il renvoie la coquille SPA.
  */
 const UA_PLAIN = "from-day1-snapshot/1.0";
-const date = process.argv[2] ?? new Date().toISOString().slice(0, 10);
+// Date locale Europe/Paris (un relevé lancé à 01:00 à Paris est encore la veille en UTC).
+const parisToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const date = process.argv[2] ?? parisToday();
 const YT_KEY = process.env.YOUTUBE_API_KEY ?? null;
 
 if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {

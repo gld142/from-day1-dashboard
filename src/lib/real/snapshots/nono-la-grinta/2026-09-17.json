@@ -1,0 +1,411 @@
+{
+  "date": "2026-09-17",
+  "spotify": {
+    "monthlyListeners": 4697629,
+    "followers": 623861,
+    "topTracks": [
+      {
+        "name": "LOVE YOU",
+        "spotifyId": "0SYGJCm9PpTvO7g14EZQex",
+        "playcount": 133448507
+      },
+      {
+        "name": "Paris",
+        "spotifyId": "3kql0qldZ3x5qUxwmUgYGa",
+        "playcount": 149729389
+      },
+      {
+        "name": "AVEC MOI",
+        "spotifyId": "5t1LPk2QiG9O7JdL0oAsou",
+        "playcount": 70307239
+      },
+      {
+        "name": "TERRAIN",
+        "spotifyId": "44kdgsCRdvpithoLYiWARZ",
+        "playcount": 49601683
+      },
+      {
+        "name": "J'tavais dit",
+        "spotifyId": "2QYUgBRPl1RTlTBp1hSCph",
+        "playcount": 26219110
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 584564236,
+    "dailyStreams": 949847,
+    "tracks": [
+      {
+        "name": "Paris",
+        "total": 148103971,
+        "daily": 211017
+      },
+      {
+        "name": "LOVE YOU",
+        "total": 131761777,
+        "daily": 239095
+      },
+      {
+        "name": "AVEC MOI",
+        "total": 69523717,
+        "daily": 105725
+      },
+      {
+        "name": "TERRAIN",
+        "total": 48942324,
+        "daily": 83292
+      },
+      {
+        "name": "LA QUOI ? (feat. La Mano 1.9)",
+        "total": 28635123,
+        "daily": 20400
+      },
+      {
+        "name": "J'tavais dit",
+        "total": 25881406,
+        "daily": 53166
+      },
+      {
+        "name": "Délit",
+        "total": 17880332,
+        "daily": 9557
+      },
+      {
+        "name": "LOVE YOU - A COLORS SHOW",
+        "total": 14737655,
+        "daily": 23090
+      },
+      {
+        "name": "Restaurant",
+        "total": 12633356,
+        "daily": 13565
+      },
+      {
+        "name": "Audrey Kelly",
+        "total": 9206177,
+        "daily": 10003
+      },
+      {
+        "name": "22%",
+        "total": 7474740,
+        "daily": 3052
+      },
+      {
+        "name": "FLASH-BACK",
+        "total": 7278678,
+        "daily": 29288
+      },
+      {
+        "name": "STEPHANIE",
+        "total": 6121948,
+        "daily": 5416
+      },
+      {
+        "name": "7AM",
+        "total": 4952246,
+        "daily": 5887
+      },
+      {
+        "name": "LA CAME",
+        "total": 4236449,
+        "daily": 36808
+      },
+      {
+        "name": "3x filtré",
+        "total": 3478945,
+        "daily": 2768
+      },
+      {
+        "name": "+33",
+        "total": 2538353,
+        "daily": 13278
+      },
+      {
+        "name": "La vie ça va trop vite",
+        "total": 2452641,
+        "daily": 1800
+      },
+      {
+        "name": "COUPE",
+        "total": 2323697,
+        "daily": 14250
+      },
+      {
+        "name": "Barbie et Ken",
+        "total": 2163803,
+        "daily": 3270
+      },
+      {
+        "name": "POUR L'ARGENT",
+        "total": 2105131,
+        "daily": 1385
+      },
+      {
+        "name": "LA QUOI ? - Basstrick Remix",
+        "total": 2094266,
+        "daily": 1126
+      },
+      {
+        "name": "TENTATION",
+        "total": 1975140,
+        "daily": 8738
+      },
+      {
+        "name": "Restart",
+        "total": 1971717,
+        "daily": 2492
+      },
+      {
+        "name": "CONFIANT",
+        "total": 1780993,
+        "daily": 6285
+      },
+      {
+        "name": "J'aime",
+        "total": 1704706,
+        "daily": 684
+      },
+      {
+        "name": "No feeling",
+        "total": 1644740,
+        "daily": 1033
+      },
+      {
+        "name": "MÉLANIE",
+        "total": 1519829,
+        "daily": 7879
+      },
+      {
+        "name": "11+11",
+        "total": 1490257,
+        "daily": 530
+      },
+      {
+        "name": "Dans le bat",
+        "total": 1421506,
+        "daily": 1077
+      },
+      {
+        "name": "La Grint",
+        "total": 1416288,
+        "daily": 2429
+      },
+      {
+        "name": "BOUT DU MONDE",
+        "total": 1156388,
+        "daily": 1747
+      },
+      {
+        "name": "LE CHEMIN EST LONG",
+        "total": 1035619,
+        "daily": 3490
+      },
+      {
+        "name": "J'envoie",
+        "total": 1025623,
+        "daily": 773
+      },
+      {
+        "name": "Dis-moi",
+        "total": 1020603,
+        "daily": 1202
+      },
+      {
+        "name": "Benef",
+        "total": 997932,
+        "daily": 1641
+      },
+      {
+        "name": "LA DANCE",
+        "total": 871630,
+        "daily": 2387
+      },
+      {
+        "name": "croissant",
+        "total": 851070,
+        "daily": 1563
+      },
+      {
+        "name": "Hollande",
+        "total": 828862,
+        "daily": 670
+      },
+      {
+        "name": "PAS UNE AUTRE",
+        "total": 802248,
+        "daily": 5431
+      },
+      {
+        "name": "LAISSE TOMBER",
+        "total": 731529,
+        "daily": 2100
+      },
+      {
+        "name": "DOUTES",
+        "total": 677871,
+        "daily": 2892
+      },
+      {
+        "name": "TOUT DONNÉ",
+        "total": 604015,
+        "daily": 2485
+      },
+      {
+        "name": "Like Like",
+        "total": 553971,
+        "daily": 612
+      },
+      {
+        "name": "Outro",
+        "total": 534146,
+        "daily": 1072
+      },
+      {
+        "name": "T'étais pas là",
+        "total": 504647,
+        "daily": 250
+      },
+      {
+        "name": "Intro",
+        "total": 490051,
+        "daily": 524
+      },
+      {
+        "name": "Mi Amor",
+        "total": 487205,
+        "daily": 596
+      },
+      {
+        "name": "Les souris dansent",
+        "total": 463602,
+        "daily": 392
+      },
+      {
+        "name": "Cocaïne",
+        "total": 451280,
+        "daily": 505
+      },
+      {
+        "name": "2x",
+        "total": 385967,
+        "daily": 471
+      },
+      {
+        "name": "Accès",
+        "total": 303056,
+        "daily": 309
+      },
+      {
+        "name": "J’y repense",
+        "total": 216590,
+        "daily": 279
+      },
+      {
+        "name": "EDL",
+        "total": 118420,
+        "daily": 71
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 290487,
+    "topTracks": [
+      {
+        "title": "LOVE YOU",
+        "rank": 995431
+      },
+      {
+        "title": "Paris",
+        "rank": 991921
+      },
+      {
+        "title": "AVEC MOI",
+        "rank": 999577
+      },
+      {
+        "title": "TERRAIN",
+        "rank": 939508
+      },
+      {
+        "title": "J'tavais dit",
+        "rank": 868266
+      },
+      {
+        "title": "LOVE YOU - A COLORS SHOW",
+        "rank": 804197
+      },
+      {
+        "title": "FLASH-BACK",
+        "rank": 792229
+      },
+      {
+        "title": "LA CAME",
+        "rank": 782787
+      },
+      {
+        "title": "LA QUOI ? (feat. La Mano 1.9)",
+        "rank": 774529
+      },
+      {
+        "title": "Restaurant",
+        "rank": 743991
+      }
+    ]
+  },
+  "youtube": {
+    "subscribers": null,
+    "videos": [
+      {
+        "videoId": "pVk1BwE_LLg",
+        "title": "Nono La Grinta - Paris",
+        "channel": "official",
+        "views": 43882878
+      },
+      {
+        "videoId": "zaX-2HGB33o",
+        "title": "Nono La Grinta - LOVE YOU",
+        "channel": "official",
+        "views": 27844565
+      },
+      {
+        "videoId": "UcLj3wLcQF4",
+        "title": "RnBoi & Nono La Grinta - AVEC MOI (Clip Officiel)",
+        "channel": "official",
+        "views": 15548636
+      },
+      {
+        "videoId": "RsBD1POgx-c",
+        "title": "Nono La Grinta - Terrain",
+        "channel": "official",
+        "views": 5417533
+      }
+    ]
+  },
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 293875
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 96790
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 92437
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 90925
+    },
+    {
+      "city": "Lille",
+      "country": "FR",
+      "listeners": 71171
+    }
+  ]
+}
