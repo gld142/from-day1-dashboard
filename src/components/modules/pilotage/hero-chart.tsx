@@ -10,8 +10,9 @@
  *
  * Le graphique reste sous le chiffre (pointer-events désactivés sur la
  * réserve) pour que le tooltip de recharts fonctionne partout ailleurs.
+ * L'aire ne s'anime pas : voir le commentaire sur `isAnimationActive`.
  */
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Area,
@@ -60,6 +61,26 @@ export function HeroChart({
   const t = useTranslations("pulse.hero");
   const locale = useLocale();
   const [range, setRange] = useState<HeroRange>(defaultRange);
+  /* Deux seuils : sous 640 px l'axe des valeurs mange la largeur du tracé et
+     le chiffre repasse en titre ; sous 1024 px il reste au centre mais
+     recouvrirait l'annotation du pic, qu'on retire alors. */
+  const [narrow, setNarrow] = useState(false);
+  const [roomForPeak, setRoomForPeak] = useState(true);
+  useEffect(() => {
+    const small = window.matchMedia("(max-width: 639px)");
+    const wide = window.matchMedia("(min-width: 1024px)");
+    const sync = () => {
+      setNarrow(small.matches);
+      setRoomForPeak(wide.matches);
+    };
+    sync();
+    small.addEventListener("change", sync);
+    wide.addEventListener("change", sync);
+    return () => {
+      small.removeEventListener("change", sync);
+      wide.removeEventListener("change", sync);
+    };
+  }, []);
 
   const data = useMemo(() => series.slice(-range), [series, range]);
 
@@ -98,9 +119,20 @@ export function HeroChart({
         </div>
       </div>
 
-      <div className="relative mt-1 h-[210px]">
+      <div className="relative mt-1">
+        {/* Au centre dès qu'il y a la place ; en titre sur mobile, sinon il
+            recouvrirait toute la courbe. */}
+        <div className="pointer-events-none z-10 mb-1 text-center sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2">
+          <div className="sheet-reserve rounded-2xl px-4 py-1.5">
+            <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
+              {value}
+            </p>
+            <p className="sheet-ink mt-1 text-[12.5px]">{caption}</p>
+          </div>
+        </div>
+        <div className="h-[168px] sm:h-[210px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 26, right: 10, bottom: 0, left: 0 }}>
+          <AreaChart data={data} margin={{ top: narrow ? 8 : 26, right: 10, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id="pulse-hero-fill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--sheet-line)" stopOpacity={0.22} />
@@ -113,7 +145,7 @@ export function HeroChart({
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 11, fill: "var(--sheet-ink)" }}
-              minTickGap={64}
+              minTickGap={narrow ? 88 : 64}
               tickFormatter={(d: string) =>
                 fmtDate(locale, d, { day: "numeric", month: "short" })
               }
@@ -122,7 +154,7 @@ export function HeroChart({
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 11, fill: "var(--sheet-ink)" }}
-              width={48}
+              width={narrow ? 34 : 48}
               tickFormatter={(v: number) => fmtCompact(locale, v)}
             />
             <Tooltip
@@ -144,9 +176,15 @@ export function HeroChart({
               stroke="var(--sheet-line)"
               strokeWidth={2}
               fill="url(#pulse-hero-fill)"
-              animationDuration={600}
+              /* Pas d'animation d'entrée : recharts anime l'aire via un
+                 clipPath qui part de zéro. Si les frames ne s'exécutent pas —
+                 onglet en arrière-plan, capture d'écran hors viewport — le
+                 clip reste fermé et la courbe n'apparaît jamais. Sur l'écran
+                 qu'on ouvre chaque matin et qu'on montre en démo, la certitude
+                 vaut mieux que 600 ms de fondu. */
+              isAnimationActive={false}
             />
-            {peak ? (
+            {peak && roomForPeak ? (
               <ReferenceDot
                 x={peak.date}
                 y={peak.streams}
@@ -179,15 +217,6 @@ export function HeroChart({
             ) : null}
           </AreaChart>
         </ResponsiveContainer>
-
-        {/* Le chiffre du jour, au centre, au-dessus du tracé. */}
-        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-          <div className="sheet-reserve rounded-2xl px-4 py-1.5">
-            <p className="text-5xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-6xl">
-              {value}
-            </p>
-            <p className="sheet-ink mt-1 text-[12.5px]">{caption}</p>
-          </div>
         </div>
       </div>
     </div>

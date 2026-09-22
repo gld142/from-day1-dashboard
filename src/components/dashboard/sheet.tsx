@@ -100,7 +100,7 @@ export function AffiliatedPoints({
   return (
     <div
       className={cn(
-        "sheet-rule mt-3 grid gap-x-4 gap-y-3 pt-2.5 sm:grid-cols-2",
+        "sheet-rule mt-3 grid gap-x-4 gap-y-3 pt-2.5 min-[380px]:grid-cols-2",
         points.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4",
         className,
       )}

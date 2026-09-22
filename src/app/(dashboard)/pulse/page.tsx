@@ -551,7 +551,7 @@ export default function PulsePage() {
                     label: (
                       <>
                         {t("money.contributions")}{" "}
-                        <span className="text-muted-foreground text-[11px]">
+                        <span className="text-muted-foreground hidden text-[11px] sm:inline">
                           {t("money.contributionsNote")}
                         </span>
                       </>
@@ -1019,7 +1019,7 @@ export default function PulsePage() {
                     label: (
                       <>
                         {t("money.expenses")}{" "}
-                        <span className="text-muted-foreground text-[11px]">
+                        <span className="text-muted-foreground hidden text-[11px] sm:inline">
                           {t("money.expensesNote")}
                         </span>
                       </>
