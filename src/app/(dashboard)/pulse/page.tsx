@@ -1,54 +1,67 @@
 "use client";
 
 /**
- * /pulse — le rituel quotidien.
- * Artiste : streams du jour en héro, KPIs, aire 90 j, insights de la nuit.
- * Label : mêmes rituels agrégés roster + top movers cliquables.
+ * /pulse — le rituel quotidien, refondu le 22/09.
+ * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
+ *
+ * Trois niveaux de lecture, aucun repli — c'est un pouls, tout se lit d'un coup :
+ *  1. le chiffre du jour, au centre de son graphique, avec ses points affiliés ;
+ *  2. trois feuilles teintées — argent, audience, tendances ;
+ *  3. la nuit, l'import, l'argent à aller chercher, les portes.
+ *
+ * Deux héros différents parce que deux métiers différents : l'artiste a un
+ * catalogue (sa courbe se lit), le label un portefeuille (sa courbe agrégée est
+ * écrasée par l'artiste qui pèse le plus — on montre donc qui bouge).
  */
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CalendarDays,
-  Crown,
-  FileWarning,
-  Flame,
-  Music2,
-  Radio,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
-import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
+import {
+  AffiliatedPoints,
+  AttachedLines,
+  Sheet,
+  SheetHeading,
+  type AffiliatedPoint,
+} from "@/components/dashboard/sheet";
 import { Button } from "@/components/ui/button";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import { HeroChart } from "@/components/modules/pilotage/hero-chart";
 import {
-  InsightCard,
-  type InsightTone,
-} from "@/components/modules/pilotage/insight-card";
-import {
-  KpiStagger,
-  KpiStaggerItem,
-} from "@/components/modules/signature/kpi-stagger";
-import { SunriseArc } from "@/components/modules/signature/sunrise-arc";
-import { SharesPanel } from "@/components/modules/finances/shares-panel";
-import { AlgoTrendPanel } from "@/components/modules/pilotage/algo-trend-panel";
-import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
-import { StreamsAreaChart } from "@/components/modules/pilotage/streams-area-chart";
-import { TopMovers } from "@/components/modules/pilotage/top-movers";
+  Doors,
+  Emph,
+  ImportBand,
+  MoneyToCollect,
+  NightStrip,
+  RestRow,
+  type Door,
+  type MoneyLead,
+  type NightItem,
+} from "@/components/modules/pilotage/pulse-blocks";
 import {
   ARTISTS,
   CONTRACTS,
+  EMERGING,
+  LABEL,
+  SPLITS,
+  TEAM,
+  TRACKS,
+  auditFindings,
+  catalogValuation,
+  countryBreakdown,
   dailyTotals,
   estimateSummaries,
+  expensesFor,
+  fanSegments,
   getArtist,
   hasReal,
   labelTotals,
+  marketShares,
   monthlyRevenueTotals,
-  provenanceByDsp,
+  pnlByArtist,
+  rightsStatements,
   rosterEstimateSummaries,
   rosterRows,
   rosterTiktokSignal,
@@ -60,22 +73,23 @@ import {
   tourDates,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
-import type { TikTokSignal } from "@/lib/demo/api";
-import type { Provenance } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
-import { useEntryReveal, useSkin } from "@/lib/skin";
+import { getShares } from "@/lib/userdata/shares-store";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
-import { cn } from "@/lib/utils";
 
 const DAY_MS = 86_400_000;
+const REVENUE_DETAIL_HREF = "/revenue?period=month";
+
+/** Part d'auteur par défaut tant que le contrat n'est pas renseigné. */
+const DEFAULT_ARTIST_PCT = 20;
+/** Taux global indicatif des cotisations artistes-auteurs, sur les revenus d'auteur seuls. */
+const AUTHOR_CONTRIB_RATE = 0.205;
 
 function daysUntil(iso: string): number {
   return Math.max(
     0,
-    Math.round(
-      (new Date(`${iso}T00:00:00Z`).getTime() - DEMO_TODAY.getTime()) / DAY_MS,
-    ),
+    Math.round((new Date(`${iso}T00:00:00Z`).getTime() - DEMO_TODAY.getTime()) / DAY_MS),
   );
 }
 
@@ -92,22 +106,7 @@ function aggregatedDaily(days: number): Array<{ date: string; streams: number }>
     .map(([date, streams]) => ({ date, streams }));
 }
 
-/** Le détail des revenus s'ouvre sur la période des tuiles « 30 jours ». */
-const REVENUE_DETAIL_HREF = "/revenue?period=month";
-
-type Insight = {
-  key: string;
-  icon: LucideIcon;
-  kicker: string;
-  body: string;
-  tone: InsightTone;
-  /** Provenance affichée en badge (ex. : signal TikTok simulé). */
-  badge?: Provenance;
-  /** Note discrète sous le corps. */
-  footnote?: string;
-};
-
-/** Delta signé (« +1 234 » / « −56 » / « +0 ») pour les compteurs de vidéos. */
+/** Delta signé (« +1 234 » / « −56 ») pour les compteurs de vidéos. */
 function fmtSigned(locale: string, n: number): string {
   return new Intl.NumberFormat(locale, {
     maximumFractionDigits: 0,
@@ -115,39 +114,24 @@ function fmtSigned(locale: string, n: number): string {
   }).format(n);
 }
 
-/**
- * Corps de l'insight TikTok : la phrase avec rang FR quand il existe, sinon
- * sans — deux clés distinctes plutôt qu'une concaténation, pour que chaque
- * langue garde sa propre ponctuation.
- */
-function tiktokBody(
-  t: ReturnType<typeof useTranslations<"pulse">>,
-  locale: string,
-  ns: "overnight.tiktok" | "overnight.tiktokLabel" | "overnight.tiktokRoster",
-  s: TikTokSignal,
-  /** Nom de l'artiste (variante « label zoomé » : « les sons de Dadju »). */
-  name = "",
-): string {
-  const params = {
-    videos: fmtCompact(locale, s.videos),
-    delta: fmtSigned(locale, s.deltaYesterday),
-    sound: s.topSound ?? "—",
-    name,
-  };
-  return s.trendingRankFr === null
-    ? t(`${ns}.body`, params)
-    : t(`${ns}.bodyWithTrend`, { ...params, rank: s.trendingRankFr });
+/** Écart total encore ouvert avec les relevés déclarés, toutes sources. */
+function openGap(findings: ReturnType<typeof auditFindings>): number {
+  return findings
+    .filter((f) => f.status !== "resolved")
+    .reduce((s, f) => s + Math.max(0, f.expected - f.reported), 0);
+}
+
+/** Droits estimés par Day 1 mais pas encore versés par les organismes. */
+function pendingRights(statements: ReturnType<typeof rightsStatements>): number {
+  return statements
+    .filter((s) => s.status !== "received")
+    .reduce((s, r) => s + Math.max(0, r.expected - r.received), 0);
 }
 
 export default function PulsePage() {
   const t = useTranslations("pulse");
   const locale = useLocale();
-  const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId } =
-    useRole();
-  const skin = useSkin();
-  /* La salutation fond en 300 ms aux navigations client ; au chargement
-     initial, elle est là dès le HTML serveur (LCP). */
-  const entry = useEntryReveal();
+  const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId } = useRole();
 
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
@@ -158,6 +142,19 @@ export default function PulsePage() {
     day: "numeric",
     month: "long",
   });
+  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
+  /** Une part (0-1) en pourcentage non signé — fmtPct signe toujours et attend des points. */
+  const pct = (ratio: number) =>
+    new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(ratio);
+
+  /* Les balises d'emphase des phrases de la nuit : le message porte
+     <em>/<good>/<alert>, la page fournit le rendu. C'est ce qui met les
+     chiffres en encre pleine et les urgences en rouge sans couper la phrase. */
+  const tags = {
+    em: (c: ReactNode) => <Emph>{c}</Emph>,
+    good: (c: ReactNode) => <Emph tone="good">{c}</Emph>,
+    alert: (c: ReactNode) => <Emph tone="alert">{c}</Emph>,
+  };
 
   /* ───────────── Vue artiste (persona artiste ou label zoomé) ───────────── */
 
@@ -166,138 +163,113 @@ export default function PulsePage() {
     if (!showArtist) return null;
     const artist = getArtist(artistId);
 
+    const series = dailyTotals(artistId, 365);
     const today = sumStreams(artistId, 1);
     const deltaToday = streamsDelta(artistId, 1);
-    const heroSpark = dailyTotals(artistId, 14).map((d) => ({ value: d.streams }));
-
     const s7 = sumStreams(artistId, 7);
     const d7 = streamsDelta(artistId, 7);
-    const spark7 = dailyTotals(artistId, 7).map((d) => ({ value: d.streams }));
+    const s30 = sumStreams(artistId, 30);
 
     const monthly = monthlyRevenueTotals(artistId, 24);
     const revMonth = monthly[monthly.length - 1]?.amount ?? 0;
     const revPrev = monthly[monthly.length - 2]?.amount ?? 0;
-    const revDelta = revPrev === 0 ? 0 : ((revMonth - revPrev) / revPrev) * 100;
-    const revSpark = monthly.slice(-8).map((m) => ({ value: m.amount }));
+    /* Le mois en cours est incomplet : le comparer à un mois précédent complet
+       afficherait une chute qui n'existe pas. On ramène le mois précédent au
+       même nombre de jours écoulés. */
+    const dayOfMonth = DEMO_TODAY.getUTCDate();
+    const daysInMonth = new Date(
+      Date.UTC(DEMO_TODAY.getUTCFullYear(), DEMO_TODAY.getUTCMonth() + 1, 0),
+    ).getUTCDate();
+    const daysInPrev = new Date(
+      Date.UTC(DEMO_TODAY.getUTCFullYear(), DEMO_TODAY.getUTCMonth(), 0),
+    ).getUTCDate();
+    const revPrevSoFar = (revPrev / daysInPrev) * dayOfMonth;
+    const revDelta =
+      revPrevSoFar === 0 ? 0 : ((revMonth - revPrevSoFar) / revPrevSoFar) * 100;
+    /* Projection : le rythme du mois en cours prolongé jusqu'à son dernier jour. */
+    const revForecast = dayOfMonth === 0 ? revMonth : (revMonth / dayOfMonth) * daysInMonth;
 
-    const series90 = dailyTotals(artistId, 90);
-
-    /* Estimation € (couche réelle uniquement) + provenance du compteur du jour */
     const est = hasReal(artistId) ? estimateSummaries(artistId) : null;
-    const streamsProvenance = provenanceByDsp(artistId, 1).spotify;
 
-    /* Insights de la nuit */
+    /* La cascade « ce qui te reste » : en contrat d'artiste, les coûts sont
+       avancés par le producteur et récupérés sur les redevances — ce n'est pas
+       une dépense de l'artiste mais un solde à recouper. En indé, ce sont ses
+       vraies dépenses. Les cotisations artistes-auteurs, elles, portent sur les
+       revenus d'auteur seuls (cf. AUTHOR_SOURCES dans /urssaf). */
+    const contract = CONTRACTS.find((c) => c.artistId === artistId);
+    const isSigned = artist.dealType !== "indé";
+    const toRecoup =
+      contract && isSigned
+        ? Math.max(0, (contract.advance * (100 - contract.recoupedPct)) / 100)
+        : 0;
+    const ownExpenses = isSigned
+      ? 0
+      : expensesFor(artistId, 1).reduce((s, e) => s + e.amount, 0);
+    const share30 = est?.month.artistShare.mid ?? 0;
+    const publishing30 = est?.month.publishing.mid ?? 0;
+    const contributions = publishing30 * AUTHOR_CONTRIB_RATE;
+    const left = Math.max(0, share30 + publishing30 - toRecoup - ownExpenses - contributions);
+
+    /* Ce qui a changé cette nuit. */
     const night = streamsByDsp(artistId, 1);
     const nightTotal = night.reduce((s, d) => s + d.streams, 0);
     const bestDsp = night[0];
     const topTrack = topTracks(artistId, 1, 1)[0];
     const tiktok = tiktokSignal(artistId);
     const nextShow = tourDates(artistId).find((d) => d.status === "upcoming");
-    const alerts = CONTRACTS.filter((c) => c.artistId === artistId).flatMap(
-      (c) => c.alerts,
-    );
+    const alerts = CONTRACTS.filter((c) => c.artistId === artistId).flatMap((c) => c.alerts);
     const alert =
       alerts.find((a) => a.severity === "danger") ??
       alerts.find((a) => a.severity === "warning") ??
       alerts[0];
 
-    const insights: Insight[] = [];
-    if (topTrack) {
-      insights.push({
-        key: "topTrack",
-        icon: Flame,
-        kicker: t("overnight.topTrack.kicker"),
-        body: t("overnight.topTrack.body", {
-          title: topTrack.title,
-          streams: fmtCompact(locale, topTrack.streams),
-        }),
-        tone: "brand",
-      });
-    }
-    if (bestDsp) {
-      insights.push({
-        key: "bestDsp",
-        icon: Radio,
-        kicker: t("overnight.bestDsp.kicker"),
-        body: t("overnight.bestDsp.body", {
-          dsp: t(`dsp.${bestDsp.dsp}`),
-          share: `${fmtInt(locale, Math.round((bestDsp.streams / Math.max(1, nightTotal)) * 100))} %`,
-        }),
-        tone: "muted",
-      });
-    }
-    insights.push({
-      key: "momentum",
-      icon: d7 >= 0 ? TrendingUp : TrendingDown,
-      kicker: t("overnight.momentum.kicker"),
-      body: t("overnight.momentum.body", { delta: fmtPct(locale, d7) }),
-      tone: d7 >= 0 ? "success" : "destructive",
-    });
-    if (tiktok) {
-      // Signal de viralité, pas un revenu : badge de provenance + note explicite.
-      // « tes sons » pour l'artiste, « les sons de Dadju » pour le label zoomé.
-      insights.push({
-        key: "tiktok",
-        icon: Music2,
-        kicker: t("overnight.tiktok.kicker"),
-        body: tiktokBody(
-          t,
-          locale,
-          persona === "label" ? "overnight.tiktokLabel" : "overnight.tiktok",
-          tiktok,
-          artist.name,
-        ),
-        tone: "brand",
-        badge: tiktok.provenance,
-        footnote: t("overnight.tiktok.note"),
-      });
-    }
-    if (nextShow) {
-      insights.push({
-        key: "nextShow",
-        icon: CalendarDays,
-        kicker: t("overnight.nextShow.kicker"),
-        body: t("overnight.nextShow.body", {
-          venue: nextShow.venue,
-          city: nextShow.city,
-          days: daysUntil(nextShow.date),
-          sold: fmtInt(locale, nextShow.ticketsSold),
-          capacity: fmtInt(locale, nextShow.capacity),
-        }),
-        tone: "brand",
-      });
-    }
-    if (alert) {
-      insights.push({
-        key: "contract",
-        icon: FileWarning,
-        kicker: t("overnight.contract.kicker"),
-        body: t("overnight.contract.body", {
-          message: alert.message[locale === "fr" ? "fr" : "en"],
-        }),
-        tone: alert.severity === "danger" ? "destructive" : "warning",
-      });
-    }
+    /* De l'argent à aller chercher, et les portes. */
+    const gap = openGap(auditFindings(artistId));
+    const rightsPending = pendingRights(rightsStatements(artistId));
+    const trackIds = new Set(TRACKS.filter((tr) => tr.artistId === artistId).map((tr) => tr.id));
+    const splitsPending = SPLITS.filter(
+      (s) => trackIds.has(s.trackId) && s.status !== "signed",
+    ).length;
+    const marketRow = marketShares("artist").find(
+      (r) => r.label.toLowerCase() === artist.name.toLowerCase(),
+    );
+    const pnl = pnlByArtist(12).find((p) => p.artistId === artistId);
+    const urssafDue = daysUntil(
+      `${DEMO_TODAY.getUTCFullYear()}-${String(Math.ceil((DEMO_TODAY.getUTCMonth() + 1) / 3) * 3 + 1).padStart(2, "0")}-15`,
+    );
+    const superfans = fanSegments(artistId).find((f) => f.id === "superfans")?.count ?? 0;
 
     return {
       artist,
+      series,
       today,
       deltaToday,
-      heroSpark,
       s7,
       d7,
-      spark7,
+      s30,
       revMonth,
       revDelta,
-      revSpark,
-      series90,
+      revForecast,
       est,
-      streamsProvenance,
-      insights,
+      toRecoup,
+      ownExpenses,
+      isSigned,
+      contributions,
+      left,
+      publishing30,
+      night: { bestDsp, nightTotal, topTrack, tiktok, nextShow, alert },
+      leads: { gap, rightsPending },
+      doors: { splitsPending, marketRow, pnl, urssafDue, alerts },
+      rest: {
+        superfans,
+        tracks: trackIds.size,
+        shows: tourDates(artistId).length,
+        countries: countryBreakdown(artistId, 30).length,
+      },
     };
-  }, [showArtist, artistId, locale, t, sharesKey, persona]);
+  }, [showArtist, artistId, sharesKey]);
 
-  /* ───────────── Vue label agrégée (focusedArtistId === null) ───────────── */
+  /* ───────────── Vue structure (roster agrégé) ───────────── */
 
   const labelView = useMemo(() => {
     void sharesKey;
@@ -305,25 +277,41 @@ export default function PulsePage() {
 
     const totals = labelTotals();
     const rows = rosterRows();
-
-    const agg14 = aggregatedDaily(14);
-    const today = agg14[agg14.length - 1]?.streams ?? 0;
-    const yesterday = agg14[agg14.length - 2]?.streams ?? 0;
-    const deltaToday =
-      yesterday === 0 ? 0 : ((today - yesterday) / yesterday) * 100;
-    const heroSpark = agg14.map((d) => ({ value: d.streams }));
-
-    const cur7 = agg14.slice(-7).reduce((s, d) => s + d.streams, 0);
-    const prev7 = agg14.slice(0, 7).reduce((s, d) => s + d.streams, 0);
+    const agg = aggregatedDaily(365);
+    const today = agg[agg.length - 1]?.streams ?? 0;
+    const yesterday = agg[agg.length - 2]?.streams ?? 0;
+    const deltaToday = yesterday === 0 ? 0 : ((today - yesterday) / yesterday) * 100;
+    const cur7 = agg.slice(-7).reduce((s, d) => s + d.streams, 0);
+    const prev7 = agg.slice(-14, -7).reduce((s, d) => s + d.streams, 0);
     const d7 = prev7 === 0 ? 0 : ((cur7 - prev7) / prev7) * 100;
+    const s30 = agg.slice(-30).reduce((s, d) => s + d.streams, 0);
 
-    const series90 = aggregatedDaily(90);
-    const movers = [...rows].sort((a, b) => b.delta30d - a.delta30d).slice(0, 5);
+    /* Qui bouge : tout le roster, trié par variation — pas seulement le top 3. */
+    const movers = [...rows].sort((a, b) => b.delta30d - a.delta30d);
+    const topEarner = rows[0]; // rosterRows est trié par revenus 12 mois
     const est = rosterEstimateSummaries();
 
-    /* Insights roster */
-    const topMover = movers[0];
-    const topEarner = rows[0]; // rosterRows est trié par revenus 12 m
+    const monthly = ARTISTS.map((a) => monthlyRevenueTotals(a.id, 24));
+    const revMonth = monthly.reduce((s, m) => s + (m[m.length - 1]?.amount ?? 0), 0);
+    const revPrev = monthly.reduce((s, m) => s + (m[m.length - 2]?.amount ?? 0), 0);
+    const dayOfMonth = DEMO_TODAY.getUTCDate();
+    const daysInMonth = new Date(
+      Date.UTC(DEMO_TODAY.getUTCFullYear(), DEMO_TODAY.getUTCMonth() + 1, 0),
+    ).getUTCDate();
+    /* Même correction qu'en vue artiste : mois en cours vs mois précédent au
+       même nombre de jours écoulés. */
+    const daysInPrev = new Date(
+      Date.UTC(DEMO_TODAY.getUTCFullYear(), DEMO_TODAY.getUTCMonth(), 0),
+    ).getUTCDate();
+    const revPrevSoFar = (revPrev / daysInPrev) * dayOfMonth;
+    const revDelta =
+      revPrevSoFar === 0 ? 0 : ((revMonth - revPrevSoFar) / revPrevSoFar) * 100;
+    const revForecast = dayOfMonth === 0 ? revMonth : (revMonth / dayOfMonth) * daysInMonth;
+    const monthExpenses = ARTISTS.reduce(
+      (s, a) => s + expensesFor(a.id, 1).reduce((x, e) => x + e.amount, 0),
+      0,
+    );
+
     const nextShow = ARTISTS.flatMap((a) =>
       tourDates(a.id)
         .filter((d) => d.status === "upcoming")
@@ -334,397 +322,992 @@ export default function PulsePage() {
     ).length;
     const tiktok = rosterTiktokSignal();
 
-    const insights: Insight[] = [];
-    if (topMover) {
-      insights.push({
-        key: "topMover",
-        icon: TrendingUp,
-        kicker: t("overnight.topMover.kicker"),
-        body: t("overnight.topMover.body", {
-          name: topMover.name,
-          delta: fmtPct(locale, topMover.delta30d),
-        }),
-        tone: "success",
-      });
-    }
-    if (topEarner) {
-      insights.push({
-        key: "topEarner",
-        icon: Crown,
-        kicker: t("overnight.topEarner.kicker"),
-        body: t("overnight.topEarner.body", {
-          name: topEarner.name,
-          share: `${fmtInt(locale, Math.round((topEarner.revenue12m / Math.max(1, totals.revenue12m)) * 100))} %`,
-        }),
-        tone: "brand",
-      });
-    }
-    if (nextShow) {
-      insights.push({
-        key: "labelNextShow",
-        icon: CalendarDays,
-        kicker: t("overnight.labelNextShow.kicker"),
-        body: t("overnight.labelNextShow.body", {
-          name: nextShow.artistName,
-          venue: nextShow.venue,
-          city: nextShow.city,
-          days: daysUntil(nextShow.date),
-        }),
-        tone: "muted",
-      });
-    }
-    if (tiktok) {
-      insights.push({
-        key: "tiktokRoster",
-        icon: Music2,
-        kicker: t("overnight.tiktokRoster.kicker"),
-        body: tiktokBody(t, locale, "overnight.tiktokRoster", tiktok),
-        tone: "brand",
-        badge: tiktok.provenance,
-        footnote: t("overnight.tiktok.note"),
-      });
-    }
-    insights.push({
-      key: "contractCount",
-      icon: FileWarning,
-      kicker: t("overnight.contractCount.kicker"),
-      body: t("overnight.contractCount.body", { count: alertCount }),
-      tone: "warning",
-    });
+    const gap = ARTISTS.reduce((s, a) => s + openGap(auditFindings(a.id)), 0);
+    const rightsPending = ARTISTS.reduce(
+      (s, a) => s + pendingRights(rightsStatements(a.id)),
+      0,
+    );
+    const splitsPending = SPLITS.filter((s) => s.status !== "signed").length;
+    const groupRows = marketShares("group");
+    const rosterNames = new Set(ARTISTS.map((a) => a.name.toLowerCase()));
+    const rosterMarket = marketShares("artist").filter((r) =>
+      rosterNames.has(r.label.toLowerCase()),
+    );
+    const rosterShare = rosterMarket.reduce((s, r) => s + r.share, 0);
+    const valuation = ARTISTS.reduce((s, a) => s + catalogValuation(a.id).mid, 0);
+    /* Un artiste est « renseigné » quand l'utilisateur a saisi ou importé ses
+       pourcentages — pas quand le contrat de démo existe. */
+    const missingContracts = ARTISTS.filter((a) => getShares(a.id) === null).length;
 
     return {
       totals,
-      cur7,
-      d7,
+      rows,
+      agg,
       today,
       deltaToday,
-      heroSpark,
-      series90,
+      cur7,
+      d7,
+      s30,
       movers,
+      topEarner,
       est,
-      insights,
+      revMonth,
+      revDelta,
+      revForecast,
+      monthExpenses,
+      valuation,
+      night: { nextShow, alertCount, tiktok, topMover: movers[0] },
+      leads: { gap, rightsPending },
+      doors: { splitsPending, rosterShare, rosterMarket, groupRows, alertCount },
+      missingContracts,
     };
-  }, [showArtist, locale, t, sharesKey]);
-
-  /* Cascade mise en avant : part artiste pour l'artiste, brut master pour le label. */
-  const line = persona === "artist" ? "artistShare" : "grossMaster";
-
-  /* « Voir le détail des revenus » : Revenus s'ouvre sur la même période. */
-  const detailLink = (
-    <Button asChild variant="ghost" size="sm">
-      <Link href={REVENUE_DETAIL_HREF}>
-        {t("estimate.detail")}
-        <ArrowRight aria-hidden />
-      </Link>
-    </Button>
-  );
+  }, [showArtist, sharesKey]);
 
   /* ───────────────────────────── Rendu ───────────────────────────── */
 
+  const v = artistView;
+  const l = labelView;
+
+  const askPlaceholder = showArtist ? t("ask.placeholder") : t("ask.placeholderLabel");
+
   return (
     <div className="rise-in">
-      <PageHeader
-        title={t("title")}
-        subtitle={showArtist ? t("subtitle") : t("subtitleLabel")}
-      >
-        {isLabel && focusedArtistId !== null && artistView && (
+      <PageHeader title={t("title")} subtitle={showArtist ? t("subtitle") : t("subtitleLabel")}>
+        {isLabel && focusedArtistId !== null && v && (
           <>
-            <ArtistBadge artist={artistView.artist} size="sm" />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setFocusedArtistId(null)}
-            >
+            <ArtistBadge artist={v.artist} size="sm" />
+            <Button variant="outline" size="sm" onClick={() => setFocusedArtistId(null)}>
               <ArrowLeft className="size-3.5" aria-hidden />
               {t("backToRoster")}
             </Button>
           </>
         )}
-        <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
-          <CalendarDays className="size-3.5" aria-hidden />
-          {dateChip}
-        </span>
       </PageHeader>
 
-      {artistView && (
-        <div className="space-y-4">
-          {/* Salutation (skin artiste) : « Bonjour Dadju », texte brut, simple
-              fondu. En structure, le sous-titre suffit. */}
-          {skin === "artist" && (
-            <p
-              data-greeting
-              className={cn(
-                "font-heading text-lg font-medium tracking-tight text-foreground",
-                entry && "fade-in",
-              )}
-            >
-              {t("greeting", { name: artistView.artist.name })}
-            </p>
-          )}
-          {/* Héro + KPIs */}
-          <KpiStagger
-            className={cn(
-              "grid gap-4 sm:grid-cols-2",
-              artistView.est ? "xl:grid-cols-7" : "xl:grid-cols-6",
-            )}
-          >
-            <KpiStaggerItem className="relative sm:col-span-2 xl:col-span-2">
-              <KpiCard
-                hero
-                id="pulse-hero"
-                className="h-full"
-                label={t("hero.today")}
-                value={artistView.today}
-                delta={artistView.deltaToday}
-                deltaLabel={t("hero.vsYesterday")}
-                spark={artistView.heroSpark}
-                sparkColor="var(--brand)"
-                provenance={artistView.streamsProvenance}
-              />
-              <SunriseArc />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-7d"
-                className="h-full"
-                label={t("kpis.streams7d")}
-                value={artistView.s7}
-                delta={artistView.d7}
-                spark={artistView.spark7}
-              />
-            </KpiStaggerItem>
-            {artistView.est ? (
-              <>
-                {/* Gains estimés : hier + 7 jours, en fourchette et avec provenance */}
-                <KpiStaggerItem>
-                  <KpiCard
-                    id="pulse-earned-day"
-                    className="h-full"
-                    label={t("kpis.earnedYesterday")}
-                    value={Math.round(artistView.est.day[line].mid)}
-                    format="eur"
-                    deltaLabel={t("kpis.rangeHint", {
-                      low: fmtEur(locale, artistView.est.day[line].low),
-                      high: fmtEur(locale, artistView.est.day[line].high),
-                    })}
-                    provenance={artistView.est.day.provenance}
-                  />
-                </KpiStaggerItem>
-                <KpiStaggerItem>
-                  <KpiCard
-                    id="pulse-earned-week"
-                    className="h-full"
-                    label={t("kpis.earnedWeek")}
-                    value={Math.round(artistView.est.week[line].mid)}
-                    format="eur"
-                    deltaLabel={
-                      persona === "artist"
-                        ? t("kpis.artistShareHint")
-                        : t("kpis.grossHint")
-                    }
-                    provenance={artistView.est.week.provenance}
-                  />
-                </KpiStaggerItem>
-              </>
-            ) : (
-              <KpiStaggerItem>
-                <KpiCard
-                  id="pulse-rev"
-                  className="h-full"
-                  label={t("kpis.revenueMonth")}
-                  value={artistView.revMonth}
-                  format="eur"
-                  delta={artistView.revDelta}
-                  deltaLabel={t("kpis.vsPrevMonth")}
-                  spark={artistView.revSpark}
-                  sparkColor="var(--chart-2)"
-                />
-              </KpiStaggerItem>
-            )}
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-listeners"
-                className="h-full"
-                label={t("kpis.monthlyListeners")}
-                value={artistView.artist.monthlyListeners}
-                delta={artistView.artist.growthRate * 100}
-                deltaLabel={t("kpis.growthHint")}
-              />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-index"
-                className="h-full"
-                label={t("kpis.day1Index")}
-                value={artistView.artist.day1Index}
-                format="int"
-                deltaLabel={t("kpis.day1IndexHint")}
-              />
-            </KpiStaggerItem>
-          </KpiStagger>
+      {/* En-tête : la salutation, l'heure du relevé, et la question. */}
+      <div className="mb-3.5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 className="font-heading text-xl font-semibold tracking-tight">
+            {t("greeting", { name: v ? v.artist.name : LABEL.name })}
+          </h2>
+          <p className="text-muted-foreground mt-0.5 text-xs">
+            <span className="bg-success mr-1.5 inline-block size-1.5 rounded-full align-[1px] shadow-[0_0_0_3px_color-mix(in_oklab,var(--success)_22%,transparent)]" />
+            {dateChip} · {t("hero.reading")} ·{" "}
+            <span className="font-mono text-[10.5px]">{t("hero.nextReading")}</span>
+          </p>
+        </div>
+        <Link
+          href="/copilot"
+          className="border-input bg-card text-muted-foreground hover:border-ring flex max-w-md flex-1 items-center justify-between rounded-lg border px-3.5 py-2.5 text-[12.5px] transition-colors"
+        >
+          {askPlaceholder}
+          {/* Symbole de raccourci clavier : ne se traduit pas. */}
+          {/* eslint-disable-next-line i18next/no-literal-string */}
+          <kbd className="text-brand text-[11px] font-semibold">⌘K</kbd>
+        </Link>
+      </div>
 
-          {/* Grand chart 90 j */}
-          <section className="rounded-xl border bg-card p-5">
-            <h2 className="mb-4 text-sm font-medium text-muted-foreground">
-              {t("chart.title")}
-            </h2>
-            <StreamsAreaChart
-              data={artistView.series90}
+      {v && (
+        <div className="space-y-3">
+          {/* 1 — le chiffre du jour, au centre de son graphique. */}
+          <Sheet family="streams">
+            <HeroChart
+              series={v.series}
               seriesLabel={t("chart.streams")}
+              heading={<SheetHeading>{t("families.streams")}</SheetHeading>}
+              value={fmtCompact(locale, v.today)}
+              caption={
+                <>
+                  {t("hero.todayArtist")}{" "}
+                  <b className={v.deltaToday >= 0 ? "text-success" : "text-destructive"}>
+                    {fmtPct(locale, v.deltaToday)}
+                  </b>{" "}
+                  <ProvenanceBadge provenance="measured" className="align-middle" />
+                </>
+              }
             />
-          </section>
-
-          {/* Position algo & tendances — simulation de démo */}
-          <AlgoTrendPanel artistId={artistId} artistName={artistView.artist.name} />
-
-          {/* Ce que ça rapporte — estimation jour / semaine / mois / année */}
-          {artistView.est && (
-            <EstimateBoard
-              summaries={artistView.est}
-              line={line}
-              title={t("estimate.title")}
-              subtitle={t("estimate.subtitle")}
-              actions={detailLink}
+            <AffiliatedPoints
+              points={[
+                {
+                  key: "d7",
+                  value: (
+                    <>
+                      {fmtCompact(locale, v.s7)}{" "}
+                      <span
+                        className={`text-xs ${v.d7 >= 0 ? "text-success" : "text-destructive"}`}
+                      >
+                        {fmtPct(locale, v.d7)}
+                      </span>
+                    </>
+                  ),
+                  label: t("affiliated.d7"),
+                },
+                {
+                  key: "d30",
+                  value: fmtCompact(locale, v.s30),
+                  label: t("affiliated.d30"),
+                  note: t("affiliated.d30Note"),
+                },
+                ...(v.night.topTrack
+                  ? [
+                      {
+                        key: "track",
+                        value: `« ${v.night.topTrack.title} »`,
+                        label: t("affiliated.topTrack"),
+                        note: t("affiliated.topTrackNote", {
+                          streams: fmtCompact(locale, v.night.topTrack.streams),
+                        }),
+                      } satisfies AffiliatedPoint,
+                    ]
+                  : []),
+                ...(v.night.bestDsp
+                  ? [
+                      {
+                        key: "dsp",
+                        value: `${t(`dsp.${v.night.bestDsp.dsp}`)} · ${fmtInt(
+                          locale,
+                          Math.round(
+                            (v.night.bestDsp.streams / Math.max(1, v.night.nightTotal)) * 100,
+                          ),
+                        )} %`,
+                        label: t("affiliated.bestDsp"),
+                        note: t("affiliated.bestDspNote"),
+                      } satisfies AffiliatedPoint,
+                    ]
+                  : []),
+              ]}
             />
-          )}
+          </Sheet>
 
-          {/* Ta part, c'est ton contrat — rappel en une ligne, l'édition se fait sur Revenus. */}
-          {artistView.est && persona === "artist" && (
-            <SharesPanel variant="compact" artistId={artistId} gross={artistView.est.day.grossMaster.mid} />
-          )}
+          {/* 2 — argent, audience, tendances. */}
+          <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr_1fr]">
+            <Sheet family="money">
+              <SheetHeading
+                action={<Link href={REVENUE_DETAIL_HREF}>{t("money.detail")}</Link>}
+              >
+                {t("families.money")}
+              </SheetHeading>
+              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                {eur(v.est?.day.artistShare.mid ?? 0)}
+              </p>
+              <p className="sheet-ink mt-1 text-xs">
+                {t("money.yesterday")} ·{" "}
+                {t("money.range", {
+                  low: eur(v.est?.day.artistShare.low ?? 0),
+                  high: eur(v.est?.day.artistShare.high ?? 0),
+                })}{" "}
+                <ProvenanceBadge provenance="estimated" className="align-middle" />
+              </p>
+              <AttachedLines
+                lines={[
+                  {
+                    key: "month",
+                    label: t("money.monthCurrent"),
+                    value: (
+                      <>
+                        {eur(v.revMonth)}{" "}
+                        <span
+                          className={`text-[11px] ${v.revDelta >= 0 ? "text-success" : "text-destructive"}`}
+                        >
+                          {fmtPct(locale, v.revDelta)}
+                        </span>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "forecast",
+                    label: (
+                      <>
+                        {t("money.monthForecast")}{" "}
+                        <ProvenanceBadge provenance="estimated" className="align-middle" />
+                      </>
+                    ),
+                    value: `≈ ${eur(v.revForecast)}`,
+                  },
+                  ...(v.isSigned && v.toRecoup > 0
+                    ? [
+                        {
+                          key: "recoup",
+                          label: (
+                            <>
+                              {t("money.recoup")}{" "}
+                              <ProvenanceBadge provenance="simulated" className="align-middle" />
+                            </>
+                          ),
+                          value: `−${eur(v.toRecoup)}`,
+                        },
+                      ]
+                    : v.ownExpenses > 0
+                      ? [
+                          {
+                            key: "expenses",
+                            label: t("money.expenses"),
+                            value: `−${eur(v.ownExpenses)}`,
+                          },
+                        ]
+                      : []),
+                  {
+                    key: "contrib",
+                    label: (
+                      <>
+                        {t("money.contributions")}{" "}
+                        <span className="text-muted-foreground text-[11px]">
+                          {t("money.contributionsNote")}
+                        </span>
+                      </>
+                    ),
+                    value: `−${eur(v.contributions)}`,
+                  },
+                  {
+                    key: "left",
+                    label: <b className="text-foreground">{t("money.leftArtist")}</b>,
+                    value: <span className="text-base">{eur(v.left)}</span>,
+                  },
+                ]}
+              />
+            </Sheet>
 
-          {/* Ce qui a changé cette nuit */}
-          <section>
-            <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">
-              {t("overnight.title")}
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {artistView.insights.map((i) => (
-                <InsightCard
-                  key={i.key}
-                  icon={i.icon}
-                  kicker={i.kicker}
-                  body={i.body}
-                  tone={i.tone}
-                  badge={i.badge}
-                  footnote={i.footnote}
-                />
-              ))}
-            </div>
-          </section>
+            <Sheet family="audience">
+              <SheetHeading>{t("families.audience")}</SheetHeading>
+              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                {fmtCompact(locale, v.artist.monthlyListeners)}
+              </p>
+              <p className="sheet-ink mt-1 text-xs">
+                {t("audience.listeners")}{" "}
+                <ProvenanceBadge provenance="measured" className="align-middle" />
+              </p>
+              <AttachedLines
+                lines={[
+                  {
+                    key: "index",
+                    label: t("audience.index"),
+                    value: `${v.artist.day1Index} / 100`,
+                  },
+                  ...(v.night.tiktok
+                    ? [
+                        {
+                          key: "tiktok",
+                          label: (
+                            <>
+                              {t("audience.tiktokVideos")}{" "}
+                              <ProvenanceBadge provenance="simulated" className="align-middle" />
+                            </>
+                          ),
+                          value: `${fmtCompact(locale, v.night.tiktok.videos)} · ${fmtSigned(locale, v.night.tiktok.deltaYesterday)}`,
+                        },
+                      ]
+                    : []),
+                  {
+                    key: "city",
+                    label: t("audience.topCountry"),
+                    value:
+                      (locale === "fr"
+                        ? countryBreakdown(v.artist.id, 30)[0]?.nameFr
+                        : countryBreakdown(v.artist.id, 30)[0]?.nameEn) ?? "—",
+                  },
+                ]}
+              />
+            </Sheet>
+
+            <Sheet family="trends">
+              <SheetHeading action={t("legend.simulated")}>
+                {t("families.trends")}
+              </SheetHeading>
+              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                {v.night.tiktok?.trendingRankFr
+                  ? t("trends.rank", { rank: v.night.tiktok.trendingRankFr })
+                  : "—"}
+              </p>
+              <p className="sheet-ink mt-1 text-xs">{t("trends.tiktokFr")}</p>
+              <AttachedLines
+                lines={[
+                  {
+                    key: "top",
+                    label: t("trends.topTrack"),
+                    value: v.night.topTrack ? `« ${v.night.topTrack.title} »` : "—",
+                  },
+                  { key: "gained", label: t("trends.gained14"), value: "+31 %" },
+                  {
+                    key: "editorial",
+                    label: t("trends.editorial"),
+                    value: t("trends.editorialValue", { count: 6 }),
+                  },
+                ]}
+              />
+            </Sheet>
+          </div>
+
+          {/* 3 — la nuit et la journée qui vient. */}
+          <NightStrip
+            items={
+              [
+                {
+                  key: "week",
+                  kicker: t("night.week.kicker"),
+                  body: (
+                    <>
+                      {v.d7 >= 0
+                        ? t.rich("night.week.up", { ...tags, delta: fmtPct(locale, v.d7) })
+                        : t.rich("night.week.down", {
+                            ...tags,
+                            delta: fmtPct(locale, Math.abs(v.d7)),
+                          })}{" "}
+                      {v.night.bestDsp
+                        ? t.rich("night.week.cause", {
+                            ...tags,
+                            dsp: t(`dsp.${v.night.bestDsp.dsp}`),
+                          })
+                        : null}
+                    </>
+                  ),
+                },
+                v.night.tiktok && {
+                  key: "push",
+                  kicker: t("night.push.kicker"),
+                  body: (
+                    <>
+                      {t.rich("night.push.body", {
+                        ...tags,
+                        videos: fmtCompact(locale, v.night.tiktok.videos),
+                        delta: fmtSigned(locale, v.night.tiktok.deltaYesterday),
+                      })}{" "}
+                      {v.night.tiktok.topSound
+                        ? t.rich("night.push.sound", {
+                            ...tags,
+                            sound: v.night.tiktok.topSound,
+                          })
+                        : null}
+                    </>
+                  ),
+                  footer: (
+                    <span className="text-muted-foreground text-[11px]">
+                      {t("night.push.note")}{" "}
+                      <ProvenanceBadge provenance="simulated" className="align-middle" />
+                    </span>
+                  ),
+                },
+                v.night.nextShow && {
+                  key: "show",
+                  kicker: t("night.show.kicker"),
+                  body: (
+                    <>
+                      {t.rich("night.show.body", {
+                        ...tags,
+                        venue: v.night.nextShow.venue,
+                        city: v.night.nextShow.city,
+                        days: daysUntil(v.night.nextShow.date),
+                      })}{" "}
+                      {t.rich("night.show.tickets", {
+                        ...tags,
+                        sold: fmtInt(locale, v.night.nextShow.ticketsSold),
+                        capacity: fmtInt(locale, v.night.nextShow.capacity),
+                      })}
+                    </>
+                  ),
+                },
+                {
+                  key: "todo",
+                  kicker: t("night.todo.kicker"),
+                  body: (
+                    <>
+                      {v.night.alert ? (
+                        <>
+                          {v.night.alert.message[locale === "fr" ? "fr" : "en"]}
+                          {v.night.alert.dueDate ? (
+                            <>
+                              {" "}
+                              <Emph tone="alert">
+                                {fmtDate(locale, v.night.alert.dueDate, {
+                                  day: "numeric",
+                                  month: "long",
+                                })}
+                              </Emph>
+                            </>
+                          ) : null}{" "}
+                        </>
+                      ) : null}
+                      {v.doors.splitsPending > 0
+                        ? t.rich("night.todo.splits", {
+                            ...tags,
+                            count: v.doors.splitsPending,
+                          })
+                        : null}
+                      {!v.night.alert && v.doors.splitsPending === 0 ? t("night.todo.none") : null}
+                    </>
+                  ),
+                },
+              ].filter(Boolean) as NightItem[]
+            }
+          />
+
+          {/* Les deux fichiers qui rendraient tout exact. */}
+          <ImportBand
+            title={t("importBand.title")}
+            status={
+              <span className="text-muted-foreground text-[11px]">
+                <ProvenanceBadge provenance="simulated" className="mr-1.5 align-middle" />
+                {t("importBand.status", { pct: `${DEFAULT_ARTIST_PCT} %` })}
+              </span>
+            }
+            body={t("importBand.body")}
+            actions={
+              <>
+                <Button asChild size="sm">
+                  <Link href="/import">{t("importBand.importStatement")}</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/revenue#shares">{t("importBand.importContract")}</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/rights">{t("importBand.askLabel")}</Link>
+                </Button>
+              </>
+            }
+          />
+
+          <MoneyToCollect
+            title={t("collect.title")}
+            leads={
+              [
+                v.leads.gap > 0 && {
+                  key: "audit",
+                  href: "/audit",
+                  label: t("collect.audit"),
+                  amount: eur(v.leads.gap),
+                },
+                {
+                  key: "sync",
+                  href: "/sync",
+                  label: t("collect.sync"),
+                  amount: t("collect.syncValue", { count: 3 }),
+                  deadline: t("collect.syncDeadline", { count: 2 }),
+                },
+                v.leads.rightsPending > 0 && {
+                  key: "rights",
+                  href: "/rights",
+                  label: t("collect.rights"),
+                  amount: eur(v.leads.rightsPending),
+                },
+              ].filter(Boolean) as MoneyLead[]
+            }
+          />
+
+          <Doors
+            title={t("doors.title")}
+            doors={
+              [
+                v.doors.marketRow && {
+                  key: "market",
+                  href: "/market",
+                  label: t("doors.market"),
+                  value: t("doors.marketValue", {
+                    rank: v.doors.marketRow.topTrack?.rank ?? "—",
+                    share: pct(v.doors.marketRow.share),
+                  }),
+                },
+                {
+                  key: "splits",
+                  href: "/splits",
+                  label: t("doors.splits"),
+                  value: t("doors.splitsValue", { count: v.doors.splitsPending }),
+                },
+                {
+                  key: "contracts",
+                  href: "/contracts",
+                  label: t("doors.contracts"),
+                  value: t("doors.contractsValue", { count: v.doors.alerts.length }),
+                  urgent: v.doors.alerts.some((a) => a.severity !== "info"),
+                },
+                {
+                  key: "index",
+                  href: "/day1-index",
+                  label: t("doors.index"),
+                  value: `${v.artist.day1Index} / 100`,
+                },
+                v.doors.pnl && {
+                  key: "pnl",
+                  href: "/finances",
+                  label: t("doors.pnl"),
+                  value: t("doors.pnlValue", { margin: pct(v.doors.pnl.margin / 100) }),
+                },
+                {
+                  key: "urssaf",
+                  href: "/urssaf",
+                  label: t("doors.urssaf"),
+                  value: t("doors.urssafValue", { days: v.doors.urssafDue }),
+                  urgent: v.doors.urssafDue <= 30,
+                },
+              ].filter(Boolean) as Door[]
+            }
+          />
+
+          <RestRow
+            title={t("rest.title")}
+            items={[
+              {
+                key: "fans",
+                href: "/fans",
+                label: t("rest.fans", { count: fmtCompact(locale, v.rest.superfans) }),
+              },
+              {
+                key: "catalog",
+                href: "/catalog",
+                label: t("rest.catalog", { count: v.rest.tracks }),
+              },
+              { key: "tour", href: "/tour", label: t("rest.tour", { count: v.rest.shows }) },
+              {
+                key: "discovery",
+                href: "/discovery",
+                label: t("rest.discovery", { count: EMERGING.length }),
+              },
+              {
+                key: "audience",
+                href: "/audience",
+                label: t("rest.audience", { count: v.rest.countries }),
+              },
+              { key: "calc", href: "/calculator", label: t("rest.calculator") },
+            ]}
+          />
+
+          <p className="text-muted-foreground mt-2 text-[11.5px]">{t("legend.intro")}</p>
         </div>
       )}
 
-      {labelView && (
-        <div className="space-y-4">
-          {/* Héro + KPIs label */}
-          <KpiStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-            <KpiStaggerItem className="relative sm:col-span-2 xl:col-span-2">
-              <KpiCard
-                hero
-                id="pulse-label-hero"
-                className="h-full"
-                label={t("hero.todayLabel")}
-                value={labelView.today}
-                delta={labelView.deltaToday}
-                deltaLabel={t("hero.vsYesterday")}
-                spark={labelView.heroSpark}
-                sparkColor="var(--brand)"
-              />
-              <SunriseArc />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-label-7d"
-                className="h-full"
-                label={t("kpis.streams7d")}
-                value={labelView.cur7}
-                delta={labelView.d7}
-              />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-label-rev"
-                className="h-full"
-                label={t("kpis.revenue12m")}
-                value={labelView.totals.revenue12m}
-                format="eur"
-              />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-label-net"
-                className="h-full"
-                label={t("kpis.net12m")}
-                value={labelView.totals.net12m}
-                format="eur"
-                deltaLabel={t("kpis.netHint")}
-              />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="pulse-label-valo"
-                className="h-full"
-                label={t("kpis.valuation")}
-                value={labelView.totals.valuationMid}
-                format="eur"
-                deltaLabel={t("kpis.valuationHint")}
-              />
-            </KpiStaggerItem>
-          </KpiStagger>
+      {l && (
+        <div className="space-y-3">
+          {/* Héros structure : le total à gauche, qui bouge à droite (gabarit I). */}
+          <Sheet family="streams">
+            <div className="grid items-center gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+              <div className="text-center">
+                <SheetHeading centered>{t("families.streamsLabel")}</SheetHeading>
+                <p className="text-5xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-6xl">
+                  {fmtCompact(locale, l.today)}
+                </p>
+                <p className="sheet-ink mt-1.5 text-[13px]">
+                  {t("hero.todayLabel", { count: ARTISTS.length })}{" "}
+                  <b className={l.deltaToday >= 0 ? "text-success" : "text-destructive"}>
+                    {fmtPct(locale, l.deltaToday)}
+                  </b>{" "}
+                  <ProvenanceBadge provenance="measured" className="align-middle" />
+                </p>
+                <Link
+                  href="/streams"
+                  className="sheet-ink mt-2 block text-[11px] underline underline-offset-2"
+                >
+                  {t("movers.range")} · {t("movers.detail")}
+                </Link>
+              </div>
+              <div>
+                <SheetHeading action={<Link href="/roster">{t("movers.see")}</Link>}>
+                  {t("movers.title")}
+                </SheetHeading>
+                <div className="mt-1">
+                  {l.movers.map((m, i) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setFocusedArtistId(m.id)}
+                      className={`grid w-full grid-cols-[1fr_auto_auto] items-baseline gap-4 py-1.5 text-left text-[12.5px] ${
+                        i === 0 ? "sheet-rule" : "border-border/30 border-t"
+                      }`}
+                    >
+                      <span className="font-medium">{m.name}</span>
+                      <span className="sheet-ink tabular-nums">
+                        {fmtCompact(locale, m.streams30d)}
+                      </span>
+                      <b
+                        className={`w-16 text-right font-semibold tabular-nums ${
+                          m.delta30d >= 0 ? "text-success" : "text-destructive"
+                        }`}
+                      >
+                        {fmtPct(locale, m.delta30d)}
+                      </b>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <AffiliatedPoints
+              points={[
+                {
+                  key: "d7",
+                  value: (
+                    <>
+                      {fmtCompact(locale, l.cur7)}{" "}
+                      <span
+                        className={`text-xs ${l.d7 >= 0 ? "text-success" : "text-destructive"}`}
+                      >
+                        {fmtPct(locale, l.d7)}
+                      </span>
+                    </>
+                  ),
+                  label: t("affiliated.d7"),
+                },
+                {
+                  key: "d30",
+                  value: fmtCompact(locale, l.s30),
+                  label: t("affiliated.d30"),
+                  note: t("affiliated.d30Note"),
+                },
+                ...(l.topEarner
+                  ? [
+                      {
+                        key: "earner",
+                        value: `${l.topEarner.name} · ${fmtInt(
+                          locale,
+                          Math.round(
+                            (l.topEarner.revenue12m / Math.max(1, l.totals.revenue12m)) * 100,
+                          ),
+                        )} %`,
+                        label: t("affiliated.earner"),
+                        note: t("affiliated.earnerNote"),
+                      } satisfies AffiliatedPoint,
+                    ]
+                  : []),
+                {
+                  key: "valuation",
+                  value: eur(l.valuation),
+                  label: t("money.valuation"),
+                  note: t("legend.simulated"),
+                },
+              ]}
+            />
+          </Sheet>
 
-          {/* Chart agrégé + top movers */}
-          <div className="grid gap-4 xl:grid-cols-3">
-            <section className="rounded-xl border bg-card p-5 xl:col-span-2">
-              <h2 className="mb-4 text-sm font-medium text-muted-foreground">
-                {t("chart.titleLabel")}
-              </h2>
-              <StreamsAreaChart
-                data={labelView.series90}
-                seriesLabel={t("chart.streams")}
-              />
-            </section>
-            <section className="rounded-xl border bg-card p-5">
-              <h2 className="text-sm font-medium">{t("movers.title")}</h2>
-              <p className="mb-3 text-xs text-muted-foreground">
-                {t("movers.subtitle")}
+          <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr_1fr]">
+            <Sheet family="money">
+              <SheetHeading
+                action={<Link href={REVENUE_DETAIL_HREF}>{t("money.detail")}</Link>}
+              >
+                {t("families.moneyLabel")}
+              </SheetHeading>
+              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                {eur(l.est.day.grossMaster.mid)}
               </p>
-              <TopMovers
-                rows={labelView.movers}
-                unitLabel={t("movers.streams30d")}
-                onSelect={setFocusedArtistId}
+              <p className="sheet-ink mt-1 text-xs">
+                {t("money.grossMaster")} · {t("money.yesterday")}{" "}
+                <ProvenanceBadge provenance="estimated" className="align-middle" />
+              </p>
+              <AttachedLines
+                lines={[
+                  {
+                    key: "month",
+                    label: t("money.monthCurrent"),
+                    value: (
+                      <>
+                        {eur(l.revMonth)}{" "}
+                        <span
+                          className={`text-[11px] ${l.revDelta >= 0 ? "text-success" : "text-destructive"}`}
+                        >
+                          {fmtPct(locale, l.revDelta)}
+                        </span>
+                      </>
+                    ),
+                  },
+                  {
+                    key: "forecast",
+                    label: (
+                      <>
+                        {t("money.monthForecast")}{" "}
+                        <ProvenanceBadge provenance="estimated" className="align-middle" />
+                      </>
+                    ),
+                    value: `≈ ${eur(l.revForecast)}`,
+                  },
+                  {
+                    key: "expenses",
+                    label: (
+                      <>
+                        {t("money.expenses")}{" "}
+                        <span className="text-muted-foreground text-[11px]">
+                          {t("money.expensesNote")}
+                        </span>
+                      </>
+                    ),
+                    value: `−${eur(l.monthExpenses)}`,
+                  },
+                  {
+                    key: "result",
+                    label: <b className="text-foreground">{t("money.leftLabel")}</b>,
+                    value: (
+                      <span className="text-base">
+                        {eur(Math.max(0, l.revMonth - l.monthExpenses))}
+                      </span>
+                    ),
+                  },
+                ]}
               />
-            </section>
+            </Sheet>
+
+            <Sheet family="audience">
+              <SheetHeading>{t("families.audienceLabel")}</SheetHeading>
+              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                {fmtCompact(
+                  locale,
+                  ARTISTS.reduce((s, a) => s + a.monthlyListeners, 0),
+                )}
+              </p>
+              <p className="sheet-ink mt-1 text-xs">
+                {t("audience.listenersLabel")}{" "}
+                <ProvenanceBadge provenance="measured" className="align-middle" />
+              </p>
+              <AttachedLines
+                lines={[
+                  {
+                    key: "index",
+                    label: t("audience.indexLabel"),
+                    value: `${Math.round(
+                      ARTISTS.reduce((s, a) => s + a.day1Index, 0) / ARTISTS.length,
+                    )} / 100`,
+                  },
+                  ...(l.night.tiktok
+                    ? [
+                        {
+                          key: "tiktok",
+                          label: (
+                            <>
+                              {t("audience.tiktokVideosLabel")}{" "}
+                              <ProvenanceBadge provenance="simulated" className="align-middle" />
+                            </>
+                          ),
+                          value: `${fmtCompact(locale, l.night.tiktok.videos)} · ${fmtSigned(locale, l.night.tiktok.deltaYesterday)}`,
+                        },
+                      ]
+                    : []),
+                  ...(l.night.topMover
+                    ? [
+                        {
+                          key: "fastest",
+                          label: t("audience.fastest"),
+                          value: l.night.topMover.name,
+                        },
+                      ]
+                    : []),
+                ]}
+              />
+            </Sheet>
+
+            <Sheet family="trends">
+              <SheetHeading action={t("legend.simulated")}>
+                {t("families.trends")}
+              </SheetHeading>
+              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+{l.doors.rosterMarket.length}
+              </p>
+              <p className="sheet-ink mt-1 text-xs">{t("trends.inTop200")}</p>
+              <AttachedLines
+                lines={[
+                  ...l.doors.rosterMarket.slice(0, 2).map((r) => ({
+                    key: r.key,
+                    label: r.label,
+                    value: t("trends.rank", { rank: r.topTrack?.rank ?? "—" }),
+                  })),
+                  {
+                    key: "share",
+                    label: t("trends.rosterShare"),
+                    value: pct(l.doors.rosterShare),
+                  },
+                ]}
+              />
+            </Sheet>
           </div>
 
-          {/* Ce que le roster rapporte — estimation agrégée */}
-          <EstimateBoard
-            summaries={labelView.est}
-            line="grossMaster"
-            title={t("estimate.titleLabel")}
-            subtitle={t("estimate.subtitle")}
-            actions={detailLink}
+          <NightStrip
+            items={
+              [
+                l.night.topMover && {
+                  key: "accel",
+                  kicker: t("night.weekLabel.kicker"),
+                  body: (
+                    <>
+                      {t.rich("night.weekLabel.body", {
+                        ...tags,
+                        name: l.night.topMover.name,
+                        delta: fmtPct(locale, l.night.topMover.delta30d),
+                      })}{" "}
+                      {l.topEarner
+                        ? t.rich("night.weekLabel.earner", {
+                            ...tags,
+                            earner: l.topEarner.name,
+                            share: `${fmtInt(
+                              locale,
+                              Math.round(
+                                (l.topEarner.revenue12m / Math.max(1, l.totals.revenue12m)) * 100,
+                              ),
+                            )} %`,
+                          })
+                        : null}
+                    </>
+                  ),
+                },
+                l.night.tiktok && {
+                  key: "push",
+                  kicker: t("night.push.kicker"),
+                  body: t.rich("night.push.bodyLabel", {
+                    ...tags,
+                    videos: fmtCompact(locale, l.night.tiktok.videos),
+                    delta: fmtSigned(locale, l.night.tiktok.deltaYesterday),
+                  }),
+                  footer: (
+                    <span className="text-muted-foreground text-[11px]">
+                      {t("night.push.noteLabel")}{" "}
+                      <ProvenanceBadge provenance="simulated" className="align-middle" />
+                    </span>
+                  ),
+                },
+                l.night.nextShow && {
+                  key: "show",
+                  kicker: t("night.show.kicker"),
+                  body: (
+                    <>
+                      <Emph>{l.night.nextShow.artistName}</Emph> —{" "}
+                      {t.rich("night.show.body", {
+                        ...tags,
+                        venue: l.night.nextShow.venue,
+                        city: l.night.nextShow.city,
+                        days: daysUntil(l.night.nextShow.date),
+                      })}
+                    </>
+                  ),
+                },
+                {
+                  key: "todo",
+                  kicker: t("night.todo.kicker"),
+                  body: (
+                    <>
+                      {t.rich("night.todo.alerts", { ...tags, count: l.night.alertCount })}{" "}
+                      {t.rich("night.todo.splitsLabel", {
+                        ...tags,
+                        count: l.doors.splitsPending,
+                      })}
+                    </>
+                  ),
+                },
+              ].filter(Boolean) as NightItem[]
+            }
           />
 
-          {/* Ce qui a changé cette nuit — roster */}
-          <section>
-            <h2 className="mb-3 font-heading text-base font-semibold tracking-tight">
-              {t("overnight.title")}
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {labelView.insights.map((i) => (
-                <InsightCard
-                  key={i.key}
-                  icon={i.icon}
-                  kicker={i.kicker}
-                  body={i.body}
-                  tone={i.tone}
-                  badge={i.badge}
-                  footnote={i.footnote}
-                />
-              ))}
-            </div>
-          </section>
+          <ImportBand
+            title={t("importBand.titleLabel")}
+            status={
+              <span className="text-muted-foreground text-[11px]">
+                <ProvenanceBadge provenance="simulated" className="mr-1.5 align-middle" />
+                {t("importBand.statusLabel", {
+                  count: l.missingContracts,
+                  total: ARTISTS.length,
+                })}
+              </span>
+            }
+            body={t("importBand.bodyLabel")}
+            actions={
+              <>
+                <Button asChild size="sm">
+                  <Link href="/contracts">{t("importBand.fillContracts")}</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/import">{t("importBand.importStatement")}</Link>
+                </Button>
+              </>
+            }
+          />
+
+          <MoneyToCollect
+            title={t("collect.title")}
+            leads={
+              [
+                l.leads.gap > 0 && {
+                  key: "audit",
+                  href: "/audit",
+                  label: t("collect.audit"),
+                  amount: eur(l.leads.gap),
+                },
+                {
+                  key: "sync",
+                  href: "/sync",
+                  label: t("collect.sync"),
+                  amount: t("collect.syncValue", { count: 5 }),
+                  deadline: t("collect.syncDeadline", { count: 2 }),
+                },
+                l.leads.rightsPending > 0 && {
+                  key: "rights",
+                  href: "/rights",
+                  label: t("collect.rights"),
+                  amount: eur(l.leads.rightsPending),
+                },
+              ].filter(Boolean) as MoneyLead[]
+            }
+          />
+
+          <Doors
+            title={t("doors.title")}
+            doors={[
+              {
+                key: "market",
+                href: "/market",
+                label: t("doors.marketLabel"),
+                value: t("doors.marketValueLabel", { share: pct(l.doors.rosterShare) }),
+              },
+              {
+                key: "valuation",
+                href: "/valuation",
+                label: t("doors.valuation"),
+                value: eur(l.valuation),
+              },
+              {
+                key: "splits",
+                href: "/splits",
+                label: t("doors.splits"),
+                value: t("doors.splitsValue", { count: l.doors.splitsPending }),
+              },
+              {
+                key: "contracts",
+                href: "/contracts",
+                label: t("doors.contracts"),
+                value: t("doors.contractsValue", { count: l.doors.alertCount }),
+                urgent: l.doors.alertCount > 0,
+              },
+              {
+                key: "rights",
+                href: "/rights",
+                label: t("doors.rights"),
+                value: t("doors.rightsValue", { amount: eur(l.leads.rightsPending) }),
+              },
+              {
+                key: "arwatch",
+                href: "/ar-watch",
+                label: t("doors.arwatch"),
+                value: t("doors.arwatchValue", { count: EMERGING.length }),
+              },
+            ]}
+          />
+
+          <RestRow
+            title={t("rest.titleLabel")}
+            items={[
+              { key: "fans", href: "/fans", label: t("rest.fansLabel") },
+              {
+                key: "catalog",
+                href: "/catalog",
+                label: t("rest.catalog", { count: TRACKS.length }),
+              },
+              {
+                key: "tour",
+                href: "/tour",
+                label: t("rest.tour", {
+                  count: ARTISTS.reduce((s, a) => s + tourDates(a.id).length, 0),
+                }),
+              },
+              {
+                key: "discovery",
+                href: "/discovery",
+                label: t("rest.discovery", { count: EMERGING.length }),
+              },
+              { key: "team", href: "/team", label: t("rest.team", { count: TEAM.length }) },
+              { key: "calc", href: "/calculator", label: t("rest.calculator") },
+            ]}
+          />
+
+          <p className="text-muted-foreground mt-2 text-[11.5px]">{t("legend.intro")}</p>
         </div>
       )}
     </div>

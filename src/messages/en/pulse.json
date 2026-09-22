@@ -5,9 +5,17 @@
   "backToRoster": "Roster view",
   "greeting": "Hello {name}",
   "hero": {
-    "today": "Streams today",
-    "todayLabel": "Roster streams today",
-    "vsYesterday": "vs yesterday"
+    "ranges": {
+      "d7": "7 d",
+      "d30": "30 d",
+      "d90": "90 d",
+      "m12": "12 months"
+    },
+    "peak": "peak {value} · {date}",
+    "todayArtist": "streams yesterday, all platforms",
+    "todayLabel": "streams yesterday, {count} artists",
+    "nextReading": "next tomorrow 09:00",
+    "reading": "09:00 reading"
   },
   "kpis": {
     "streams7d": "Streams · 7 days",
@@ -96,9 +104,10 @@
     }
   },
   "movers": {
-    "title": "Top movers · 30 days",
-    "subtitle": "Click an artist to zoom in",
-    "streams30d": "streams · 30 d"
+    "title": "Who's moving · last 30 days",
+    "see": "see roster →",
+    "range": "last 90 days",
+    "detail": "see details →"
   },
   "dsp": {
     "spotify": "Spotify",
@@ -143,5 +152,171 @@
       "playlists": "Editorial playlist adds"
     },
     "note": "Demo simulation: ranks, creators and saves will be measured in production (Soundcharts, connected accounts)."
+  },
+  "families": {
+    "streams": "Streams",
+    "streamsLabel": "Roster streams",
+    "money": "What it earns",
+    "moneyLabel": "What the roster earns",
+    "audience": "Audience",
+    "audienceLabel": "Roster audience",
+    "trends": "Algorithm position & trends"
+  },
+  "affiliated": {
+    "d7": "7 days",
+    "d30": "30 days",
+    "d30Note": "Spotify reconstructed, others estimated",
+    "topTrack": "leading track",
+    "topTrackNote": "{streams} streams yesterday",
+    "bestDsp": "leading platform",
+    "bestDspNote": "of last night's listening",
+    "earner": "where the money comes from",
+    "earnerNote": "of the label's 12-month revenue"
+  },
+  "money": {
+    "yesterday": "yesterday",
+    "range": "{low} – {high}",
+    "grossMaster": "Gross master",
+    "artistShare": "Your share · {pct}",
+    "artistShareLabel": "Artist share · {pct}",
+    "publishing": "Publishing",
+    "monthCurrent": "Revenue this month",
+    "monthForecast": "End-of-month forecast",
+    "recoup": "− left to recoup on the advance",
+    "expenses": "− expenses this month",
+    "expensesNote": "advances, promo, studio",
+    "contributions": "− artist-author contributions",
+    "contributionsNote": "on publishing income",
+    "leftArtist": "What's actually left · 30 days",
+    "leftLabel": "Result this month",
+    "net12m": "Net after expenses",
+    "valuation": "Catalogue valuation",
+    "cols": {
+      "d7": "7 days",
+      "d30": "30 days",
+      "m12": "12 months",
+      "net12m": "net 12m"
+    },
+    "detail": "see details →"
+  },
+  "audience": {
+    "listeners": "monthly listeners",
+    "listenersLabel": "combined monthly listeners",
+    "index": "Day 1 Index",
+    "indexLabel": "Roster average Day 1 Index",
+    "tiktokVideos": "Videos using your sounds",
+    "tiktokVideosLabel": "Videos using the sounds",
+    "newListeners": "New listeners this month",
+    "fastest": "Fastest riser",
+    "topCity": "Top listening city",
+    "topCountry": "Top listening country"
+  },
+  "trends": {
+    "tiktokFr": "TikTok · trending sounds FR",
+    "inTop200": "roster tracks in the French Top 200",
+    "rosterShare": "Roster share · Top 200",
+    "editorial": "Editorial playlist adds",
+    "editorialValue": "{count} this week",
+    "gained14": "Streams gained in 14 days",
+    "others": "Apple · Deezer · Instagram",
+    "rank": "no. {rank}",
+    "topTrack": "Most used track"
+  },
+  "night": {
+    "week": {
+      "kicker": "Your week",
+      "up": "You did <good>{delta}</good> more streams than last week.",
+      "down": "You did <alert>{delta}</alert> fewer streams than last week.",
+      "cause": "<em>{dsp}</em> is carrying the period."
+    },
+    "weekLabel": {
+      "kicker": "Who's accelerating",
+      "body": "<em>{name}</em> gained <good>{delta}</good> streams over 30 days — the roster's biggest rise.",
+      "earner": "<em>{earner}</em> accounts for <em>{share}</em> of the label's revenue."
+    },
+    "push": {
+      "kicker": "Where the push comes from",
+      "body": "<em>{videos}</em> videos use your sounds, <good>{delta}</good> yesterday.",
+      "bodyLabel": "<em>{videos}</em> videos use the roster's sounds, <good>{delta}</good> yesterday.",
+      "sound": "Most used: “<em>{sound}</em>”.",
+      "note": "A comment from you revives their reach.",
+      "noteLabel": "A repost from the label revives their reach."
+    },
+    "show": {
+      "kicker": "Next date",
+      "body": "<em>{venue}</em>, {city} — in <em>{days}</em> days.",
+      "tickets": "<em>{sold}</em> tickets sold out of {capacity}.",
+      "none": "No date scheduled."
+    },
+    "todo": {
+      "kicker": "To do today",
+      "splits": "Sign <em>{count}</em> splits.",
+      "splitsLabel": "Get <em>{count}</em> splits signed.",
+      "alerts": "Handle <alert>{count}</alert> contract alerts across the roster.",
+      "none": "Nothing urgent today."
+    }
+  },
+  "importBand": {
+    "title": "Two files would make these numbers exact.",
+    "titleLabel": "The roster's artist shares are simulated.",
+    "status": "share simulated at {pct} · ±30 % range",
+    "statusLabel": "{count} of {total} contracts not filled in",
+    "body": "Your distributor statement calibrates the euros and makes the audit gap exact. Your contract replaces the assumption with your real share. Both stay on your device.",
+    "bodyLabel": "Fill in the real percentages or import the contracts: every cascade recalculates and the badges turn to “declared”.",
+    "importStatement": "Import my statement",
+    "importContract": "Import my contract",
+    "askLabel": "Ask my label",
+    "fillContracts": "Fill in the contracts"
+  },
+  "collect": {
+    "title": "Money to go and claim",
+    "audit": "Gap with declared statements",
+    "sync": "Sync briefs matching your catalogue",
+    "syncValue": "{count} briefs",
+    "syncDeadline": "{count} close this week",
+    "rights": "Estimated SACEM, not yet paid"
+  },
+  "doors": {
+    "title": "Go further",
+    "market": "Your share of the French market",
+    "marketLabel": "French market share",
+    "marketValue": "no. {rank} · {share}",
+    "marketValueLabel": "{share} of the Top 200",
+    "splits": "Splits",
+    "splitsValue": "{count} pending",
+    "contracts": "Contracts",
+    "contractsValue": "{count} alerts",
+    "contractsOne": "1 option to exercise",
+    "index": "Day 1 Index",
+    "indexValue": "{score} · top {pct}",
+    "pnl": "Expenses & P&L",
+    "pnlValue": "{margin} margin",
+    "urssaf": "URSSAF · artist-author",
+    "urssafValue": "due in {days} d",
+    "valuation": "Catalogue valuation",
+    "rights": "French rights · SACEM",
+    "rightsValue": "{amount} expected",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "{count} artists tracked"
+  },
+  "rest": {
+    "title": "The rest of your dashboard",
+    "titleLabel": "The rest of the dashboard",
+    "fans": "Fans · {count} superfans",
+    "fansLabel": "Fans · roster segments",
+    "catalog": "Catalogue · {count} tracks",
+    "tour": "Tour · {count} dates",
+    "discovery": "Discovery Lab · {count} demos",
+    "team": "Team · {count} people",
+    "calculator": "Deal simulator",
+    "audience": "Audience · {count} countries"
+  },
+  "ask": {
+    "placeholder": "Ask me anything about your numbers…",
+    "placeholderLabel": "Ask me anything about the roster…"
+  },
+  "legend": {
+    "intro": "Every number carries its provenance.",
+    "simulated": "simulated"
   }
 }

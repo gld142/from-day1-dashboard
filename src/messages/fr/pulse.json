@@ -5,9 +5,17 @@
   "backToRoster": "Vue roster",
   "greeting": "Bonjour {name}",
   "hero": {
-    "today": "Streams aujourd'hui",
-    "todayLabel": "Streams du roster aujourd'hui",
-    "vsYesterday": "vs hier"
+    "ranges": {
+      "d7": "7 j",
+      "d30": "30 j",
+      "d90": "90 j",
+      "m12": "12 mois"
+    },
+    "peak": "pic {value} · {date}",
+    "todayArtist": "streams hier, toutes plateformes",
+    "todayLabel": "streams hier, {count} artistes",
+    "nextReading": "prochain demain 09:00",
+    "reading": "relevé de 09:00"
   },
   "kpis": {
     "streams7d": "Streams · 7 jours",
@@ -96,9 +104,10 @@
     }
   },
   "movers": {
-    "title": "Top movers · 30 jours",
-    "subtitle": "Cliquez sur un artiste pour zoomer",
-    "streams30d": "streams · 30 j"
+    "title": "Qui bouge · 30 derniers jours",
+    "see": "voir le roster →",
+    "range": "90 derniers jours",
+    "detail": "voir le détail →"
   },
   "dsp": {
     "spotify": "Spotify",
@@ -143,5 +152,171 @@
       "playlists": "Entrées en playlists éditoriales"
     },
     "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés)."
+  },
+  "families": {
+    "streams": "Streams",
+    "streamsLabel": "Streams du roster",
+    "money": "Ce que ça rapporte",
+    "moneyLabel": "Ce que le roster rapporte",
+    "audience": "Audience",
+    "audienceLabel": "Audience du roster",
+    "trends": "Position algo & tendances"
+  },
+  "affiliated": {
+    "d7": "7 jours",
+    "d30": "30 jours",
+    "d30Note": "Spotify reconstitué, autres estimés",
+    "topTrack": "titre en tête",
+    "topTrackNote": "{streams} streams hier",
+    "bestDsp": "plateforme en tête",
+    "bestDspNote": "de l'écoute de la nuit",
+    "earner": "d'où vient l'argent",
+    "earnerNote": "des revenus 12 mois du label"
+  },
+  "money": {
+    "yesterday": "hier",
+    "range": "{low} – {high}",
+    "grossMaster": "Brut master",
+    "artistShare": "Ta part · {pct}",
+    "artistShareLabel": "Part artiste · {pct}",
+    "publishing": "Droits d'auteur",
+    "monthCurrent": "Revenus du mois en cours",
+    "monthForecast": "Projection fin de mois",
+    "recoup": "− reste à recouper sur l'avance",
+    "expenses": "− dépenses du mois",
+    "expensesNote": "avances, promo, studio",
+    "contributions": "− cotisations artiste-auteur",
+    "contributionsNote": "sur les droits d'auteur",
+    "leftArtist": "Ce qui te reste · 30 jours",
+    "leftLabel": "Résultat du mois",
+    "net12m": "Net après dépenses",
+    "valuation": "Valorisation catalogue",
+    "cols": {
+      "d7": "7 jours",
+      "d30": "30 jours",
+      "m12": "12 mois",
+      "net12m": "net 12 m"
+    },
+    "detail": "voir le détail →"
+  },
+  "audience": {
+    "listeners": "auditeurs mensuels",
+    "listenersLabel": "auditeurs mensuels cumulés",
+    "index": "Day 1 Index",
+    "indexLabel": "Day 1 Index moyen du roster",
+    "tiktokVideos": "Vidéos qui utilisent tes sons",
+    "tiktokVideosLabel": "Vidéos qui utilisent les sons",
+    "newListeners": "Nouveaux auditeurs ce mois",
+    "fastest": "Qui monte le plus vite",
+    "topCity": "1ʳᵉ ville d'écoute",
+    "topCountry": "1ᵉʳ pays d'écoute"
+  },
+  "trends": {
+    "tiktokFr": "TikTok · sons en tendance FR",
+    "inTop200": "titres du roster dans le Top 200 FR",
+    "rosterShare": "Part du roster · Top 200",
+    "editorial": "Entrées en playlists édito",
+    "editorialValue": "{count} cette semaine",
+    "gained14": "Streams gagnés en 14 jours",
+    "others": "Apple · Deezer · Instagram",
+    "rank": "n° {rank}",
+    "topTrack": "Titre le plus repris"
+  },
+  "night": {
+    "week": {
+      "kicker": "Ta semaine",
+      "up": "Tu as fait <good>{delta}</good> de streams en plus que la semaine dernière.",
+      "down": "Tu as fait <alert>{delta}</alert> de streams en moins que la semaine dernière.",
+      "cause": "<em>{dsp}</em> porte la période."
+    },
+    "weekLabel": {
+      "kicker": "Qui accélère",
+      "body": "<em>{name}</em> a pris <good>{delta}</good> de streams sur 30 jours — la plus forte hausse du roster.",
+      "earner": "<em>{earner}</em> représente <em>{share}</em> des revenus du label."
+    },
+    "push": {
+      "kicker": "D'où vient la poussée",
+      "body": "<em>{videos}</em> vidéos utilisent tes sons, <good>{delta}</good> hier.",
+      "bodyLabel": "<em>{videos}</em> vidéos utilisent les sons du roster, <good>{delta}</good> hier.",
+      "sound": "Le plus repris : « <em>{sound}</em> ».",
+      "note": "Un commentaire de toi relance leur diffusion.",
+      "noteLabel": "Un repost du label relance leur diffusion."
+    },
+    "show": {
+      "kicker": "Prochaine date",
+      "body": "<em>{venue}</em>, {city} — dans <em>{days}</em> jours.",
+      "tickets": "<em>{sold}</em> billets vendus sur {capacity}.",
+      "none": "Aucune date programmée."
+    },
+    "todo": {
+      "kicker": "À faire aujourd'hui",
+      "splits": "Signer <em>{count}</em> splits.",
+      "splitsLabel": "Faire signer <em>{count}</em> splits.",
+      "alerts": "Traiter <alert>{count}</alert> alertes contrat sur le roster.",
+      "none": "Rien d'urgent aujourd'hui."
+    }
+  },
+  "importBand": {
+    "title": "Deux fichiers rendraient ces chiffres exacts.",
+    "titleLabel": "Les parts artistes du roster sont simulées.",
+    "status": "part simulée à {pct} · fourchette ±30 %",
+    "statusLabel": "{count} contrats sur {total} non renseignés",
+    "body": "Ton relevé distributeur calibre les euros et rend l'écart d'audit exact. Ton contrat remplace l'hypothèse par ta vraie part. Les deux restent sur ton appareil.",
+    "bodyLabel": "Renseigne les pourcentages réels ou importe les contrats : toutes les cascades se recalculent et les badges passent à « renseigné ».",
+    "importStatement": "Importer mon relevé",
+    "importContract": "Importer mon contrat",
+    "askLabel": "Demander à mon label",
+    "fillContracts": "Renseigner les contrats"
+  },
+  "collect": {
+    "title": "De l'argent à aller chercher",
+    "audit": "Écart avec les relevés déclarés",
+    "sync": "Briefs de synchro pour ton catalogue",
+    "syncValue": "{count} briefs",
+    "syncDeadline": "{count} ferment cette semaine",
+    "rights": "SACEM estimé, pas encore versé"
+  },
+  "doors": {
+    "title": "Aller plus loin",
+    "market": "Ta part du marché FR",
+    "marketLabel": "Part du marché FR",
+    "marketValue": "n° {rank} · {share}",
+    "marketValueLabel": "{share} du Top 200",
+    "splits": "Splits",
+    "splitsValue": "{count} en attente",
+    "contracts": "Contrats",
+    "contractsValue": "{count} alertes",
+    "contractsOne": "1 option à lever",
+    "index": "Day 1 Index",
+    "indexValue": "{score} · top {pct}",
+    "pnl": "Dépenses & P&L",
+    "pnlValue": "marge {margin}",
+    "urssaf": "URSSAF · artiste-auteur",
+    "urssafValue": "échéance dans {days} j",
+    "valuation": "Valorisation catalogue",
+    "rights": "Droits FR · SACEM",
+    "rightsValue": "{amount} attendus",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "{count} artistes suivis"
+  },
+  "rest": {
+    "title": "Le reste de ton dashboard",
+    "titleLabel": "Le reste du dashboard",
+    "fans": "Fans · {count} superfans",
+    "fansLabel": "Fans · segments roster",
+    "catalog": "Catalogue · {count} titres",
+    "tour": "Tournée · {count} dates",
+    "discovery": "Discovery Lab · {count} inédits",
+    "team": "Équipe · {count} personnes",
+    "calculator": "Simulateur de deals",
+    "audience": "Audience · {count} pays"
+  },
+  "ask": {
+    "placeholder": "Demande-moi n'importe quoi sur tes chiffres…",
+    "placeholderLabel": "Demande-moi n'importe quoi sur le roster…"
+  },
+  "legend": {
+    "intro": "Chaque chiffre porte sa provenance.",
+    "simulated": "simulé"
   }
 }

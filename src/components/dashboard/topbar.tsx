@@ -31,7 +31,6 @@ import {
 import { ArtistAvatar } from "@/components/dashboard/artist-badge";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { CommandPalette } from "@/components/dashboard/command-palette";
-import { DailyBrief } from "@/components/dashboard/daily-brief";
 
 const THEME_META = [
   { id: "night", icon: Moon },
@@ -142,7 +141,6 @@ export function Topbar() {
 
       <div className="ml-auto flex items-center gap-2">
         <CommandPalette />
-        <DailyBrief />
         {/* Ambiance : nuit / aube / jour */}
         <div
           className="flex items-center rounded-full border p-0.5"

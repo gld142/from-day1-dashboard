@@ -50,6 +50,9 @@ export type NavItem = {
   labelKey: string;
   icon: LucideIcon;
   personas?: Persona[];
+  /** Réservé : plus aucune pastille dans la navigation depuis la refonte du
+   *  22/09 — une page n'est pas « nouvelle » pour l'utilisateur qui l'ouvre
+   *  chaque matin. */
   badgeKey?: "new" | "beta" | "soon";
   /** Masquée par défaut pour ces personas ("all" = pour tous). */
   defaultHidden?: Persona[] | "all";
@@ -91,7 +94,6 @@ export const NAV_SECTIONS: NavSection[] = [
         href: "/market",
         labelKey: "items.market",
         icon: PieChart,
-        badgeKey: "new",
       },
       { href: "/revenue", labelKey: "items.revenue", icon: CircleDollarSign },
       { href: "/audience", labelKey: "items.audience", icon: Globe2 },
@@ -99,7 +101,6 @@ export const NAV_SECTIONS: NavSection[] = [
         href: "/algo-position",
         labelKey: "items.algoposition",
         icon: Crosshair,
-        badgeKey: "new",
       },
     ],
   },
@@ -110,7 +111,6 @@ export const NAV_SECTIONS: NavSection[] = [
         href: "/finances",
         labelKey: "items.finances",
         icon: ReceiptEuro,
-        badgeKey: "new",
       },
       {
         // Simulateur de scénarios (deals, projections) — visible par défaut
@@ -118,7 +118,6 @@ export const NAV_SECTIONS: NavSection[] = [
         href: "/calculator",
         labelKey: "items.calculator",
         icon: Calculator,
-        badgeKey: "new",
       },
       {
         // Back catalogue et estimation : réservés à la structure (Gaël, 17/09).
@@ -149,7 +148,6 @@ export const NAV_SECTIONS: NavSection[] = [
         href: "/audit",
         labelKey: "items.audit",
         icon: ShieldCheck,
-        badgeKey: "beta",
       },
       { href: "/day1-index", labelKey: "items.day1index", icon: Fingerprint },
       {
@@ -202,7 +200,6 @@ export const NAV_SECTIONS: NavSection[] = [
         href: "/import",
         labelKey: "items.importer",
         icon: FileUp,
-        badgeKey: "new",
       },
       { href: "/settings", labelKey: "items.settings", icon: Settings },
     ],

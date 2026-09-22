@@ -334,3 +334,84 @@
     .rise-in, .fade-in, .listening-grid > span { animation: none; }
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   PAPIERS TEINTÉS — la couleur code la famille d'information, pas le décor
+   (design validé le 22/09, docs/superpowers/specs/2026-09-22-pulse-refonte-design.md)
+
+   Quatre familles : streams (lavande), argent (ivoire), audience (menthe),
+   tendances (rosé). Chaque famille expose trois tokens — le fond de la
+   feuille, l'encre de ses libellés, le filet qui sépare le chiffre clé de
+   ses points affiliés — déclinés sur les trois thèmes.
+
+   Usage : <section class="sheet sheet-streams"> … </section>
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Nuit et aube : même rôle, fonds sourds posés sur le canvas encre, encres
+   remontées pour rester lisibles (le filet garde la teinte de la famille).
+   Les thèmes explicites portent :root[data-theme=…] pour l'emporter sur le
+   défaut :root quel que soit l'ordre des règles après compilation. */
+:root,
+[data-theme="night"] {
+  --paper-streams: oklch(0.225 0.038 285);
+  --ink-streams: oklch(0.79 0.1 288);
+  --line-streams: oklch(0.62 0.19 285);
+  --paper-money: oklch(0.225 0.031 76);
+  --ink-money: oklch(0.83 0.1 82);
+  --line-money: oklch(0.7 0.13 78);
+  --paper-audience: oklch(0.222 0.032 166);
+  --ink-audience: oklch(0.81 0.1 164);
+  --line-audience: oklch(0.65 0.13 163);
+  --paper-trends: oklch(0.228 0.036 8);
+  --ink-trends: oklch(0.81 0.09 12);
+  --line-trends: oklch(0.65 0.15 10);
+}
+
+:root[data-theme="dawn"] {
+  --paper-streams: oklch(0.25 0.04 300);
+  --ink-streams: oklch(0.83 0.08 300);
+  --line-streams: oklch(0.66 0.15 298);
+  --paper-money: oklch(0.252 0.038 60);
+  --ink-money: oklch(0.86 0.1 68);
+  --line-money: oklch(0.72 0.15 40);
+  --paper-audience: oklch(0.245 0.032 170);
+  --ink-audience: oklch(0.82 0.09 166);
+  --line-audience: oklch(0.66 0.13 164);
+  --paper-trends: oklch(0.252 0.04 5);
+  --ink-trends: oklch(0.84 0.09 15);
+  --line-trends: oklch(0.68 0.15 12);
+}
+
+/* Thème jour : les valeurs validées en maquette. */
+:root[data-theme="day"] {
+  --paper-streams: oklch(0.945 0.022 295);
+  --ink-streams: oklch(0.43 0.09 293);
+  --line-streams: oklch(0.51 0.19 292);
+  --paper-money: oklch(0.966 0.031 88);
+  --ink-money: oklch(0.47 0.09 72);
+  --line-money: oklch(0.63 0.12 74);
+  --paper-audience: oklch(0.958 0.026 160);
+  --ink-audience: oklch(0.46 0.09 163);
+  --line-audience: oklch(0.58 0.12 162);
+  --paper-trends: oklch(0.952 0.021 10);
+  --ink-trends: oklch(0.47 0.11 12);
+  --line-trends: oklch(0.58 0.14 12);
+}
+
+.sheet {
+  border-radius: calc(var(--radius) + 2px);
+  background: var(--sheet-paper);
+  color: var(--foreground);
+  padding: 1.25rem 1.5rem;
+}
+.sheet-streams { --sheet-paper: var(--paper-streams); --sheet-ink: var(--ink-streams); --sheet-line: var(--line-streams); }
+.sheet-money { --sheet-paper: var(--paper-money); --sheet-ink: var(--ink-money); --sheet-line: var(--line-money); }
+.sheet-audience { --sheet-paper: var(--paper-audience); --sheet-ink: var(--ink-audience); --sheet-line: var(--line-audience); }
+.sheet-trends { --sheet-paper: var(--paper-trends); --sheet-ink: var(--ink-trends); --sheet-line: var(--line-trends); }
+
+/* Libellés de la feuille : l'encre de la famille, jamais le gris global. */
+.sheet-ink { color: var(--sheet-ink); }
+/* Le filet qui rattache les points affiliés à leur chiffre clé. */
+.sheet-rule { border-top: 1.5px solid var(--sheet-line); }
+/* Réserve claire derrière le chiffre posé au centre du graphique. */
+.sheet-reserve { background: color-mix(in oklab, var(--sheet-paper) 94%, transparent); }
