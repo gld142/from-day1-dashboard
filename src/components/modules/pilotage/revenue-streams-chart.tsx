@@ -106,7 +106,11 @@ export function RevenueStreamsChart({
               fill="url(#ov-rev-bars)"
               radius={[4, 4, 0, 0]}
               maxBarSize={28}
-              animationDuration={600}
+              /* Pas d'animation : recharts anime via un clip qui part de zéro.
+                 Quand les frames ne s'exécutent pas — onglet en arrière-plan,
+                 capture d'écran hors viewport — le clip reste fermé et la série
+                 n'apparaît jamais. Voir hero-chart.tsx. */
+              isAnimationActive={false}
             />
             <Line
               yAxisId="str"
@@ -116,7 +120,11 @@ export function RevenueStreamsChart({
               stroke="var(--chart-1)"
               strokeWidth={2}
               dot={false}
-              animationDuration={600}
+              /* Pas d'animation : recharts anime via un clip qui part de zéro.
+                 Quand les frames ne s'exécutent pas — onglet en arrière-plan,
+                 capture d'écran hors viewport — le clip reste fermé et la série
+                 n'apparaît jamais. Voir hero-chart.tsx. */
+              isAnimationActive={false}
             />
           </ComposedChart>
         </ResponsiveContainer>

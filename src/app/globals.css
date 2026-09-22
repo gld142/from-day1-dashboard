@@ -339,8 +339,8 @@
    PAPIERS TEINTÉS — la couleur code la famille d'information, pas le décor
    (design validé le 22/09, docs/superpowers/specs/2026-09-22-pulse-refonte-design.md)
 
-   Quatre familles : streams (lavande), argent (ivoire), audience (menthe),
-   tendances (rosé). Chaque famille expose trois tokens — le fond de la
+   Cinq familles : streams (lavande), argent (ivoire), audience (menthe),
+   tendances (rosé), catalogue (ardoise). Chaque famille expose trois tokens — le fond de la
    feuille, l'encre de ses libellés, le filet qui sépare le chiffre clé de
    ses points affiliés — déclinés sur les trois thèmes.
 
@@ -365,6 +365,9 @@
   --paper-trends: oklch(0.228 0.036 8);
   --ink-trends: oklch(0.81 0.09 12);
   --line-trends: oklch(0.65 0.15 10);
+  --paper-catalog: oklch(0.222 0.028 235);
+  --ink-catalog: oklch(0.81 0.08 232);
+  --line-catalog: oklch(0.64 0.12 233);
 }
 
 :root[data-theme="dawn"] {
@@ -380,6 +383,9 @@
   --paper-trends: oklch(0.252 0.04 5);
   --ink-trends: oklch(0.84 0.09 15);
   --line-trends: oklch(0.68 0.15 12);
+  --paper-catalog: oklch(0.248 0.03 240);
+  --ink-catalog: oklch(0.83 0.08 236);
+  --line-catalog: oklch(0.67 0.12 236);
 }
 
 /* Thème jour : les valeurs validées en maquette. */
@@ -396,6 +402,9 @@
   --paper-trends: oklch(0.952 0.021 10);
   --ink-trends: oklch(0.47 0.11 12);
   --line-trends: oklch(0.58 0.14 12);
+  --paper-catalog: oklch(0.952 0.019 235);
+  --ink-catalog: oklch(0.45 0.08 235);
+  --line-catalog: oklch(0.55 0.12 234);
 }
 
 .sheet {
@@ -408,6 +417,7 @@
 .sheet-money { --sheet-paper: var(--paper-money); --sheet-ink: var(--ink-money); --sheet-line: var(--line-money); }
 .sheet-audience { --sheet-paper: var(--paper-audience); --sheet-ink: var(--ink-audience); --sheet-line: var(--line-audience); }
 .sheet-trends { --sheet-paper: var(--paper-trends); --sheet-ink: var(--ink-trends); --sheet-line: var(--line-trends); }
+.sheet-catalog { --sheet-paper: var(--paper-catalog); --sheet-ink: var(--ink-catalog); --sheet-line: var(--line-catalog); }
 
 /* Libellés de la feuille : l'encre de la famille, jamais le gris global. */
 .sheet-ink { color: var(--sheet-ink); }

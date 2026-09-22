@@ -15,7 +15,11 @@
     "artists": "Artistes au roster",
     "artistsHint": "au roster",
     "net12m": "Net · 12 mois",
-    "netHint": "après dépenses"
+    "netHint": "après dépenses",
+    "listeners": "auditeurs mensuels",
+    "listenersRoster": "auditeurs mensuels cumulés",
+    "tracks": "Titres au catalogue",
+    "stage": "Stade de carrière"
   },
   "chart": {
     "title": "Revenus × streams — 12 mois",
@@ -52,5 +56,52 @@
     "tiktok": "TikTok",
     "amazon": "Amazon Music",
     "other": "Autres"
+  },
+  "hero": {
+    "year": "Les 12 derniers mois",
+    "yearLabel": "Les 12 derniers mois du roster",
+    "caption": "de revenus sur l'année, toutes sources",
+    "captionLabel": "de revenus sur l'année, tout le roster"
+  },
+  "affiliated": {
+    "streams12m": "streams sur 12 mois",
+    "bestMonth": "meilleur mois",
+    "margin": "marge nette",
+    "marginNote": "ce qui reste après dépenses",
+    "streamingShare": "part du streaming",
+    "streamingShareNote": "le reste : droits d'auteur, live, merch, synchro"
+  },
+  "doors": {
+    "revenue": "Revenus",
+    "streams": "Streams",
+    "fans": "Superfans",
+    "index": "Day 1 Index",
+    "catalog": "Catalogue",
+    "catalogValue": "{count} titres",
+    "tour": "Tournée",
+    "tourValue": "{count} dates",
+    "roster": "Roster",
+    "valuation": "Valorisation catalogue",
+    "market": "Marché",
+    "marketValue": "{share} du Top 200 France",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "{count} artistes repérés",
+    "finances": "Dépenses & P&L"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "market": "Marché",
+    "audit": "Audit royalties",
+    "rights": "Droits FR",
+    "splits": "Splits",
+    "contracts": "Contrats",
+    "team": "Équipe",
+    "calculator": "Simulateur de deals"
+  },
+  "stages": {
+    "emerging": "Émergent",
+    "developing": "En développement",
+    "established": "Confirmé",
+    "peak": "Au sommet"
   }
 }

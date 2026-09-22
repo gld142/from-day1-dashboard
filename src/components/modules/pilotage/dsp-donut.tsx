@@ -18,16 +18,20 @@ const COLORS = [
 export function DspDonut({
   data,
   totalLabel,
+  /** Cercle au-dessus, légende dessous : pour une colonne étroite, où la
+   *  disposition en ligne tronque les noms de plateformes. */
+  stacked = false,
 }: {
   data: Array<{ dsp: string; label: string; streams: number }>;
   totalLabel: string;
+  stacked?: boolean;
 }) {
   const locale = useLocale();
   const total = data.reduce((s, d) => s + d.streams, 0);
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-      <div className="relative mx-auto h-44 w-44 shrink-0">
+    <div className={stacked ? "flex flex-col gap-3" : "flex flex-col gap-4 sm:flex-row sm:items-center"}>
+      <div className={stacked ? "relative mx-auto h-36 w-36 shrink-0" : "relative mx-auto h-44 w-44 shrink-0"}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Tooltip
@@ -50,7 +54,11 @@ export function DspDonut({
               outerRadius="96%"
               paddingAngle={2}
               strokeWidth={0}
-              animationDuration={600}
+              /* Pas d'animation : recharts anime via un clip qui part de zéro.
+                 Quand les frames ne s'exécutent pas — onglet en arrière-plan,
+                 capture d'écran hors viewport — le clip reste fermé et la série
+                 n'apparaît jamais. Voir hero-chart.tsx. */
+              isAnimationActive={false}
             >
               {data.map((d, i) => (
                 <Cell key={d.dsp} fill={COLORS[i % COLORS.length]} />
@@ -67,7 +75,7 @@ export function DspDonut({
           </span>
         </div>
       </div>
-      <ul className="min-w-0 flex-1 space-y-2">
+      <ul className={stacked ? "min-w-0 flex-1 space-y-1.5" : "min-w-0 flex-1 space-y-2"}>
         {data.map((d, i) => {
           const share = total === 0 ? 0 : (d.streams / total) * 100;
           return (

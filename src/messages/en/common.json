@@ -90,5 +90,25 @@
       "medium": "Medium confidence",
       "indicative": "Indicative"
     }
+  },
+  "families": {
+    "streams": "Streams",
+    "money": "What it earns",
+    "audience": "Audience",
+    "trends": "Trends",
+    "catalog": "Catalogue",
+    "rights": "Rights",
+    "streamsRoster": "Roster streams",
+    "moneyRoster": "What the roster earns",
+    "audienceRoster": "Roster audience"
+  },
+  "blocks": {
+    "doors": "Go further",
+    "rest": "The rest of your dashboard",
+    "restLabel": "The rest of the dashboard",
+    "collect": "Money to go and claim",
+    "legend": "Every number carries its provenance.",
+    "detail": "see details →",
+    "seeAll": "see all →"
   }
 }

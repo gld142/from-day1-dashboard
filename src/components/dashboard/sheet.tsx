@@ -4,7 +4,7 @@
  * Feuille teintée — l'unité de base de Pulse.
  *
  * La couleur code la famille d'information (streams / argent / audience /
- * tendances), pas la décoration : un chiffre se reconnaît à la couleur de sa
+ * tendances / catalogue), pas la décoration : un chiffre se reconnaît à la couleur de sa
  * feuille, sur toutes les pages. Les tokens vivent dans globals.css et sont
  * déclinés sur les trois thèmes.
  *
@@ -17,13 +17,14 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type SheetFamily = "streams" | "money" | "audience" | "trends";
+export type SheetFamily = "streams" | "money" | "audience" | "trends" | "catalog";
 
 const FAMILY_CLASS: Record<SheetFamily, string> = {
   streams: "sheet-streams",
   money: "sheet-money",
   audience: "sheet-audience",
   trends: "sheet-trends",
+  catalog: "sheet-catalog",
 };
 
 export function Sheet({

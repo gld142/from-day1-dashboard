@@ -90,5 +90,25 @@
       "medium": "Confiance moyenne",
       "indicative": "Indicatif"
     }
+  },
+  "families": {
+    "streams": "Streams",
+    "money": "Ce que ça rapporte",
+    "audience": "Audience",
+    "trends": "Tendances",
+    "catalog": "Catalogue",
+    "rights": "Droits",
+    "streamsRoster": "Streams du roster",
+    "moneyRoster": "Ce que le roster rapporte",
+    "audienceRoster": "Audience du roster"
+  },
+  "blocks": {
+    "doors": "Aller plus loin",
+    "rest": "Le reste de ton dashboard",
+    "restLabel": "Le reste du dashboard",
+    "collect": "De l'argent à aller chercher",
+    "legend": "Chaque chiffre porte sa provenance.",
+    "detail": "voir le détail →",
+    "seeAll": "tout voir →"
   }
 }
