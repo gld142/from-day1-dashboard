@@ -31,8 +31,19 @@ const TOOLTIP_STYLE = {
 /**
  * Historique (ligne pleine) + projection (pointillés) + bande de confiance
  * (range area low→high, chart-1 à 8 %).
+ *
+ * Aucune animation : recharts fait entrer aires et lignes via un clipPath qui
+ * part de zéro, et si les frames ne s'exécutent pas — onglet en arrière-plan,
+ * capture hors viewport — le clip reste fermé et le graphique demeure vide.
  */
-export function ForecastChart({ data }: { data: ForecastChartPoint[] }) {
+export function ForecastChart({
+  data,
+  /** `true` quand le chiffre clé est posé au centre : on lui laisse la place. */
+  centeredValue = false,
+}: {
+  data: ForecastChartPoint[];
+  centeredValue?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("calculator.chart");
 
@@ -43,30 +54,30 @@ export function ForecastChart({ data }: { data: ForecastChartPoint[] }) {
   };
 
   return (
-    <div className="h-80 w-full">
+    <div className="h-[230px] w-full sm:h-[280px]">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 0 }}>
+        <ComposedChart data={data} margin={{ top: centeredValue ? 22 : 8, right: 4, bottom: 0, left: 0 }}>
           <defs>
             <linearGradient id="forecast-actual" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.18} />
+              <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.1} />
               <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid vertical={false} strokeOpacity={0.07} />
+          <CartesianGrid vertical={false} strokeOpacity={0.12} />
           <XAxis
             dataKey="month"
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
             tickFormatter={(m: string) => fmtMonth(locale, m)}
             minTickGap={24}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
             tickFormatter={(v: number) => fmtCompact(locale, v)}
-            width={44}
+            width={52}
           />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
@@ -93,11 +104,12 @@ export function ForecastChart({ data }: { data: ForecastChartPoint[] }) {
             dataKey="band"
             name="band"
             stroke="none"
-            fill="var(--chart-1)"
-            fillOpacity={0.08}
+            /* La bande d'incertitude prend la teinte de la feuille : elle dit
+               l'imprécision, pas une quatrième série. */
+            fill="var(--sheet-line, var(--chart-1))"
+            fillOpacity={0.14}
             connectNulls={false}
-            isAnimationActive
-            animationDuration={600}
+            isAnimationActive={false}
             activeDot={false}
           />
           <Area
@@ -109,7 +121,7 @@ export function ForecastChart({ data }: { data: ForecastChartPoint[] }) {
             fill="url(#forecast-actual)"
             connectNulls={false}
             dot={false}
-            animationDuration={600}
+            isAnimationActive={false}
           />
           <Line
             type="monotone"
@@ -120,7 +132,7 @@ export function ForecastChart({ data }: { data: ForecastChartPoint[] }) {
             strokeDasharray="6 4"
             dot={false}
             connectNulls={false}
-            animationDuration={600}
+            isAnimationActive={false}
           />
         </ComposedChart>
       </ResponsiveContainer>

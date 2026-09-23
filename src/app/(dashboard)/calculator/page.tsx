@@ -1,16 +1,35 @@
 "use client";
 
 /**
- * Revenue Calculator — projection de revenus 6/12/24 mois.
- * Paramètres à gauche, résultats (chart, KPIs, table, donut) à droite.
+ * /calculator — le simulateur de revenus. Refondu le 23/09.
+ * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
+ *
+ * Une seule question : **combien dans six, douze ou vingt-quatre mois**. Le
+ * total projeté se pose au centre de sa propre courbe, les hypothèses vivent
+ * juste dessous, et rien d'autre n'encombre.
+ *
+ * Deux blocs de l'ancienne page disparaissent :
+ *  - la répartition projetée par source appliquait les proportions des douze
+ *    derniers mois au total projeté. Elle ne disait donc rien que /revenue ne
+ *    dise déjà mieux, en mesuré — elle devient une porte.
+ *  - la carte « méthodologie » prenait la place d'un bloc de données pour du
+ *    texte qu'on lit une fois : elle se replie.
+ *
+ * En vue label sans zoom, la projection somme celle de chaque artiste : le même
+ * ajustement de croissance s'applique à tous, et les fourchettes s'additionnent.
  */
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import NumberFlow from "@number-flow/react";
-import { PieChart } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
-import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
+import {
+  AffiliatedPoints,
+  CenteredValue,
+  Sheet,
+  SheetHeading,
+  SheetSegments,
+} from "@/components/dashboard/sheet";
 import {
   ForecastChart,
   type ForecastChartPoint,
@@ -19,32 +38,16 @@ import {
   ForecastTable,
   type ForecastRow,
 } from "@/components/modules/calculator/forecast-table";
-import { MethodologyCard } from "@/components/modules/calculator/methodology-card";
-import { EmptyState } from "@/components/modules/signature/empty-state";
-import {
-  KpiStagger,
-  KpiStaggerItem,
-} from "@/components/modules/signature/kpi-stagger";
-import {
-  SourceDonut,
-  type SourceSlice,
-} from "@/components/modules/calculator/source-donut";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ARTISTS,
   getArtist,
-  revenueBySource,
+  monthlyRevenueTotals,
   revenueForecast,
 } from "@/lib/demo/api";
-import { fmtEur, fmtPct } from "@/lib/format";
+import type { ForecastPoint } from "@/lib/demo/api";
+import { fmtEur, fmtInt, fmtMonth, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 
 const HORIZONS = [6, 12, 24] as const;
@@ -58,28 +61,75 @@ const SCENARIO_BOOST: Record<Scenario, number> = {
 };
 const SCENARIOS: Scenario[] = ["none", "single", "ep", "album"];
 
+/** Somme de plusieurs projections mois par mois — la vue roster. */
+function mergeForecasts(series: ForecastPoint[][]): ForecastPoint[] {
+  const acc = new Map<string, ForecastPoint>();
+  for (const one of series) {
+    for (const p of one) {
+      const cur = acc.get(p.month);
+      if (!cur) {
+        acc.set(p.month, { ...p });
+        continue;
+      }
+      const add = (a: number | null, b: number | null) =>
+        a === null && b === null ? null : (a ?? 0) + (b ?? 0);
+      acc.set(p.month, {
+        month: p.month,
+        actual: add(cur.actual, p.actual),
+        projected: add(cur.projected, p.projected),
+        low: add(cur.low, p.low),
+        high: add(cur.high, p.high),
+      });
+    }
+  }
+  return Array.from(acc.values()).sort((a, b) => a.month.localeCompare(b.month));
+}
+
 export default function CalculatorPage() {
   const locale = useLocale();
   const t = useTranslations("calculator");
-  const tCommon = useTranslations("common");
-  const { artistId, isLabel } = useRole();
+  const tc = useTranslations("common");
+  const { artistId, focusedArtistId, isLabel } = useRole();
 
-  const [localArtistId, setLocalArtistId] = useState<string | null>(null);
   const [horizon, setHorizon] = useState<number>(12);
   const [scenario, setScenario] = useState<Scenario>("none");
   /** Ajustement de croissance en points de % mensuels (-5 → +15). */
   const [growthAdj, setGrowthAdj] = useState<number>(0);
 
-  const effectiveArtistId = isLabel ? (localArtistId ?? artistId) : artistId;
-  const artist = getArtist(effectiveArtistId);
+  const aggregated = isLabel && !focusedArtistId;
+  const ids = useMemo(
+    () => (aggregated ? ARTISTS.map((a) => a.id) : [artistId]),
+    [aggregated, artistId],
+  );
+  const focusedArtist = isLabel && focusedArtistId ? getArtist(focusedArtistId) : null;
 
   const growthDelta = SCENARIO_BOOST[scenario] + growthAdj / 100;
-  const effectiveGrowth = artist.growthRate + growthDelta;
+
+  /* Le rythme de départ. Sur un roster, la moyenne pondérée par les revenus :
+     un artiste à 2 % de croissance sur 80 % des revenus pèse plus qu'un autre
+     à 20 % sur 2 %. */
+  const baseGrowth = useMemo(() => {
+    if (ids.length === 1) return getArtist(ids[0]).growthRate;
+    let weighted = 0;
+    let total = 0;
+    for (const id of ids) {
+      const revenue = monthlyRevenueTotals(id, 24)
+        .slice(-12)
+        .reduce((s, m) => s + m.amount, 0);
+      weighted += getArtist(id).growthRate * revenue;
+      total += revenue;
+    }
+    return total === 0 ? 0 : weighted / total;
+  }, [ids]);
+  const effectiveGrowth = baseGrowth + growthDelta;
 
   /* ── Projection ────────────────────────────────────────────────────── */
   const forecast = useMemo(
-    () => revenueForecast(effectiveArtistId, { growthDelta, horizon }),
-    [effectiveArtistId, growthDelta, horizon],
+    () =>
+      mergeForecasts(
+        ids.map((id) => revenueForecast(id, { growthDelta, horizon })),
+      ),
+    [ids, growthDelta, horizon],
   );
 
   const chartData = useMemo<ForecastChartPoint[]>(() => {
@@ -122,7 +172,7 @@ export default function CalculatorPage() {
     [forecast],
   );
 
-  const { totalProjected, totalLow, totalHigh, monthlyAvg, deltaVsPast } =
+  const { totalProjected, totalLow, totalHigh, monthlyAvg, deltaVsPast, best } =
     useMemo(() => {
       const totalProjected = projRows.reduce((s, r) => s + r.projected, 0);
       const totalLow = projRows.reduce((s, r) => s + r.low, 0);
@@ -132,104 +182,182 @@ export default function CalculatorPage() {
       const pastSame = actuals
         .slice(-Math.min(horizon, actuals.length))
         .reduce((s, p) => s + (p.actual ?? 0), 0);
-      const deltaVsPast =
-        pastSame === 0 ? 0 : ((totalProjected - pastSame) / pastSame) * 100;
-      return { totalProjected, totalLow, totalHigh, monthlyAvg, deltaVsPast };
+      const best = projRows.reduce<ForecastRow | null>(
+        (b, r) => (!b || r.projected > b.projected ? r : b),
+        null,
+      );
+      return {
+        totalProjected,
+        totalLow,
+        totalHigh,
+        monthlyAvg,
+        deltaVsPast:
+          pastSame === 0 ? 0 : ((totalProjected - pastSame) / pastSame) * 100,
+        best,
+      };
     }, [projRows, forecast, horizon]);
 
-  /* ── Répartition par source appliquée au projeté ───────────────────── */
-  const sourceSlices = useMemo<SourceSlice[]>(() => {
-    const last12 = revenueBySource(effectiveArtistId, 12);
-    const base = last12.reduce((s, r) => s + r.amount, 0);
-    if (base === 0) return [];
-    return last12.map((r) => ({
-      source: r.source,
-      amount: Math.round((r.amount / base) * totalProjected),
-    }));
-  }, [effectiveArtistId, totalProjected]);
+  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
+  /** La largeur de la bande au terme choisi — la même règle que le générateur. */
+  const maxSpread = Math.round((0.12 + horizon * 0.018) * 100);
 
   return (
     <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("subtitle")}>
-        <ArtistBadge artist={artist} size="sm" />
+      <PageHeader
+        title={t("title")}
+        subtitle={
+          aggregated
+            ? t("subtitleLabel")
+            : focusedArtist
+              ? t("subtitleFocused", { name: focusedArtist.name })
+              : t("subtitle")
+        }
+      >
+        {focusedArtist && <ArtistBadge artist={focusedArtist} meta={focusedArtist.genre} />}
       </PageHeader>
 
-      <div className="grid items-start gap-4 lg:grid-cols-[300px_1fr]">
-        {/* ── Colonne paramètres ──────────────────────────────────────── */}
-        <aside className="rounded-xl border bg-card p-5 lg:sticky lg:top-4">
-          <h2 className="text-sm font-semibold">{t("params.title")}</h2>
-          <p className="mb-5 text-xs text-muted-foreground">
-            {t("params.subtitle")}
-          </p>
+      <div className="space-y-3">
+        {/* Combien, et dans quelle fourchette. */}
+        <Sheet family="money">
+          <SheetHeading
+            action={
+              <SheetSegments
+                value={horizon}
+                onChange={setHorizon}
+                label={t("params.horizon")}
+                options={HORIZONS.map((h) => ({
+                  value: h as number,
+                  label: t("params.months", { count: h }),
+                }))}
+              />
+            }
+          >
+            {t("hero.title")}
+          </SheetHeading>
 
-          <div className="space-y-5">
-            {isLabel && (
-              <div className="grid gap-2">
-                <Label>{t("params.artist")}</Label>
-                <Select
-                  value={effectiveArtistId}
-                  onValueChange={setLocalArtistId}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ARTISTS.map((a) => (
-                      <SelectItem key={a.id} value={a.id}>
-                        {a.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+          <div className="group relative">
+            <CenteredValue
+              value={eur(totalProjected)}
+              caption={
+                <>
+                  {t("hero.caption", { count: horizon })}
+                  {aggregated && <> · {t("hero.scopeRoster")}</>}
+                  <span className="mt-0.5 block opacity-80">
+                    {t("hero.range", {
+                      low: eur(totalLow),
+                      high: eur(totalHigh),
+                    })}
+                  </span>
+                </>
+              }
+            />
+            <ForecastChart data={chartData} centeredValue />
+          </div>
 
-            <div className="grid gap-2">
-              <Label>{t("params.horizon")}</Label>
-              <Tabs
-                value={String(horizon)}
-                onValueChange={(v) => setHorizon(Number(v))}
-              >
-                <TabsList className="w-full">
-                  {HORIZONS.map((h) => (
-                    <TabsTrigger key={h} value={String(h)} className="num flex-1">
-                      {t("params.months", { count: h })}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-            </div>
+          <div className="sheet-ink mt-1.5 flex flex-wrap items-center gap-4 text-[11.5px]">
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                aria-hidden
+                className="h-0.5 w-4 rounded-full"
+                style={{ background: "var(--chart-1)" }}
+              />
+              {t("chart.actual")}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                aria-hidden
+                className="h-0.5 w-4 rounded-full"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, var(--chart-2) 60%, transparent 60%)",
+                  backgroundSize: "6px 100%",
+                }}
+              />
+              {t("chart.projected")}
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                aria-hidden
+                className="h-2.5 w-4 rounded-sm"
+                style={{ background: "var(--sheet-line)", opacity: 0.3 }}
+              />
+              {t("chart.band")}
+            </span>
+          </div>
 
+          <AffiliatedPoints
+            points={[
+              {
+                key: "avg",
+                value: eur(monthlyAvg),
+                label: t("kpis.monthlyAvg"),
+              },
+              {
+                key: "delta",
+                value: (
+                  <span
+                    className={deltaVsPast >= 0 ? "text-success" : "text-destructive"}
+                  >
+                    {fmtPct(locale, deltaVsPast)}
+                  </span>
+                ),
+                label: t("kpis.deltaShort", { count: horizon }),
+                note: t("kpis.deltaHint"),
+              },
+              {
+                key: "growth",
+                value: `${fmtPct(locale, effectiveGrowth * 100)}${tc("units.perMonth")}`,
+                label: t("kpis.growth"),
+                note: aggregated
+                  ? t("kpis.growthHintRoster")
+                  : t("kpis.growthHint", {
+                      base: fmtPct(locale, baseGrowth * 100),
+                    }),
+              },
+              {
+                key: "best",
+                value: best ? fmtMonth(locale, best.month) : "—",
+                label: t("kpis.bestMonth"),
+                note: best ? eur(best.projected) : undefined,
+              },
+            ]}
+          />
+        </Sheet>
+
+        {/* Les hypothèses, juste sous leur effet. */}
+        <Sheet family="money">
+          <SheetHeading
+            action={aggregated ? t("params.subtitleLabel") : t("params.subtitle")}
+          >
+            {aggregated ? t("params.titleLabel") : t("params.title")}
+          </SheetHeading>
+
+          <div className="mt-2 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <div className="grid gap-2">
               <Label>{t("params.scenario")}</Label>
-              <Select
+              <SheetSegments
                 value={scenario}
-                onValueChange={(v) => setScenario(v as Scenario)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SCENARIOS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {t(`params.scenarios.${s}`)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="num text-xs text-muted-foreground">
+                onChange={(v) => setScenario(v)}
+                label={t("params.scenario")}
+                className="flex-wrap text-[12px]"
+                options={SCENARIOS.map((s) => ({
+                  value: s,
+                  label: t(`params.scenarios.${s}`),
+                }))}
+              />
+              <p className="sheet-ink text-[11.5px]">
                 {scenario === "none"
                   ? t("params.scenarioNone")
-                  : t("params.scenarioBoost", {
+                  : t("params.scenarioHint", {
                       points: SCENARIO_BOOST[scenario] * 100,
                     })}
               </p>
             </div>
 
             <div className="grid gap-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <Label htmlFor="growth-adj">{t("params.growth")}</Label>
-                <span className="num text-sm font-semibold text-brand">
+                <span className="num text-sm font-semibold tabular-nums">
                   <NumberFlow
                     value={growthAdj}
                     locales={locale}
@@ -246,154 +374,100 @@ export default function CalculatorPage() {
                 step={0.5}
                 value={growthAdj}
                 onChange={(e) => setGrowthAdj(Number(e.target.value))}
-                className="w-full accent-brand"
+                className="w-full accent-[var(--ink-money)]"
               />
-              <p className="text-xs text-muted-foreground">
-                {t("params.growthHint")}
-              </p>
-            </div>
-
-            <div className="space-y-1 rounded-lg bg-surface-2 p-3 text-xs">
-              <p className="flex items-center justify-between text-muted-foreground">
-                <span>{t("params.baseGrowth")}</span>
-                <span className="num font-medium text-foreground">
-                  {fmtPct(locale, artist.growthRate * 100)}
-                  {tCommon("units.perMonth")}
-                </span>
-              </p>
-              <p className="flex items-center justify-between text-muted-foreground">
-                <span>{t("params.effectiveGrowth")}</span>
-                <span className="num font-semibold text-brand">
-                  {fmtPct(locale, effectiveGrowth * 100)}
-                  {tCommon("units.perMonth")}
-                </span>
-              </p>
+              <p className="sheet-ink text-[11.5px]">{t("params.growthHint")}</p>
             </div>
           </div>
-        </aside>
+        </Sheet>
 
-        {/* ── Colonne résultats ───────────────────────────────────────── */}
-        <div className="min-w-0 space-y-4">
-          <KpiStagger className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <KpiStaggerItem>
-              <KpiCard
-                id="calc-total"
-                className="h-full"
-                label={t("kpis.projectedTotal", { count: horizon })}
-                value={totalProjected}
-                format="eur"
-                hero
-              />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <div className="flex h-full flex-col gap-1 rounded-xl border bg-card p-4">
-                <span className="text-xs font-medium text-muted-foreground">
-                  {t("kpis.range")}
-                </span>
-                <span className="num text-lg font-semibold tracking-tight">
-                  {fmtEur(locale, totalLow, { compact: true })}
-                  <span className="mx-1 text-muted-foreground">–</span>
-                  {fmtEur(locale, totalHigh, { compact: true })}
-                </span>
-                <span className="text-[11px] text-muted-foreground">
-                  {t("kpis.rangeHint")}
-                </span>
-              </div>
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <KpiCard
-                id="calc-monthly"
-                className="h-full"
-                label={t("kpis.monthlyAvg")}
-                value={monthlyAvg}
-                format="eur"
-              />
-            </KpiStaggerItem>
-            <KpiStaggerItem>
-              <div className="flex h-full flex-col gap-1 rounded-xl border bg-card p-4">
-                <span className="text-xs font-medium text-muted-foreground">
-                  {t("kpis.delta", { count: horizon })}
-                </span>
-                <span className="num text-2xl font-semibold tracking-tight">
-                  <DeltaChip value={deltaVsPast} className="text-sm" />
-                </span>
-                <span className="text-[11px] text-muted-foreground">
-                  {t("kpis.deltaHint")}
-                </span>
-              </div>
-            </KpiStaggerItem>
-          </KpiStagger>
+        {/* Le détail mois par mois, et la règle qui le produit. */}
+        <Sheet family="money">
+          <SheetHeading>{t("table.title")}</SheetHeading>
+          <ForecastTable rows={projRows} bare />
+          <details className="sheet-rule mt-3 pt-2.5 text-[11.5px] leading-relaxed">
+            <summary className="sheet-ink cursor-pointer font-medium">
+              {t("methodology.title")}
+            </summary>
+            <p className="text-muted-foreground mt-2">{t("methodology.intro")}</p>
+            <ul className="text-muted-foreground mt-1.5 space-y-1">
+              {(["point1", "point2", "point3"] as const).map((key) => (
+                <li key={key}>— {t(`methodology.${key}`)}</li>
+              ))}
+              <li>
+                —{" "}
+                {t("methodology.point4", {
+                  maxSpread: fmtInt(locale, maxSpread),
+                })}
+              </li>
+            </ul>
+            <p className="text-muted-foreground mt-2">
+              {t("methodology.disclaimer")}
+            </p>
+          </details>
+        </Sheet>
 
-          <section className="rounded-xl border bg-card p-5">
-            <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-              <div>
-                <h2 className="text-sm font-semibold">{t("chart.title")}</h2>
-                <p className="text-xs text-muted-foreground">
-                  {t("chart.subtitle")}
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5">
-                  <span
-                    aria-hidden
-                    className="h-0.5 w-4 rounded-full"
-                    style={{ background: "var(--chart-1)" }}
-                  />
-                  {t("chart.actual")}
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span
-                    aria-hidden
-                    className="h-0.5 w-4 rounded-full"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(90deg, var(--chart-2) 60%, transparent 60%)",
-                      backgroundSize: "6px 100%",
-                    }}
-                  />
-                  {t("chart.projected")}
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span
-                    aria-hidden
-                    className="h-2.5 w-4 rounded-sm"
-                    style={{ background: "var(--chart-1)", opacity: 0.15 }}
-                  />
-                  {t("chart.band")}
-                </span>
-              </div>
-            </div>
-            <ForecastChart data={chartData} />
-          </section>
+        <Doors
+          title={tc("blocks.doors")}
+          doors={[
+            {
+              key: "revenue",
+              family: "money",
+              href: "/revenue",
+              label: t("doors.revenue"),
+              value: t("doors.revenueValue"),
+            },
+            {
+              key: "finances",
+              family: "money",
+              href: "/finances",
+              label: t("doors.finances"),
+              value: t("doors.financesValue"),
+            },
+            {
+              key: "contracts",
+              family: "money",
+              href: "/contracts",
+              label: t("doors.contracts"),
+              value: t("doors.contractsValue"),
+            },
+            {
+              key: "splits",
+              family: "money",
+              href: "/splits",
+              label: t("doors.splits"),
+              value: t("doors.splitsValue"),
+            },
+            {
+              key: "valuation",
+              family: "money",
+              href: "/valuation",
+              label: t("doors.valuation"),
+              value: t("doors.valuationValue"),
+            },
+            {
+              key: "catalog",
+              family: "catalog",
+              href: "/catalog",
+              label: t("doors.catalog"),
+              value: t("doors.catalogValue"),
+            },
+          ]}
+        />
 
-          <div className="grid gap-4 xl:grid-cols-2">
-            <section className="rounded-xl border bg-card pb-1">
-              <h2 className="border-b p-5 pb-4 text-sm font-semibold">
-                {t("table.title")}
-              </h2>
-              <ForecastTable rows={projRows} />
-            </section>
+        <RestRow
+          title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
+          items={[
+            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+            { key: "streams", href: "/streams", label: t("rest.streams") },
+            { key: "tour", href: "/tour", label: t("rest.tour") },
+            { key: "sync", href: "/sync", label: t("rest.sync") },
+            { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
+            { key: "audit", href: "/audit", label: t("rest.audit") },
+          ]}
+        />
 
-            <div className="space-y-4">
-              <section className="rounded-xl border bg-card p-5">
-                <h2 className="text-sm font-semibold">{t("donut.title")}</h2>
-                <p className="mb-4 text-xs text-muted-foreground">
-                  {t("donut.subtitle")}
-                </p>
-                {sourceSlices.length > 0 ? (
-                  <SourceDonut data={sourceSlices} />
-                ) : (
-                  <EmptyState
-                    icon={PieChart}
-                    title={t("donut.emptyTitle")}
-                    description={t("donut.emptyDescription")}
-                  />
-                )}
-              </section>
-              <MethodologyCard horizon={horizon} />
-            </div>
-          </div>
-        </div>
+        <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>
   );

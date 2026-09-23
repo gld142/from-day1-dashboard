@@ -1,25 +1,28 @@
 {
-  "title": "Revenue Calculator",
-  "subtitle": "Projetez vos revenus sur 6 à 24 mois selon vos scénarios de sortie et de croissance.",
+  "title": "Simulateur de revenus",
+  "subtitle": "Ce que tes revenus peuvent devenir dans 6 à 24 mois, selon ce que tu prépares.",
   "params": {
-    "title": "Paramètres",
-    "subtitle": "Ajustez les hypothèses, la projection se met à jour en direct",
+    "title": "Ce que tu simules",
+    "subtitle": "Change une hypothèse, la projection suit",
     "artist": "Artiste",
     "horizon": "Horizon",
     "months": "{count} mois",
     "scenario": "Scénario de sortie",
     "scenarios": {
-      "none": "Aucune sortie prévue",
-      "single": "Single à venir",
-      "ep": "EP à venir",
-      "album": "Album à venir"
+      "none": "Rien de prévu",
+      "single": "Un single",
+      "ep": "Un EP",
+      "album": "Un album"
     },
     "scenarioBoost": "+{points} pts de croissance",
-    "scenarioNone": "Croissance organique seule",
-    "growth": "Ajustement de croissance",
+    "scenarioNone": "Croissance organique seule, sans sortie.",
+    "growth": "Si ça va plus vite (ou moins vite)",
     "growthHint": "Points de croissance mensuelle ajoutés ou retirés au rythme actuel",
     "baseGrowth": "Croissance actuelle",
-    "effectiveGrowth": "Croissance projetée"
+    "effectiveGrowth": "Croissance projetée",
+    "titleLabel": "Ce que vous simulez",
+    "scenarioHint": "Une sortie ajoute {points} points de croissance mensuelle.",
+    "subtitleLabel": "Changez une hypothèse, la projection suit"
   },
   "kpis": {
     "projectedTotal": "Total projeté ({count} mois)",
@@ -27,14 +30,19 @@
     "rangeHint": "Selon la bande basse / haute",
     "monthlyAvg": "Mensuel moyen projeté",
     "delta": "vs {count} derniers mois",
-    "deltaHint": "Projection comparée au réalisé récent"
+    "deltaHint": "Projection comparée au réalisé récent",
+    "bestMonth": "Le mois le plus fort",
+    "growth": "Croissance projetée",
+    "growthHint": "rythme actuel {base} par mois",
+    "growthHintRoster": "moyenne du roster, pondérée par les revenus",
+    "deltaShort": "vs les {count} mois passés"
   },
   "chart": {
     "title": "Historique & projection",
     "subtitle": "24 mois de réalisé, projection médiane et bande de confiance",
     "actual": "Réalisé",
     "projected": "Projeté",
-    "band": "Bande de confiance"
+    "band": "Fourchette"
   },
   "table": {
     "title": "Détail mensuel projeté",
@@ -60,12 +68,42 @@
     "merch": "Merch"
   },
   "methodology": {
-    "title": "Méthodologie",
+    "title": "Comment ce chiffre est calculé",
     "intro": "Une projection transparente, pas une boule de cristal :",
     "point1": "Niveau de départ : moyenne des 3 derniers mois de revenus réalisés.",
     "point2": "Croissance : rythme mensuel actuel de l'artiste, ajusté par votre scénario de sortie et votre curseur.",
     "point3": "Saisonnalité : coefficients mensuels appris sur 24 mois d'historique.",
     "point4": "Incertitude : la bande de confiance s'élargit de ±12 % à court terme jusqu'à ±{maxSpread} % à l'horizon choisi.",
     "disclaimer": "Projection indicative fondée sur les tendances passées — elle ne constitue pas une garantie de revenus."
+  },
+  "subtitleLabel": "Ce que le roster peut rapporter dans 6 à 24 mois, selon ce que vous préparez.",
+  "subtitleFocused": "Ce que les revenus de {name} peuvent devenir dans 6 à 24 mois.",
+  "hero": {
+    "title": "Projection",
+    "caption": "Projeté sur {count} mois",
+    "range": "entre {low} et {high} selon la bande de confiance",
+    "scopeRoster": "sur tout le roster"
+  },
+  "doors": {
+    "revenue": "Revenus",
+    "revenueValue": "d'où vient l'argent aujourd'hui",
+    "finances": "Dépenses & P&L",
+    "financesValue": "ce qu'il reste après dépenses",
+    "contracts": "Contrats",
+    "contractsValue": "taux et échéances",
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi",
+    "valuation": "Valorisation",
+    "valuationValue": "ce que vaut le catalogue",
+    "catalog": "Catalogue",
+    "catalogValue": "ce qui porte les revenus"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "tour": "Tournée",
+    "sync": "Sync & Licensing",
+    "urssaf": "URSSAF",
+    "audit": "Audit royalties"
   }
 }

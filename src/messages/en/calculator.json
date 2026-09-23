@@ -1,25 +1,28 @@
 {
-  "title": "Revenue Calculator",
-  "subtitle": "Project your revenue over 6 to 24 months based on your release and growth scenarios.",
+  "title": "Revenue simulator",
+  "subtitle": "What your revenue could become in 6 to 24 months, given what you're preparing.",
   "params": {
-    "title": "Parameters",
-    "subtitle": "Adjust the assumptions, the projection updates live",
+    "title": "What you're simulating",
+    "subtitle": "Change an assumption, the projection follows",
     "artist": "Artist",
     "horizon": "Horizon",
     "months": "{count} months",
     "scenario": "Release scenario",
     "scenarios": {
-      "none": "No release planned",
-      "single": "Upcoming single",
-      "ep": "Upcoming EP",
-      "album": "Upcoming album"
+      "none": "Nothing planned",
+      "single": "A single",
+      "ep": "An EP",
+      "album": "An album"
     },
     "scenarioBoost": "+{points} growth pts",
-    "scenarioNone": "Organic growth only",
-    "growth": "Growth adjustment",
+    "scenarioNone": "Organic growth only, no release.",
+    "growth": "If it goes faster (or slower)",
     "growthHint": "Monthly growth points added to or removed from the current pace",
     "baseGrowth": "Current growth",
-    "effectiveGrowth": "Projected growth"
+    "effectiveGrowth": "Projected growth",
+    "titleLabel": "What you're simulating",
+    "scenarioHint": "A release adds {points} points of monthly growth.",
+    "subtitleLabel": "Change an assumption, the projection follows"
   },
   "kpis": {
     "projectedTotal": "Projected total ({count} months)",
@@ -27,14 +30,19 @@
     "rangeHint": "Based on the low / high band",
     "monthlyAvg": "Projected monthly average",
     "delta": "vs last {count} months",
-    "deltaHint": "Projection compared to recent actuals"
+    "deltaHint": "Projection compared to recent actuals",
+    "bestMonth": "Strongest month",
+    "growth": "Projected growth",
+    "growthHint": "current pace {base} per month",
+    "growthHintRoster": "roster average, weighted by revenue",
+    "deltaShort": "vs the past {count} months"
   },
   "chart": {
     "title": "History & projection",
     "subtitle": "24 months of actuals, median projection and confidence band",
     "actual": "Actual",
     "projected": "Projected",
-    "band": "Confidence band"
+    "band": "Range"
   },
   "table": {
     "title": "Projected monthly detail",
@@ -60,12 +68,42 @@
     "merch": "Merch"
   },
   "methodology": {
-    "title": "Methodology",
+    "title": "How this figure is computed",
     "intro": "A transparent projection, not a crystal ball:",
     "point1": "Starting level: average of the last 3 months of actual revenue.",
     "point2": "Growth: the artist's current monthly pace, adjusted by your release scenario and slider.",
     "point3": "Seasonality: monthly coefficients learned from 24 months of history.",
     "point4": "Uncertainty: the confidence band widens from ±12% short-term up to ±{maxSpread}% at the chosen horizon.",
     "disclaimer": "Indicative projection based on past trends — it is not a revenue guarantee."
+  },
+  "subtitleLabel": "What the roster could earn in 6 to 24 months, given what you're preparing.",
+  "subtitleFocused": "What {name}'s revenue could become in 6 to 24 months.",
+  "hero": {
+    "title": "Projection",
+    "caption": "Projected over {count} months",
+    "range": "between {low} and {high} on the confidence band",
+    "scopeRoster": "across the whole roster"
+  },
+  "doors": {
+    "revenue": "Revenue",
+    "revenueValue": "where the money comes from today",
+    "finances": "Expenses & P&L",
+    "financesValue": "what's left after expenses",
+    "contracts": "Contracts",
+    "contractsValue": "rates and deadlines",
+    "splits": "Splits",
+    "splitsValue": "who gets what",
+    "valuation": "Valuation",
+    "valuationValue": "what the catalog is worth",
+    "catalog": "Catalog",
+    "catalogValue": "what carries the revenue"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "tour": "Touring",
+    "sync": "Sync & Licensing",
+    "urssaf": "URSSAF",
+    "audit": "Royalty audit"
   }
 }
