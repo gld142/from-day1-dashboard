@@ -27,6 +27,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
+import { StreamGlyph } from "@/components/dashboard/stream-glyph";
 import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { Progress } from "@/components/ui/progress";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
@@ -173,6 +174,7 @@ export default function StreamsPage() {
           </div>
           <div className="relative">
             <CenteredValue
+              glyph={<StreamGlyph size="lg" className="opacity-80" />}
               value={fmtCompact(locale, total)}
               caption={
                 <>

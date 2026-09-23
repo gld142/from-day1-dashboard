@@ -88,10 +88,13 @@ export function SheetHeading({
 export function CenteredValue({
   value,
   caption,
+  glyph,
   className,
 }: {
   value: ReactNode;
   caption: ReactNode;
+  /** Repère posé à gauche du nombre — `StreamGlyph` pour des lectures. */
+  glyph?: ReactNode;
   className?: string;
 }) {
   return (
@@ -102,8 +105,9 @@ export function CenteredValue({
       )}
     >
       <div className="sheet-reserve rounded-2xl px-4 py-1.5">
-        <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
-          {value}
+        <p className="flex items-center justify-center gap-3 text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
+          {glyph}
+          <span>{value}</span>
         </p>
         <p className="sheet-ink mt-1 text-[12.5px]">{caption}</p>
       </div>

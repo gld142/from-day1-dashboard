@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { RankMedal } from "@/components/dashboard/rank-medal";
+import { StreamGlyph } from "@/components/dashboard/stream-glyph";
 import { PageHeader } from "@/components/dashboard/page-header";
 import {
   AffiliatedPoints,
@@ -415,6 +416,7 @@ export default function PulsePage() {
             <HeroChart
               series={v.series}
               seriesLabel={t("chart.streams")}
+              glyph={<StreamGlyph size="lg" className="opacity-80" />}
               heading={<SheetHeading>{t("families.streams")}</SheetHeading>}
               value={fmtCompact(locale, v.today)}
               caption={
@@ -881,8 +883,9 @@ export default function PulsePage() {
             <div className="grid items-center gap-6 lg:grid-cols-[0.85fr_1.15fr]">
               <div className="text-center">
                 <SheetHeading centered>{t("families.streamsLabel")}</SheetHeading>
-                <p className="text-5xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-6xl">
-                  {fmtCompact(locale, l.today)}
+                <p className="flex items-center justify-center gap-3 text-5xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-6xl">
+                  <StreamGlyph size="lg" className="opacity-80" />
+                  <span>{fmtCompact(locale, l.today)}</span>
                 </p>
                 <p className="sheet-ink mt-1.5 text-[13px]">
                   {t("hero.todayLabel", { count: ARTISTS.length })}{" "}

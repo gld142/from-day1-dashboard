@@ -46,6 +46,7 @@ export function HeroChart({
   value,
   caption,
   seriesLabel,
+  glyph,
   defaultRange = 90,
   onRangeChange,
 }: {
@@ -56,6 +57,8 @@ export function HeroChart({
   /** Ce qu'il est, sa variation et sa provenance. */
   caption: ReactNode;
   seriesLabel: string;
+  /** Repère à gauche du chiffre (ex. le triangle de lecture). */
+  glyph?: ReactNode;
   defaultRange?: HeroRange;
   onRangeChange?: (range: HeroRange) => void;
 }) {
@@ -123,7 +126,7 @@ export function HeroChart({
       <div className="relative mt-1">
         {/* Au centre dès qu'il y a la place ; en titre sur mobile, sinon il
             recouvrirait toute la courbe. */}
-        <CenteredValue value={value} caption={caption} />
+        <CenteredValue value={value} caption={caption} glyph={glyph} />
         <div className="h-[168px] sm:h-[210px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: narrow ? 8 : 26, right: 10, bottom: 0, left: 0 }}>

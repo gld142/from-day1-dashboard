@@ -26,6 +26,7 @@ import {
   SheetHeading,
 } from "@/components/dashboard/sheet";
 import { Button } from "@/components/ui/button";
+import { StreamGlyph } from "@/components/dashboard/stream-glyph";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { DspDonut } from "@/components/modules/pilotage/dsp-donut";
 import { RevenueStreamsChart } from "@/components/modules/pilotage/revenue-streams-chart";
@@ -353,8 +354,9 @@ export default function OverviewPage() {
               <SheetHeading action={<Link href="/streams">{tc("blocks.detail")}</Link>}>
                 {tc("families.streams")}
               </SheetHeading>
-              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-                {fmtCompact(locale, v.streams30d)}
+              <p className="flex items-center gap-2 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                <StreamGlyph size="md" className="opacity-75" />
+                <span>{fmtCompact(locale, v.streams30d)}</span>
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("kpis.streams30d")}{" "}
@@ -573,8 +575,9 @@ export default function OverviewPage() {
               <SheetHeading action={<Link href="/streams">{tc("blocks.detail")}</Link>}>
                 {tc("families.streamsRoster")}
               </SheetHeading>
-              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-                {fmtCompact(locale, l.streams30d)}
+              <p className="flex items-center gap-2 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                <StreamGlyph size="md" className="opacity-75" />
+                <span>{fmtCompact(locale, l.streams30d)}</span>
               </p>
               <p className="sheet-ink mt-1 text-xs">{t("kpis.streams30d")}</p>
               <div className="mt-2">
