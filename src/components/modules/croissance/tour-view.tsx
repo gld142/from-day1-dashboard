@@ -6,7 +6,7 @@
  */
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CalendarDays, MapPin, Sparkles, Trophy } from "lucide-react";
+import { MapPin } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -25,8 +25,13 @@ import {
 } from "@/lib/demo/api";
 import type { Artist, TourDate } from "@/lib/demo/types";
 import { useRole } from "@/lib/role";
-import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtMonth } from "@/lib/format";
-import { KpiCard } from "@/components/dashboard/kpi";
+import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtMonth, fmtPct } from "@/lib/format";
+import {
+  AffiliatedPoints,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
@@ -105,6 +110,7 @@ function liveMonthly(ids: string[]): Array<{ month: string; amount: number }> {
 
 export function TourView() {
   const t = useTranslations("tour");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { artistId, focusedArtistId, isLabel, setFocusedArtistId } = useRole();
   const rosterMode = isLabel && focusedArtistId === null;
@@ -219,62 +225,60 @@ export function TourView() {
         )}
       </PageHeader>
 
-      {/* ─── KPIs ─── */}
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          id="tour-upcoming"
-          label={t("kpis.upcoming")}
-          value={upcoming.length}
-          format="int"
-          deltaLabel={
-            upcoming[0]
-              ? `${fmtDate(locale, upcoming[0].date)} · ${upcoming[0].city}`
-              : undefined
-          }
+      <div className="space-y-3">
+      {/* Ce que le live rapporte, et l'état des dates. */}
+      <Sheet family="catalog">
+        <SheetHeading action={t("hero.caption")}>{t("hero.title")}</SheetHeading>
+        <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+          {fmtEur(locale, liveRevenue12m, { compact: liveRevenue12m >= 100_000 })}
+        </p>
+        <AffiliatedPoints
+          className="mt-2"
+          points={[
+            {
+              key: "upcoming",
+              value: String(upcoming.length),
+              label: t("kpis.upcoming"),
+              note: upcoming[0]
+                ? t("kpis.upcomingHint", {
+                    date: fmtDate(locale, upcoming[0].date),
+                    city: upcoming[0].city,
+                  })
+                : t("kpis.upcomingNone"),
+            },
+            {
+              key: "fill",
+              value: fmtPct(locale, fillRate).replace("+", ""),
+              label: t("kpis.fillRate"),
+              note: t("kpis.fillRateHint"),
+            },
+            {
+              key: "venue",
+              value: bestVenue ? bestVenue.venue : "—",
+              label: t("kpis.bestVenue"),
+              note: bestVenue
+                ? t("kpis.bestVenueHint", {
+                    city: bestVenue.city,
+                    amount: fmtEur(locale, bestVenue.grossRevenue, { compact: true }),
+                  })
+                : undefined,
+            },
+            {
+              /* `past`, pas `dates` : ce dernier contient aussi les dates à
+                 venir, et le point affichait 13 là où 8 dates sont passées. */
+              key: "dates",
+              value: String(past.length),
+              label: t("timeline.past"),
+              note: t("chart.description"),
+            },
+          ]}
         />
-        <KpiCard
-          id="tour-fill"
-          label={t("kpis.fillRate")}
-          value={fillRate}
-          format="pct"
-          deltaLabel={t("kpis.fillRateHint")}
-        />
-        <KpiCard
-          id="tour-live-revenue"
-          label={t("kpis.liveRevenue")}
-          value={liveRevenue12m}
-          format="eur"
-          spark={liveSeries.map((m) => ({ value: m.amount }))}
-          sparkColor="var(--chart-2)"
-        />
-        <div className="flex flex-col gap-1 rounded-xl border bg-card p-4">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-medium text-muted-foreground">
-              {t("kpis.bestVenue")}
-            </span>
-            <Trophy className="size-3.5 text-warning" aria-hidden />
-          </div>
-          <div className="truncate text-2xl font-semibold tracking-tight">
-            {bestVenue ? bestVenue.venue : "—"}
-          </div>
-          {bestVenue && (
-            <span className="text-[11px] text-muted-foreground">
-              {bestVenue.city} ·{" "}
-              <span className="num">
-                {fmtEur(locale, bestVenue.grossRevenue, { compact: true })}
-              </span>
-            </span>
-          )}
-        </div>
-      </div>
+      </Sheet>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-3 lg:grid-cols-5">
         {/* ─── Timeline des dates ─── */}
-        <section className="rounded-xl border bg-card p-5 lg:col-span-3">
-          <div className="mb-3 flex items-center gap-2">
-            <CalendarDays className="size-4 text-muted-foreground" aria-hidden />
-            <h2 className="text-sm font-semibold">{t("timeline.upcoming")}</h2>
-          </div>
+        <Sheet family="catalog" className="lg:col-span-3">
+          <SheetHeading>{t("timeline.upcoming")}</SheetHeading>
 
           {upcoming.length === 0 ? (
             <div className="flex h-24 items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
@@ -378,28 +382,29 @@ export function TourView() {
               </div>
             </>
           )}
-        </section>
+        </Sheet>
 
         {/* ─── Colonne droite : chart + villes + reco ─── */}
-        <div className="flex flex-col gap-4 lg:col-span-2">
-          <section className="rounded-xl border bg-card p-5">
-            <h2 className="text-sm font-semibold">{t("chart.title")}</h2>
-            <p className="text-xs text-muted-foreground">{t("chart.description")}</p>
-            <div className="mt-3 h-44">
+        <div className="flex flex-col gap-3 lg:col-span-2">
+          <Sheet family="catalog">
+            <SheetHeading action={t("chart.description")}>
+              {t("chart.title")}
+            </SheetHeading>
+            <div className="mt-1 h-44">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 4, right: 0, bottom: 0, left: -12 }}>
-                  <CartesianGrid vertical={false} strokeOpacity={0.07} />
+                  <CartesianGrid vertical={false} strokeOpacity={0.12} />
                   <XAxis
                     dataKey="label"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: "var(--sheet-ink)" }}
                     interval="preserveStartEnd"
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: "var(--sheet-ink)" }}
                     tickFormatter={(v: number) => fmtCompact(locale, v)}
                     width={52}
                   />
@@ -418,17 +423,18 @@ export function TourView() {
                     fill="var(--chart-2)"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={22}
-                    animationDuration={600}
+                    isAnimationActive={false}
                   />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </section>
+          </Sheet>
 
-          <section className="rounded-xl border bg-card p-5">
-            <h2 className="text-sm font-semibold">{t("cities.title")}</h2>
-            <p className="text-xs text-muted-foreground">{t("cities.description")}</p>
-            <ul className="mt-3 space-y-2.5">
+          <Sheet family="catalog">
+            <SheetHeading action={t("cities.description")}>
+              {t("cities.title")}
+            </SheetHeading>
+            <ul className="mt-1 space-y-2.5">
               {topCities.map((c, i) => (
                 <li key={c.city}>
                   <div className="flex items-baseline justify-between gap-2 text-sm">
@@ -453,19 +459,13 @@ export function TourView() {
                 </li>
               ))}
             </ul>
-          </section>
+          </Sheet>
 
           {recos.length > 0 && (
-            <section className="brand-glow rounded-xl border bg-card p-5">
-              <div className="flex items-center justify-between gap-2">
-                <h2 className="flex items-center gap-2 text-sm font-semibold">
-                  <Sparkles className="size-4 text-brand" aria-hidden />
-                  {t("reco.title")}
-                </h2>
-                <Badge variant="secondary">{t("reco.badge")}</Badge>
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground">{t("reco.description")}</p>
-              <ul className="mt-3 space-y-3">
+            <Sheet family="trends">
+              <SheetHeading action={t("reco.badge")}>{t("reco.title")}</SheetHeading>
+              <p className="sheet-ink text-[11.5px]">{t("reco.description")}</p>
+              <ul className="mt-2 space-y-2.5">
                 {recos.map((c) => {
                   const city = CITY_SUGGEST[c.iso3];
                   return (
@@ -476,16 +476,43 @@ export function TourView() {
                           city: locale === "fr" ? city.fr : city.en,
                         })}
                       </p>
-                      <p className="num mt-0.5 text-xs text-muted-foreground">
+                      <p className="sheet-ink mt-0.5 text-xs tabular-nums">
                         {t("reco.streams", { streams: fmtCompact(locale, c.streams) })}
                       </p>
                     </li>
                   );
                 })}
               </ul>
-            </section>
+            </Sheet>
           )}
         </div>
+      </div>
+
+      <Doors
+        title={tc("blocks.doors")}
+        doors={[
+          { key: "audience", family: "audience", href: "/audience", label: t("doors.audience"), value: t("doors.audienceValue") },
+          { key: "fans", family: "audience", href: "/fans", label: t("doors.fans"), value: t("doors.fansValue") },
+          { key: "revenue", family: "money", href: "/revenue", label: t("doors.revenue"), value: t("doors.revenueValue") },
+          { key: "finances", family: "money", href: "/finances", label: t("doors.finances"), value: t("doors.financesValue") },
+          { key: "catalog", family: "catalog", href: "/catalog", label: t("doors.catalog"), value: t("doors.catalogValue") },
+          { key: "contracts", family: "money", href: "/contracts", label: t("doors.contracts"), value: t("doors.contractsValue") },
+        ]}
+      />
+
+      <RestRow
+        title={isLabel ? tc("blocks.restLabel") : tc("blocks.rest")}
+        items={[
+          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+          { key: "streams", href: "/streams", label: t("rest.streams") },
+          { key: "market", href: "/market", label: t("rest.market") },
+          { key: "sync", href: "/sync", label: t("rest.sync") },
+          { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
+          { key: "team", href: "/team", label: t("rest.team") },
+        ]}
+      />
+
+      <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 {
   "title": "Tour & live",
-  "subtitle": "Dates, attendance, stage revenue — your whole live business in one place",
-  "labelSubtitle": "Every date across the roster — filter by artist",
+  "subtitle": "Your dates, how full they are and what they earn.",
+  "labelSubtitle": "Every roster date, how full it is and what it earns.",
   "filter": {
     "all": "Whole roster"
   },
@@ -10,7 +10,10 @@
     "fillRate": "Average fill rate",
     "fillRateHint": "Across past dates",
     "liveRevenue": "Live revenue 12m",
-    "bestVenue": "Best venue"
+    "bestVenue": "Best venue",
+    "upcomingHint": "next: {date} in {city}",
+    "upcomingNone": "nothing scheduled",
+    "bestVenueHint": "{city} · {amount}"
   },
   "timeline": {
     "upcoming": "Upcoming",
@@ -36,9 +39,35 @@
   },
   "reco": {
     "title": "Cities to book",
-    "badge": "AI suggestion",
+    "badge": "Audience with no date",
     "description": "Streaming audience crossed with already-scheduled dates",
     "item": "Strong audience in {country} — no date scheduled in {city}",
     "streams": "{streams} streams / 30d"
+  },
+  "hero": {
+    "title": "Live revenue over 12 months",
+    "caption": "gross box office, all venues"
+  },
+  "doors": {
+    "audience": "Audience",
+    "audienceValue": "where they are",
+    "fans": "Fans CRM",
+    "fansValue": "who to invite to the presale",
+    "revenue": "Revenue",
+    "revenueValue": "live inside your revenue",
+    "finances": "Expenses & P&L",
+    "financesValue": "what a tour costs",
+    "catalog": "Catalog",
+    "catalogValue": "what you play",
+    "contracts": "Contracts",
+    "contractsValue": "booking and deadlines"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "market": "Market",
+    "sync": "Sync & Licensing",
+    "urssaf": "URSSAF",
+    "team": "Team"
   }
 }
