@@ -318,5 +318,14 @@
   "legend": {
     "intro": "Chaque chiffre porte sa provenance.",
     "simulated": "simulé"
+  },
+  "year": {
+    "title": "Ton année",
+    "titleLabel": "L'année du roster",
+    "revenue": "de revenus",
+    "streams": "streams",
+    "best": "meilleur mois",
+    "streaming": "de streaming",
+    "detail": "voir le bilan"
   }
 }

@@ -318,5 +318,14 @@
   "legend": {
     "intro": "Every number carries its provenance.",
     "simulated": "simulated"
+  },
+  "year": {
+    "title": "Your year",
+    "titleLabel": "The roster's year",
+    "revenue": "in revenue",
+    "streams": "streams",
+    "best": "best month",
+    "streaming": "from streaming",
+    "detail": "see the full picture"
   }
 }

@@ -39,6 +39,7 @@ import {
   MoneyToCollect,
   NightStrip,
   RestRow,
+  YearBand,
   type Door,
   type MoneyLead,
   type NightItem,
@@ -78,6 +79,7 @@ import {
 import { DEMO_TODAY } from "@/lib/demo/seed";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { yearWindow } from "@/lib/year-window";
 import { getShares } from "@/lib/userdata/shares-store";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 
@@ -149,6 +151,46 @@ export default function PulsePage() {
   /** Une part (0-1) en pourcentage non signé — fmtPct signe toujours et attend des points. */
   const pct = (ratio: number) =>
     new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(ratio);
+
+  /* Le bilan d'année — calculé dans lib/year-window pour que Pulse et Revenus
+     ne puissent pas diverger. */
+  const year = useMemo(
+    () => yearWindow(showArtist ? [artistId] : ARTISTS.map((a) => a.id)),
+    [showArtist, artistId],
+  );
+
+  const yearBand = (
+    <YearBand
+      title={showArtist ? t("year.title") : t("year.titleLabel")}
+      href="/revenue"
+      detail={t("year.detail")}
+      facts={[
+        { key: "rev", value: eur(year.revenue), label: t("year.revenue") },
+        {
+          key: "streams",
+          value: fmtCompact(locale, year.streams),
+          label: t("year.streams"),
+        },
+        ...(year.best
+          ? [
+              {
+                key: "best",
+                value: fmtDate(locale, `${year.best.month}-01`, {
+                  month: "long",
+                  year: "numeric",
+                }),
+                label: t("year.best"),
+              },
+            ]
+          : []),
+        {
+          key: "share",
+          value: pct(year.streamingShare / 100),
+          label: t("year.streaming"),
+        },
+      ]}
+    />
+  );
 
   /* Les balises d'emphase des phrases de la nuit : le message porte
      <em>/<good>/<alert>, la page fournit le rendu. C'est ce qui met les
@@ -799,6 +841,8 @@ export default function PulsePage() {
             }
           />
 
+          {yearBand}
+
           <Doors
             title={t("doors.title")}
             doors={
@@ -1255,6 +1299,8 @@ export default function PulsePage() {
               ].filter(Boolean) as MoneyLead[]
             }
           />
+
+          {yearBand}
 
           <Doors
             title={t("doors.title")}

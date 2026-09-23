@@ -9,8 +9,6 @@ import enNav from "./en/nav.json";
 /* ─── Namespaces modules (un fichier = un module, éditable en parallèle) ─── */
 import frPulse from "./fr/pulse.json";
 import enPulse from "./en/pulse.json";
-import frOverview from "./fr/overview.json";
-import enOverview from "./en/overview.json";
 import frStreams from "./fr/streams.json";
 import enStreams from "./en/streams.json";
 import frMarket from "./fr/market.json";
@@ -79,7 +77,6 @@ const MESSAGES = {
     common: frCommon,
     nav: frNav,
     pulse: frPulse,
-    overview: frOverview,
     streams: frStreams,
     market: frMarket,
     revenue: frRevenue,
@@ -116,7 +113,6 @@ const MESSAGES = {
     common: enCommon,
     nav: enNav,
     pulse: enPulse,
-    overview: enOverview,
     streams: enStreams,
     market: enMarket,
     revenue: enRevenue,

@@ -22,7 +22,6 @@ import {
   FileUp,
   Fingerprint,
   FlaskConical,
-  Gauge,
   Globe2,
   Handshake,
   HeartHandshake,
@@ -76,7 +75,6 @@ export const NAV_SECTIONS: NavSection[] = [
     labelKey: "sections.daily",
     items: [
       { href: "/pulse", labelKey: "items.pulse", icon: Activity },
-      { href: "/overview", labelKey: "items.overview", icon: Gauge },
       {
         href: "/roster",
         labelKey: "items.roster",
@@ -214,7 +212,7 @@ export const NAV_SECTIONS: NavSection[] = [
  * de section : rien ne disparaît par oubli.
  */
 const LABEL_LAYOUT: ReadonlyArray<{ labelKey: string; hrefs: string[] }> = [
-  { labelKey: "sections.daily", hrefs: ["/roster", "/pulse", "/overview"] },
+  { labelKey: "sections.daily", hrefs: ["/roster", "/pulse"] },
   {
     labelKey: "sections.data",
     hrefs: ["/streams", "/market", "/revenue", "/audience", "/algo-position"],

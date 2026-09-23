@@ -169,6 +169,46 @@ const DOOR_INK: Record<DoorFamily, string> = {
   catalog: "text-[var(--ink-catalog)]",
 };
 
+/**
+ * Le bilan de l'année, en une ligne. Un pouls parle d'aujourd'hui, mais on doit
+ * pouvoir lever les yeux : quatre chiffres d'année et une porte vers le détail,
+ * sans le deuxième graphique qui doublerait le héros.
+ */
+export function YearBand({
+  title,
+  href,
+  detail,
+  facts,
+}: {
+  title: ReactNode;
+  href: string;
+  detail: ReactNode;
+  facts: ReadonlyArray<{ key: string; value: ReactNode; label: ReactNode }>;
+}) {
+  return (
+    <Link
+      href={href}
+      className="border-border bg-card hover:border-ring/50 group mt-3 flex flex-col gap-3 rounded-xl border px-4.5 py-3.5 transition-colors lg:flex-row lg:items-center lg:justify-between lg:gap-6"
+    >
+      <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+        <h2 className="text-muted-foreground text-[11px] font-semibold tracking-[0.08em] uppercase">
+          {title}
+        </h2>
+        {facts.map((f) => (
+          <span key={f.key} className="text-[12.5px]">
+            <b className="font-semibold tabular-nums">{f.value}</b>{" "}
+            <span className="text-foreground/70">{f.label}</span>
+          </span>
+        ))}
+      </div>
+      <span className="text-foreground/80 shrink-0 text-[12px] font-medium group-hover:underline">
+        {detail}
+        <ArrowRight className="ml-1 inline size-3" aria-hidden />
+      </span>
+    </Link>
+  );
+}
+
 export type Door = {
   key: string;
   href: string;

@@ -21,7 +21,7 @@ describe("navForPersona — structure (label)", () => {
 
   it("suit le parcours structure : rituel → data → finances → business → intelligence → croissance → compte", () => {
     expect(hrefs(nav)).toEqual([
-      ["sections.daily", ["/roster", "/pulse", "/overview"]],
+      ["sections.daily", ["/roster", "/pulse"]],
       ["sections.data", ["/streams", "/market", "/revenue", "/audience", "/algo-position"]],
       ["sections.finances", ["/finances", "/valuation", "/calculator"]],
       ["sections.rights", ["/contracts", "/splits", "/rights", "/urssaf"]],

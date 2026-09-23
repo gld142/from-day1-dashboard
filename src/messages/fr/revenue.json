@@ -10,7 +10,9 @@
     "vsPrevYear": "vs 12 mois précédents",
     "sourceCount": "sources de revenus",
     "sourceCountNote": "sur les 12 derniers mois",
-    "bestMonth": "meilleur mois"
+    "bestMonth": "meilleur mois",
+    "streams12m": "streams sur 12 mois",
+    "streamingShare": "{share} des revenus viennent du streaming"
   },
   "estimate": {
     "title": "Estimation live",

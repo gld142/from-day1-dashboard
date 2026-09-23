@@ -40,6 +40,7 @@ import { REVENUE_SOURCES } from "@/lib/demo/types";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { yearWindow } from "@/lib/year-window";
 import { useUrlParam } from "@/lib/url-param";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { DeltaChip } from "@/components/dashboard/kpi";
@@ -200,6 +201,12 @@ export default function RevenuePage() {
     new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(
       points / 100,
     );
+  /* Les faits d'année, partagés avec la bande « Ton année » de Pulse. */
+  const year = useMemo(
+    () => yearWindow(aggregated ? ARTISTS.map((a) => a.id) : [artistId]),
+    [aggregated, artistId],
+  );
+
   /* Les 12 mois que résume le chiffre du centre, dans une série qui en montre
      24 : la zone ombrée dit lesquels. */
   const window12 = useMemo(() => {
@@ -212,18 +219,6 @@ export default function RevenuePage() {
 
   /* Le meilleur mois de la série empilée — un total d'année ne raconte rien,
      un mois nommé si. */
-  const bestMonth = useMemo(() => {
-    let best: { month: string; total: number } | null = null;
-    for (const row of data.stacked) {
-      const total = Object.entries(row).reduce(
-        (sum, [k, v]) => (k === "month" ? sum : sum + Number(v ?? 0)),
-        0,
-      );
-      if (!best || total > best.total) best = { month: row.month, total };
-    }
-    return best;
-  }, [data.stacked]);
-
   const fmtRate = (rate: number) =>
     new Intl.NumberFormat(locale, {
       minimumFractionDigits: 4,
@@ -358,16 +353,16 @@ export default function RevenuePage() {
                 note: pct(topShare * 100),
               },
               {
-                key: "sources",
-                value: data.sources.length,
-                label: t("kpis.sourceCount"),
-                note: t("kpis.sourceCountNote"),
+                key: "streams12m",
+                value: fmtCompact(locale, year.streams),
+                label: t("kpis.streams12m"),
+                note: t("kpis.streamingShare", { share: pct(year.streamingShare) }),
               },
               {
                 key: "best",
-                value: bestMonth ? fmtMonth(locale, bestMonth.month) : "—",
+                value: year.best ? fmtMonth(locale, year.best.month) : "—",
                 label: t("kpis.bestMonth"),
-                note: bestMonth ? eur(bestMonth.total) : undefined,
+                note: year.best ? eur(year.best.amount) : undefined,
               },
             ]}
           />

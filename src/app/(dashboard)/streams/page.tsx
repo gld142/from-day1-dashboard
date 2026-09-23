@@ -346,7 +346,7 @@ export default function StreamsPage() {
           title={isLabel && !focusedArtistId ? tc("blocks.restLabel") : tc("blocks.rest")}
           items={[
             { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "overview", href: "/overview", label: t("rest.overview") },
+            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
             { key: "fans", href: "/fans", label: t("rest.fans") },
             { key: "sync", href: "/sync", label: t("rest.sync") },
             { key: "discovery", href: "/discovery", label: t("rest.discovery") },
