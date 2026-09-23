@@ -13,6 +13,7 @@ import {
   UserPlus,
   type LucideIcon,
 } from "lucide-react";
+import { teamLastActive } from "@/lib/demo/data";
 import { fmtDate } from "@/lib/format";
 import { artistColor } from "@/lib/format";
 import { hueForName } from "@/components/modules/structure/team-avatar";
@@ -25,47 +26,54 @@ type Entry = {
   params: Record<string, string>;
 };
 
-/** Entrées fixes, alignées sur TEAM (noms, lastActive) et le roster. */
+/**
+ * Entrées fixes, alignées sur TEAM (noms, lastActive) et le roster.
+ *
+ * Les dates sont posées en jours avant le « aujourd'hui » du produit, comme
+ * `lastActive` : en dur, elles restaient au 2 juillet 2026 pendant que
+ * DEMO_TODAY suivait le dernier relevé, et le journal finissait par montrer
+ * une équipe qui n'a rien fait depuis des mois.
+ */
 const ENTRIES: Entry[] = [
   {
     key: "expense",
     icon: Receipt,
-    date: "2026-07-02",
+    date: teamLastActive(0),
     name: "Omar B.",
     params: { artist: "Mira Sol" },
   },
   {
     key: "split",
     icon: Split,
-    date: "2026-07-01",
+    date: teamLastActive(1),
     name: "Lisa M.",
     params: { track: "Nova" },
   },
   {
     key: "audit",
     icon: FileSearch,
-    date: "2026-06-30",
+    date: teamLastActive(2),
     name: "Gaël C.",
     params: { artist: "KAYRO" },
   },
   {
     key: "export",
     icon: Receipt,
-    date: "2026-06-28",
+    date: teamLastActive(4),
     name: "Inès T.",
     params: {},
   },
   {
     key: "contract",
     icon: FileSignature,
-    date: "2026-06-20",
+    date: teamLastActive(12),
     name: "Me Marc D.",
     params: { artist: "Sky Lune" },
   },
   {
     key: "invite",
     icon: UserPlus,
-    date: "2026-06-15",
+    date: teamLastActive(17),
     name: "Gaël C.",
     params: { invitee: "Omar B." },
   },

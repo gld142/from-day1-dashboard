@@ -14,6 +14,7 @@ import type {
   Track,
   TrackSplit,
 } from "./types";
+import { daysAgo, isoDay } from "./seed";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
 
 export const LABEL = {
@@ -298,6 +299,23 @@ export const CONTRACTS: Contract[] = [
 
 /* ─────────────────────────── Équipe ─────────────────────────── */
 
+/**
+ * Dernière activité d'un membre, exprimée en jours avant le « aujourd'hui » du
+ * produit.
+ *
+ * Écrites en dur, ces dates ne vieillissaient pas avec lui : DEMO_TODAY suit
+ * LATEST_DATE et avance à chaque relevé, les dates restaient au 2 juillet 2026.
+ * L'écart passé la semaine, « actifs sur 7 jours » de /team affichait 0 en
+ * permanence — un compteur qui ne bouge jamais, sur une équipe qu'on voit
+ * travailler juste à côté. On garde les écarts d'origine, qui racontent
+ * quelque chose (deux membres aujourd'hui, la manageuse hier, la comptable en
+ * début de semaine, l'avocat il y a une quinzaine) et on les ancre à la date
+ * du produit au lieu du calendrier.
+ */
+export function teamLastActive(daysBefore: number): string {
+  return isoDay(daysAgo(daysBefore));
+}
+
 export const TEAM: TeamMember[] = [
   {
     id: "gael",
@@ -305,7 +323,7 @@ export const TEAM: TeamMember[] = [
     role: "owner",
     artistAccess: "all",
     modules: "all",
-    lastActive: "2026-07-02",
+    lastActive: teamLastActive(0),
   },
   {
     id: "lisa",
@@ -313,7 +331,7 @@ export const TEAM: TeamMember[] = [
     role: "manager",
     artistAccess: ["nono-la-grinta", "kiko"],
     modules: "all",
-    lastActive: "2026-07-01",
+    lastActive: teamLastActive(1),
   },
   {
     id: "omar",
@@ -321,7 +339,7 @@ export const TEAM: TeamMember[] = [
     role: "marketing",
     artistAccess: "all",
     modules: ["finances", "streams", "audience", "fans"],
-    lastActive: "2026-07-02",
+    lastActive: teamLastActive(0),
   },
   {
     id: "ines",
@@ -329,7 +347,7 @@ export const TEAM: TeamMember[] = [
     role: "comptable",
     artistAccess: "all",
     modules: ["finances", "revenue", "urssaf", "rights"],
-    lastActive: "2026-06-28",
+    lastActive: teamLastActive(4),
   },
   {
     id: "marc",
@@ -337,7 +355,7 @@ export const TEAM: TeamMember[] = [
     role: "avocat",
     artistAccess: "all",
     modules: ["contracts", "splits", "audit"],
-    lastActive: "2026-06-20",
+    lastActive: teamLastActive(12),
   },
 ];
 

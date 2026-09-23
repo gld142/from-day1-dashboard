@@ -22,6 +22,7 @@ import {
 } from "./data";
 import {
   RIGHTS_ORGANISMS,
+  RELEASE_BOOST_HALF_LIFE_MONTHS,
   RIGHTS_ORG_SCALE,
   RIGHTS_PENDING_PERIOD,
   RIGHTS_PERIODS,
@@ -545,12 +546,19 @@ export function revenueForecast(
   if (months.length === 0) return out;
   const last3 = months.slice(-3).map((m) => byMonth.get(m) ?? 0);
   const baseLevel = last3.reduce((s, v) => s + v, 0) / last3.length;
-  const g = (userArtist()?.growthRate ?? 0) + growthDelta;
+  const growthRate = userArtist()?.growthRate ?? 0;
   const lastDate = new Date(`${months[months.length - 1]}-01T00:00:00Z`);
+  // Même règle que le générateur : le scénario de sortie s'éteint, le taux
+  // organique continue. Sans quoi le calculateur ne raconterait pas la même
+  // histoire selon que « Mes données » est actif ou non.
+  let compound = 1;
   for (let i = 1; i <= horizon; i++) {
     const d = new Date(lastDate);
     d.setUTCMonth(d.getUTCMonth() + i);
-    const level = baseLevel * Math.pow(1 + g, i);
+    const releaseBoost =
+      growthDelta * Math.pow(0.5, (i - 1) / RELEASE_BOOST_HALF_LIFE_MONTHS);
+    compound *= 1 + growthRate + releaseBoost;
+    const level = baseLevel * compound;
     const spread = 0.15 + i * 0.02; // plus prudent : historique court
     out.push({
       month: isoMonth(d),

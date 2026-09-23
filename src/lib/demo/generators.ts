@@ -108,19 +108,55 @@ function sourceProfile(artistId: string): Record<RevenueSource, number> {
   };
 }
 
+/**
+ * Rythme de versement des sources encaissées par à-coups.
+ *
+ * Chaque source arrive par vagues (trimestre SACEM, semestre droits voisins,
+ * saison live) et la moyenne annuelle de chaque ligne est ce qui donne son
+ * poids réel à la source. On sépare donc les deux : `peak`/`off` portent le
+ * RYTHME, et leur moyenne sur douze mois est tenue à la valeur d'origine du
+ * générateur, pour qu'aucun total annuel ne bouge en changeant la forme.
+ *
+ * Les amplitudes d'origine (SACEM ×3,1 contre ×0,12) faisaient du mois de
+ * versement 40 % du revenu du mois et du mois suivant un trou : sur un
+ * graphique mensuel la ligne ne racontait plus l'activité de l'artiste mais le
+ * calendrier des répartiteurs. On garde les vagues — elles sont vraies — en
+ * divisant l'écart crête/creux par ~5, ce qui laisse la saisonnalité lisible
+ * sans qu'elle écrase la tendance.
+ */
+const PAYOUT_RHYTHM = {
+  /** SACEM : répartition trimestrielle (janv/avr/juil/oct). Moyenne = 1,1133. */
+  sacem: { peak: 2.0, off: 0.67 },
+  /** Droits voisins (ADAMI/SPEDIDAM) : deux versements, juin et décembre. Moyenne = 0,9833. */
+  neighboring: { peak: 3.4, off: 0.5 },
+  /** SPRE : même calendrier que les droits voisins. Moyenne = 0,7417. */
+  spre: { peak: 2.6, off: 0.37 },
+  /** Live : saison mai→sept, épaules mars et novembre, creux l'hiver. Moyenne = 1,0792. */
+  live: { season: 1.6, shoulder: 1.0, off: 0.59 },
+} as const;
+
 /** Revenus mensuels par source sur `months` mois (défaut 24).
  *  `streamingOverride` (mois → € brut master) remplace le calcul synthétique — artistes réels. */
 export function revenueSeries(artistId: string, months = 24, streamingOverride?: Map<string, number>): RevenuePoint[] {
   const out: RevenuePoint[] = [];
+  const a = getArtist(artistId);
   const profile = sourceProfile(artistId);
   const rand = rngFor(`${artistId}:revenue`);
+  // Un placement sync se négocie à la notoriété : pub nationale pour un artiste
+  // à plusieurs millions d'auditeurs, spot local ou court-métrage pour un
+  // émergent. Sans cette échelle, le montant est un forfait 2–16 k € qui vaut
+  // deux ans de revenus pour un artiste à 24 k auditeurs et fabrique un pic
+  // isolé de ×158 sur sa courbe mensuelle. Au-delà du million d'auditeurs le
+  // tarif est celui du marché, pas celui de l'audience : le facteur plafonne
+  // à 1 et les gros artistes gardent exactement leurs montants.
+  const syncScale = Math.min(1, a.monthlyListeners / 1_000_000);
 
   for (let i = months - 1; i >= 0; i--) {
     const m = monthsAgo(i);
     const month = isoMonth(m);
-    const a = getArtist(artistId);
-    const monthlyStreams = (getArtist(artistId).monthlyListeners * 2.6) *
-      Math.pow(1 + a.growthRate, -(i - 0)) ;
+    // L'historique se lit à rebours : le mois i est i mois avant aujourd'hui,
+    // donc i mois de croissance composée EN MOINS que le niveau d'aujourd'hui.
+    const monthlyStreams = a.monthlyListeners * 2.6 * Math.pow(1 + a.growthRate, -i);
     // `rand()` est consommé dans les deux cas : le bruit du reste de la série ne bouge pas.
     const synthetic = monthlyStreams * STREAM_RATE * (0.92 + rand() * 0.16);
     const streaming = streamingOverride?.get(month) ?? synthetic;
@@ -129,7 +165,7 @@ export function revenueSeries(artistId: string, months = 24, streamingOverride?:
 
     // SACEM : versements trimestriels (janv/avr/juil/oct), sinon résiduel.
     const mm = m.getUTCMonth();
-    const sacemQuarter = mm % 3 === 0 ? 3.1 : 0.12;
+    const sacemQuarter = mm % 3 === 0 ? PAYOUT_RHYTHM.sacem.peak : PAYOUT_RHYTHM.sacem.off;
     out.push({
       month,
       source: "sacem",
@@ -138,7 +174,8 @@ export function revenueSeries(artistId: string, months = 24, streamingOverride?:
     });
 
     // Droits voisins : 2 versements/an (juin, décembre).
-    const neighboring = mm === 5 || mm === 11 ? 5.6 : 0.06;
+    const semester = mm === 5 || mm === 11;
+    const neighboring = semester ? PAYOUT_RHYTHM.neighboring.peak : PAYOUT_RHYTHM.neighboring.off;
     out.push({
       month,
       source: "neighboring",
@@ -149,7 +186,9 @@ export function revenueSeries(artistId: string, months = 24, streamingOverride?:
     out.push({
       month,
       source: "spre",
-      amount: Math.round(streaming * profile.spre * (mm === 5 || mm === 11 ? 4.2 : 0.05)),
+      amount: Math.round(
+        streaming * profile.spre * (semester ? PAYOUT_RHYTHM.spre.peak : PAYOUT_RHYTHM.spre.off),
+      ),
       artistId,
     });
 
@@ -158,12 +197,17 @@ export function revenueSeries(artistId: string, months = 24, streamingOverride?:
     out.push({
       month,
       source: "sync",
-      amount: syncHit ? Math.round(2000 + rand() * 14000) : 0,
+      amount: syncHit ? Math.round((2000 + rand() * 14000) * syncScale) : 0,
       artistId,
     });
 
     // Live : saison été + tournées.
-    const liveSeason = mm >= 4 && mm <= 8 ? 1.8 : mm === 10 || mm === 2 ? 1.1 : 0.35;
+    const liveSeason =
+      mm >= 4 && mm <= 8
+        ? PAYOUT_RHYTHM.live.season
+        : mm === 10 || mm === 2
+          ? PAYOUT_RHYTHM.live.shoulder
+          : PAYOUT_RHYTHM.live.off;
     out.push({
       month,
       source: "live",
@@ -268,11 +312,23 @@ export function expensesFor(artistId: string, months = 24): Expense[] {
   const a = getArtist(artistId);
   const stageScale =
     a.careerStage === "established" ? 2.2 : a.careerStage === "developing" ? 1 : 0.55;
-  // Un artiste à 24 k auditeurs ne dépense pas comme un artiste à 6 M : sous 300 k auditeurs,
-  // l'échelle décroît linéairement.
   // Au-dessus de 300 k auditeurs, les budgets (clips, marketing, tournée) grossissent
   // avec l'artiste ; plafond ×25 pour garder des montants plausibles sur une major.
-  const sizeFactor = Math.min(25, a.monthlyListeners / 300_000);
+  //
+  // En dessous, une décroissance linéaire ne suffit pas : elle suppose que
+  // l'émergent commande les mêmes postes en miniature. Or un artiste à 24 k
+  // auditeurs ne tourne pas un clip à 14 k € divisé par douze — il ne le tourne
+  // pas du tout, il n'a pas d'attaché de presse et sa tournée tient dans une
+  // voiture. Le générateur ne peut pas sauter ces postes (le tirage du RNG est
+  // séquentiel : changer le nombre de tirages déplacerait TOUTES les données de
+  // démo), alors on reproduit l'effet sur le montant, avec un exposant > 1.
+  // 1,4 est calibré sur l'émergent du roster : il ramène sa marge 12 mois de
+  // −217 % à une quinzaine de points négatifs, ce qu'on attend d'un artiste qui
+  // réinvestit un peu plus qu'il n'encaisse. L'exposant ne touche que les
+  // artistes sous le seuil — à 300 k il vaut exactement 1, donc la courbe reste
+  // continue et les artistes plus gros gardent leurs montants au centime près.
+  const sizeRatio = a.monthlyListeners / 300_000;
+  const sizeFactor = sizeRatio >= 1 ? Math.min(25, sizeRatio) : Math.pow(sizeRatio, 1.4);
   const scale = stageScale * sizeFactor;
   const projects = PROJECTS.filter((p) => p.artistId === artistId);
   const out: Expense[] = [];
@@ -548,9 +604,30 @@ export type ForecastPoint = {
 };
 
 /**
+ * Demi-vie, en mois, de l'effet de croissance d'une sortie (scénario du
+ * calculateur + curseur d'ajustement).
+ *
+ * Une sortie ne change pas le régime de croissance d'un artiste pour toujours :
+ * elle fait un pic qui retombe. Ajouté tel quel au taux mensuel composé, un
+ * scénario « album » (+18 pts) multipliait la projection à 24 mois par 51 —
+ * 342 M € pour un artiste qui en fait 12 par an. Le delta décroît donc
+ * géométriquement, et lui seul : le taux organique de l'artiste, lui, continue.
+ *
+ * 4 mois : le pic de streams d'une sortie est déjà modélisé plus haut
+ * (`releaseBoost`) par une exponentielle de constante 38 jours, soit une
+ * demi-vie de ~26 jours. L'effet sur la CROISSANCE dure plus longtemps que le
+ * pic lui-même — ajouts en playlist, traction sur le back-catalogue, annonce de
+ * tournée — sans être permanent : une demi-vie de 4 mois couvre le cycle de
+ * promo, puis l'artiste retrouve son rythme (le boost est divisé par 8 au bout
+ * d'un an). Le niveau acquis, lui, reste : c'est bien ce qu'une sortie laisse.
+ */
+export const RELEASE_BOOST_HALF_LIFE_MONTHS = 4;
+
+/**
  * Projection 12 mois : tendance (croissance composée artiste) ×
  * saisonnalité mensuelle apprise sur l'historique + bande de confiance.
- * `scenario` module la croissance (ex : +0.25 si sortie d'album prévue).
+ * `growthDelta` module la croissance (ex : +0.18 si sortie d'album prévue) et
+ * s'éteint avec `RELEASE_BOOST_HALF_LIFE_MONTHS`.
  * `streamingOverride` : même sens que dans `revenueSeries` — l'historique projeté
  * doit être celui que le dashboard affiche (artistes réels).
  */
@@ -590,14 +667,21 @@ export function revenueForecast(
 
   const last3 = months.slice(-3).map((m) => byMonth.get(m) ?? 0);
   const baseLevel = last3.reduce((s, v) => s + v, 0) / 3;
-  const g = a.growthRate + growthDelta;
 
   const lastDate = new Date(`${months[months.length - 1]}-01T00:00:00Z`);
+  // La croissance se compose mois par mois au lieu d'une puissance fermée :
+  // le taux n'est plus constant, puisque la part « sortie » s'éteint.
+  let compound = 1;
   for (let i = 1; i <= horizon; i++) {
     const d = new Date(lastDate);
     d.setUTCMonth(d.getUTCMonth() + i);
     const idx = d.getUTCMonth();
-    const level = baseLevel * Math.pow(1 + g, i) * seasonal[idx];
+    // Plein effet le premier mois projeté — celui de la sortie — puis moitié
+    // moins tous les RELEASE_BOOST_HALF_LIFE_MONTHS.
+    const releaseBoost =
+      growthDelta * Math.pow(0.5, (i - 1) / RELEASE_BOOST_HALF_LIFE_MONTHS);
+    compound *= 1 + a.growthRate + releaseBoost;
+    const level = baseLevel * compound * seasonal[idx];
     const spread = 0.12 + i * 0.018; // l'incertitude grandit avec l'horizon
     out.push({
       month: isoMonth(d),
