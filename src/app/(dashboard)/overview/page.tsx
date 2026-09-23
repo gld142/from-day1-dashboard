@@ -26,6 +26,7 @@ import {
   SheetHeading,
 } from "@/components/dashboard/sheet";
 import { Button } from "@/components/ui/button";
+import { AudienceGlyph } from "@/components/dashboard/audience-glyph";
 import { StreamGlyph } from "@/components/dashboard/stream-glyph";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { DspDonut } from "@/components/modules/pilotage/dsp-donut";
@@ -296,7 +297,7 @@ export default function OverviewPage() {
             <SheetHeading action={<Link href="/revenue">{tc("blocks.detail")}</Link>}>
               {t("hero.year")}
             </SheetHeading>
-            <div className="relative">
+            <div className="group relative">
               <CenteredValue
                 value={eur(v.revenue12m)}
                 caption={
@@ -373,8 +374,9 @@ export default function OverviewPage() {
               <SheetHeading action={<Link href="/audience">{tc("blocks.detail")}</Link>}>
                 {tc("families.audience")}
               </SheetHeading>
-              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-                {fmtCompact(locale, v.artist.monthlyListeners)}
+              <p className="flex items-center gap-2.5 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                <AudienceGlyph size="md" className="opacity-75" />
+                <span>{fmtCompact(locale, v.artist.monthlyListeners)}</span>
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("kpis.listeners")}{" "}
@@ -443,36 +445,42 @@ export default function OverviewPage() {
               [
                 {
                   key: "revenue",
+                  family: "money",
                   href: "/revenue",
                   label: t("doors.revenue"),
                   value: eur(v.revenue12m),
                 },
                 {
                   key: "streams",
+                  family: "streams",
                   href: "/streams",
                   label: t("doors.streams"),
                   value: fmtCompact(locale, v.streams30d),
                 },
                 v.superfans && {
                   key: "fans",
+                  family: "audience",
                   href: "/fans",
                   label: t("doors.fans"),
                   value: fmtCompact(locale, v.superfans.count),
                 },
                 {
                   key: "index",
+                  family: "audience",
                   href: "/day1-index",
                   label: t("doors.index"),
                   value: `${v.artist.day1Index} / 100`,
                 },
                 {
                   key: "catalog",
+                  family: "catalog",
                   href: "/catalog",
                   label: t("doors.catalog"),
                   value: t("doors.catalogValue", { count: v.trackCount }),
                 },
                 {
                   key: "tour",
+                  family: "catalog",
                   href: "/tour",
                   label: t("doors.tour"),
                   value: t("doors.tourValue", { count: v.shows }),
@@ -503,7 +511,7 @@ export default function OverviewPage() {
             <SheetHeading action={<Link href="/revenue">{tc("blocks.detail")}</Link>}>
               {t("hero.yearLabel")}
             </SheetHeading>
-            <div className="relative">
+            <div className="group relative">
               <CenteredValue
                 value={eur(l.revenue12m)}
                 caption={
@@ -589,8 +597,9 @@ export default function OverviewPage() {
               <SheetHeading action={<Link href="/audience">{tc("blocks.detail")}</Link>}>
                 {tc("families.audienceRoster")}
               </SheetHeading>
-              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-                {fmtCompact(locale, l.listeners)}
+              <p className="flex items-center gap-2.5 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                <AudienceGlyph size="md" className="opacity-75" />
+                <span>{fmtCompact(locale, l.listeners)}</span>
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("kpis.listenersRoster")}{" "}
@@ -632,36 +641,42 @@ export default function OverviewPage() {
             doors={[
               {
                 key: "roster",
+                family: "audience",
                 href: "/roster",
                 label: t("doors.roster"),
                 value: ARTISTS.length,
               },
               {
                 key: "revenue",
+                family: "money",
                 href: "/revenue",
                 label: t("doors.revenue"),
                 value: eur(l.revenue12m),
               },
               {
                 key: "valuation",
+                family: "catalog",
                 href: "/valuation",
                 label: t("doors.valuation"),
                 value: eur(l.valuation),
               },
               {
                 key: "market",
+                family: "trends",
                 href: "/market",
                 label: t("doors.market"),
                 value: t("doors.marketValue", { share: pct(l.rosterShare, 1) }),
               },
               {
                 key: "arwatch",
+                family: "audience",
                 href: "/ar-watch",
                 label: t("doors.arwatch"),
                 value: t("doors.arwatchValue", { count: EMERGING.length }),
               },
               {
                 key: "finances",
+                family: "money",
                 href: "/finances",
                 label: t("doors.finances"),
                 value: eur(l.totals.net12m),

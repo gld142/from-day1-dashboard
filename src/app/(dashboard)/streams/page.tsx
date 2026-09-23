@@ -172,7 +172,7 @@ export default function StreamsPage() {
               </TabsList>
             </Tabs>
           </div>
-          <div className="relative">
+          <div className="group relative">
             <CenteredValue
               glyph={<StreamGlyph size="lg" className="opacity-80" />}
               value={fmtCompact(locale, total)}
@@ -299,36 +299,42 @@ export default function StreamsPage() {
           doors={[
             {
               key: "revenue",
+              family: "money",
               href: "/revenue",
               label: t("doors.revenue"),
               value: t("doors.revenueValue"),
             },
             {
               key: "audience",
+              family: "audience",
               href: "/audience",
               label: t("doors.audience"),
               value: t("doors.audienceValue", { count: countries.length }),
             },
             {
               key: "market",
+              family: "trends",
               href: "/market",
               label: t("doors.market"),
               value: t("doors.marketValue"),
             },
             {
               key: "algo",
+              family: "trends",
               href: "/algo-position",
               label: t("doors.algo"),
               value: t("doors.algoValue"),
             },
             {
               key: "catalog",
+              family: "catalog",
               href: "/catalog",
               label: t("doors.catalog"),
               value: t("doors.catalogValue", { count: trackRows.length }),
             },
             {
               key: "audit",
+              family: "money",
               href: "/audit",
               label: t("doors.audit"),
               value: t("doors.auditValue"),

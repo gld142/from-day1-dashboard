@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { RankMedal } from "@/components/dashboard/rank-medal";
+import { AudienceGlyph } from "@/components/dashboard/audience-glyph";
 import { StreamGlyph } from "@/components/dashboard/stream-glyph";
 import { PageHeader } from "@/components/dashboard/page-header";
 import {
@@ -572,8 +573,9 @@ export default function PulsePage() {
 
             <Sheet family="audience">
               <SheetHeading>{t("families.audience")}</SheetHeading>
-              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-                {fmtCompact(locale, v.artist.monthlyListeners)}
+              <p className="flex items-center gap-2.5 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                <AudienceGlyph size="md" className="opacity-75" />
+                <span>{fmtCompact(locale, v.artist.monthlyListeners)}</span>
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("audience.listeners")}{" "}
@@ -774,6 +776,7 @@ export default function PulsePage() {
               [
                 v.leads.gap > 0 && {
                   key: "audit",
+                  family: "money",
                   href: "/audit",
                   label: t("collect.audit"),
                   amount: eur(v.leads.gap),
@@ -787,6 +790,7 @@ export default function PulsePage() {
                 },
                 v.leads.rightsPending > 0 && {
                   key: "rights",
+                  family: "money",
                   href: "/rights",
                   label: t("collect.rights"),
                   amount: eur(v.leads.rightsPending),
@@ -801,6 +805,7 @@ export default function PulsePage() {
               [
                 v.doors.marketRow && {
                   key: "market",
+                  family: "trends",
                   href: "/market",
                   label: t("doors.market"),
                   value: t("doors.marketValue", {
@@ -810,12 +815,14 @@ export default function PulsePage() {
                 },
                 {
                   key: "splits",
+                  family: "catalog",
                   href: "/splits",
                   label: t("doors.splits"),
                   value: t("doors.splitsValue", { count: v.doors.splitsPending }),
                 },
                 {
                   key: "contracts",
+                  family: "money",
                   href: "/contracts",
                   label: t("doors.contracts"),
                   value: t("doors.contractsValue", { count: v.doors.alerts.length }),
@@ -823,6 +830,7 @@ export default function PulsePage() {
                 },
                 {
                   key: "index",
+                  family: "audience",
                   href: "/day1-index",
                   label: t("doors.index"),
                   value: `${v.artist.day1Index} / 100`,
@@ -835,6 +843,7 @@ export default function PulsePage() {
                 },
                 {
                   key: "urssaf",
+                  family: "money",
                   href: "/urssaf",
                   label: t("doors.urssaf"),
                   value: t("doors.urssafValue", { days: v.doors.urssafDue }),
@@ -1048,11 +1057,11 @@ export default function PulsePage() {
 
             <Sheet family="audience">
               <SheetHeading>{t("families.audienceLabel")}</SheetHeading>
-              <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-                {fmtCompact(
-                  locale,
-                  ARTISTS.reduce((s, a) => s + a.monthlyListeners, 0),
-                )}
+              <p className="flex items-center gap-2.5 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
+                <AudienceGlyph size="md" className="opacity-75" />
+                <span>
+                  {fmtCompact(locale, ARTISTS.reduce((s, a) => s + a.monthlyListeners, 0))}
+                </span>
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("audience.listenersLabel")}{" "}
@@ -1224,6 +1233,7 @@ export default function PulsePage() {
               [
                 l.leads.gap > 0 && {
                   key: "audit",
+                  family: "money",
                   href: "/audit",
                   label: t("collect.audit"),
                   amount: eur(l.leads.gap),
@@ -1237,6 +1247,7 @@ export default function PulsePage() {
                 },
                 l.leads.rightsPending > 0 && {
                   key: "rights",
+                  family: "money",
                   href: "/rights",
                   label: t("collect.rights"),
                   amount: eur(l.leads.rightsPending),
@@ -1250,24 +1261,28 @@ export default function PulsePage() {
             doors={[
               {
                 key: "market",
+                family: "trends",
                 href: "/market",
                 label: t("doors.marketLabel"),
                 value: t("doors.marketValueLabel", { share: pct(l.doors.rosterShare) }),
               },
               {
                 key: "valuation",
+                family: "catalog",
                 href: "/valuation",
                 label: t("doors.valuation"),
                 value: eur(l.valuation),
               },
               {
                 key: "splits",
+                family: "catalog",
                 href: "/splits",
                 label: t("doors.splits"),
                 value: t("doors.splitsValue", { count: l.doors.splitsPending }),
               },
               {
                 key: "contracts",
+                family: "money",
                 href: "/contracts",
                 label: t("doors.contracts"),
                 value: t("doors.contractsValue", { count: l.doors.alertCount }),
@@ -1275,12 +1290,14 @@ export default function PulsePage() {
               },
               {
                 key: "rights",
+                family: "money",
                 href: "/rights",
                 label: t("doors.rights"),
                 value: t("doors.rightsValue", { amount: eur(l.leads.rightsPending) }),
               },
               {
                 key: "arwatch",
+                family: "audience",
                 href: "/ar-watch",
                 label: t("doors.arwatch"),
                 value: t("doors.arwatchValue", { count: EMERGING.length }),

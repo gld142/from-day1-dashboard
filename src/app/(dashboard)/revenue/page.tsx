@@ -278,7 +278,7 @@ export default function RevenuePage() {
           <SheetHeading action={`${t("chart.subtitle")} · ${t("chart.window12")}`}>
             {t("chart.title")}
           </SheetHeading>
-          <div className="relative">
+          <div className="group relative">
             <CenteredValue
               value={eur(data.total12)}
               caption={
@@ -606,36 +606,42 @@ export default function RevenuePage() {
           doors={[
             {
               key: "finances",
+              family: "money",
               href: "/finances",
               label: t("doors.finances"),
               value: t("doors.financesValue"),
             },
             {
               key: "rights",
+              family: "money",
               href: "/rights",
               label: t("doors.rights"),
               value: t("doors.rightsValue"),
             },
             {
               key: "audit",
+              family: "money",
               href: "/audit",
               label: t("doors.audit"),
               value: t("doors.auditValue"),
             },
             {
               key: "contracts",
+              family: "money",
               href: "/contracts",
               label: t("doors.contracts"),
               value: t("doors.contractsValue"),
             },
             {
               key: "urssaf",
+              family: "money",
               href: "/urssaf",
               label: t("doors.urssaf"),
               value: t("doors.urssafValue"),
             },
             {
               key: "calculator",
+              family: "money",
               href: "/calculator",
               label: t("doors.calculator"),
               value: t("doors.calculatorValue"),

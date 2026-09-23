@@ -81,9 +81,10 @@ export function SheetHeading({
  * de la feuille — le gabarit H. Sous 640 px il repasse en titre au-dessus :
  * au centre d'un écran étroit, il recouvrirait toute la courbe.
  *
- * S'utilise autour d'un graphique : le parent porte `relative`, ce bloc se
- * place en absolu par-dessus, sans capter le pointeur (le tooltip du graphique
- * continue de fonctionner).
+ * S'utilise autour d'un graphique : le parent porte `relative group`, ce bloc
+ * se place en absolu par-dessus sans capter le pointeur (le tooltip du
+ * graphique continue de fonctionner) — et **s'efface au survol**, pour rendre
+ * visible la portion de courbe et l'infobulle qu'il recouvrait.
  */
 export function CenteredValue({
   value,
@@ -100,7 +101,7 @@ export function CenteredValue({
   return (
     <div
       className={cn(
-        "pointer-events-none z-10 mb-1 text-center sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2",
+        "pointer-events-none z-10 mb-1 text-center transition-opacity duration-200 sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:group-hover:opacity-10",
         className,
       )}
     >
@@ -152,7 +153,7 @@ export function AffiliatedPoints({
           </b>
           <span className="sheet-ink mt-0.5 block text-xs">{p.label}</span>
           {p.note ? (
-            <small className="text-muted-foreground mt-0.5 block text-[11px]">
+            <small className="sheet-ink mt-0.5 block text-[11px] font-medium">
               {p.note}
             </small>
           ) : null}

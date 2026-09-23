@@ -158,11 +158,24 @@ export function MoneyToCollect({
   );
 }
 
+/** La famille d'information d'une porte — sa couleur, comme pour les feuilles. */
+export type DoorFamily = "streams" | "money" | "audience" | "trends" | "catalog";
+
+const DOOR_INK: Record<DoorFamily, string> = {
+  streams: "text-[var(--ink-streams)]",
+  money: "text-[var(--ink-money)]",
+  audience: "text-[var(--ink-audience)]",
+  trends: "text-[var(--ink-trends)]",
+  catalog: "text-[var(--ink-catalog)]",
+};
+
 export type Door = {
   key: string;
   href: string;
   label: ReactNode;
   value: ReactNode;
+  /** Teinte le libellé à la couleur de sa famille. */
+  family?: DoorFamily;
   /** Met la valeur en rouge : une échéance, un écart, une alerte. */
   urgent?: boolean;
 };
@@ -187,7 +200,14 @@ export function Doors({
             href={d.href}
             className="group border-border/60 flex items-baseline justify-between gap-3 border-t py-2 text-[12.5px]"
           >
-            <span className="text-foreground/80">{d.label}</span>
+            <span
+              className={cn(
+                "font-medium",
+                d.family ? DOOR_INK[d.family] : "text-foreground/80",
+              )}
+            >
+              {d.label}
+            </span>
             <b
               className={cn(
                 "font-semibold whitespace-nowrap tabular-nums group-hover:underline",

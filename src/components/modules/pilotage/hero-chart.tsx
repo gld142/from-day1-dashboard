@@ -123,7 +123,7 @@ export function HeroChart({
         </div>
       </div>
 
-      <div className="relative mt-1">
+      <div className="group relative mt-1">
         {/* Au centre dès qu'il y a la place ; en titre sur mobile, sinon il
             recouvrirait toute la courbe. */}
         <CenteredValue value={value} caption={caption} glyph={glyph} />
