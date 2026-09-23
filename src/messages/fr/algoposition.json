@@ -7,7 +7,8 @@
     "healthScore": "Score de santé algo",
     "of100": "sur 100",
     "releaseRadar": "Streams Release Radar · 28 j",
-    "radio": "Streams Radio & Autoplay · 28 j"
+    "radio": "Streams Radio & Autoplay · 28 j",
+    "scoreOf": "{score} / 100"
   },
   "sources": {
     "title": "D'où vient ta part algorithmique",
@@ -75,6 +76,30 @@
     "score": "Score",
     "share": "Part algo",
     "rr": "Release Radar 28 j",
-    "trend": "Tendance"
+    "trend": "Tendance",
+    "ranking": "Classement du roster"
+  },
+  "doors": {
+    "market": "Marché",
+    "marketValue": "ta part du Top 200 FR",
+    "streams": "Streams",
+    "streamsValue": "le volume derrière la part",
+    "audience": "Audience",
+    "audienceValue": "qui l'algorithme t'envoie",
+    "catalog": "Catalogue",
+    "catalogValue": "les titres qui portent",
+    "sync": "Sync & Licensing",
+    "syncValue": "placer tes titres",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "tester un inédit",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "artistes suivis"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenus",
+    "fans": "Fans CRM",
+    "index": "Day 1 Index",
+    "roster": "Roster"
   }
 }

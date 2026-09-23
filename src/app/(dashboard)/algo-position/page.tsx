@@ -8,11 +8,7 @@
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
-  ArrowRight,
-  BookmarkCheck,
-  CircleCheck,
   Compass,
-  Eye,
   Play,
   Radar,
   Radio,
@@ -20,7 +16,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
-import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
+import { RankMedal } from "@/components/dashboard/rank-medal";
+import {
+  AffiliatedPoints,
+  CenteredValue,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, NightStrip, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import {
   PERCEPTION_THRESHOLDS,
@@ -34,23 +37,18 @@ import {
 } from "@/components/modules/algo/algo-data";
 import {
   AlgoMixChart,
-  MIX_COLORS,
   type MixKey,
 } from "@/components/modules/algo/algo-mix-chart";
-import {
-  InsightCard,
-  type InsightTone,
-} from "@/components/modules/pilotage/insight-card";
 import { Progress } from "@/components/ui/progress";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import {
   ARTISTS,
   PROJECTS,
-  dailyTotals,
   getArtist,
   streamsDelta,
 } from "@/lib/demo/api";
 import { hashString } from "@/lib/demo/seed";
-import { fmtCompact } from "@/lib/format";
+import { fmtCompact, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +68,6 @@ const SOURCE_COLORS: Record<AlgoSourceId, string> = {
   dailyMix: "var(--chart-5)",
 };
 
-const MIX_KEYS: MixKey[] = ["algorithmic", "editorial", "organic"];
 
 function latestRelease(artistId: string) {
   return PROJECTS.filter((p) => p.artistId === artistId).sort((a, b) =>
@@ -80,6 +77,7 @@ function latestRelease(artistId: string) {
 
 export default function AlgoPositionPage() {
   const t = useTranslations("algoposition");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { artistId, isLabel, focusedArtistId, setFocusedArtistId } = useRole();
   const aggregated = isLabel && !focusedArtistId;
@@ -93,7 +91,6 @@ export default function AlgoPositionPage() {
   const score = algoHealthScore(artistId);
   const breakdown = useMemo(() => algoSourceBreakdown(artistId), [artistId]);
   const mix = useMemo(() => algoMixSeries(artistId, 90), [artistId]);
-  const daily28 = useMemo(() => dailyTotals(artistId, 28), [artistId]);
   const perception = algoPerception(artistId);
 
   const rr = breakdown.find((b) => b.id === "releaseRadar")!;
@@ -122,24 +119,14 @@ export default function AlgoPositionPage() {
   const saveOk = perception.saveRate >= PERCEPTION_THRESHOLDS.saveRate;
   const completionOk = perception.completion >= PERCEPTION_THRESHOLDS.completion;
 
-  const signals: Array<{
-    key: string;
-    icon: LucideIcon;
-    tone: InsightTone;
-    kicker: string;
-    body: string;
-  }> = [
+  const signals: Array<{ key: string; kicker: string; body: string }> = [
     {
       key: "rr",
-      icon: Radar,
-      tone: "success",
       kicker: t("signals.rrKicker"),
       body: t("signals.rrBody", { title: release?.title ?? "—", pct: dec(rrBoost) }),
     },
     {
       key: "save",
-      icon: BookmarkCheck,
-      tone: saveOk ? "success" : "warning",
       kicker: t("signals.saveKicker"),
       body: saveOk
         ? t("signals.saveAbove", {
@@ -153,8 +140,6 @@ export default function AlgoPositionPage() {
     },
     {
       key: "dw",
-      icon: Compass,
-      tone: dwDiff >= 0 ? "brand" : "muted",
       kicker: t("signals.dwKicker"),
       body:
         dwDiff >= 0
@@ -163,8 +148,6 @@ export default function AlgoPositionPage() {
     },
     {
       key: "completion",
-      icon: CircleCheck,
-      tone: completionOk ? "success" : "warning",
       kicker: t("signals.completionKicker"),
       body: completionOk
         ? t("signals.completionGood", { rate: dec(perception.completion) })
@@ -203,6 +186,10 @@ export default function AlgoPositionPage() {
     organic: t("mix.organic"),
   };
 
+  /** La source qui pèse le plus, et l'échelle des barres du bloc sources. */
+  const topSource = breakdown.reduce((a, b) => (b.sharePct > a.sharePct ? b : a), breakdown[0]);
+  const maxSourceShare = Math.max(1, ...breakdown.map((b) => b.sharePct));
+
   const perceptionRows = [
     {
       key: "saveRate" as const,
@@ -225,307 +212,347 @@ export default function AlgoPositionPage() {
   ];
 
   return (
-    <div>
-      <PageHeader
-        title={t("title")}
-        subtitle={aggregated ? t("subtitleLabel") : t("subtitle")}
-      >
+    <div className="rise-in">
+      <PageHeader title={t("title")} subtitle={aggregated ? t("subtitleLabel") : t("subtitle")}>
         {!aggregated && isLabel && <ArtistBadge artist={artist} size="md" />}
       </PageHeader>
 
       {aggregated ? (
-        /* ─── Vue roster (label) ─── */
-        <>
-          <div className="rise-in grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <KpiCard
-              id="algo-roster-share"
-              label={t("roster.avgShare")}
-              value={Math.round(rosterAvgShare * 10) / 10}
-              format="pct"
-            />
-            <KpiCard
-              id="algo-roster-score"
-              label={t("roster.avgScore")}
-              value={rosterAvgScore}
-              format="int"
-              deltaLabel={t("kpis.of100")}
-            />
-            <KpiCard
-              id="algo-roster-rr"
-              label={t("kpis.releaseRadar")}
-              value={rosterRows.reduce((s, r) => s + r.rr28, 0)}
-            />
-            <KpiCard
-              id="algo-roster-top"
-              label={t("roster.bestScore")}
-              value={rosterRows[0]?.score ?? 0}
-              format="int"
-              deltaLabel={rosterRows[0]?.artist.name}
-            />
-          </div>
-
-          <section className="rise-in mt-4 rounded-xl border bg-card p-5">
-            <h2 className="mb-1 font-heading text-base font-semibold">
-              {t("roster.title")}
-            </h2>
-            <p className="mb-4 text-xs text-muted-foreground">
-              {t("roster.description")}
+        /* ─── Vue roster ─── */
+        <div className="space-y-3">
+          <Sheet family="trends">
+            <SheetHeading action={t("roster.description")}>{t("roster.title")}</SheetHeading>
+            <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+              {dec(rosterAvgShare)} %
             </p>
-            <div className="flex flex-col">
-              {rosterRows.map((r) => (
+            <p className="sheet-ink mt-1.5 text-[13px]">
+              {t("roster.avgShare")} <ProvenanceBadge provenance="simulated" className="align-middle" />
+            </p>
+            <AffiliatedPoints
+              points={[
+                {
+                  key: "score",
+                  value: t("kpis.scoreOf", { score: rosterAvgScore }),
+                  label: t("roster.avgScore"),
+                },
+                ...(rosterRows[0]
+                  ? [
+                      {
+                        key: "best",
+                        value: rosterRows[0].artist.name,
+                        label: t("roster.bestScore"),
+                        note: t("kpis.scoreOf", { score: rosterRows[0].score }),
+                      },
+                    ]
+                  : []),
+                {
+                  key: "rr",
+                  value: fmtCompact(locale, rosterRows.reduce((s, r) => s + r.rr28, 0)),
+                  label: t("kpis.releaseRadar"),
+                },
+                {
+                  key: "artists",
+                  value: rosterRows.length,
+                  label: t("roster.artist"),
+                },
+              ]}
+            />
+          </Sheet>
+
+          <Sheet family="trends">
+            <SheetHeading action={t("roster.trend")}>{t("roster.ranking")}</SheetHeading>
+            <div className="mt-1">
+              {rosterRows.map((r, i) => (
                 <button
                   key={r.artist.id}
+                  type="button"
                   onClick={() => setFocusedArtistId(r.artist.id)}
-                  className="hairline-b group flex items-center gap-3 py-3 text-left transition-colors last:shadow-none hover:bg-surface-2"
+                  className={cn(
+                    "grid w-full grid-cols-[1fr_auto_auto_auto] items-baseline gap-4 py-2 text-left text-[12.5px]",
+                    i === 0 ? "sheet-rule" : "border-border/30 border-t",
+                  )}
                 >
-                  <ArtistBadge
-                    artist={r.artist}
-                    size="md"
-                    meta={r.artist.genre}
-                    className="w-44 shrink-0"
-                  />
-                  <span className="num w-9 text-right text-sm font-semibold">
-                    {r.score}
+                  <span className="flex min-w-0 items-center gap-2 font-medium">
+                    <RankMedal rank={i + 1} size="sm" />
+                    <span className="truncate">{r.artist.name}</span>
                   </span>
-                  <div className="hidden min-w-0 flex-1 sm:block">
-                    <div className="h-1.5 overflow-hidden rounded-full bg-surface-2">
-                      <div
-                        className={cn(
-                          "h-full rounded-full transition-all",
-                          r.score >= 70
-                            ? "bg-success"
-                            : r.score >= 50
-                              ? "bg-brand"
-                              : "bg-warning",
-                        )}
-                        style={{ width: `${r.score}%` }}
-                      />
-                    </div>
-                  </div>
-                  <span className="num w-14 text-right text-xs text-muted-foreground">
+                  <span className="sheet-ink w-20 text-right tabular-nums">
                     {dec(r.share)} %
                   </span>
-                  <span className="num hidden w-20 text-right text-xs text-muted-foreground md:block">
+                  <span className="sheet-ink w-20 text-right tabular-nums">
                     {fmtCompact(locale, r.rr28)}
                   </span>
-                  <DeltaChip value={r.trend} />
-                  <ArrowRight
-                    className="size-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-                    aria-hidden
-                  />
+                  <b className="w-16 text-right font-semibold tabular-nums">
+                    {t("kpis.scoreOf", { score: r.score })}
+                  </b>
                 </button>
               ))}
             </div>
-            <div className="mt-3 flex justify-between text-[11px] text-muted-foreground">
-              <span>{t("roster.artist")}</span>
-              <span className="flex gap-6">
-                <span>{t("roster.score")}</span>
-                <span>{t("roster.share")}</span>
-                <span className="hidden md:inline">{t("roster.rr")}</span>
-                <span>{t("roster.trend")}</span>
-              </span>
-            </div>
-          </section>
-        </>
+            <p className="sheet-ink mt-2 text-[11px]">
+              {t("roster.share")} · {t("roster.rr")} · {t("roster.score")}
+            </p>
+          </Sheet>
+
+          <Doors
+            title={tc("blocks.doors")}
+            doors={[
+              {
+                key: "market",
+                href: "/market",
+                label: t("doors.market"),
+                family: "trends",
+                value: t("doors.marketValue"),
+              },
+              {
+                key: "streams",
+                href: "/streams",
+                label: t("doors.streams"),
+                family: "streams",
+                value: t("doors.streamsValue"),
+              },
+              {
+                key: "arwatch",
+                href: "/ar-watch",
+                label: t("doors.arwatch"),
+                family: "audience",
+                value: t("doors.arwatchValue"),
+              },
+              {
+                key: "discovery",
+                href: "/discovery",
+                label: t("doors.discovery"),
+                family: "catalog",
+                value: t("doors.discoveryValue"),
+              },
+              {
+                key: "sync",
+                href: "/sync",
+                label: t("doors.sync"),
+                family: "money",
+                value: t("doors.syncValue"),
+              },
+              {
+                key: "catalog",
+                href: "/catalog",
+                label: t("doors.catalog"),
+                family: "catalog",
+                value: t("doors.catalogValue"),
+              },
+            ]}
+          />
+
+          <RestRow
+            title={tc("blocks.restLabel")}
+            items={[
+              { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+              { key: "roster", href: "/roster", label: t("rest.roster") },
+              { key: "revenue", href: "/revenue", label: t("rest.revenue") },
+              { key: "index", href: "/day1-index", label: t("rest.index") },
+            ]}
+          />
+
+          <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+        </div>
       ) : (
         /* ─── Vue artiste ─── */
-        <>
-          {/* KPIs */}
-          <div className="rise-in grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <KpiCard
-              id="algo-share"
-              label={t("kpis.algoShare")}
-              value={share}
-              format="pct"
-              delta={shareDelta}
-              spark={mix.map((m) => ({ value: m.algorithmic }))}
-              hero
+        <div className="space-y-3">
+          {/* La part algorithmique, au centre de son évolution sur 90 jours. */}
+          <Sheet family="trends">
+            <SheetHeading action={t("mix.description")}>{t("mix.title")}</SheetHeading>
+            <div className="group relative">
+              <CenteredValue
+                value={`${dec(share)} %`}
+                caption={
+                  <>
+                    {t("kpis.algoShare")}{" "}
+                    <b className={shareDelta >= 0 ? "text-success" : "text-destructive"}>
+                      {fmtPct(locale, shareDelta)}
+                    </b>{" "}
+                    <ProvenanceBadge provenance="simulated" className="align-middle" />
+                  </>
+                }
+              />
+              <AlgoMixChart data={mix} labels={mixLabels} height={210} />
+            </div>
+            <AffiliatedPoints
+              points={[
+                {
+                  key: "score",
+                  value: t("kpis.scoreOf", { score }),
+                  label: t("kpis.healthScore"),
+                },
+                {
+                  key: "rr",
+                  value: fmtCompact(locale, rr.streams28d),
+                  label: t("kpis.releaseRadar"),
+                  note: fmtPct(locale, rrDelta),
+                },
+                {
+                  key: "radio",
+                  value: fmtCompact(locale, radioStreams),
+                  label: t("kpis.radio"),
+                  note: fmtPct(locale, radioDelta),
+                },
+                {
+                  key: "top",
+                  value: t(`sources.${topSource.id}.name`),
+                  label: t("sources.title"),
+                  note: `${dec(topSource.sharePct)} %`,
+                },
+              ]}
             />
-            <KpiCard
-              id="algo-score"
-              label={t("kpis.healthScore")}
-              value={score}
-              format="int"
-              deltaLabel={t("kpis.of100")}
-            />
-            <KpiCard
-              id="algo-rr"
-              label={t("kpis.releaseRadar")}
-              value={rr.streams28d}
-              delta={rrDelta}
-              spark={daily28.map((d) => ({
-                value: (d.streams * rr.sharePct) / 100,
-              }))}
-              sparkColor="var(--chart-2)"
-            />
-            <KpiCard
-              id="algo-radio"
-              label={t("kpis.radio")}
-              value={radioStreams}
-              delta={radioDelta}
-              spark={daily28.map((d) => ({
-                value: (d.streams * (share - rr.sharePct)) / 100,
-              }))}
-              sparkColor="var(--chart-3)"
-            />
-          </div>
+          </Sheet>
 
-          {/* Décomposition + perception */}
-          <div className="mt-4 grid gap-4 lg:grid-cols-5">
-            <section className="rise-in rounded-xl border bg-card p-5 lg:col-span-3">
-              <h2 className="mb-1 font-heading text-base font-semibold">
-                {t("sources.title")}
-              </h2>
-              <p className="mb-5 text-xs text-muted-foreground">
+          <div className="grid gap-3 lg:grid-cols-[1.5fr_1fr]">
+            {/* Les cinq portes de l'algorithme, et ce que chacune veut. */}
+            <Sheet family="trends">
+              <SheetHeading>{t("sources.title")}</SheetHeading>
+              <p className="sheet-ink mb-1 text-xs">
                 {t("sources.description", { share: dec(share) })}
               </p>
-              <div className="flex flex-col gap-4">
-                {breakdown.map((slice) => {
-                  const Icon = SOURCE_ICONS[slice.id];
-                  const maxShare = breakdown[0].sharePct;
+              <div className="mt-2">
+                {breakdown.map((b, i) => {
+                  const Icon = SOURCE_ICONS[b.id];
                   return (
-                    <div key={slice.id}>
-                      <div className="flex items-center gap-2.5">
-                        <span
-                          className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg"
-                          style={{
-                            background: `color-mix(in oklab, ${SOURCE_COLORS[slice.id]} 14%, transparent)`,
-                            color: SOURCE_COLORS[slice.id],
-                          }}
-                        >
-                          <Icon className="size-3.5" aria-hidden />
+                    <div
+                      key={b.id}
+                      className={cn(
+                        "py-2.5",
+                        i === 0 ? "sheet-rule" : "border-border/30 border-t",
+                      )}
+                    >
+                      <div className="flex items-baseline justify-between gap-3 text-[12.5px]">
+                        <span className="flex items-center gap-2 font-medium">
+                          <Icon className="size-3.5 shrink-0" aria-hidden />
+                          {t(`sources.${b.id}.name`)}
                         </span>
-                        <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                          {t(`sources.${slice.id}.name`)}
-                        </span>
-                        <span className="num text-xs text-muted-foreground">
-                          {fmtCompact(locale, slice.streams28d)}
-                        </span>
-                        <span className="num w-14 text-right text-sm font-semibold">
-                          {dec(slice.sharePct)} %
+                        <span className="flex items-baseline gap-3 tabular-nums">
+                          <span className="sheet-ink">{fmtCompact(locale, b.streams28d)}</span>
+                          <b className="w-12 text-right font-semibold">{dec(b.sharePct)} %</b>
                         </span>
                       </div>
-                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
+                      <div className="mt-1 h-1.5 rounded-full bg-[color-mix(in_oklab,var(--sheet-line)_14%,transparent)]">
                         <div
-                          className="h-full rounded-full transition-all"
+                          className="h-full rounded-full"
                           style={{
-                            width: `${(slice.sharePct / maxShare) * 100}%`,
-                            background: SOURCE_COLORS[slice.id],
+                            width: `${Math.max(1.5, (b.sharePct / maxSourceShare) * 100)}%`,
+                            background: SOURCE_COLORS[b.id],
                           }}
                         />
                       </div>
-                      <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
-                        {t(`sources.${slice.id}.hint`)}
+                      <p className="text-muted-foreground mt-1 text-[11px] leading-snug">
+                        {t(`sources.${b.id}.hint`)}
                       </p>
                     </div>
                   );
                 })}
               </div>
-            </section>
+            </Sheet>
 
-            {/* Comment l'algo te voit */}
-            <section className="rise-in rounded-xl border bg-card p-5 lg:col-span-2">
-              <h2 className="mb-1 flex items-center gap-2 font-heading text-base font-semibold">
-                <Eye className="size-4 text-brand" aria-hidden />
-                {t("perception.title")}
-              </h2>
-              <p className="mb-5 text-xs text-muted-foreground">
-                {t("perception.description")}
-              </p>
-              <div className="flex flex-col gap-5">
-                {perceptionRows.map((row) => (
-                  <div key={row.key}>
-                    <div className="flex items-baseline justify-between gap-3">
-                      <span className="text-sm font-medium">
-                        {t(`perception.${row.key}`)}
-                      </span>
-                      <span
+            {/* Ce que l'algorithme mesure de toi. */}
+            <Sheet family="audience">
+              <SheetHeading>{t("perception.title")}</SheetHeading>
+              <p className="sheet-ink mb-1 text-xs">{t("perception.description")}</p>
+              <div className="mt-2">
+                {perceptionRows.map((row, i) => (
+                  <div
+                    key={row.key}
+                    className={cn(
+                      "py-2.5",
+                      i === 0 ? "sheet-rule" : "border-border/30 border-t",
+                    )}
+                  >
+                    <div className="flex items-baseline justify-between gap-3 text-[12.5px]">
+                      <span className="font-medium">{t(`perception.${row.key}`)}</span>
+                      <b
                         className={cn(
-                          "num text-sm font-semibold",
-                          row.good ? "text-success" : "text-warning",
+                          "font-semibold tabular-nums",
+                          row.good ? "text-success" : "text-destructive",
                         )}
                       >
                         {dec(row.value)} %
-                      </span>
+                      </b>
                     </div>
-                    <div className="relative mt-2">
-                      <Progress
-                        value={row.value}
-                        className={cn(
-                          "h-1.5",
-                          row.good
-                            ? "[&_[data-slot=progress-indicator]]:bg-success"
-                            : "[&_[data-slot=progress-indicator]]:bg-warning",
-                        )}
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute -top-0.5 h-2.5 w-px bg-foreground/50"
-                        style={{ left: `${row.threshold}%` }}
-                      />
-                    </div>
-                    <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
-                      {t(`perception.${row.key}Hint`, {
-                        threshold: dec(row.threshold),
-                      })}
+                    <Progress value={Math.min(100, row.value)} className="mt-1.5 h-1.5" />
+                    <p className="text-muted-foreground mt-1 text-[11px] leading-snug">
+                      {t(`perception.${row.key}Hint`, { threshold: dec(row.threshold) })}
                     </p>
                   </div>
                 ))}
               </div>
-              <p className="mt-5 rounded-lg bg-surface-2 p-3 text-[11px] leading-relaxed text-muted-foreground">
-                {t("perception.note")}
-              </p>
-            </section>
+              <p className="text-muted-foreground mt-2 text-[11px]">{t("perception.note")}</p>
+            </Sheet>
           </div>
 
-          {/* Évolution 90 j */}
-          <section className="rise-in mt-4 rounded-xl border bg-card p-5">
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h2 className="font-heading text-base font-semibold">
-                  {t("mix.title")}
-                </h2>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  {t("mix.description")}
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                {MIX_KEYS.map((k) => (
-                  <span
-                    key={k}
-                    className="flex items-center gap-1.5 text-[11px] text-muted-foreground"
-                  >
-                    <span
-                      aria-hidden
-                      className="size-2 rounded-full"
-                      style={{ background: MIX_COLORS[k] }}
-                    />
-                    {mixLabels[k]}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <AlgoMixChart data={mix} labels={mixLabels} />
-          </section>
+          {/* Ce qu'il faut en retenir aujourd'hui. */}
+          <NightStrip
+            items={signals.map((s) => ({
+              key: s.key,
+              kicker: s.kicker,
+              body: s.body,
+            }))}
+          />
 
-          {/* Signaux */}
-          <section className="rise-in mt-4">
-            <h2 className="mb-3 font-heading text-base font-semibold">
-              {t("signals.title")}
-            </h2>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {signals.map((s) => (
-                <InsightCard
-                  key={s.key}
-                  icon={s.icon}
-                  kicker={s.kicker}
-                  body={s.body}
-                  tone={s.tone}
-                />
-              ))}
-            </div>
-          </section>
-        </>
+          <Doors
+            title={tc("blocks.doors")}
+            doors={[
+              {
+                key: "market",
+                href: "/market",
+                label: t("doors.market"),
+                family: "trends",
+                value: t("doors.marketValue"),
+              },
+              {
+                key: "streams",
+                href: "/streams",
+                label: t("doors.streams"),
+                family: "streams",
+                value: t("doors.streamsValue"),
+              },
+              {
+                key: "audience",
+                href: "/audience",
+                label: t("doors.audience"),
+                family: "audience",
+                value: t("doors.audienceValue"),
+              },
+              {
+                key: "catalog",
+                href: "/catalog",
+                label: t("doors.catalog"),
+                family: "catalog",
+                value: t("doors.catalogValue"),
+              },
+              {
+                key: "sync",
+                href: "/sync",
+                label: t("doors.sync"),
+                family: "money",
+                value: t("doors.syncValue"),
+              },
+              {
+                key: "discovery",
+                href: "/discovery",
+                label: t("doors.discovery"),
+                family: "catalog",
+                value: t("doors.discoveryValue"),
+              },
+            ]}
+          />
+
+          <RestRow
+            title={tc("blocks.rest")}
+            items={[
+              { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+              { key: "revenue", href: "/revenue", label: t("rest.revenue") },
+              { key: "fans", href: "/fans", label: t("rest.fans") },
+              { key: "index", href: "/day1-index", label: t("rest.index") },
+            ]}
+          />
+
+          <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+        </div>
       )}
     </div>
   );

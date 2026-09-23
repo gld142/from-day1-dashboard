@@ -7,7 +7,8 @@
     "healthScore": "Algo health score",
     "of100": "out of 100",
     "releaseRadar": "Release Radar streams · 28d",
-    "radio": "Radio & Autoplay streams · 28d"
+    "radio": "Radio & Autoplay streams · 28d",
+    "scoreOf": "{score} / 100"
   },
   "sources": {
     "title": "Where your algorithmic share comes from",
@@ -75,6 +76,30 @@
     "score": "Score",
     "share": "Algo share",
     "rr": "Release Radar 28d",
-    "trend": "Trend"
+    "trend": "Trend",
+    "ranking": "Roster ranking"
+  },
+  "doors": {
+    "market": "Market",
+    "marketValue": "your share of the French Top 200",
+    "streams": "Streams",
+    "streamsValue": "the volume behind the share",
+    "audience": "Audience",
+    "audienceValue": "who the algorithm sends you",
+    "catalog": "Catalogue",
+    "catalogValue": "the tracks that carry",
+    "sync": "Sync & Licensing",
+    "syncValue": "place your tracks",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "test a demo",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "artists tracked"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenue",
+    "fans": "Fans CRM",
+    "index": "Day 1 Index",
+    "roster": "Roster"
   }
 }
