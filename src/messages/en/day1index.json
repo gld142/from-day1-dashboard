@@ -1,33 +1,32 @@
 {
   "title": "Day 1 Index",
-  "subtitle": "A single score condensing volume, growth, diversification, engagement and momentum — comparable across artists.",
+  "subtitle": "One score, and the five things that move it up or down.",
   "gauge": {
     "label": "Overall score",
     "outOf": "/ 100",
-    "percentile": "Top {pct}% of comparable artists",
-    "updated": "Recomputed nightly from your data",
     "labelAvg": "Roster average index",
+    "updated": "Each dimension is scored out of 100, from your data.",
     "artistsCount": "{count, plural, one {# artist} other {# artists}}",
     "best": "Best index",
     "spread": "Min–max spread"
   },
   "breakdown": {
-    "title": "Score breakdown",
-    "subtitle": "Five dimensions computed from your actual data.",
-    "volume": "Volume",
-    "volumeDesc": "Monthly listeners, normalized across the roster",
+    "title": "What makes up this score",
+    "subtitle": "Five dimensions, each scored out of 100",
+    "volume": "Audience size",
+    "volumeDesc": "Your monthly listeners, against the roster's biggest",
     "growth": "Growth",
-    "growthDesc": "Monthly stream growth rate",
-    "diversification": "Diversification",
-    "diversificationDesc": "Number of active revenue sources over 12 months",
-    "engagement": "Engagement",
-    "engagementDesc": "Superfan share of monthly audience",
-    "momentum": "Momentum",
-    "momentumDesc": "30-day stream dynamics vs the previous period"
+    "growthDesc": "How fast your streams climb each month",
+    "diversification": "Revenue sources",
+    "diversificationDesc": "How many sources paid you over 12 months",
+    "engagement": "Loyal fans",
+    "engagementDesc": "The share of superfans in your monthly audience",
+    "momentum": "Recent momentum",
+    "momentumDesc": "Your last 30 days of streams against the 30 before"
   },
   "leaderboard": {
     "title": "Roster leaderboard",
-    "subtitle": "Every artist on the roster, ranked by index.",
+    "subtitle": "Ranked by index",
     "rank": "#",
     "artist": "Artist",
     "stage": "Stage",
@@ -53,5 +52,38 @@
     "copy": "Copy link",
     "copied": "Link copied",
     "preview": "Preview"
+  },
+  "subtitleLabel": "Each roster artist's score, and what moves it up or down.",
+  "kpis": {
+    "rank": "Your rank",
+    "rankValue": "#{rank}",
+    "rankFirst": "#1",
+    "rankHint": "of {total} on the roster",
+    "stage": "Career stage",
+    "strongest": "What carries you",
+    "weakest": "What holds you back",
+    "outOf100": "{value} / 100"
+  },
+  "doors": {
+    "audience": "Audience",
+    "audienceValue": "who actually listens",
+    "streams": "Streams",
+    "streamsValue": "the volumes behind the score",
+    "fans": "Fans CRM",
+    "fansValue": "your superfans, one by one",
+    "revenue": "Revenue",
+    "revenueValue": "your revenue sources",
+    "market": "Market",
+    "marketValue": "your place in your genre",
+    "valuation": "Valuation",
+    "valuationValue": "what the catalog is worth"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "algo": "Algorithmic position",
+    "discovery": "Discovery Lab",
+    "roster": "Roster",
+    "arwatch": "A&R Watch",
+    "catalog": "Catalog"
   }
 }

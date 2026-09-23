@@ -20,7 +20,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { DEMO_TODAY } from "@/lib/demo/seed";
 import type { AuditFinding } from "@/lib/demo/types";
-import { fmtDate, fmtEur, fmtPct } from "@/lib/format";
+import { fmtDate, fmtEur } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export function AuditFindingCard({
