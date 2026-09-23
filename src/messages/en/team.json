@@ -1,13 +1,16 @@
 {
   "title": "Team & access",
-  "subtitle": "Who sees what at {label} — members, roles and per-module permissions.",
+  "subtitle": "Who sees what at {label} — and since when.",
   "artistTitle": "Access to my data",
-  "artistSubtitle": "The people at {label} who can view your dashboard, and what they see.",
+  "artistSubtitle": "The people at {label} who can see your dashboard, and what they see.",
   "kpis": {
     "members": "Active members",
     "roles": "Distinct roles",
     "activeWeek": "Active in 7 days",
-    "lastActivity": "Last activity: {date}"
+    "lastActivity": "Last activity: {date}",
+    "pending": "Pending invitations",
+    "pendingNone": "none pending",
+    "rolesHint": "one scope per role"
   },
   "roles": {
     "owner": "Founder",
@@ -56,5 +59,32 @@
       "audit": "{name} launched a royalty audit for {artist}",
       "invite": "{name} invited {invitee} as {role}"
     }
+  },
+  "hero": {
+    "title": "People with access",
+    "caption": "{active} active over the last 7 days",
+    "captionIdle": "nobody has signed in for 7 days — last activity on {date}"
+  },
+  "doors": {
+    "roster": "Roster",
+    "rosterValue": "the artists involved",
+    "splits": "Splits",
+    "splitsValue": "who signs what",
+    "finances": "Expenses & P&L",
+    "financesValue": "who enters expenses",
+    "contracts": "Contracts",
+    "contractsValue": "who tracks deadlines",
+    "settings": "Settings",
+    "settingsValue": "account settings",
+    "audit": "Royalty audit",
+    "auditValue": "who opens claims"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "catalog": "Catalog",
+    "tour": "Touring",
+    "sync": "Sync & Licensing",
+    "import": "Import a statement",
+    "urssaf": "URSSAF"
   }
 }

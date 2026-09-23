@@ -1,13 +1,16 @@
 {
   "title": "Équipe & accès",
-  "subtitle": "Qui voit quoi chez {label} — membres, rôles et permissions par module.",
+  "subtitle": "Qui voit quoi chez {label} — et depuis quand.",
   "artistTitle": "Accès à mes données",
-  "artistSubtitle": "Les personnes de {label} qui peuvent consulter votre dashboard, et ce qu'elles voient.",
+  "artistSubtitle": "Les personnes de {label} qui peuvent consulter ton dashboard, et ce qu'elles voient.",
   "kpis": {
     "members": "Membres actifs",
     "roles": "Rôles distincts",
     "activeWeek": "Actifs sur 7 jours",
-    "lastActivity": "Dernière activité : {date}"
+    "lastActivity": "Dernière activité : {date}",
+    "pending": "Invitations en attente",
+    "pendingNone": "aucune en attente",
+    "rolesHint": "un périmètre par rôle"
   },
   "roles": {
     "owner": "Fondateur",
@@ -56,5 +59,32 @@
       "audit": "{name} a lancé un audit royalties pour {artist}",
       "invite": "{name} a invité {invitee} en tant que {role}"
     }
+  },
+  "hero": {
+    "title": "Personnes avec un accès",
+    "caption": "{active} actives sur les 7 derniers jours",
+    "captionIdle": "personne ne s'est connecté depuis 7 jours — dernière activité le {date}"
+  },
+  "doors": {
+    "roster": "Roster",
+    "rosterValue": "les artistes concernés",
+    "splits": "Splits",
+    "splitsValue": "qui signe quoi",
+    "finances": "Dépenses & P&L",
+    "financesValue": "qui saisit les dépenses",
+    "contracts": "Contrats",
+    "contractsValue": "qui suit les échéances",
+    "settings": "Réglages",
+    "settingsValue": "les réglages du compte",
+    "audit": "Audit royalties",
+    "auditValue": "qui ouvre les réclamations"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "catalog": "Catalogue",
+    "tour": "Tournée",
+    "sync": "Sync & Licensing",
+    "import": "Importer un relevé",
+    "urssaf": "URSSAF"
   }
 }

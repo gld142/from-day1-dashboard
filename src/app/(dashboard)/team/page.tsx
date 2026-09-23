@@ -8,7 +8,12 @@
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CheckCircle2 } from "lucide-react";
-import { KpiCard } from "@/components/dashboard/kpi";
+import {
+  AffiliatedPoints,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ActivityLog } from "@/components/modules/structure/activity-log";
 import {
@@ -26,6 +31,7 @@ const WEEK_MS = 7 * 24 * 3600 * 1000;
 
 export default function TeamPage() {
   const t = useTranslations("team");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { isLabel, artistId } = useRole();
 
@@ -70,7 +76,7 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="rise-in space-y-6">
+    <div className="rise-in">
       <PageHeader
         title={isLabel ? t("title") : t("artistTitle")}
         subtitle={
@@ -89,49 +95,104 @@ export default function TeamPage() {
         </p>
       )}
 
-      {/* KPIs équipe */}
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-        <KpiCard
-          id="team-members"
-          label={t("kpis.members")}
-          value={members.length + pending.length}
-          format="int"
-          deltaLabel={t("kpis.lastActivity", {
+      <div className="space-y-3">
+      {/* Qui a un accès, et depuis quand. */}
+      <Sheet family="catalog">
+        <SheetHeading
+          action={t("kpis.lastActivity", {
             date: lastActivity ? fmtDate(locale, lastActivity) : "—",
           })}
+        >
+          {t("hero.title")}
+        </SheetHeading>
+        <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+          {members.length + pending.length}
+        </p>
+        <p className="sheet-ink mt-1.5 text-[13px]">
+          {/* « 0 actives sur 7 jours » ne dit rien d'utile : quand la fenêtre
+              est vide, on donne la date qui, elle, se lit. */}
+          {activeWeek > 0
+            ? t("hero.caption", { active: activeWeek })
+            : t("hero.captionIdle", {
+                date: lastActivity ? fmtDate(locale, lastActivity) : "—",
+              })}
+        </p>
+        <AffiliatedPoints
+          points={[
+            {
+              key: "members",
+              value: String(members.length),
+              label: t("kpis.members"),
+            },
+            {
+              key: "roles",
+              value: String(distinctRoles),
+              label: t("kpis.roles"),
+              note: t("kpis.rolesHint"),
+            },
+            {
+              key: "active",
+              value: String(activeWeek),
+              label: t("kpis.activeWeek"),
+            },
+            {
+              key: "pending",
+              value: String(pending.length),
+              label: t("kpis.pending"),
+              note: pending.length === 0 ? t("kpis.pendingNone") : undefined,
+            },
+          ]}
         />
-        <KpiCard
-          id="team-roles"
-          label={t("kpis.roles")}
-          value={distinctRoles}
-          format="int"
-        />
-        <KpiCard
-          id="team-active"
-          label={t("kpis.activeWeek")}
-          value={activeWeek}
-          format="int"
-          hero
-          className="col-span-2 lg:col-span-1"
-        />
-      </section>
+      </Sheet>
 
       {/* Tableau des membres */}
-      <TeamTable
-        members={members}
-        pending={isLabel ? pending : []}
-        hint={isLabel ? undefined : t("table.artistHint")}
-      />
+      <Sheet family="catalog">
+        <SheetHeading action={isLabel ? undefined : t("table.artistHint")}>
+          {t("table.title")}
+        </SheetHeading>
+        <TeamTable members={members} pending={isLabel ? pending : []} bare />
+      </Sheet>
 
       {/* Matrice permissions + journal */}
-      <section className="grid gap-6 xl:grid-cols-5">
-        <div className="xl:col-span-3">
-          <PermissionsMatrix />
-        </div>
-        <div className="xl:col-span-2">
-          <ActivityLog />
-        </div>
-      </section>
+      <div className="grid gap-3 xl:grid-cols-5">
+        <Sheet family="catalog" className="xl:col-span-3">
+          <SheetHeading action={t("matrix.subtitle")}>{t("matrix.title")}</SheetHeading>
+          <PermissionsMatrix bare />
+        </Sheet>
+        <Sheet family="catalog" className="xl:col-span-2">
+          <SheetHeading action={t("activity.subtitle")}>
+            {t("activity.title")}
+          </SheetHeading>
+          <ActivityLog bare />
+        </Sheet>
+      </div>
+
+      <Doors
+        title={tc("blocks.doors")}
+        doors={[
+          { key: "roster", family: "money", href: "/roster", label: t("doors.roster"), value: t("doors.rosterValue") },
+          { key: "splits", family: "money", href: "/splits", label: t("doors.splits"), value: t("doors.splitsValue") },
+          { key: "finances", family: "money", href: "/finances", label: t("doors.finances"), value: t("doors.financesValue") },
+          { key: "contracts", family: "money", href: "/contracts", label: t("doors.contracts"), value: t("doors.contractsValue") },
+          { key: "settings", family: "catalog", href: "/settings", label: t("doors.settings"), value: t("doors.settingsValue") },
+          { key: "audit", family: "money", href: "/audit", label: t("doors.audit"), value: t("doors.auditValue") },
+        ]}
+      />
+
+      <RestRow
+        title={isLabel ? tc("blocks.restLabel") : tc("blocks.rest")}
+        items={[
+          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+          { key: "catalog", href: "/catalog", label: t("rest.catalog") },
+          { key: "tour", href: "/tour", label: t("rest.tour") },
+          { key: "sync", href: "/sync", label: t("rest.sync") },
+          { key: "import", href: "/import", label: t("rest.import") },
+          { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
+        ]}
+      />
+
+      <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+      </div>
     </div>
   );
 }

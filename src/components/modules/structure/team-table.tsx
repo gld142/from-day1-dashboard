@@ -60,22 +60,27 @@ export function TeamTable({
   members,
   pending,
   hint,
+  bare = false,
 }: {
   members: TeamMember[];
   pending: PendingInvite[];
   hint?: string;
+  /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
+  bare?: boolean;
 }) {
   const t = useTranslations("team");
   const tNav = useTranslations("nav");
   const locale = useLocale();
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pb-2 pt-5">
-        <h2 className="text-sm font-semibold">{t("table.title")}</h2>
-        {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
-      </div>
-      <div className="overflow-x-auto">
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border"}>
+      {!bare && (
+        <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5 pb-2">
+          <h2 className="text-sm font-semibold">{t("table.title")}</h2>
+          {hint && <p className="text-muted-foreground text-[11px]">{hint}</p>}
+        </div>
+      )}
+      <div className={bare ? "mt-1 min-w-0 overflow-x-auto" : "overflow-x-auto"}>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

@@ -40,7 +40,7 @@ const ROLES: TeamMember["role"][] = [
   "avocat",
 ];
 
-export function PermissionsMatrix() {
+export function PermissionsMatrix({ bare = false }: { bare?: boolean } = {}) {
   const t = useTranslations("team");
   const tNav = useTranslations("nav");
 
@@ -65,14 +65,16 @@ export function PermissionsMatrix() {
   }
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="px-5 pb-2 pt-5">
-        <h2 className="text-sm font-semibold">{t("matrix.title")}</h2>
-        <p className="mt-0.5 text-[11px] text-muted-foreground">
-          {t("matrix.subtitle")}
-        </p>
-      </div>
-      <div className="overflow-x-auto">
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border"}>
+      {!bare && (
+        <div className="px-5 pt-5 pb-2">
+          <h2 className="text-sm font-semibold">{t("matrix.title")}</h2>
+          <p className="text-muted-foreground mt-0.5 text-[11px]">
+            {t("matrix.subtitle")}
+          </p>
+        </div>
+      )}
+      <div className={bare ? "mt-1 min-w-0 overflow-x-auto" : "overflow-x-auto"}>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">

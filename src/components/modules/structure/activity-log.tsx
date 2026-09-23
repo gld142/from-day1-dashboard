@@ -71,17 +71,21 @@ const ENTRIES: Entry[] = [
   },
 ];
 
-export function ActivityLog() {
+export function ActivityLog({ bare = false }: { bare?: boolean } = {}) {
   const t = useTranslations("team");
   const locale = useLocale();
 
   return (
-    <div className="rounded-xl border bg-card p-5">
-      <h2 className="text-sm font-semibold">{t("activity.title")}</h2>
-      <p className="mt-0.5 text-[11px] text-muted-foreground">
-        {t("activity.subtitle")}
-      </p>
-      <ol className="mt-4 space-y-0">
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border p-5"}>
+      {!bare && (
+        <>
+          <h2 className="text-sm font-semibold">{t("activity.title")}</h2>
+          <p className="text-muted-foreground mt-0.5 text-[11px]">
+            {t("activity.subtitle")}
+          </p>
+        </>
+      )}
+      <ol className={bare ? "mt-1 space-y-0" : "mt-4 space-y-0"}>
         {ENTRIES.map((e, i) => {
           const Icon = e.icon;
           const params =
