@@ -1,20 +1,30 @@
 {
   "title": "Contracts",
-  "subtitle": "Your commitments at a glance: deadlines, rates, advances and recoupment.",
+  "subtitle": "What your contracts commit you to — and what's coming up.",
   "kpis": {
     "active": "Active contracts",
     "alerts": "Open alerts",
-    "avgRecoup": "Average recoupment"
+    "avgRecoup": "Average recoupment",
+    "advance": "Advances received",
+    "advanceHint": "{count, plural, one {on # contract} other {on # contracts}}",
+    "activeHint": "{count, plural, =0 {none expired} one {# expired} other {# expired}}",
+    "rates": "Your contract rates",
+    "ratesLabel": "Contract rates",
+    "ratesRange": "{low}% – {high}%",
+    "ratesHint": "lowest to highest",
+    "next": "Next deadline",
+    "nextNone": "nothing within six months"
   },
   "alerts": {
-    "heading": "Contract alerts",
+    "heading": "What's coming",
     "due": "Due: {date}",
     "kinds": {
       "expiry": "Contract ending",
       "option": "Option to exercise",
       "audit-window": "Audit window",
       "unusual-clause": "Unusual clause"
-    }
+    },
+    "none": "No alerts: nothing is coming due."
   },
   "table": {
     "heading": "All contracts",
@@ -41,7 +51,7 @@
     "active": "Active"
   },
   "recoup": {
-    "heading": "Understanding recoupment",
+    "heading": "How an advance works",
     "sub": "{type} contract · {counterparty}",
     "advance": "Advance paid",
     "recouped": "Already recouped",
@@ -67,5 +77,37 @@
   "labelView": {
     "contractsOf": "{count, plural, one {# contract} other {# contracts}}"
   },
-  "empty": "No contracts for this view."
+  "empty": "No contracts for this view.",
+  "subtitleLabel": "What the roster's contracts commit to — and what's coming up.",
+  "subtitleFocused": "What {name}'s contracts commit to — and what's coming up.",
+  "hero": {
+    "title": "Left to recoup",
+    "caption": "before royalties are paid out",
+    "captionDone": "every advance is cleared: royalties are flowing.",
+    "noAdvance": "No advance in this scope.",
+    "barRecouped": "Recouped",
+    "barRemaining": "Left to recoup"
+  },
+  "doors": {
+    "splits": "Splits",
+    "splitsValue": "who gets what on each track",
+    "revenue": "Revenue",
+    "revenueValue": "what your rate earns",
+    "audit": "Royalty audit",
+    "auditValue": "gap with statements",
+    "rights": "French rights",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM",
+    "calculator": "Deal simulator",
+    "calculatorValue": "test before signing",
+    "valuation": "Valuation",
+    "valuationValue": "what the catalog is worth"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Expenses & P&L",
+    "urssaf": "URSSAF",
+    "catalog": "Catalog",
+    "team": "Team",
+    "import": "Import a statement"
+  }
 }

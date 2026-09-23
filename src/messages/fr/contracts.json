@@ -1,20 +1,30 @@
 {
   "title": "Contrats",
-  "subtitle": "Vos engagements en un coup d'œil : échéances, taux, avances et recoupement.",
+  "subtitle": "Ce que tes contrats t'engagent à — et ce qui arrive bientôt.",
   "kpis": {
     "active": "Contrats actifs",
     "alerts": "Alertes ouvertes",
-    "avgRecoup": "Recoupement moyen"
+    "avgRecoup": "Recoupement moyen",
+    "advance": "Avances reçues",
+    "advanceHint": "{count, plural, one {sur # contrat} other {sur # contrats}}",
+    "activeHint": "{count, plural, =0 {aucun expiré} one {# expiré} other {# expirés}}",
+    "rates": "Taux de tes contrats",
+    "ratesLabel": "Taux des contrats",
+    "ratesRange": "{low} % – {high} %",
+    "ratesHint": "du plus bas au plus haut",
+    "next": "Prochaine échéance",
+    "nextNone": "rien d'ici six mois"
   },
   "alerts": {
-    "heading": "Alertes contractuelles",
+    "heading": "Ce qui arrive",
     "due": "Échéance : {date}",
     "kinds": {
       "expiry": "Fin de contrat",
       "option": "Option à lever",
       "audit-window": "Fenêtre d'audit",
       "unusual-clause": "Clause inhabituelle"
-    }
+    },
+    "none": "Aucune alerte : rien n'arrive à échéance."
   },
   "table": {
     "heading": "Tous les contrats",
@@ -41,7 +51,7 @@
     "active": "Actif"
   },
   "recoup": {
-    "heading": "Comprendre le recoupement",
+    "heading": "Comment marche une avance",
     "sub": "Contrat {type} · {counterparty}",
     "advance": "Avance versée",
     "recouped": "Déjà recoupé",
@@ -67,5 +77,37 @@
   "labelView": {
     "contractsOf": "{count, plural, one {# contrat} other {# contrats}}"
   },
-  "empty": "Aucun contrat pour cette vue."
+  "empty": "Aucun contrat pour cette vue.",
+  "subtitleLabel": "Ce que les contrats du roster engagent — et ce qui arrive bientôt.",
+  "subtitleFocused": "Ce que les contrats de {name} l'engagent à — et ce qui arrive bientôt.",
+  "hero": {
+    "title": "Reste à recouper",
+    "caption": "avant que les royautés soient versées",
+    "captionDone": "toutes les avances sont soldées : les royautés tombent.",
+    "noAdvance": "Aucune avance sur ce périmètre.",
+    "barRecouped": "Déjà recoupé",
+    "barRemaining": "Reste à recouper"
+  },
+  "doors": {
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi sur chaque titre",
+    "revenue": "Revenus",
+    "revenueValue": "ce que ton taux rapporte",
+    "audit": "Audit royalties",
+    "auditValue": "écart avec les relevés",
+    "rights": "Droits FR",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM",
+    "calculator": "Simulateur de deals",
+    "calculatorValue": "tester avant de signer",
+    "valuation": "Valorisation",
+    "valuationValue": "ce que vaut le catalogue"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Dépenses & P&L",
+    "urssaf": "URSSAF",
+    "catalog": "Catalogue",
+    "team": "Équipe",
+    "import": "Importer un relevé"
+  }
 }

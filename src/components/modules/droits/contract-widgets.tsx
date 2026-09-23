@@ -1,16 +1,22 @@
 "use client";
 
 /**
- * Widgets contrats : cartes d'alerte, tableau des contrats,
- * visualisation pédagogique du recoupement.
+ * Widgets contrats : la ligne d'alerte, le tableau des contrats, et les trois
+ * étapes d'une avance.
+ *
+ * La carte d'alerte est devenue une ligne : une alerte tient en une phrase et
+ * une date, et huit cartes côte à côte donnaient à un rappel d'échéance le
+ * poids visuel d'un bloc de données.
+ *
+ * L'ancienne « visualisation du recoupement » affichait avance, recoupé et
+ * reste pour un seul contrat — les mêmes chiffres que le héros de la page, et
+ * la même barre. Il n'en reste que ce qu'elle seule disait : les trois étapes.
  */
 import { useLocale, useTranslations } from "next-intl";
 import {
   CalendarClock,
-  CircleCheck,
   FileSearch,
   Flag,
-  Hourglass,
   ShieldAlert,
 } from "lucide-react";
 import type { Artist, Contract, ContractAlert } from "@/lib/demo/types";
@@ -28,21 +34,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-/** La sévérité se lit sur la pastille de l'icône (fond teinté + trait), pas sur un bord latéral. */
-const SEVERITY_STYLES: Record<ContractAlert["severity"], { well: string; icon: string }> = {
-  info: { well: "bg-brand/12", icon: "text-brand" },
-  warning: { well: "bg-warning/12", icon: "text-warning" },
-  danger: { well: "bg-destructive/12", icon: "text-destructive" },
+/** La sévérité se lit sur l'icône : elle n'a pas besoin d'un fond de plus. */
+const SEVERITY_INK: Record<ContractAlert["severity"], string> = {
+  info: "text-brand",
+  warning: "text-warning",
+  danger: "text-destructive",
 };
 
-const KIND_ICONS: Record<ContractAlert["kind"], React.ComponentType<{ className?: string }>> = {
+const KIND_ICONS: Record<
+  ContractAlert["kind"],
+  React.ComponentType<{ className?: string }>
+> = {
   expiry: CalendarClock,
   option: Flag,
   "audit-window": FileSearch,
   "unusual-clause": ShieldAlert,
 };
 
-export function AlertCard({
+/** Une alerte : son icône, ce qu'elle est, ce qu'elle dit, et pour quand. */
+export function AlertRow({
   alert,
   contract,
   artist,
@@ -53,38 +63,39 @@ export function AlertCard({
 }) {
   const t = useTranslations("contracts");
   const locale = useLocale();
-  const style = SEVERITY_STYLES[alert.severity];
   const Icon = KIND_ICONS[alert.kind];
   const message = alert.message[locale === "fr" ? "fr" : "en"];
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border bg-card p-4">
-      <span
-        className={cn(
-          "flex size-7 shrink-0 items-center justify-center rounded-md",
-          style.well,
-        )}
-      >
-        <Icon className={cn("size-4", style.icon)} aria-hidden />
-      </span>
+    <div className="border-border/50 flex items-start gap-3 border-t py-2.5 first:border-t-0">
+      <Icon
+        className={cn("mt-0.5 size-4 shrink-0", SEVERITY_INK[alert.severity])}
+        aria-hidden
+      />
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="text-xs font-semibold">{t(`alerts.kinds.${alert.kind}`)}</span>
-          <span className="text-[11px] text-muted-foreground">
-            {t(`types.${contract.type === "édition" ? "edition" : contract.type}`)} ·{" "}
-            {contract.counterparty}
-          </span>
-          {artist && (
-            <ArtistBadge artist={artist} size="sm" className="ml-auto" />
+        <p className="text-[13px] leading-snug">
+          <b className="font-semibold">{t(`alerts.kinds.${alert.kind}`)}</b>
+          <span className="sheet-ink"> — {message}</span>
+        </p>
+        <p className="sheet-ink mt-0.5 text-[11px]">
+          {t(`types.${contract.type === "édition" ? "edition" : contract.type}`)} ·{" "}
+          {contract.counterparty}
+          {alert.dueDate && (
+            <>
+              {" · "}
+              <span
+                className={cn(
+                  "font-medium",
+                  alert.severity === "danger" && "text-destructive",
+                )}
+              >
+                {t("alerts.due", { date: fmtDate(locale, alert.dueDate) })}
+              </span>
+            </>
           )}
-        </div>
-        <p className="mt-1 text-sm leading-snug">{message}</p>
-        {alert.dueDate && (
-          <p className="num mt-1 text-[11px] text-muted-foreground">
-            {t("alerts.due", { date: fmtDate(locale, alert.dueDate) })}
-          </p>
-        )}
+        </p>
       </div>
+      {artist && <ArtistBadge artist={artist} size="sm" className="shrink-0" />}
     </div>
   );
 }
@@ -92,15 +103,18 @@ export function AlertCard({
 export function ContractsTable({
   contracts,
   todayIso,
+  bare = false,
 }: {
   contracts: Contract[];
   todayIso: string;
+  /** Dans une feuille teintée : pas de carte, pas de padding de bord. */
+  bare?: boolean;
 }) {
   const t = useTranslations("contracts");
   const locale = useLocale();
 
   return (
-    <div className="overflow-x-auto">
+    <div className={cn("min-w-0 overflow-x-auto", bare && "mt-1")}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -125,15 +139,17 @@ export function ContractsTable({
                     {expired && (
                       <Badge
                         variant="outline"
-                        className="border-transparent bg-destructive/10 text-destructive"
+                        className="bg-destructive/10 text-destructive border-transparent"
                       >
                         {t("badges.expired")}
                       </Badge>
                     )}
                   </span>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{c.counterparty}</TableCell>
-                <TableCell className="num whitespace-nowrap text-muted-foreground">
+                <TableCell className="text-muted-foreground">
+                  {c.counterparty}
+                </TableCell>
+                <TableCell className="num text-muted-foreground whitespace-nowrap">
                   {fmtDate(locale, c.startDate, { month: "short", year: "numeric" })} →{" "}
                   {fmtDate(locale, c.endDate, { month: "short", year: "numeric" })}
                 </TableCell>
@@ -149,10 +165,11 @@ export function ContractsTable({
                       value={c.recoupedPct}
                       className={cn(
                         "flex-1",
-                        c.recoupedPct >= 100 && "[&>[data-slot=progress-indicator]]:bg-success",
+                        c.recoupedPct >= 100 &&
+                          "[&>[data-slot=progress-indicator]]:bg-success",
                       )}
                     />
-                    <span className="num w-10 text-right text-xs text-muted-foreground">
+                    <span className="num text-muted-foreground w-10 text-right text-xs">
                       {fmtInt(locale, c.recoupedPct)} %
                     </span>
                   </div>
@@ -172,119 +189,39 @@ export function ContractsTable({
   );
 }
 
-/** Visualisation pédagogique : où en est l'avance, étape par étape. */
-export function RecoupmentViz({
-  contract,
-  artist,
-}: {
-  contract: Contract;
-  artist?: Artist;
-}) {
+/**
+ * Les trois étapes d'une avance, sur le contrat le plus lourd du périmètre.
+ * C'est de la pédagogie : elle se replie, parce qu'on ne la lit qu'une fois.
+ */
+export function RecoupmentSteps({ contract }: { contract: Contract }) {
   const t = useTranslations("contracts");
   const locale = useLocale();
-
   const recouped = Math.round((contract.advance * contract.recoupedPct) / 100);
-  const remaining = Math.max(0, contract.advance - recouped);
-  const done = contract.recoupedPct >= 100;
-  const rateLabel = `${fmtInt(locale, contract.royaltyRate)} %`;
 
   return (
-    <section className="rounded-xl border bg-card p-5">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h2 className="text-sm font-semibold">{t("recoup.heading")}</h2>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {t("recoup.sub", {
-              type: t(`types.${contract.type === "édition" ? "edition" : contract.type}`),
-              counterparty: contract.counterparty,
-            })}
-          </p>
-        </div>
-        {artist && <ArtistBadge artist={artist} size="sm" />}
-      </div>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-lg bg-surface-2 p-3">
-          <p className="text-[11px] text-muted-foreground">{t("recoup.advance")}</p>
-          <p className="num mt-0.5 text-lg font-semibold">
-            {fmtEur(locale, contract.advance)}
-          </p>
-        </div>
-        <div className="rounded-lg bg-surface-2 p-3">
-          <p className="text-[11px] text-muted-foreground">{t("recoup.recouped")}</p>
-          <p className="num mt-0.5 text-lg font-semibold text-success">
-            {fmtEur(locale, recouped)}
-          </p>
-        </div>
-        <div className="rounded-lg bg-surface-2 p-3">
-          <p className="text-[11px] text-muted-foreground">{t("recoup.remaining")}</p>
-          <p
-            className={cn(
-              "num mt-0.5 text-lg font-semibold",
-              done ? "text-success" : "text-warning",
-            )}
-          >
-            {fmtEur(locale, remaining)}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-4">
-        <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full transition-all"
-            style={{
-              width: `${Math.min(100, contract.recoupedPct)}%`,
-              background: "linear-gradient(90deg, var(--chart-1), var(--chart-2))",
-            }}
-          />
-        </div>
-        <div className="num mt-1 flex justify-between text-[11px] text-muted-foreground">
-          <span>0</span>
-          <span>{fmtInt(locale, contract.recoupedPct)} %</span>
-          <span>{fmtEur(locale, contract.advance, { compact: true })}</span>
-        </div>
-      </div>
-
-      <p
-        className={cn(
-          "mt-3 flex items-center gap-2 text-sm",
-          done ? "text-success" : "text-muted-foreground",
-        )}
-      >
-        {done ? (
-          <CircleCheck className="size-4 shrink-0" aria-hidden />
-        ) : (
-          <Hourglass className="size-4 shrink-0 text-warning" aria-hidden />
-        )}
-        {done
-          ? t("recoup.done")
-          : t("recoup.left", { remaining: fmtEur(locale, remaining) })}
-      </p>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-lg border border-dashed p-3">
-          <p className="text-xs font-semibold">{t("recoup.steps.advance.title")}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            {t("recoup.steps.advance.body", { advance: fmtEur(locale, contract.advance) })}
-          </p>
-        </div>
-        <div className="rounded-lg border border-dashed p-3">
-          <p className="text-xs font-semibold">{t("recoup.steps.recoup.title")}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            {t("recoup.steps.recoup.body", {
-              rate: rateLabel,
+    <div className="mt-2 grid gap-x-6 gap-y-3 sm:grid-cols-3">
+      {(
+        [
+          ["advance", { advance: fmtEur(locale, contract.advance) }],
+          [
+            "recoup",
+            {
+              rate: `${fmtInt(locale, contract.royaltyRate)} %`,
               recouped: fmtEur(locale, recouped),
-            })}
+            },
+          ],
+          ["payout", {}],
+        ] as const
+      ).map(([key, values]) => (
+        <div key={key}>
+          <p className="text-[12px] font-semibold">
+            {t(`recoup.steps.${key}.title`)}
+          </p>
+          <p className="text-muted-foreground mt-0.5 text-[11.5px] leading-relaxed">
+            {t(`recoup.steps.${key}.body`, values)}
           </p>
         </div>
-        <div className="rounded-lg border border-dashed p-3">
-          <p className="text-xs font-semibold">{t("recoup.steps.payout.title")}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            {t("recoup.steps.payout.body")}
-          </p>
-        </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }
