@@ -1,27 +1,34 @@
 "use client";
 
 /**
- * /discovery — Discovery Lab : le potentiel des inédits AVANT sortie.
- * L'artiste "uploade" ses démos, l'IA les score : Discovery Score global,
- * sous-scores (TikTok, playlists, hits, hook), podium + méthodologie.
+ * /discovery — le potentiel des inédits avant la sortie. Refondue le 23/09.
+ * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
+ *
+ * Les quatre sous-scores du meilleur inédit s'affichaient trois fois sur la
+ * même page : dans le podium, dans sa ligne de la liste, et dans le graphique
+ * de comparaison. Ils ne restent qu'au podium — qui les explique — et dans la
+ * comparaison, qui les met face aux autres. La liste garde le score global et
+ * le rang, et renvoie à la comparaison pour le détail.
  */
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import NumberFlow from "@number-flow/react";
 import {
   ArrowRight,
   AudioLines,
   History,
   Loader,
-  Music2,
   Sparkles,
   TrendingUp,
-  Trophy,
   type LucideIcon,
 } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
-import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
+import {
+  AffiliatedPoints,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import {
   DemoCompareChart,
   demoColor,
@@ -75,6 +82,7 @@ function DemoMeta({ demo, bpmLabel }: { demo: DemoTrack; bpmLabel: string }) {
 
 export default function DiscoveryPage() {
   const t = useTranslations("discovery");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { artistId, isLabel, focusedArtistId, setFocusedArtistId } = useRole();
   const aggregated = isLabel && !focusedArtistId;
@@ -87,9 +95,16 @@ export default function DiscoveryPage() {
   );
   const estimate = firstWeekEstimate(artistId, best);
 
-  /* Démos "en analyse…" ajoutées via le Dialog (state local, démo produit). */
+  /* Démos "en analyse…" ajoutées via le Dialog (state local, démo produit).
+     Le changement d'artiste vide la file : un ajustement d'état au rendu, et
+     non un effet — un `setState` synchrone dans un effet déclenche un second
+     rendu en cascade (react-hooks/set-state-in-effect). */
   const [pending, setPending] = useState<string[]>([]);
-  useEffect(() => setPending([]), [artistId]);
+  const [pendingFor, setPendingFor] = useState(artistId);
+  if (pendingFor !== artistId) {
+    setPendingFor(artistId);
+    setPending([]);
+  }
 
   const subLabels = {
     tiktok: t("scores.tiktok"),
@@ -115,33 +130,67 @@ export default function DiscoveryPage() {
     { key: "history", icon: History },
   ];
 
-  const methodCard = (
-    <section className="rise-in mt-4 rounded-xl border bg-card p-5">
-      <h2 className="mb-1 font-heading text-base font-semibold">
-        {t("method.title")}
-      </h2>
-      <p className="mb-4 max-w-2xl text-xs text-muted-foreground">
-        {t("method.description")}
-      </p>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {methodItems.map(({ key, icon: Icon }) => (
-          <div key={key} className="rounded-lg bg-surface-2 p-4">
-            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-brand/10 text-brand">
-              <Icon className="size-3.5" aria-hidden />
-            </span>
-            <p className="mt-2.5 text-sm font-medium">{t(`method.${key}.title`)}</p>
-            <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
-              {t(`method.${key}.description`)}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
+  const methodDetails = (
+    <Sheet family="trends">
+      <details className="text-[11.5px] leading-relaxed">
+        <summary className="sheet-ink cursor-pointer font-medium">
+          {t("method.title")}
+        </summary>
+        <p className="text-muted-foreground mt-2 max-w-3xl">
+          {t("method.description")}
+        </p>
+        <div className="mt-2 grid gap-x-6 gap-y-3 sm:grid-cols-3">
+          {methodItems.map(({ key, icon: Icon }) => (
+            <div key={key}>
+              <p className="flex items-center gap-2 text-[12px] font-semibold">
+                <Icon className="size-3.5 shrink-0" aria-hidden />
+                {t(`method.${key}.title`)}
+              </p>
+              <p className="text-muted-foreground mt-0.5">
+                {t(`method.${key}.description`)}
+              </p>
+            </div>
+          ))}
+        </div>
+      </details>
+    </Sheet>
+  );
+
+  const doors = (
+    <Doors
+      title={tc("blocks.doors")}
+      doors={[
+        { key: "catalog", family: "catalog", href: "/catalog", label: t("doors.catalog"), value: t("doors.catalogValue") },
+        { key: "market", family: "trends", href: "/market", label: t("doors.market"), value: t("doors.marketValue") },
+        { key: "algo", family: "trends", href: "/algo-position", label: t("doors.algo"), value: t("doors.algoValue") },
+        { key: "streams", family: "streams", href: "/streams", label: t("doors.streams"), value: t("doors.streamsValue") },
+        { key: "audience", family: "audience", href: "/audience", label: t("doors.audience"), value: t("doors.audienceValue") },
+        { key: "sync", family: "money", href: "/sync", label: t("doors.sync"), value: t("doors.syncValue") },
+      ]}
+    />
+  );
+
+  const rest = (
+    <RestRow
+      title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
+      items={[
+        { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+        { key: "fans", href: "/fans", label: t("rest.fans") },
+        { key: "tour", href: "/tour", label: t("rest.tour") },
+        { key: "index", href: "/day1-index", label: t("rest.index") },
+        { key: "arwatch", href: "/ar-watch", label: t("rest.arwatch") },
+        { key: "revenue", href: "/revenue", label: t("rest.revenue") },
+      ]}
+    />
+  );
+
+  const legend = (
+    <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
   );
 
   if (aggregated) {
     return (
-      <div>
+      <div className="rise-in">
         <PageHeader title={t("title")} subtitle={t("subtitleLabel")}>
           <Select onValueChange={(v) => setFocusedArtistId(v)}>
             <SelectTrigger className="w-52">
@@ -157,203 +206,196 @@ export default function DiscoveryPage() {
           </Select>
         </PageHeader>
 
-        <section className="rise-in rounded-xl border bg-card p-5">
-          <h2 className="mb-1 font-heading text-base font-semibold">
-            {t("rosterView.title")}
-          </h2>
-          <p className="mb-4 text-xs text-muted-foreground">
-            {t("rosterView.description")}
-          </p>
-          <div className="flex flex-col">
-            {rosterBest.map(({ artist: a, demo }) => (
-              <button
-                key={a.id}
-                onClick={() => setFocusedArtistId(a.id)}
-                className="hairline-b group flex items-center gap-3 py-3 text-left transition-colors last:shadow-none hover:bg-surface-2"
-              >
-                <ArtistBadge artist={a} size="md" meta={a.genre} className="w-44 shrink-0" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium">
-                    {demo.title}
+        <div className="space-y-3">
+          <Sheet family="trends">
+            <SheetHeading action={t("rosterView.hint")}>
+              {t("rosterView.title")}
+            </SheetHeading>
+            <p className="sheet-ink mt-0.5 text-[11.5px]">
+              {t("rosterView.description")}
+            </p>
+            <div className="mt-2 flex flex-col">
+              {rosterBest.map(({ artist: a, demo }) => (
+                <button
+                  key={a.id}
+                  onClick={() => setFocusedArtistId(a.id)}
+                  className="border-border/50 group flex items-center gap-3 border-t py-2.5 text-left transition-colors first:border-t-0 hover:bg-[color-mix(in_oklab,var(--sheet-line)_8%,transparent)]"
+                >
+                  <ArtistBadge
+                    artist={a}
+                    size="md"
+                    meta={a.genre}
+                    className="hidden w-44 shrink-0 sm:flex"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">
+                      {demo.title}
+                    </span>
+                    <DemoMeta demo={demo} bpmLabel={t("list.bpm")} />
                   </span>
-                  <DemoMeta demo={demo} bpmLabel={t("list.bpm")} />
-                </span>
-                <div className="hidden w-28 shrink-0 sm:block">
-                  <div className="h-1.5 overflow-hidden rounded-full bg-surface-2">
-                    <div
-                      className="h-full rounded-full bg-brand"
-                      style={{ width: `${demo.score}%` }}
-                    />
+                  <div className="hidden w-28 shrink-0 sm:block">
+                    <div className="h-1.5 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--sheet-line)_16%,transparent)]">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${demo.score}%`,
+                          background: "var(--sheet-line)",
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-                <span className="num w-14 text-right text-sm font-semibold">
-                  {demo.score}
-                  <span className="text-[11px] font-normal text-muted-foreground">
-                    /100
+                  <span className="w-14 shrink-0 text-right text-sm font-semibold tabular-nums">
+                    {demo.score}
+                    <span className="sheet-ink text-[11px] font-normal">/100</span>
                   </span>
-                </span>
-                <span className="hidden md:block">
-                  <TierBadge tier={demoTier(demo)} label={t(`tiers.${demoTier(demo)}`)} />
-                </span>
-                <ArrowRight
-                  className="size-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-                  aria-hidden
-                />
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 text-[11px] text-muted-foreground">
-            {t("rosterView.hint")}
-          </p>
-        </section>
+                  <span className="hidden md:block">
+                    <TierBadge
+                      tier={demoTier(demo)}
+                      label={t(`tiers.${demoTier(demo)}`)}
+                    />
+                  </span>
+                  <ArrowRight
+                    className="sheet-ink hidden size-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 sm:block"
+                    aria-hidden
+                  />
+                </button>
+              ))}
+            </div>
+          </Sheet>
 
-        {methodCard}
+          {methodDetails}
+          {doors}
+          {rest}
+          {legend}
+        </div>
       </div>
     );
   }
 
   /* ─── Vue artiste : le lab complet ─── */
+  const weakest = DEMO_SUB_KEYS.reduce((w, k) =>
+    best.sub[k] < best.sub[w] ? k : w,
+  );
+
   return (
-    <div>
+    <div className="rise-in">
       <PageHeader title={t("title")} subtitle={t("subtitle")}>
-        {isLabel && <ArtistBadge artist={artist} size="md" />}
+        {isLabel && <ArtistBadge artist={artist} meta={artist.genre} />}
         <UploadDemoDialog onAdd={(title) => setPending((p) => [...p, title])} />
       </PageHeader>
 
-      {/* KPIs */}
-      <div className="rise-in grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KpiCard
-          id="disc-count"
-          label={t("kpis.demos")}
-          value={demos.length + pending.length}
-          format="int"
-        />
-        <KpiCard
-          id="disc-best"
-          label={t("kpis.best")}
-          value={best.score}
-          format="int"
-          deltaLabel={best.title}
-          hero
-        />
-        <KpiCard
-          id="disc-avg"
-          label={t("kpis.avg")}
-          value={avgScore}
-          format="int"
-          deltaLabel={t("kpis.of100")}
-        />
-        <KpiCard
-          id="disc-estimate"
-          label={t("kpis.firstWeek")}
-          value={estimate}
-          deltaLabel={t("kpis.firstWeekHint")}
-        />
-      </div>
+      <div className="space-y-3">
+        {/* Le meilleur inédit, et pourquoi c'est lui. */}
+        <Sheet family="trends">
+          <SheetHeading action={t("podium.kicker")}>{t("hero.title")}</SheetHeading>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
+            <div>
+              <p className="flex items-baseline gap-2">
+                <span className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+                  {best.score}
+                </span>
+                <span className="sheet-ink text-sm tabular-nums">
+                  {t("hero.of100")}
+                </span>
+              </p>
+              <p className="mt-1.5 text-[15px] font-semibold">{best.title}</p>
+              <div className="mt-0.5">
+                <DemoMeta demo={best} bpmLabel={t("list.bpm")} />
+              </div>
+              <p className="sheet-ink mt-2 max-w-xl text-[12.5px] leading-relaxed">
+                {t("podium.reason", {
+                  hook: fmtInt(locale, best.sub.hook),
+                  tiktok: fmtInt(locale, best.sub.tiktok),
+                  playlist: fmtInt(locale, best.sub.playlist),
+                })}
+              </p>
+            </div>
 
-      {/* Podium : le meilleur inédit */}
-      <section className="rise-in brand-glow mt-4 rounded-2xl border bg-gradient-to-b from-card to-surface-2 p-6">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="flex flex-col justify-center">
-            <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.14em] text-brand">
-              <Trophy className="size-3.5" aria-hidden />
-              {t("podium.kicker")}
-            </span>
-            <h2 className="mt-2 font-heading text-3xl font-semibold tracking-tight">
-              {best.title}
-            </h2>
-            <div className="mt-1.5">
-              <DemoMeta demo={best} bpmLabel={t("list.bpm")} />
-            </div>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
-              {t("podium.reason", {
-                hook: fmtInt(locale, best.sub.hook),
-                tiktok: fmtInt(locale, best.sub.tiktok),
-                playlist: fmtInt(locale, best.sub.playlist),
-              })}
-            </p>
-            <p className="num mt-3 text-xs text-muted-foreground">
-              {t("podium.estimate", { streams: fmtCompact(locale, estimate) })}
-            </p>
-          </div>
-          <div className="flex flex-col justify-center gap-4">
-            <div className="flex items-baseline gap-2">
-              <span className="num text-5xl font-semibold tracking-tight">
-                <NumberFlow
-                  value={best.score}
-                  format={{ maximumFractionDigits: 0 }}
-                  locales={locale}
-                />
-              </span>
-              <span className="num text-sm text-muted-foreground">/100</span>
-            </div>
-            <div className="flex flex-col gap-3">
+            {/* Les quatre dimensions du meilleur : elles ne se répètent plus
+                ni dans la liste, ni ailleurs. */}
+            <div className="flex flex-col justify-center gap-2.5">
               {DEMO_SUB_KEYS.map((k, i) => (
                 <div key={k}>
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-xs font-medium text-muted-foreground">
+                    <span className="sheet-ink text-xs font-medium">
                       {subLabels[k]}
                     </span>
-                    <span className="num text-xs font-semibold">
+                    <span className="text-xs font-semibold tabular-nums">
                       {best.sub[k]}
                     </span>
                   </div>
-                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface-2">
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[color-mix(in_oklab,var(--sheet-line)_16%,transparent)]">
                     <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${best.sub[k]}%`,
-                        background: demoColor(i),
-                      }}
+                      className="h-full rounded-full"
+                      style={{ width: `${best.sub[k]}%`, background: demoColor(i) }}
                     />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        {/* Liste des inédits */}
-        <section className="rise-in rounded-xl border bg-card p-5">
-          <h2 className="mb-4 font-heading text-base font-semibold">
-            {t("list.title")}
-          </h2>
-          <div className="flex flex-col gap-3">
-            {pending.map((title, i) => (
-              <div
-                key={`pending-${i}`}
-                className="flex items-center gap-3 rounded-lg border border-dashed bg-surface-2/50 p-3"
-              >
-                <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                  <Loader className="size-4 animate-spin" aria-hidden />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium">{title}</span>
-                  <span className="text-[11px] text-muted-foreground">
-                    {t("list.analyzing")}
-                  </span>
-                </span>
-                <Badge variant="outline" className="animate-pulse rounded-full">
-                  {t("list.analyzingBadge")}
-                </Badge>
-              </div>
-            ))}
-            {demos.map((d) => {
-              const tier = demoTier(d);
-              return (
+          <AffiliatedPoints
+            points={[
+              {
+                key: "count",
+                value: fmtInt(locale, demos.length + pending.length),
+                label: t("kpis.demos"),
+              },
+              {
+                key: "avg",
+                value: fmtInt(locale, avgScore),
+                label: t("kpis.avg"),
+                note: t("kpis.avgHint", { count: demos.length }),
+              },
+              {
+                key: "estimate",
+                value: fmtCompact(locale, estimate),
+                label: t("kpis.firstWeek"),
+                note: t("kpis.firstWeekHint"),
+              },
+              {
+                key: "weakest",
+                value: subLabels[weakest],
+                label: t("kpis.weakest"),
+                note: t("kpis.weakestHint", { value: fmtInt(locale, best.sub[weakest]) }),
+              },
+            ]}
+          />
+        </Sheet>
+
+        <div className="grid gap-3 lg:grid-cols-2">
+          {/* La liste : rang, titre, score. Le détail est en face. */}
+          <Sheet family="trends">
+            <SheetHeading action={t("list.hint")}>{t("list.title")}</SheetHeading>
+            <div className="mt-1 flex flex-col">
+              {pending.map((title, i) => (
                 <div
-                  key={d.id}
-                  className={cn(
-                    "rounded-lg border p-3 transition-colors hover:bg-surface-2/50",
-                    tier === "priority" && "border-brand/40",
-                  )}
+                  key={`pending-${i}`}
+                  className="border-border/50 flex items-center gap-3 border-t py-2.5 first:border-t-0"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-muted-foreground">
-                      <Music2 className="size-4" aria-hidden />
-                    </span>
+                  <Loader className="sheet-ink size-4 shrink-0 animate-spin" aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">{title}</span>
+                    <span className="sheet-ink text-[11px]">{t("list.analyzing")}</span>
+                  </span>
+                  <Badge variant="outline" className="rounded-full">
+                    {t("list.analyzingBadge")}
+                  </Badge>
+                </div>
+              ))}
+              {demos.map((d, i) => {
+                const tier = demoTier(d);
+                return (
+                  <div
+                    key={d.id}
+                    className="border-border/50 flex items-center gap-3 border-t py-2.5 first:border-t-0"
+                  >
+                    <span
+                      aria-hidden
+                      className="size-2.5 shrink-0 rounded-full"
+                      style={{ background: demoColor(i) }}
+                    />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium">
                         {d.title}
@@ -361,67 +403,41 @@ export default function DiscoveryPage() {
                       <DemoMeta demo={d} bpmLabel={t("list.bpm")} />
                     </span>
                     <TierBadge tier={tier} label={t(`tiers.${tier}`)} />
-                    <span className="num w-12 text-right text-lg font-semibold">
+                    <span className="w-12 shrink-0 text-right text-lg font-semibold tabular-nums">
                       {d.score}
                     </span>
                   </div>
-                  <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2">
-                    {DEMO_SUB_KEYS.map((k, i) => (
-                      <div key={k} className="flex items-center gap-2">
-                        <span className="w-24 shrink-0 truncate text-[10px] text-muted-foreground">
-                          {subLabels[k]}
-                        </span>
-                        <div className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-2">
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${d.sub[k]}%`,
-                              background: demoColor(i),
-                            }}
-                          />
-                        </div>
-                        <span className="num w-6 text-right text-[10px] text-muted-foreground">
-                          {d.sub[k]}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+                );
+              })}
+            </div>
+          </Sheet>
 
-        {/* Comparaison */}
-        <section className="rise-in rounded-xl border bg-card p-5">
-          <div className="mb-4">
-            <h2 className="font-heading text-base font-semibold">
+          {/* Les quatre dimensions, tous inédits confondus. */}
+          <Sheet family="trends">
+            <SheetHeading action={t("compare.description")}>
               {t("compare.title")}
-            </h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {t("compare.description")}
-            </p>
-          </div>
-          <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            {demos.map((d, i) => (
-              <span
-                key={d.id}
-                className="flex items-center gap-1.5 text-[11px] text-muted-foreground"
-              >
-                <span
-                  aria-hidden
-                  className="size-2 rounded-full"
-                  style={{ background: demoColor(i) }}
-                />
-                {d.title}
-              </span>
-            ))}
-          </div>
-          <DemoCompareChart demos={demos} dimLabels={subLabels} />
-        </section>
-      </div>
+            </SheetHeading>
+            <div className="mt-1 mb-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+              {demos.map((d, i) => (
+                <span key={d.id} className="sheet-ink flex items-center gap-1.5 text-[11px]">
+                  <span
+                    aria-hidden
+                    className="size-2 rounded-full"
+                    style={{ background: demoColor(i) }}
+                  />
+                  {d.title}
+                </span>
+              ))}
+            </div>
+            <DemoCompareChart demos={demos} dimLabels={subLabels} />
+          </Sheet>
+        </div>
 
-      {methodCard}
+        {methodDetails}
+        {doors}
+        {rest}
+        {legend}
+      </div>
     </div>
   );
 }

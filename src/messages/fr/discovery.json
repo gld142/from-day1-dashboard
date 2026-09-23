@@ -8,7 +8,10 @@
     "avg": "Score moyen",
     "of100": "sur 100",
     "firstWeek": "Streams estimés · 1re semaine",
-    "firstWeekHint": "si le meilleur inédit sort en single"
+    "firstWeekHint": "si le meilleur inédit sort en single",
+    "weakest": "Son point faible",
+    "weakestHint": "{value}/100 — c'est là qu'il y a à gagner",
+    "avgHint": "sur {count, plural, one {# inédit} other {# inédits}}"
   },
   "podium": {
     "kicker": "Single prioritaire",
@@ -31,7 +34,8 @@
     "title": "Tes inédits",
     "bpm": "BPM",
     "analyzing": "Analyse audio en cours — score disponible dans quelques minutes.",
-    "analyzingBadge": "En analyse…"
+    "analyzingBadge": "En analyse…",
+    "hint": "Le détail des quatre dimensions est dans la comparaison ci-contre"
   },
   "compare": {
     "title": "Comparaison des inédits",
@@ -69,5 +73,31 @@
     "description": "Le meilleur inédit de chaque artiste, classé par Discovery Score — de quoi prioriser les prochaines sorties.",
     "selectArtist": "Choisir un artiste",
     "hint": "Clique sur une ligne pour ouvrir le lab complet de l'artiste."
+  },
+  "hero": {
+    "title": "Le single à sortir",
+    "of100": "/ 100"
+  },
+  "doors": {
+    "catalog": "Catalogue",
+    "catalogValue": "ce qui est déjà sorti",
+    "market": "Marché",
+    "marketValue": "ce qui monte dans ton genre",
+    "algo": "Position algo",
+    "algoValue": "comment l'algo te pousse",
+    "streams": "Streams",
+    "streamsValue": "ce que donnent tes sorties",
+    "audience": "Audience",
+    "audienceValue": "à qui tu t'adresses",
+    "sync": "Sync & Licensing",
+    "syncValue": "placer un titre en synchro"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "fans": "Fans CRM",
+    "tour": "Tournée",
+    "index": "Day 1 Index",
+    "arwatch": "A&R Watch",
+    "revenue": "Revenus"
   }
 }

@@ -51,14 +51,14 @@ export function DemoCompareChart({
             dataKey="dim"
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
             interval={0}
           />
           <YAxis
             domain={[0, 100]}
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
             width={30}
           />
           <Tooltip
@@ -81,7 +81,7 @@ export function DemoCompareChart({
               fill={demoColor(i)}
               radius={[4, 4, 0, 0]}
               maxBarSize={14}
-              animationDuration={600}
+              isAnimationActive={false}
             />
           ))}
         </BarChart>
