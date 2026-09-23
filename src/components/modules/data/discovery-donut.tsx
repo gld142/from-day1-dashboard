@@ -17,7 +17,14 @@ const COLORS: Record<DiscoverySource, string> = {
   ugc: "var(--chart-4)",
 };
 
-export function DiscoveryDonut({ ids }: { ids: string[] }) {
+export function DiscoveryDonut({
+  ids,
+  /** Sans carte ni titre : le bloc vit alors dans une feuille qui les porte. */
+  bare = false,
+}: {
+  ids: string[];
+  bare?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("audience");
 
@@ -29,16 +36,20 @@ export function DiscoveryDonut({ ids }: { ids: string[] }) {
 
   const pct = (n: number) => fmtPct(locale, n).replace("+", "");
 
+  const Frame = bare ? "div" : "section";
+
   return (
-    <section className="rounded-xl border bg-card p-5">
-      <header>
-        <h2 className="font-heading text-base font-semibold tracking-tight">
-          {t("discovery.title")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t("discovery.subtitle")}
-        </p>
-      </header>
+    <Frame className={bare ? undefined : "rounded-xl border bg-card p-5"}>
+      {!bare && (
+        <header>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("discovery.title")}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t("discovery.subtitle")}
+          </p>
+        </header>
+      )}
 
       <div className="mt-5 flex flex-col items-center gap-8 lg:flex-row lg:items-start">
         {/* Donut */}
@@ -112,6 +123,6 @@ export function DiscoveryDonut({ ids }: { ids: string[] }) {
           ))}
         </div>
       </div>
-    </section>
+    </Frame>
   );
 }

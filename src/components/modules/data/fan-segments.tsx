@@ -27,7 +27,14 @@ const COLORS: Record<FanSegment["id"], string> = {
   dormant: "var(--chart-4)",
 };
 
-export function FanSegments({ ids }: { ids: string[] }) {
+export function FanSegments({
+  ids,
+  /** Sans carte ni titre : le bloc vit alors dans une feuille qui les porte. */
+  bare = false,
+}: {
+  ids: string[];
+  bare?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("audience");
 
@@ -37,16 +44,20 @@ export function FanSegments({ ids }: { ids: string[] }) {
     segments.reduce((s, seg) => s + seg.count, 0),
   );
 
+  const Frame = bare ? "div" : "section";
+
   return (
-    <section>
-      <header>
-        <h2 className="font-heading text-base font-semibold tracking-tight">
-          {t("segments.title")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t("segments.subtitle")}
-        </p>
-      </header>
+    <Frame>
+      {!bare && (
+        <header>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("segments.title")}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t("segments.subtitle")}
+          </p>
+        </header>
+      )}
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {segments.map((seg) => {
           const Icon = ICONS[seg.id];
@@ -87,6 +98,6 @@ export function FanSegments({ ids }: { ids: string[] }) {
           );
         })}
       </div>
-    </section>
+    </Frame>
   );
 }

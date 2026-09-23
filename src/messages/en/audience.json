@@ -8,7 +8,12 @@
     "superfans": "Superfans",
     "superfansHint": "activable core fanbase",
     "growth": "Monthly growth",
-    "growthHint": "audience-weighted average"
+    "growthHint": "audience-weighted average",
+    "superfansShare": "{share} of the fanbase",
+    "fanbase": "Total fanbase",
+    "fanbaseHint": "all engagement levels",
+    "topCity": "Top city",
+    "topCityHint": "{listeners} listeners"
   },
   "segments": {
     "title": "Fan segments",
@@ -74,5 +79,26 @@
     "engagement": "Engagement",
     "growth": "Growth",
     "topMarket": "Top market"
+  },
+  "doors": {
+    "fans": "Fans CRM",
+    "fansValue": "{count} superfans to activate",
+    "streams": "Streams",
+    "streamsValue": "volume and platforms",
+    "market": "Market",
+    "marketValue": "your share of the French Top 200",
+    "algo": "Algorithm position",
+    "algoValue": "where the algorithm places you",
+    "index": "Day 1 Index",
+    "indexValue": "your overall score",
+    "tour": "Tour",
+    "tourValue": "where to play"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenue",
+    "sync": "Sync & Licensing",
+    "discoveryLab": "Discovery Lab",
+    "catalog": "Catalogue"
   }
 }

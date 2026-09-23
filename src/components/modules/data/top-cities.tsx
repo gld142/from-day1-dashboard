@@ -8,23 +8,34 @@ import { useLocale, useTranslations } from "next-intl";
 import { fmtCompact } from "@/lib/format";
 import { topCities } from "./derive";
 
-export function TopCities({ ids }: { ids: string[] }) {
+export function TopCities({
+  ids,
+  /** Sans carte ni titre : le bloc vit alors dans une feuille qui les porte. */
+  bare = false,
+}: {
+  ids: string[];
+  bare?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("audience");
 
   const rows = useMemo(() => topCities(ids, 8), [ids]);
   const max = Math.max(1, ...rows.map((r) => r.listeners));
 
+  const Frame = bare ? "div" : "section";
+
   return (
-    <section className="rounded-xl border bg-card p-5">
-      <header>
-        <h2 className="font-heading text-base font-semibold tracking-tight">
-          {t("demo.cities")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t("demo.citiesHint")}
-        </p>
-      </header>
+    <Frame className={bare ? undefined : "rounded-xl border bg-card p-5"}>
+      {!bare && (
+        <header>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("demo.cities")}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t("demo.citiesHint")}
+          </p>
+        </header>
+      )}
 
       <ul className="mt-4 space-y-3">
         {rows.map((r, i) => (
@@ -50,6 +61,6 @@ export function TopCities({ ids }: { ids: string[] }) {
           </li>
         ))}
       </ul>
-    </section>
+    </Frame>
   );
 }

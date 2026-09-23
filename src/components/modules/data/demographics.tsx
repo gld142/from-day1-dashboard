@@ -8,7 +8,14 @@ import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { demographyFor } from "./derive";
 
-export function Demographics({ ids }: { ids: string[] }) {
+export function Demographics({
+  ids,
+  /** Sans carte ni titre : le bloc vit alors dans une feuille qui les porte. */
+  bare = false,
+}: {
+  ids: string[];
+  bare?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("audience");
   const d = useMemo(() => demographyFor(ids), [ids]);
@@ -27,16 +34,20 @@ export function Demographics({ ids }: { ids: string[] }) {
     { key: "nonbinary", label: t("demo.nonbinary"), value: d.gender.nonbinary, color: "var(--chart-4)" },
   ];
 
+  const Frame = bare ? "div" : "section";
+
   return (
-    <section className="rounded-xl border bg-card p-5">
-      <header>
-        <h2 className="font-heading text-base font-semibold tracking-tight">
-          {t("demo.title")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t("demo.subtitle")}
-        </p>
-      </header>
+    <Frame className={bare ? undefined : "rounded-xl border bg-card p-5"}>
+      {!bare && (
+        <header>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("demo.title")}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t("demo.subtitle")}
+          </p>
+        </header>
+      )}
 
       <div className="mt-5 grid gap-8 md:grid-cols-2">
         {/* Tranches d'âge */}
@@ -95,6 +106,6 @@ export function Demographics({ ids }: { ids: string[] }) {
           </ul>
         </div>
       </div>
-    </section>
+    </Frame>
   );
 }
