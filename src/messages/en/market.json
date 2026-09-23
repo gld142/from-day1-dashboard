@@ -105,5 +105,35 @@
   "empty": {
     "title": "No market capture",
     "hint": "Run “npm run snapshot:market” to capture today's Spotify France Top 200 and each track's label."
+  },
+  "mine": {
+    "title": "Your place in the Top 200",
+    "scope": "Spotify France",
+    "caption": "of the chart's streams · {count} charting tracks",
+    "absentValue": "Not charting yet",
+    "absentHint": "None of your tracks is in today's 200 — the landscape below still tells you who you're measured against.",
+    "bestTrack": "your highest-placed track",
+    "bestTrackNote": "{artist} · {streams} streams",
+    "leader": "leading group"
+  },
+  "doors": {
+    "algo": "Algorithm position",
+    "algoValue": "your ranks per platform",
+    "streams": "Streams",
+    "streamsValue": "your actual volume",
+    "audience": "Audience",
+    "audienceValue": "who listens",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "artists on the rise",
+    "sync": "Sync & Licensing",
+    "syncValue": "place your tracks",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "test a demo"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenue",
+    "catalog": "Catalogue",
+    "index": "Day 1 Index"
   }
 }

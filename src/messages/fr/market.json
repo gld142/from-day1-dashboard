@@ -105,5 +105,35 @@
   "empty": {
     "title": "Aucun relevé marché",
     "hint": "Lance « npm run snapshot:market » pour capter le Top 200 Spotify France du jour et les labels de chaque titre."
+  },
+  "mine": {
+    "title": "Ta place dans le Top 200",
+    "scope": "Spotify France",
+    "caption": "des streams du classement · {count} titres classés",
+    "absentValue": "Pas encore classé",
+    "absentHint": "Aucun de tes titres n'est dans les 200 de la journée — le paysage ci-dessous reste utile pour savoir à qui tu te mesures.",
+    "bestTrack": "ton titre le mieux placé",
+    "bestTrackNote": "{artist} · {streams} streams",
+    "leader": "groupe en tête"
+  },
+  "doors": {
+    "algo": "Position algo",
+    "algoValue": "tes rangs par plateforme",
+    "streams": "Streams",
+    "streamsValue": "ton volume réel",
+    "audience": "Audience",
+    "audienceValue": "qui t'écoute",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "les artistes qui montent",
+    "sync": "Sync & Licensing",
+    "syncValue": "placer tes titres",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "tester un inédit"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenus",
+    "catalog": "Catalogue",
+    "index": "Day 1 Index"
   }
 }
