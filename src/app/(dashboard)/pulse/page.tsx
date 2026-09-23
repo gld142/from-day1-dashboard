@@ -647,10 +647,10 @@ export default function PulsePage() {
                   body: (
                     <>
                       {v.d7 >= 0
-                        ? t.rich("night.week.up", { ...tags, delta: fmtPct(locale, v.d7) })
+                        ? t.rich("night.week.up", { ...tags, delta: pct(v.d7 / 100) })
                         : t.rich("night.week.down", {
                             ...tags,
-                            delta: fmtPct(locale, Math.abs(v.d7)),
+                            delta: pct(Math.abs(v.d7) / 100),
                           })}{" "}
                       {v.night.bestDsp
                         ? t.rich("night.week.cause", {
@@ -1123,7 +1123,7 @@ export default function PulsePage() {
                       {t.rich("night.weekLabel.body", {
                         ...tags,
                         name: l.night.topMover.name,
-                        delta: fmtPct(locale, l.night.topMover.delta30d),
+                        delta: pct(Math.abs(l.night.topMover.delta30d) / 100),
                       })}{" "}
                       {l.topEarner
                         ? t.rich("night.weekLabel.earner", {

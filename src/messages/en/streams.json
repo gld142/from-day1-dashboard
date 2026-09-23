@@ -72,7 +72,9 @@
     "topCountries": "Top territories",
     "loading": "Loading map",
     "streamsLabel": "streams",
-    "ofTotal": "of total"
+    "ofTotal": "of total",
+    "less": "Less",
+    "more": "More"
   },
   "doors": {
     "revenue": "What it earns",

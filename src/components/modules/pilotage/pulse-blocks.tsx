@@ -219,7 +219,7 @@ export function RestRow({
   items: ReadonlyArray<{ key: string; href: string; label: ReactNode }>;
 }) {
   return (
-    <section className="border-border/60 mt-3 flex flex-wrap items-baseline gap-x-4.5 gap-y-1.5 border-t pt-2.5 text-[11.5px]">
+    <section className="border-border/60 mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t pt-2.5 text-[11.5px]">
       <span className="text-muted-foreground text-[10.5px] font-semibold tracking-[0.08em] uppercase">
         {title}
       </span>
@@ -227,10 +227,10 @@ export function RestRow({
         <Link
           key={i.key}
           href={i.href}
-          className="text-foreground/70 hover:text-foreground"
+          className="text-brand hover:bg-brand/10 rounded-md px-1.5 py-0.5 font-medium transition-colors"
         >
           {i.label}
-          <ArrowRight className="ml-0.5 inline size-3 opacity-50" aria-hidden />
+          <ArrowRight className="ml-0.5 inline size-3" aria-hidden />
         </Link>
       ))}
     </section>

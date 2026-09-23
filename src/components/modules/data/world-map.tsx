@@ -43,6 +43,14 @@ const ISO3_TO_NUMERIC: Record<string, string> = {
 
 const ANTARCTICA_ID = "010";
 
+/* Teintes empruntées à la feuille hôte (sheet-*), avec repli hors feuille. */
+const RAMP = "var(--sheet-line, var(--chart-1))";
+const BASE = "var(--sheet-paper, var(--surface-1))";
+/** Pays sans données : visible, mais nettement en retrait de la rampe. */
+const IDLE = "color-mix(in oklch, var(--sheet-ink, var(--muted-foreground)) 19%, var(--sheet-paper, var(--surface-2)))";
+/** Le trait qui sépare deux pays : la surface elle-même, comme un spacer. */
+const SEAM = "var(--sheet-paper, var(--background))";
+
 type Tip = {
   x: number;
   y: number;
@@ -136,12 +144,16 @@ export function WorldMap({
               const id = normalizeId(geo.id);
               const country = byNumericId.get(id);
               const pct = country ? Math.round(mixPct(country.streams)) : 0;
+              /* Rampe séquentielle d'une seule teinte — celle de la feuille
+                 quand la carte y vit, sinon la teinte de graphique par défaut.
+                 Les pays sans données prennent un ton *de la feuille* : sur un
+                 fond teinté, --surface-2 les rendait indistincts du décor. */
               const fill = country
-                ? `color-mix(in oklch, var(--chart-1) ${pct}%, var(--surface-2))`
-                : "var(--surface-2)";
+                ? `color-mix(in oklch, ${RAMP} ${pct}%, ${BASE})`
+                : IDLE;
               const hoverFill = country
-                ? `color-mix(in oklch, var(--chart-1) ${Math.min(100, pct + 14)}%, var(--surface-2))`
-                : "var(--surface-3)";
+                ? `color-mix(in oklch, ${RAMP} ${Math.min(100, pct + 16)}%, ${BASE})`
+                : IDLE;
               return (
                 <Geography
                   key={`geo-${i}-${id ?? "x"}`}
@@ -165,22 +177,22 @@ export function WorldMap({
                   style={{
                     default: {
                       fill,
-                      stroke: "var(--border)",
-                      strokeWidth: 0.5,
+                      stroke: SEAM,
+                      strokeWidth: 0.7,
                       outline: "none",
                       transition: "fill 150ms ease",
                     },
                     hover: {
                       fill: hoverFill,
-                      stroke: "var(--border)",
-                      strokeWidth: 0.5,
+                      stroke: SEAM,
+                      strokeWidth: 0.7,
                       outline: "none",
                       cursor: country ? "pointer" : "default",
                     },
                     pressed: {
                       fill: hoverFill,
-                      stroke: "var(--border)",
-                      strokeWidth: 0.5,
+                      stroke: SEAM,
+                      strokeWidth: 0.7,
                       outline: "none",
                     },
                   }}
@@ -190,6 +202,19 @@ export function WorldMap({
           }
         </Geographies>
       </ComposableMap>
+
+      <div className="mt-1.5 flex items-center justify-end gap-1.5 text-[10.5px]">
+        <span className="sheet-ink opacity-80">{t("map.less")}</span>
+        {[18, 42, 66, 90].map((step) => (
+          <span
+            key={step}
+            aria-hidden
+            className="size-2.5 rounded-[3px]"
+            style={{ background: `color-mix(in oklch, ${RAMP} ${step}%, ${BASE})` }}
+          />
+        ))}
+        <span className="sheet-ink opacity-80">{t("map.more")}</span>
+      </div>
 
       {tip && (
         <div

@@ -72,7 +72,9 @@
     "topCountries": "Top territoires",
     "loading": "Chargement de la carte",
     "streamsLabel": "streams",
-    "ofTotal": "du total"
+    "ofTotal": "du total",
+    "less": "Moins",
+    "more": "Plus"
   },
   "doors": {
     "revenue": "Ce que ça rapporte",
