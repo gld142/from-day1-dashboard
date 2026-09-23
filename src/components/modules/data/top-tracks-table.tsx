@@ -31,26 +31,33 @@ export type TrackRow = {
 export function TopTracksTable({
   rows,
   showArtist,
+  /** Sans carte ni titre : le bloc vit alors dans une feuille qui les porte. */
+  bare = false,
 }: {
   rows: TrackRow[];
   showArtist: boolean;
+  bare?: boolean;
 }) {
   const locale = useLocale();
   const t = useTranslations("streams");
   const maxShare = Math.max(1, ...rows.map((r) => r.share));
 
-  return (
-    <section className="rounded-xl border bg-card p-5">
-      <header>
-        <h2 className="font-heading text-base font-semibold tracking-tight">
-          {t("tracks.title")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {t("tracks.subtitle", { count: rows.length })}
-        </p>
-      </header>
+  const Frame = bare ? "div" : "section";
 
-      <Table className="mt-4">
+  return (
+    <Frame className={bare ? undefined : "rounded-xl border bg-card p-5"}>
+      {!bare && (
+        <header>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("tracks.title")}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {t("tracks.subtitle", { count: rows.length })}
+          </p>
+        </header>
+      )}
+
+      <Table className={bare ? "mt-1" : "mt-4"}>
         <TableHeader>
           <TableRow>
             <TableHead className="w-8">{t("tracks.rank")}</TableHead>
@@ -100,6 +107,6 @@ export function TopTracksTable({
           ))}
         </TableBody>
       </Table>
-    </section>
+    </Frame>
   );
 }

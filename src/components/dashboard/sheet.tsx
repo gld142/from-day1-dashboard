@@ -76,6 +76,41 @@ export function SheetHeading({
   );
 }
 
+/**
+ * Le chiffre clé posé au centre de son graphique, dans une réserve à la teinte
+ * de la feuille — le gabarit H. Sous 640 px il repasse en titre au-dessus :
+ * au centre d'un écran étroit, il recouvrirait toute la courbe.
+ *
+ * S'utilise autour d'un graphique : le parent porte `relative`, ce bloc se
+ * place en absolu par-dessus, sans capter le pointeur (le tooltip du graphique
+ * continue de fonctionner).
+ */
+export function CenteredValue({
+  value,
+  caption,
+  className,
+}: {
+  value: ReactNode;
+  caption: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "pointer-events-none z-10 mb-1 text-center sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2",
+        className,
+      )}
+    >
+      <div className="sheet-reserve rounded-2xl px-4 py-1.5">
+        <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
+          {value}
+        </p>
+        <p className="sheet-ink mt-1 text-[12.5px]">{caption}</p>
+      </div>
+    </div>
+  );
+}
+
 export type AffiliatedPoint = {
   key: string;
   /** Le chiffre, en gras — ce que l'œil accroche. */

@@ -11,7 +11,10 @@
     "bestDay": "Meilleure journée",
     "bestDayOn": "le {date}",
     "topDsp": "DSP dominant",
-    "topDspShare": "{share} des streams de la période"
+    "topDspShare": "{share} des streams de la période",
+    "perDay": "moyenne par jour",
+    "perDayNote": "sur {days} jours",
+    "prevPeriod": "période précédente"
   },
   "chart": {
     "title": "Évolution des streams",
@@ -70,5 +73,27 @@
     "loading": "Chargement de la carte",
     "streamsLabel": "streams",
     "ofTotal": "du total"
+  },
+  "doors": {
+    "revenue": "Ce que ça rapporte",
+    "revenueValue": "estimation en continu",
+    "audience": "Audience",
+    "audienceValue": "{count} pays",
+    "market": "Marché",
+    "marketValue": "Top 200 France",
+    "algo": "Position algo",
+    "algoValue": "rangs par plateforme",
+    "catalog": "Catalogue",
+    "catalogValue": "{count} titres en tête",
+    "audit": "Audit royalties",
+    "auditValue": "écart avec les relevés"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "overview": "Vue d'ensemble",
+    "fans": "Fans",
+    "sync": "Sync & Licensing",
+    "discovery": "Discovery Lab",
+    "index": "Day 1 Index"
   }
 }

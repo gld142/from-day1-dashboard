@@ -33,7 +33,16 @@ type DspRow = {
   spark: Array<{ value: number }>;
 };
 
-export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
+export function DspBreakdown({
+  ids,
+  days,
+  /** Sans carte ni titre : le bloc vit alors dans une feuille qui les porte. */
+  bare = false,
+}: {
+  ids: string[];
+  days: number;
+  bare?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("streams");
 
@@ -77,18 +86,22 @@ export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
 
   const pct = (n: number) => fmtPct(locale, n).replace("+", "");
 
+  const Frame = bare ? "div" : "section";
+
   return (
-    <section className="rounded-xl border bg-card p-5">
-      <header>
-        <h2 className="font-heading text-base font-semibold tracking-tight">
-          {t("dsp.title")}
-        </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">{t("dsp.subtitle")}</p>
-      </header>
+    <Frame className={bare ? undefined : "rounded-xl border bg-card p-5"}>
+      {!bare && (
+        <header>
+          <h2 className="font-heading text-base font-semibold tracking-tight">
+            {t("dsp.title")}
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">{t("dsp.subtitle")}</p>
+        </header>
+      )}
 
       {/* Donut à gauche (≤ 260 px), tableau des parts en légende à droite ;
           empilés sur mobile. */}
-      <div className="mt-4 grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-center">
+      <div className="mt-3 grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:items-center">
         <DspShareDonut rows={rows} />
         <Table>
           <TableHeader>
@@ -132,7 +145,11 @@ export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
         </Table>
       </div>
 
-      {/* Tendance — small multiples, une sparkline par DSP */}
+      {/* Tendance — small multiples, une sparkline par DSP. Masqués en mode nu :
+          le tableau ci-dessus donne déjà volume, delta et part de chaque
+          plateforme ; les répéter en cartes n'ajoute que de la fatigue. */}
+      {!bare && (
+        <>
       <h3 className="mt-6 text-xs font-medium text-muted-foreground">{t("dsp.trend")}</h3>
       <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-7">
         {rows.map((r) => (
@@ -160,6 +177,8 @@ export function DspBreakdown({ ids, days }: { ids: string[]; days: number }) {
           </div>
         ))}
       </div>
-    </section>
+        </>
+      )}
+    </Frame>
   );
 }

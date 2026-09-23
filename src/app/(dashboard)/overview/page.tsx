@@ -21,6 +21,7 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import {
   AffiliatedPoints,
   AttachedLines,
+  CenteredValue,
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
@@ -295,20 +296,18 @@ export default function OverviewPage() {
               {t("hero.year")}
             </SheetHeading>
             <div className="relative">
-              <div className="pointer-events-none z-10 mb-1 text-center sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2">
-                <div className="sheet-reserve rounded-2xl px-4 py-1.5">
-                  <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
-                    {eur(v.revenue12m)}
-                  </p>
-                  <p className="sheet-ink mt-1 text-[12.5px]">
+              <CenteredValue
+                value={eur(v.revenue12m)}
+                caption={
+                  <>
                     {t("hero.caption")}{" "}
                     <b className={v.revenueDelta >= 0 ? "text-success" : "text-destructive"}>
                       {fmtPct(locale, v.revenueDelta)}
                     </b>{" "}
                     <ProvenanceBadge provenance="estimated" className="align-middle" />
-                  </p>
-                </div>
-              </div>
+                  </>
+                }
+              />
               <RevenueStreamsChart
                 data={v.series}
                 revenueLabel={t("chart.revenue")}
@@ -503,20 +502,18 @@ export default function OverviewPage() {
               {t("hero.yearLabel")}
             </SheetHeading>
             <div className="relative">
-              <div className="pointer-events-none z-10 mb-1 text-center sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2">
-                <div className="sheet-reserve rounded-2xl px-4 py-1.5">
-                  <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
-                    {eur(l.revenue12m)}
-                  </p>
-                  <p className="sheet-ink mt-1 text-[12.5px]">
+              <CenteredValue
+                value={eur(l.revenue12m)}
+                caption={
+                  <>
                     {t("hero.captionLabel")}{" "}
                     <b className={l.revenueDelta >= 0 ? "text-success" : "text-destructive"}>
                       {fmtPct(locale, l.revenueDelta)}
                     </b>{" "}
                     <ProvenanceBadge provenance="estimated" className="align-middle" />
-                  </p>
-                </div>
-              </div>
+                  </>
+                }
+              />
               <RevenueStreamsChart
                 data={l.series}
                 revenueLabel={t("chart.revenue")}

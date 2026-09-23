@@ -110,7 +110,10 @@ export function RosterCompare({ days }: { days: number }) {
                 stroke={artistColor(artist.hue)}
                 strokeWidth={2}
                 dot={false}
-                animationDuration={600}
+            /* Pas d'animation : le clip de recharts reste fermé quand les
+               frames ne s'exécutent pas (onglet en arrière-plan, capture hors
+               viewport) et la série n'apparaît jamais. Voir hero-chart.tsx. */
+            isAnimationActive={false}
               />
             ))}
           </LineChart>

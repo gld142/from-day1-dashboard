@@ -11,7 +11,10 @@
     "bestDay": "Best day",
     "bestDayOn": "on {date}",
     "topDsp": "Top DSP",
-    "topDspShare": "{share} of period streams"
+    "topDspShare": "{share} of period streams",
+    "perDay": "daily average",
+    "perDayNote": "over {days} days",
+    "prevPeriod": "previous period"
   },
   "chart": {
     "title": "Streams over time",
@@ -70,5 +73,27 @@
     "loading": "Loading map",
     "streamsLabel": "streams",
     "ofTotal": "of total"
+  },
+  "doors": {
+    "revenue": "What it earns",
+    "revenueValue": "continuous estimate",
+    "audience": "Audience",
+    "audienceValue": "{count} countries",
+    "market": "Market",
+    "marketValue": "French Top 200",
+    "algo": "Algorithm position",
+    "algoValue": "ranks per platform",
+    "catalog": "Catalogue",
+    "catalogValue": "{count} leading tracks",
+    "audit": "Royalty audit",
+    "auditValue": "gap with statements"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "overview": "Overview",
+    "fans": "Fans",
+    "sync": "Sync & Licensing",
+    "discovery": "Discovery Lab",
+    "index": "Day 1 Index"
   }
 }

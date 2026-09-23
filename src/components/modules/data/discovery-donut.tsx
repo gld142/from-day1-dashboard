@@ -67,7 +67,10 @@ export function DiscoveryDonut({ ids }: { ids: string[] }) {
                 cornerRadius={4}
                 stroke="var(--card)"
                 strokeWidth={2}
-                animationDuration={600}
+            /* Pas d'animation : le clip de recharts reste fermé quand les
+               frames ne s'exécutent pas (onglet en arrière-plan, capture hors
+               viewport) et la série n'apparaît jamais. Voir hero-chart.tsx. */
+            isAnimationActive={false}
               >
                 {parts.map((p) => (
                   <Cell key={p.id} fill={COLORS[p.id]} />

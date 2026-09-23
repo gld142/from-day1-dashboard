@@ -20,9 +20,14 @@ import type { DSP } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
-import { KpiCard } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
-import { Badge } from "@/components/ui/badge";
+import {
+  AffiliatedPoints,
+  CenteredValue,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { Progress } from "@/components/ui/progress";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -93,10 +98,6 @@ export default function StreamsPage() {
     () => (weekly ? aggregateWeekly(cur) : cur),
     [cur, weekly],
   );
-  const spark = useMemo(
-    () => chartData.map((p) => ({ value: p.streams })),
-    [chartData],
-  );
 
   const trackRows = useMemo<TrackRow[]>(() => {
     const all = ids.flatMap((id) => topTracks(id, days, 12));
@@ -142,7 +143,10 @@ export default function StreamsPage() {
     [aggregate, artistId],
   );
 
-  const pct = (n: number) => fmtPct(locale, n).replace("+", "");
+  const pct = (n: number) =>
+    new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(
+      n / 100,
+    );
 
   return (
     <div className="rise-in">
@@ -150,176 +154,200 @@ export default function StreamsPage() {
         {focusedArtist && (
           <ArtistBadge artist={focusedArtist} meta={focusedArtist.genre} />
         )}
-        <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
-          <TabsList>
-            {PERIODS.map((p) => (
-              <TabsTrigger key={p} value={p} className="num text-xs">
-                {tc(`periods.${p}`)}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
       </PageHeader>
 
-      {/* Rangée KPI */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          id="streams-total"
-          hero
-          label={t("kpi.total")}
-          value={total}
-          delta={delta}
-          spark={spark}
-        />
-        <KpiCard
-          id="streams-delta"
-          label={t("kpi.delta")}
-          value={delta}
-          format="pct"
-          deltaLabel={t("kpi.deltaHint")}
-        />
-        <KpiCard
-          id="streams-best"
-          label={t("kpi.bestDay")}
-          value={bestDay.streams}
-          deltaLabel={
-            bestDay.date
-              ? t("kpi.bestDayOn", {
-                  date: fmtDate(locale, bestDay.date, {
-                    day: "numeric",
-                    month: "long",
-                  }),
-                })
-              : undefined
-          }
-        />
-        <div className="flex flex-col gap-1 rounded-xl border bg-card p-4">
-          <span className="text-xs font-medium text-muted-foreground">
-            {t("kpi.topDsp")}
-          </span>
-          <span className="text-2xl font-semibold tracking-tight">
-            {topDsp ? t(`dsp.names.${topDsp.dsp}`) : "—"}
-          </span>
-          {topDsp && (
-            <span className="num text-xs text-muted-foreground">
-              {t("kpi.topDspShare", {
-                share: pct(total === 0 ? 0 : (topDsp.streams / total) * 100),
-              })}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Grand chart de tendance */}
-      <section className="mt-4 rounded-xl border bg-card p-5">
-        <header className="flex flex-wrap items-start justify-between gap-2">
-          <div>
-            <h2 className="font-heading text-base font-semibold tracking-tight">
-              {t("chart.title")}
-            </h2>
-            <p className="mt-0.5 text-sm text-muted-foreground">
-              {weekly ? t("chart.weekly") : t("chart.daily")}
-            </p>
+      <div className="space-y-3">
+        {/* Le volume de la période, au centre de sa courbe. */}
+        <Sheet family="streams">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <SheetHeading>{t("chart.title")}</SheetHeading>
+            <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
+              <TabsList className="h-7">
+                {PERIODS.map((p) => (
+                  <TabsTrigger key={p} value={p} className="num px-2.5 text-[11px]">
+                    {tc(`periods.${p}`)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
           </div>
-          {aggregate && (
-            <Badge variant="outline" className="num">
-              {t("chart.rosterNote", { count: ids.length })}
-            </Badge>
-          )}
-        </header>
-        <div className="mt-4">
-          <StreamsTrendChart data={chartData} />
-        </div>
-      </section>
-
-      {/* 365 jours d'écoute — un carré par jour (un seul artiste) */}
-      {year && (
-        <section className="mt-4 rounded-xl border bg-card p-5">
-          <header>
-            <h2 className="font-heading text-base font-semibold tracking-tight">
-              {t("calendar.title")}
-            </h2>
-            <p className="mt-0.5 text-sm text-muted-foreground">
-              {t("calendar.subtitle")}
-            </p>
-          </header>
-          <ListeningCalendar days={year} className="mt-4" />
-        </section>
-      )}
-
-      {/* Comparateur roster (vue label agrégée) */}
-      {aggregate && (
-        <div className="mt-4">
-          <RosterCompare days={days} />
-        </div>
-      )}
-
-      {/* Répartition DSP + légende de provenance par plateforme */}
-      <div className="mt-4">
-        <DspBreakdown ids={ids} days={days} />
-        {provByDsp.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 px-1 text-xs text-muted-foreground">
-            <span>{t("provenanceLegend")}</span>
-            {provByDsp.map(({ dsp, provenance }) => (
-              <span key={dsp} className="inline-flex items-center gap-1">
-                <span>{t(`dsp.names.${dsp}`)}</span>
-                <ProvenanceBadge provenance={provenance} />
-              </span>
-            ))}
+          <div className="relative">
+            <CenteredValue
+              value={fmtCompact(locale, total)}
+              caption={
+                <>
+                  {weekly ? t("chart.weekly") : t("chart.daily")}{" "}
+                  <b className={delta >= 0 ? "text-success" : "text-destructive"}>
+                    {fmtPct(locale, delta)}
+                  </b>
+                </>
+              }
+            />
+            <StreamsTrendChart data={chartData} />
           </div>
-        )}
-        {tiktok && (
-          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 px-1 text-xs text-muted-foreground">
-            <span>
-              {t("tiktokSignal", { videos: fmtCompact(locale, tiktok.videos) })}
-            </span>
-            <span aria-hidden>·</span>
-            <span>{t("tiktokNote")}</span>
-            <ProvenanceBadge provenance={tiktok.provenance} />
-          </div>
-        )}
-      </div>
+          <AffiliatedPoints
+            points={[
+              {
+                key: "best",
+                value: fmtCompact(locale, bestDay.streams),
+                label: t("kpi.bestDay"),
+                note: bestDay.date
+                  ? fmtDate(locale, bestDay.date, { day: "numeric", month: "long" })
+                  : undefined,
+              },
+              {
+                key: "avg",
+                value: fmtCompact(locale, Math.round(total / Math.max(1, cur.length))),
+                label: t("kpi.perDay"),
+                note: t("kpi.perDayNote", { days: cur.length }),
+              },
+              ...(topDsp
+                ? [
+                    {
+                      key: "dsp",
+                      value: t(`dsp.names.${topDsp.dsp}`),
+                      label: t("kpi.topDsp"),
+                      note: t("kpi.topDspShare", {
+                        share: pct(total === 0 ? 0 : (topDsp.streams / total) * 100),
+                      }),
+                    },
+                  ]
+                : []),
+              {
+                key: "prev",
+                value: fmtCompact(locale, prevTotal),
+                label: t("kpi.prevPeriod"),
+                note: t("kpi.deltaHint"),
+              },
+            ]}
+          />
+        </Sheet>
 
-      {/* Top titres */}
-      <div className="mt-4">
-        <TopTracksTable rows={trackRows} showArtist={aggregate} />
-      </div>
-
-      {/* Carte monde + top territoires */}
-      <section className="mt-4 rounded-xl border bg-card p-5">
-        <header>
-          <h2 className="font-heading text-base font-semibold tracking-tight">
-            {t("map.title")}
-          </h2>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            {t("map.subtitle")}
-          </p>
-        </header>
-        <div className="mt-4 grid items-start gap-6 lg:grid-cols-[1.7fr_1fr]">
-          <WorldMap data={countries} />
-          <div>
-            <h3 className="text-xs font-medium text-muted-foreground">
-              {t("map.topCountries")}
-            </h3>
-            <ul className="mt-3 space-y-2.5">
-              {countries.slice(0, 8).map((c) => (
-                <li key={c.iso3} className="flex items-center gap-3">
-                  <span className="w-24 truncate text-sm">
-                    {locale === "fr" ? c.nameFr : c.nameEn}
-                  </span>
-                  <Progress
-                    value={(c.streams / maxCountry) * 100}
-                    className="flex-1"
-                  />
-                  <span className="num w-12 shrink-0 text-right text-xs text-muted-foreground">
-                    {fmtCompact(locale, c.streams)}
-                  </span>
-                </li>
+        {/* Par plateforme — et d'où vient chaque chiffre. */}
+        <Sheet family="streams">
+          <SheetHeading action={t("dsp.subtitle")}>{t("dsp.title")}</SheetHeading>
+          <DspBreakdown ids={ids} days={days} bare />
+          {provByDsp.length > 0 && (
+            <div className="sheet-rule mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-2.5 text-xs">
+              <span className="sheet-ink">{t("provenanceLegend")}</span>
+              {provByDsp.map(({ dsp, provenance }) => (
+                <span key={dsp} className="inline-flex items-center gap-1">
+                  <span>{t(`dsp.names.${dsp}`)}</span>
+                  <ProvenanceBadge provenance={provenance} />
+                </span>
               ))}
-            </ul>
+            </div>
+          )}
+          {tiktok && (
+            <p className="text-muted-foreground mt-2 text-xs">
+              {t("tiktokSignal", { videos: fmtCompact(locale, tiktok.videos) })} ·{" "}
+              {t("tiktokNote")} <ProvenanceBadge provenance={tiktok.provenance} />
+            </p>
+          )}
+        </Sheet>
+
+        {/* Les titres relèvent du catalogue : ils en prennent la couleur. */}
+        <Sheet family="catalog">
+          <SheetHeading action={t("tracks.subtitle", { count: trackRows.length })}>
+            {t("tracks.title")}
+          </SheetHeading>
+          <TopTracksTable rows={trackRows} showArtist={aggregate} bare />
+        </Sheet>
+
+        {/* Où on t'écoute : c'est de l'audience, pas du volume. */}
+        <Sheet family="audience">
+          <SheetHeading action={t("map.subtitle")}>{t("map.title")}</SheetHeading>
+          <div className="mt-2 grid items-start gap-6 lg:grid-cols-[1.7fr_1fr]">
+            <WorldMap data={countries} />
+            <div>
+              <h3 className="sheet-ink text-[11px] font-semibold tracking-[0.06em] uppercase">
+                {t("map.topCountries")}
+              </h3>
+              <ul className="mt-2 space-y-2.5">
+                {countries.slice(0, 8).map((c) => (
+                  <li key={c.iso3} className="flex items-center gap-3">
+                    <span className="w-24 truncate text-sm">
+                      {locale === "fr" ? c.nameFr : c.nameEn}
+                    </span>
+                    <Progress value={(c.streams / maxCountry) * 100} className="flex-1" />
+                    <span className="num w-12 shrink-0 text-right text-xs">
+                      {fmtCompact(locale, c.streams)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </Sheet>
+
+        {/* Une année jour par jour — un seul artiste. */}
+        {year && (
+          <Sheet family="streams">
+            <SheetHeading action={t("calendar.subtitle")}>
+              {t("calendar.title")}
+            </SheetHeading>
+            <ListeningCalendar days={year} className="mt-2" />
+          </Sheet>
+        )}
+
+        {aggregate && <RosterCompare days={days} />}
+
+        <Doors
+          title={tc("blocks.doors")}
+          doors={[
+            {
+              key: "revenue",
+              href: "/revenue",
+              label: t("doors.revenue"),
+              value: t("doors.revenueValue"),
+            },
+            {
+              key: "audience",
+              href: "/audience",
+              label: t("doors.audience"),
+              value: t("doors.audienceValue", { count: countries.length }),
+            },
+            {
+              key: "market",
+              href: "/market",
+              label: t("doors.market"),
+              value: t("doors.marketValue"),
+            },
+            {
+              key: "algo",
+              href: "/algo-position",
+              label: t("doors.algo"),
+              value: t("doors.algoValue"),
+            },
+            {
+              key: "catalog",
+              href: "/catalog",
+              label: t("doors.catalog"),
+              value: t("doors.catalogValue", { count: trackRows.length }),
+            },
+            {
+              key: "audit",
+              href: "/audit",
+              label: t("doors.audit"),
+              value: t("doors.auditValue"),
+            },
+          ]}
+        />
+
+        <RestRow
+          title={isLabel && !focusedArtistId ? tc("blocks.restLabel") : tc("blocks.rest")}
+          items={[
+            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+            { key: "overview", href: "/overview", label: t("rest.overview") },
+            { key: "fans", href: "/fans", label: t("rest.fans") },
+            { key: "sync", href: "/sync", label: t("rest.sync") },
+            { key: "discovery", href: "/discovery", label: t("rest.discovery") },
+            { key: "index", href: "/day1-index", label: t("rest.index") },
+          ]}
+        />
+
+        <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+      </div>
     </div>
   );
 }

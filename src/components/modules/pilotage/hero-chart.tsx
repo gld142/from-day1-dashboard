@@ -25,6 +25,7 @@ import {
   YAxis,
 } from "recharts";
 import { fmtCompact, fmtDate } from "@/lib/format";
+import { CenteredValue } from "@/components/dashboard/sheet";
 import { cn } from "@/lib/utils";
 
 /** Les quatre fenêtres du sélecteur, en jours de relevé. */
@@ -122,14 +123,7 @@ export function HeroChart({
       <div className="relative mt-1">
         {/* Au centre dès qu'il y a la place ; en titre sur mobile, sinon il
             recouvrirait toute la courbe. */}
-        <div className="pointer-events-none z-10 mb-1 text-center sm:absolute sm:top-1/2 sm:left-1/2 sm:mb-0 sm:-translate-x-1/2 sm:-translate-y-1/2">
-          <div className="sheet-reserve rounded-2xl px-4 py-1.5">
-            <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl lg:text-6xl">
-              {value}
-            </p>
-            <p className="sheet-ink mt-1 text-[12.5px]">{caption}</p>
-          </div>
-        </div>
+        <CenteredValue value={value} caption={caption} />
         <div className="h-[168px] sm:h-[210px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: narrow ? 8 : 26, right: 10, bottom: 0, left: 0 }}>
