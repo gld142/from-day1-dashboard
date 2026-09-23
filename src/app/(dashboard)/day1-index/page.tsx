@@ -258,7 +258,14 @@ export default function Day1IndexPage() {
                     </span>
                   </span>
                   {isCurrent && (
-                    <Badge className="bg-brand/10 text-brand shrink-0">
+                    <Badge
+                      /* Encre de la feuille, pas le violet de marque : un badge
+                         violet sur un papier « tendances » rosé mesurait 3,90:1
+                         en nuit et 4,26 à l'aube, sous le seuil AA — et il
+                         affichait la couleur du produit là où la règle veut
+                         celle de la famille. */
+                      className="shrink-0 border-transparent bg-[color-mix(in_oklab,var(--sheet-line)_22%,transparent)] text-foreground"
+                    >
                       {t("leaderboard.you")}
                     </Badge>
                   )}

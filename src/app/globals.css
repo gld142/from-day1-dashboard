@@ -75,13 +75,38 @@
   --popover-foreground: var(--foreground);
   --primary: oklch(0.62 0.19 285);
   --primary-foreground: oklch(0.98 0.005 285);
-  --brand-base: oklch(0.62 0.19 285);
+  /* Le motif « bg-brand/10 + text-brand » — « Fondateur », « Wavely »,
+     « Émergent », « Single prioritaire », « Toujours visible » — plafonne à
+     3,87:1 dans son pire cas papier × skin tant que le violet reste à 0,62.
+     Un cran de clarté le porte à 4,70, teinte et chroma intactes : le violet
+     reste le violet. --primary, --accent et --ring gardent 0,62, déclarés
+     séparément : boutons, interrupteurs et anneaux de focus ne bougent pas.
+     Écart assumé : la marque n'est plus le violet exact de --line-streams —
+     l'accent produit cesse de se confondre avec une famille. */
+  --brand-base: oklch(0.68 0.19 285);
   --brand: var(--brand-base);
-  --brand-foreground: oklch(0.98 0.005 285);
+  /* Sur l'aplat de marque, le quasi-blanc ne peut pas s'en sortir : la
+     pastille « J-27 » de /urssaf mesure 3,62:1, et le blanc pur ne donnerait
+     que 3,83 — le seuil est hors d'atteinte par le haut. Pire, sur le violet
+     éclairci ci-dessus cette encre claire tomberait à 2,83. On renverse donc
+     l'encre, comme le fait déjà l'aube : sombre sur violet, 6,05:1 en skin
+     structure, 5,71 en skin artiste. Les deux lignes se modifient ensemble ou
+     pas du tout. Le soupçon de chroma garde l'encre parente du violet plutôt
+     qu'un noir neutre. Concerne les neuf « bg-brand text-brand-foreground »,
+     dont les logotypes de la barre latérale et de la nav mobile : c'est le
+     changement le plus visible du lot, et le seul qui touche une marque et
+     non une donnée. */
+  --brand-foreground: oklch(0.20 0.03 285);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
   --muted: var(--surface-2);
-  --muted-foreground: oklch(0.68 0.016 258);
+  /* Servi en /70 — « Rituel quotidien » de /settings, les quatre libellés de
+     quadrant de /roster — ce gris tombe à 3,56:1 sur le papier de sa feuille.
+     À 0,763 il remonte à 4,64, et les autres endroits où il frôlait le seuil
+     (onglets inactifs et pastilles « Simulé » de /revenue) remontent avec lui.
+     Teinte et chroma ne bougent pas — le gris froid de la nuit reste ce gris,
+     il cesse seulement de s'effacer. */
+  --muted-foreground: oklch(0.763 0.016 258);
   --accent: oklch(0.62 0.19 285 / 12%);
   --accent-foreground: oklch(0.78 0.13 285);
   --destructive: oklch(0.68 0.19 22);
@@ -109,7 +134,11 @@
 /* ════════════════════════════════════════════════════════════════════
    THÈME 2 — AUBE · indigo-prune, première lueur corail
    ════════════════════════════════════════════════════════════════════ */
-[data-theme="dawn"] {
+/* `:root[data-theme=…]` (0,2,0) et non `[data-theme=…]` seul (0,1,0) : sous
+   la forme nue, ce bloc a la même spécificité que le `:root` du thème nuit et
+   ne gagne que par l'ordre de déclaration — une règle `:root` ajoutée plus bas
+   dans le fichier le ferait taire sans bruit. */
+:root[data-theme="dawn"] {
   color-scheme: dark;
   --background: oklch(0.17 0.022 305);
   --foreground: oklch(0.94 0.012 65);
@@ -128,10 +157,19 @@
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
   --muted: var(--surface-2);
-  --muted-foreground: oklch(0.7 0.02 320);
+  /* Même défaut qu'en nuit, aux mêmes endroits : servi en /70, ce gris mesure
+     3,64:1 sur « Rituel quotidien » et sur les libellés de quadrant. 0,779 les
+     remonte à 4,61, et entraîne avec lui les autres endroits où il frôlait le
+     seuil. La teinte 320 garde au gris son biais prune, propre à l'aube. */
+  --muted-foreground: oklch(0.779 0.02 320);
   --accent: oklch(0.72 0.15 40 / 13%);
   --accent-foreground: oklch(0.8 0.12 42);
-  --destructive: oklch(0.68 0.19 22);
+  /* Les deltas négatifs de /roster (« −4,7 % », « −2,2 % ») posés en rouge sur
+     destructive/10 mesurent 4,47:1 sur le papier argent et 4,48 sur le papier
+     tendances de l'aube : sous le seuil d'un cheveu. Un centième de clarté les
+     porte à 4,61 — à l'œil, c'est le même rouge d'alerte. La nuit garde 0,68 :
+     ses papiers sont plus sombres et le même rouge y mesure déjà 4,79. */
+  --destructive: oklch(0.69 0.19 22);
   --success: oklch(0.72 0.15 162);
   --warning: oklch(0.8 0.14 80);
   --border: oklch(0.94 0.03 50 / 9%);
@@ -156,7 +194,10 @@
 /* ════════════════════════════════════════════════════════════════════
    THÈME 3 — JOUR · papier, encre, violet profond en signal
    ════════════════════════════════════════════════════════════════════ */
-[data-theme="day"] {
+/* Même forme qu'à l'aube : sous `[data-theme="day"]` seul (0,1,0), ce bloc a
+   exactement la spécificité du `:root` de la nuit et ne l'emporte que par
+   l'ordre des règles. Aucune valeur du thème jour n'est touchée. */
+:root[data-theme="day"] {
   color-scheme: light;
   --background: oklch(0.977 0.002 250);
   --foreground: oklch(0.205 0.012 260);
@@ -368,6 +409,24 @@
   --paper-catalog: oklch(0.222 0.028 235);
   --ink-catalog: oklch(0.81 0.08 232);
   --line-catalog: oklch(0.64 0.12 233);
+  /* L'encart — le fond des pastilles posées DANS une feuille. Sans lui elles
+     tirent le gris neutre de --secondary, plus sombre que le papier : les
+     modules de /team (« Dépenses & P&L », « Streams live », « Audience »,
+     « Fans CRM », « Revenus ») mesurent 1,04:1 contre leur feuille et ne se
+     lisent plus comme des pastilles, quand « Tous les modules » juste à côté,
+     en variante outline, se détache à 1,20. Cette pastille était déjà faible
+     avant les papiers (1,06 sur une carte) ; ce que le papier a créé, c'est
+     l'INVERSION de polarité — l'encart plus sombre que son support — et c'est
+     elle qu'on annule. Chaque valeur reprend la teinte et la chroma du papier
+     de sa famille et ne monte que la clarté (+0,062) : l'argent reste ambre,
+     le catalogue ardoise, aucune famille ne dérive vers une autre ni ne
+     redevient grise. 1,20:1, juste sous --border (1,23) : l'encart ne prend
+     pas le pas sur les filets. */
+  --inset-streams: oklch(0.287 0.038 285);
+  --inset-money: oklch(0.287 0.031 76);
+  --inset-audience: oklch(0.284 0.032 166);
+  --inset-trends: oklch(0.29 0.036 8);
+  --inset-catalog: oklch(0.284 0.028 235);
 }
 
 :root[data-theme="dawn"] {
@@ -376,7 +435,12 @@
   --line-streams: oklch(0.66 0.15 298);
   --paper-money: oklch(0.252 0.038 60);
   --ink-money: oklch(0.86 0.1 68);
-  --line-money: oklch(0.72 0.15 40);
+  /* Ambre de la famille « argent » (teinte 72, entre son papier 60 et son
+     encre 68) — et non plus oklch(0.72 0.15 40), qui était le corail de
+     --brand-base de l'aube au degré près : le filet affichait l'accent du
+     thème au lieu de la famille, et l'argent changeait d'identité entre nuit
+     (ambre) et aube (corail). */
+  --line-money: oklch(0.74 0.13 72);
   --paper-audience: oklch(0.245 0.032 170);
   --ink-audience: oklch(0.82 0.09 166);
   --line-audience: oklch(0.66 0.13 164);
@@ -386,6 +450,18 @@
   --paper-catalog: oklch(0.248 0.03 240);
   --ink-catalog: oklch(0.83 0.08 236);
   --line-catalog: oklch(0.67 0.12 236);
+  /* Le même encart qu'en nuit : ici la pastille de module mesure 1,06:1, juste
+     au-dessus du seuil de l'audit — donc invisible dans ses relevés — mais
+     c'est le même défaut au même endroit, et l'aube ne reste pas seule avec
+     une pastille illisible. Teintes et chromas repris des papiers de l'aube,
+     clarté +0,055 : 1,18-1,20:1, sous --border (1,26). L'identité de chaque
+     famille est ainsi la même d'un thème à l'autre — argent ambre, audience
+     verte, tendances rosées, catalogue ardoise, streams lavande. */
+  --inset-streams: oklch(0.305 0.04 300);
+  --inset-money: oklch(0.307 0.038 60);
+  --inset-audience: oklch(0.3 0.032 170);
+  --inset-trends: oklch(0.307 0.04 5);
+  --inset-catalog: oklch(0.303 0.03 240);
 }
 
 /* Thème jour : les valeurs validées en maquette. */
@@ -417,11 +493,31 @@
   color: var(--foreground);
   padding: 1.25rem 1.5rem;
 }
-.sheet-streams { --sheet-paper: var(--paper-streams); --sheet-ink: var(--ink-streams); --sheet-line: var(--line-streams); }
-.sheet-money { --sheet-paper: var(--paper-money); --sheet-ink: var(--ink-money); --sheet-line: var(--line-money); }
-.sheet-audience { --sheet-paper: var(--paper-audience); --sheet-ink: var(--ink-audience); --sheet-line: var(--line-audience); }
-.sheet-trends { --sheet-paper: var(--paper-trends); --sheet-ink: var(--ink-trends); --sheet-line: var(--line-trends); }
-.sheet-catalog { --sheet-paper: var(--paper-catalog); --sheet-ink: var(--ink-catalog); --sheet-line: var(--line-catalog); }
+/* Quatre slots par famille désormais : le papier, l'encre des libellés, le
+   filet, et l'encart des pastilles posées dessus. Déclarer une variable ne
+   peint rien — c'est la règle suivante qui s'en sert. */
+.sheet-streams { --sheet-paper: var(--paper-streams); --sheet-ink: var(--ink-streams); --sheet-line: var(--line-streams); --sheet-inset: var(--inset-streams); }
+.sheet-money { --sheet-paper: var(--paper-money); --sheet-ink: var(--ink-money); --sheet-line: var(--line-money); --sheet-inset: var(--inset-money); }
+.sheet-audience { --sheet-paper: var(--paper-audience); --sheet-ink: var(--ink-audience); --sheet-line: var(--line-audience); --sheet-inset: var(--inset-audience); }
+.sheet-trends { --sheet-paper: var(--paper-trends); --sheet-ink: var(--ink-trends); --sheet-line: var(--line-trends); --sheet-inset: var(--inset-trends); }
+.sheet-catalog { --sheet-paper: var(--paper-catalog); --sheet-ink: var(--ink-catalog); --sheet-line: var(--line-catalog); --sheet-inset: var(--inset-catalog); }
+
+/* Dans une feuille, une pastille « secondary » cesse de tirer le gris neutre
+   de shadcn — plus sombre que le papier, donc à contre-polarité — et prend
+   l'encart de sa famille. C'est ici, et nulle part ailleurs, que le 1,04:1 de
+   /team se corrige : redéfinir --surface-2 sur la feuille ne changerait rien,
+   puisque --secondary est substitué à la racine, là où il est déclaré.
+   Le jour reste dehors : son papier est clair, un encart sombre y serait un
+   contresens, et ses valeurs sont gelées — `:root:not(…)` (0,3,0) l'écarte
+   sans toucher une ligne de son bloc. Une .sheet sans famille retombe
+   explicitement sur --surface-2, c'est-à-dire sur le comportement d'avant,
+   plutôt que de compter sur un rattrapage par héritage.
+   --muted reste dehors lui aussi : il peint les pistes des barres de
+   progression, dont le pire rapport remplissage/piste est déjà à 2,54:1 —
+   éclaircir la piste le ferait baisser encore. */
+:root:not([data-theme="day"]) .sheet {
+  --secondary: var(--sheet-inset, var(--surface-2));
+}
 
 /* Libellés de la feuille : l'encre de la famille, jamais le gris global. */
 .sheet-ink { color: var(--sheet-ink); }
