@@ -1,30 +1,19 @@
 {
-  "title": "AI Copilot",
-  "subtitle": "Ask questions in natural language — the Copilot answers with your real data.",
-  "capabilities": {
-    "title": "What the Copilot can do",
-    "analyzeTitle": "Analyze your revenue",
-    "analyzeDesc": "Best month, dominant sources, seasonality — explained in one sentence.",
-    "anomalyTitle": "Detect anomalies",
-    "anomalyDesc": "Royalty gaps, stream drops, late payments.",
-    "auditTitle": "Prepare an audit",
-    "auditDesc": "Quantify a gap and pre-draft the verification letter.",
-    "forecastTitle": "Project what is next",
-    "forecastDesc": "6-12 month trends based on your current growth."
-  },
+  "title": "Copilot",
+  "subtitle": "Ask your question; the answer is computed from your figures, not guessed.",
   "chat": {
     "assistantName": "Copilot",
     "you": "You",
-    "status": "Connected to your data",
-    "placeholder": "Ask a question about your data…",
+    "status": "Answers computed from the current scope's data",
+    "placeholder": "Ask a question about this data…",
     "send": "Send",
     "typing": "Copilot is writing…",
     "disclaimer": "Demo — answers are generated from your demo data.",
     "suggestionsLabel": "Suggestions",
-    "generic": "Good question. In this demo I mostly answer the suggestions below — in production, I query all of your data (streams, revenue, contracts, rights) in natural language and cite my sources."
+    "generic": "In the demo I answer the suggestions below. In production I query the whole dataset — streams, revenue, contracts, rights — and cite my sources."
   },
   "greeting": {
-    "artist": "Hi {name} — I have analyzed your last 24 months of data. Ask me anything about your streams, revenue or rights.",
+    "artist": "Hi {name} — I have your last 24 months in front of me. Ask me anything about your streams, revenue or rights.",
     "label": "Hi — I am looking at the consolidated data of the {count} artists on {label}. Ask me your management questions."
   },
   "suggestions": {
@@ -38,14 +27,14 @@
     "auditLabel": "Are we owed money?"
   },
   "answers": {
-    "bestMonth": "Your best month is {month}: {amount} in revenue across all sources, {pct} above your monthly average ({avg}). The peak is mostly driven by streaming and live.",
+    "bestMonth": "Over 24 months, your best month is {month}: {amount} in revenue across all sources, {pct} above your monthly average ({avg}). The peak comes mostly from streaming and live.",
     "growth": "Over the last 30 days, your streams are moving {delta} versus the previous 30 days, with {streams} total streams. Your monthly listener base stands at {listeners} — the underlying trend is still carried by your {growthRate} monthly growth.",
-    "topSource": "Your top revenue source over 12 months is {source}: {amount}, which is {pct} of your total ({total}). That is a healthy concentration level — keep an eye on diversification.",
-    "audit": "Yes, probably. My reconciliation detects {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totaling {amount}. Head to the Audit module to generate the verification letters.",
-    "bestMonthLabel": "The roster best month is {month}: {amount} in consolidated revenue, {pct} above the monthly average ({avg}).",
+    "topSource": "Over 12 months, your top revenue source is {source}: {amount}, or {pct} of your total ({total}).",
+    "audit": "My reconciliation finds {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totalling {amount}. That's a question to ask, not money in hand: the Audit page holds the verification letters.",
+    "bestMonthLabel": "Over 24 months, the roster's best month is {month}: {amount} in consolidated revenue, {pct} above the monthly average ({avg}).",
     "growthLabel": "Over 30 days, the roster totals {streams} streams, moving {delta} versus the previous period. The momentum is driven by your developing artists.",
     "topArtist": "{artist} is your most profitable artist: {net} in net result over 12 months, at a {margin} margin. Revenue generated: {revenue}.",
-    "auditLabel": "Yes. Across the roster I detect {count, plural, =0 {no gap} one {# gap} other {# gaps}} for a recoverable total of {amount}, spread over {artists, plural, one {# artist} other {# artists}}. The Audit module holds the pre-drafted letters."
+    "auditLabel": "Across the roster I find {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totalling {amount} across {artists, plural, one {# artist} other {# artists}}. These are questions to ask, not money in hand — the letters are on the Audit page."
   },
   "sources": {
     "streaming": "streaming",
@@ -55,5 +44,28 @@
     "sync": "sync",
     "live": "live",
     "merch": "merch"
+  },
+  "subtitleLabel": "Ask your question; the answer is computed from the roster's figures.",
+  "doors": {
+    "audit": "Royalty audit",
+    "auditValue": "the gaps, and the letters",
+    "revenue": "Revenue",
+    "revenueValue": "where the money comes from",
+    "streams": "Streams",
+    "streamsValue": "volumes, platform by platform",
+    "finances": "Expenses & P&L",
+    "financesValue": "what's left after expenses",
+    "audience": "Audience",
+    "audienceValue": "who actually listens",
+    "calculator": "Simulator",
+    "calculatorValue": "what's coming in 12 months"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "index": "Day 1 Index",
+    "market": "Market",
+    "discovery": "Discovery Lab",
+    "catalog": "Catalog",
+    "settings": "Settings"
   }
 }

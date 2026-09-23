@@ -1,58 +1,106 @@
 "use client";
 
 /**
- * /copilot — Copilot IA.
- * Bandeau de 4 capacités + chat avec échanges pré-écrits interpolés
- * des vraies données démo (chips cliquables, saisie libre).
+ * /copilot — poser une question, obtenir un chiffre calculé.
+ * Refondue le 23/09. Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
+ *
+ * Le bandeau de quatre « capacités » disparaît. Il annonçait ce que l'outil
+ * saurait faire, au-dessus d'un chat dont les suggestions font exactement la
+ * même chose — en cliquable. Annoncer une capacité juste au-dessus du bouton
+ * qui l'exécute, c'est occuper un quart d'écran pour rien.
+ *
+ * Pas de feuille teintée ici : la page **est** le chat. Lui poser un héros
+ * au-dessus reviendrait à répondre avant qu'on ait demandé.
  */
 import { useTranslations } from "next-intl";
-import { FileSearch, LineChart, Radar, TrendingUp } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { CopilotChat } from "@/components/modules/intelligence/copilot-chat";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { useRole } from "@/lib/role";
 
 export default function CopilotPage() {
   const t = useTranslations("copilot");
+  const tc = useTranslations("common");
   const { artistId, focusedArtistId, isLabel, persona } = useRole();
 
   const isRoster = isLabel && focusedArtistId === null;
 
-  const capabilities = [
-    { icon: LineChart, title: t("capabilities.analyzeTitle"), desc: t("capabilities.analyzeDesc") },
-    { icon: Radar, title: t("capabilities.anomalyTitle"), desc: t("capabilities.anomalyDesc") },
-    { icon: FileSearch, title: t("capabilities.auditTitle"), desc: t("capabilities.auditDesc") },
-    { icon: TrendingUp, title: t("capabilities.forecastTitle"), desc: t("capabilities.forecastDesc") },
-  ];
-
   return (
     <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <PageHeader
+        title={t("title")}
+        subtitle={isRoster ? t("subtitleLabel") : t("subtitle")}
+      />
 
-      {/* ── Bandeau capacités ── */}
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {capabilities.map((cap, i) => (
-          <div key={i} className="flex items-start gap-3 rounded-xl border bg-card p-4">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
-              <cap.icon className="size-4" aria-hidden />
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-medium">{cap.title}</p>
-              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                {cap.desc}
-              </p>
-            </div>
-          </div>
-        ))}
-      </section>
+      {/* Re-monté à chaque changement de persona / zoom : le fil doit repartir
+          des bonnes données, pas continuer sur celles de l'artiste précédent. */}
+      <CopilotChat
+        key={`${persona}:${focusedArtistId ?? "all"}`}
+        isRoster={isRoster}
+        artistId={artistId}
+      />
 
-      {/* ── Chat (re-monté à chaque changement de persona / zoom) ── */}
-      <div className="mt-4">
-        <CopilotChat
-          key={`${persona}:${focusedArtistId ?? "all"}`}
-          isRoster={isRoster}
-          artistId={artistId}
-        />
-      </div>
+      <Doors
+        title={tc("blocks.doors")}
+        doors={[
+          {
+            key: "audit",
+            family: "money",
+            href: "/audit",
+            label: t("doors.audit"),
+            value: t("doors.auditValue"),
+          },
+          {
+            key: "revenue",
+            family: "money",
+            href: "/revenue",
+            label: t("doors.revenue"),
+            value: t("doors.revenueValue"),
+          },
+          {
+            key: "streams",
+            family: "streams",
+            href: "/streams",
+            label: t("doors.streams"),
+            value: t("doors.streamsValue"),
+          },
+          {
+            key: "finances",
+            family: "money",
+            href: "/finances",
+            label: t("doors.finances"),
+            value: t("doors.financesValue"),
+          },
+          {
+            key: "audience",
+            family: "audience",
+            href: "/audience",
+            label: t("doors.audience"),
+            value: t("doors.audienceValue"),
+          },
+          {
+            key: "calculator",
+            family: "money",
+            href: "/calculator",
+            label: t("doors.calculator"),
+            value: t("doors.calculatorValue"),
+          },
+        ]}
+      />
+
+      <RestRow
+        title={isRoster ? tc("blocks.restLabel") : tc("blocks.rest")}
+        items={[
+          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+          { key: "index", href: "/day1-index", label: t("rest.index") },
+          { key: "market", href: "/market", label: t("rest.market") },
+          { key: "discovery", href: "/discovery", label: t("rest.discovery") },
+          { key: "catalog", href: "/catalog", label: t("rest.catalog") },
+          { key: "settings", href: "/settings", label: t("rest.settings") },
+        ]}
+      />
+
+      <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
     </div>
   );
 }
