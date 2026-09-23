@@ -1,24 +1,27 @@
 "use client";
 
 /**
- * /audit — Audit royalties IA (feature killer).
- * Héro : montant total récupérable (NumberFlow + brand-glow).
- * Cards findings → lettre de vérification pré-rédigée en Dialog.
+ * /audit — l'écart entre ce que les streams devraient rapporter et ce qui est
+ * déclaré. Refondue le 23/09.
+ * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
+ *
+ * Le héros s'appelait « montant récupérable détecté » et le seul démenti —
+ * « estimations du modèle, pas des créances certaines » — vivait quinze cents
+ * pixels plus bas, en onze pixels. Un écart n'est pas une créance : la page le
+ * dit maintenant sous le chiffre, et l'attendu porte sa provenance.
+ *
+ * Le chiffre reste rouge, parce qu'il appelle une action ; il n'est plus
+ * présenté comme de l'argent acquis.
  */
 import { useMemo } from "react";
-import NumberFlow from "@number-flow/react";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  Database,
-  FileText,
-  GitCompareArrows,
-  ScanSearch,
-  ShieldCheck,
-} from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { AuditFindingCard } from "@/components/modules/intelligence/audit-finding-card";
-import { Badge } from "@/components/ui/badge";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { ARTISTS, auditFindings, getArtist } from "@/lib/demo/api";
 import type { Artist, AuditFinding } from "@/lib/demo/types";
 import { fmtEur } from "@/lib/format";
@@ -28,10 +31,12 @@ type Group = { artist: Artist; findings: AuditFinding[]; gap: number };
 
 export default function AuditPage() {
   const t = useTranslations("audit");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { artistId, focusedArtistId, isLabel } = useRole();
 
   const isRoster = isLabel && focusedArtistId === null;
+  const focusedArtist = isLabel && focusedArtistId ? getArtist(focusedArtistId) : null;
 
   const groups = useMemo<Group[]>(() => {
     const ids = isRoster ? ARTISTS.map((a) => a.id) : [artistId];
@@ -48,128 +53,268 @@ export default function AuditPage() {
       .sort((a, b) => b.gap - a.gap);
   }, [isRoster, artistId]);
 
-  const allFindings = groups.flatMap((g) => g.findings);
-  const totalGap = groups.reduce((s, g) => s + g.gap, 0);
-  const avgConfidence =
-    allFindings.length === 0
-      ? 0
-      : allFindings.reduce((s, f) => s + f.confidence, 0) / allFindings.length;
-  const sourceCount = new Set(allFindings.map((f) => f.source)).size;
+  const facts = useMemo(() => {
+    const all = groups.flatMap((g) => g.findings);
+    const gap = all.reduce((s, f) => s + (f.expected - f.reported), 0);
+    const expected = all.reduce((s, f) => s + f.expected, 0);
+    const reported = all.reduce((s, f) => s + f.reported, 0);
+    const confidences = all.map((f) => f.confidence);
+    const biggest = all.reduce<AuditFinding | null>(
+      (b, f) => (!b || f.expected - f.reported > b.expected - b.reported ? f : b),
+      null,
+    );
+    const periods = Array.from(new Set(all.map((f) => f.period))).sort();
+    return {
+      all,
+      gap,
+      expected,
+      reported,
+      sourceCount: new Set(all.map((f) => f.source)).size,
+      avgConfidence:
+        confidences.length === 0
+          ? 0
+          : confidences.reduce((s, c) => s + c, 0) / confidences.length,
+      lowConfidence: confidences.length === 0 ? 0 : Math.min(...confidences),
+      biggest,
+      from: periods[0] ?? null,
+      to: periods[periods.length - 1] ?? null,
+    };
+  }, [groups]);
 
-  const methodSteps = [
-    { icon: Database, title: t("method.step1Title"), desc: t("method.step1Desc") },
-    { icon: GitCompareArrows, title: t("method.step2Title"), desc: t("method.step2Desc") },
-    { icon: ScanSearch, title: t("method.step3Title"), desc: t("method.step3Desc") },
-    { icon: FileText, title: t("method.step4Title"), desc: t("method.step4Desc") },
-  ];
+  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
+  const pct = (unit: number) =>
+    new Intl.NumberFormat(locale, {
+      style: "percent",
+      maximumFractionDigits: 0,
+    }).format(unit);
+  const gapPct = facts.expected === 0 ? 0 : (facts.gap / facts.expected) * 100;
 
   return (
     <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <PageHeader
+        title={t("title")}
+        subtitle={isRoster ? t("subtitleLabel") : t("subtitle")}
+      >
+        {focusedArtist && <ArtistBadge artist={focusedArtist} meta={focusedArtist.genre} />}
+      </PageHeader>
 
-      {/* ── Héro : montant récupérable ── */}
-      <section className="brand-glow rounded-2xl border bg-gradient-to-b from-card to-surface-2 p-6">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <p className="text-xs font-medium text-muted-foreground">
-              {isRoster ? t("label.heroLabel") : t("hero.label")}
-            </p>
-            <p className="num mt-1 text-5xl font-semibold tracking-tight text-destructive">
-              <NumberFlow
-                value={totalGap}
-                format={{
-                  style: "currency",
-                  currency: "EUR",
-                  maximumFractionDigits: 0,
-                }}
-                locales={locale}
-              />
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">{t("hero.scanned")}</p>
-          </div>
-          <div className="flex flex-col items-end gap-2 text-sm">
-            <Badge variant="outline" className="num">
-              {t("hero.findings", { count: allFindings.length })}
-            </Badge>
-            {isRoster && (
-              <Badge variant="outline" className="num">
-                {t("label.artistsWithFindings", { count: groups.length })}
-              </Badge>
-            )}
-            <span className="text-xs text-muted-foreground">
-              {t("hero.avgConfidence")}{" "}
-              <span className="num font-semibold text-foreground">
-                {Math.round(avgConfidence * 100)} %
-              </span>
-            </span>
-            <span className="num text-xs text-muted-foreground">
-              {t("hero.sources", { count: sourceCount })}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Findings ── */}
-      {allFindings.length === 0 ? (
-        <div className="mt-6 flex h-48 flex-col items-center justify-center gap-1 rounded-xl border border-dashed">
-          <ShieldCheck className="mb-1 size-6 text-success" aria-hidden />
+      {facts.all.length === 0 ? (
+        <div className="flex h-48 flex-col items-center justify-center gap-1 rounded-xl border border-dashed">
+          <ShieldCheck className="text-success mb-1 size-6" aria-hidden />
           <p className="text-sm font-medium">{t("empty.title")}</p>
-          <p className="text-xs text-muted-foreground">{t("empty.hint")}</p>
-        </div>
-      ) : isRoster ? (
-        <div className="mt-8 space-y-8">
-          {groups.map((g) => (
-            <section key={g.artist.id}>
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                <ArtistBadge
-                  artist={g.artist}
-                  meta={t("hero.findings", { count: g.findings.length })}
-                />
-                <span className="num text-sm font-semibold text-destructive">
-                  {t("label.artistTotal", { amount: fmtEur(locale, g.gap) })}
-                </span>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {g.findings.map((f) => (
-                  <AuditFindingCard key={f.id} finding={f} artistName={g.artist.name} />
-                ))}
-              </div>
-            </section>
-          ))}
+          <p className="text-muted-foreground text-xs">{t("empty.hint")}</p>
         </div>
       ) : (
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {groups[0]?.findings.map((f) => (
-            <AuditFindingCard
-              key={f.id}
-              finding={f}
-              artistName={groups[0].artist.name}
+        <div className="space-y-3">
+          {/* L'écart, et ce qu'il n'est pas. */}
+          <Sheet family="money">
+            <SheetHeading>
+              {isRoster ? t("hero.titleLabel") : t("hero.title")}
+            </SheetHeading>
+            <p className="text-destructive text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+              {eur(facts.gap)}
+            </p>
+            <p className="sheet-ink mt-1.5 text-[13px]">
+              {t("hero.caption")}{" "}
+              <ProvenanceBadge provenance="estimated" className="align-middle" />
+            </p>
+
+            {/* Ce qui est déclaré, et ce qui manque, sur la même base. */}
+            <div className="mt-3 flex h-2.5 w-full overflow-hidden rounded-full">
+              <div
+                className="h-full"
+                style={{
+                  width: `${100 - gapPct}%`,
+                  background: "color-mix(in oklab, var(--sheet-line) 55%, transparent)",
+                }}
+                title={`${t("hero.barReported")} · ${eur(facts.reported)}`}
+              />
+              <div
+                className="h-full"
+                style={{ width: `${gapPct}%`, background: "var(--destructive)" }}
+                title={`${t("hero.barGap")} · ${eur(facts.gap)}`}
+              />
+            </div>
+            <p className="sheet-ink mt-1 flex flex-wrap justify-between gap-x-4 text-[11px]">
+              <span>
+                {t("hero.barReported")} {eur(facts.reported)}
+              </span>
+              <span>{t("hero.expectedTotal", { amount: eur(facts.expected) })}</span>
+            </p>
+
+            {/* Le démenti est sous le chiffre, pas au pied de la page. */}
+            <p className="sheet-ink mt-2 text-[11.5px] leading-relaxed">
+              {t("hero.notClaim")}
+            </p>
+
+            <AffiliatedPoints
+              points={[
+                {
+                  key: "findings",
+                  value: String(facts.all.length),
+                  label: t("kpis.findings"),
+                  note: t("kpis.findingsHint", { count: facts.sourceCount }),
+                },
+                {
+                  key: "confidence",
+                  value: pct(facts.avgConfidence),
+                  label: t("kpis.confidence"),
+                  note: t("kpis.confidenceHint", { low: pct(facts.lowConfidence) }),
+                },
+                {
+                  key: "biggest",
+                  value: facts.biggest
+                    ? eur(facts.biggest.expected - facts.biggest.reported)
+                    : "—",
+                  label: t("kpis.biggest"),
+                  note: facts.biggest
+                    ? t("kpis.biggestHint", {
+                        source: facts.biggest.source,
+                        period: facts.biggest.period,
+                      })
+                    : undefined,
+                },
+                isRoster
+                  ? {
+                      key: "artists",
+                      value: String(groups.length),
+                      label: t("kpis.artists"),
+                      note: t("kpis.artistsHint", { total: ARTISTS.length }),
+                    }
+                  : {
+                      key: "window",
+                      value:
+                        facts.from && facts.to
+                          ? facts.from === facts.to
+                            ? facts.from
+                            : t("kpis.windowHint", { from: facts.from, to: facts.to })
+                          : "—",
+                      label: t("kpis.window"),
+                      note: t("kpis.windowNote"),
+                    },
+              ]}
             />
-          ))}
+          </Sheet>
+
+          {/* Un écart, une lettre. */}
+          <section className="mt-1">
+            <h2 className="text-muted-foreground mb-2 text-[11px] font-semibold tracking-[0.08em] uppercase">
+              {t("findingsHeading")}
+            </h2>
+            <div className="flex flex-col gap-5">
+              {groups.map((g) => (
+                <div key={g.artist.id}>
+                  {isRoster && (
+                    <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2">
+                      <ArtistBadge
+                        artist={g.artist}
+                        meta={t("hero.findings", { count: g.findings.length })}
+                      />
+                      <span className="num text-destructive text-sm font-semibold">
+                        {t("label.artistTotal", { amount: fmtEur(locale, g.gap) })}
+                      </span>
+                    </div>
+                  )}
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                    {g.findings.map((f) => (
+                      <AuditFindingCard
+                        key={f.id}
+                        finding={f}
+                        artistName={g.artist.name}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* La règle du calcul, repliée : on la lit une fois. */}
+          <Sheet family="money">
+            <details className="text-[11.5px] leading-relaxed">
+              <summary className="sheet-ink cursor-pointer font-medium">
+                {t("method.title")}
+              </summary>
+              <p className="text-muted-foreground mt-2">{t("method.subtitle")}</p>
+              <div className="mt-2 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+                {(["step1", "step2", "step3", "step4"] as const).map((step) => (
+                  <div key={step}>
+                    <p className="text-[12px] font-semibold">{t(`method.${step}Title`)}</p>
+                    <p className="text-muted-foreground mt-0.5">
+                      {t(`method.${step}Desc`)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-muted-foreground mt-3">{t("method.disclaimer")}</p>
+            </details>
+          </Sheet>
+
+          <Doors
+            title={tc("blocks.doors")}
+            doors={[
+              {
+                key: "import",
+                family: "money",
+                href: "/import",
+                label: t("doors.import"),
+                value: t("doors.importValue"),
+              },
+              {
+                key: "rights",
+                family: "money",
+                href: "/rights",
+                label: t("doors.rights"),
+                value: t("doors.rightsValue"),
+              },
+              {
+                key: "contracts",
+                family: "money",
+                href: "/contracts",
+                label: t("doors.contracts"),
+                value: t("doors.contractsValue"),
+              },
+              {
+                key: "revenue",
+                family: "money",
+                href: "/revenue",
+                label: t("doors.revenue"),
+                value: t("doors.revenueValue"),
+              },
+              {
+                key: "splits",
+                family: "money",
+                href: "/splits",
+                label: t("doors.splits"),
+                value: t("doors.splitsValue"),
+              },
+              {
+                key: "streams",
+                family: "streams",
+                href: "/streams",
+                label: t("doors.streams"),
+                value: t("doors.streamsValue"),
+              },
+            ]}
+          />
+
+          <RestRow
+            title={isRoster ? tc("blocks.restLabel") : tc("blocks.rest")}
+            items={[
+              { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+              { key: "finances", href: "/finances", label: t("rest.finances") },
+              { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
+              { key: "valuation", href: "/valuation", label: t("rest.valuation") },
+              { key: "catalog", href: "/catalog", label: t("rest.catalog") },
+              { key: "copilot", href: "/copilot", label: t("rest.copilot") },
+            ]}
+          />
+
+          <p className="text-muted-foreground mt-2 text-[11.5px]">
+            {tc("blocks.legend")}
+          </p>
         </div>
       )}
-
-      {/* ── Méthode ── */}
-      <section className="mt-8 rounded-xl border bg-card p-5">
-        <h2 className="font-heading text-base font-semibold">{t("method.title")}</h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">{t("method.subtitle")}</p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {methodSteps.map((step, i) => (
-            <div key={i} className="rounded-lg border bg-surface-2/50 p-4">
-              <span className="flex size-8 items-center justify-center rounded-md bg-brand/10 text-brand">
-                <step.icon className="size-4" aria-hidden />
-              </span>
-              <p className="mt-3 text-sm font-medium">{step.title}</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                {step.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-4 text-[11px] text-muted-foreground">
-          {t("method.disclaimer")}
-        </p>
-      </section>
     </div>
   );
 }

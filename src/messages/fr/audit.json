@@ -1,12 +1,16 @@
 {
-  "title": "Audit royalties IA",
-  "subtitle": "Rapprochement automatique entre vos streams réels et les montants déclarés par les plateformes, sociétés de gestion et labels.",
+  "title": "Audit royalties",
+  "subtitle": "L'écart entre ce que tes streams devraient rapporter et ce qu'on te déclare.",
   "hero": {
-    "label": "Montant récupérable détecté",
-    "findings": "{count, plural, =0 {Aucun écart détecté} one {# écart détecté} other {# écarts détectés}}",
-    "avgConfidence": "Confiance moyenne",
+    "title": "Écart détecté",
+    "titleLabel": "Écart détecté sur le roster",
+    "caption": "entre ce que le modèle attend et ce qui est déclaré",
+    "notClaim": "Un écart n'est pas une créance : c'est une question à poser, pas une somme acquise.",
+    "barReported": "Déclaré",
+    "barGap": "Écart",
+    "expectedTotal": "Attendu {amount}",
     "scanned": "24 mois de relevés analysés",
-    "sources": "{count} sources croisées"
+    "findings": "{count, plural, =0 {aucun écart} one {# écart} other {# écarts}}"
   },
   "finding": {
     "expected": "Attendu (modèle Day 1)",
@@ -39,7 +43,7 @@
     "download": "Télécharger .txt (démo)"
   },
   "method": {
-    "title": "Comment fonctionne l’audit",
+    "title": "Comment cet écart est calculé",
     "subtitle": "Un rapprochement systématique, pas une estimation au doigt mouillé.",
     "step1Title": "Ingestion",
     "step1Desc": "Relevés DSP, SACEM, droits voisins et labels sont normalisés dans un référentiel unique.",
@@ -60,5 +64,42 @@
   "empty": {
     "title": "Aucun écart détecté",
     "hint": "Vos déclarations correspondent aux streams observés sur la période analysée."
+  },
+  "subtitleLabel": "L'écart entre ce que les streams du roster devraient rapporter et ce qui est déclaré.",
+  "kpis": {
+    "findings": "Écarts ouverts",
+    "findingsHint": "{count, plural, one {# source croisée} other {# sources croisées}}",
+    "confidence": "Confiance moyenne",
+    "confidenceHint": "la plus basse : {low}",
+    "biggest": "Le plus gros écart",
+    "biggestHint": "{source} · {period}",
+    "artists": "Artistes concernés",
+    "artistsHint": "sur {total} au roster",
+    "window": "Périodes concernées",
+    "windowHint": "{from} → {to}",
+    "windowNote": "là où un écart apparaît"
+  },
+  "findingsHeading": "Chaque écart, et la lettre qui va avec",
+  "doors": {
+    "rights": "Droits FR",
+    "rightsValue": "relevés SACEM, ADAMI, SPEDIDAM",
+    "contracts": "Contrats",
+    "contractsValue": "le taux qui sert de base",
+    "revenue": "Revenus",
+    "revenueValue": "ce qui est réellement tombé",
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi sur chaque titre",
+    "import": "Importer un relevé",
+    "importValue": "pour rendre l'écart exact",
+    "streams": "Streams",
+    "streamsValue": "les volumes qui fondent l'attendu"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Dépenses & P&L",
+    "urssaf": "URSSAF",
+    "valuation": "Valorisation",
+    "catalog": "Catalogue",
+    "copilot": "Copilot"
   }
 }

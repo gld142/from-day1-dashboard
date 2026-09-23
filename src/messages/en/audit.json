@@ -1,12 +1,16 @@
 {
-  "title": "AI Royalty Audit",
-  "subtitle": "Automatic reconciliation between your actual streams and the amounts reported by platforms, collection societies and labels.",
+  "title": "Royalty audit",
+  "subtitle": "The gap between what your streams should earn and what gets reported to you.",
   "hero": {
-    "label": "Recoverable amount detected",
-    "findings": "{count, plural, =0 {No gap detected} one {# gap detected} other {# gaps detected}}",
-    "avgConfidence": "Average confidence",
-    "scanned": "24 months of statements analyzed",
-    "sources": "{count} sources cross-checked"
+    "title": "Gap detected",
+    "titleLabel": "Gap detected across the roster",
+    "caption": "between what the model expects and what is reported",
+    "notClaim": "A gap is not a debt owed: it's a question to ask, not money in hand.",
+    "barReported": "Reported",
+    "barGap": "Gap",
+    "expectedTotal": "Expected {amount}",
+    "scanned": "24 months of statements analysed",
+    "findings": "{count, plural, =0 {no gap} one {# gap} other {# gaps}}"
   },
   "finding": {
     "expected": "Expected (Day 1 model)",
@@ -39,7 +43,7 @@
     "download": "Download .txt (demo)"
   },
   "method": {
-    "title": "How the audit works",
+    "title": "How this gap is computed",
     "subtitle": "A systematic reconciliation, not a back-of-the-envelope estimate.",
     "step1Title": "Ingestion",
     "step1Desc": "DSP statements, collection societies, neighboring rights and label reports are normalized into a single reference.",
@@ -60,5 +64,42 @@
   "empty": {
     "title": "No gap detected",
     "hint": "Your statements match the streams observed over the analyzed period."
+  },
+  "subtitleLabel": "The gap between what the roster's streams should earn and what gets reported.",
+  "kpis": {
+    "findings": "Open gaps",
+    "findingsHint": "{count, plural, one {# source cross-checked} other {# sources cross-checked}}",
+    "confidence": "Average confidence",
+    "confidenceHint": "lowest: {low}",
+    "biggest": "Largest gap",
+    "biggestHint": "{source} · {period}",
+    "artists": "Artists concerned",
+    "artistsHint": "of {total} on the roster",
+    "window": "Periods concerned",
+    "windowHint": "{from} → {to}",
+    "windowNote": "where a gap shows up"
+  },
+  "findingsHeading": "Each gap, and the letter that goes with it",
+  "doors": {
+    "rights": "French rights",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM statements",
+    "contracts": "Contracts",
+    "contractsValue": "the rate it's based on",
+    "revenue": "Revenue",
+    "revenueValue": "what actually landed",
+    "splits": "Splits",
+    "splitsValue": "who gets what on each track",
+    "import": "Import a statement",
+    "importValue": "to make the gap exact",
+    "streams": "Streams",
+    "streamsValue": "the volumes the estimate rests on"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Expenses & P&L",
+    "urssaf": "URSSAF",
+    "valuation": "Valuation",
+    "catalog": "Catalog",
+    "copilot": "Copilot"
   }
 }
