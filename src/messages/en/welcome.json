@@ -27,7 +27,7 @@
           "desc": "Roster Pulse: what moved overnight, lead track, top platform, TikTok, gap to claim — before the meeting, not during it."
         }
       },
-      "firstInsight": "“Across the 3 pilot artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter: the claim is ready, and it's the platform being questioned, never the label.”",
+      "firstInsight": "“Across the demo roster, <accent>{gap}</accent> of estimated-vs-reported gap on the platforms in the last closed quarter, across {artists, plural, one {# artist} other {# artists}}: the claim is ready, and it's the platform we question, never the label.”",
       "values": {
         "1": {
           "promise": "Six tabs for one question",
@@ -70,7 +70,7 @@
           "desc": "24-month history, 12-month forecast, valuation range, your publisher's attestation: the funder's file your bank knows how to read."
         }
       },
-      "firstInsight": "“Across the 3 demo artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter — on songs as on masters, it's the platform being questioned, never the publisher.”",
+      "firstInsight": "“Across the demo roster, <accent>{gap}</accent> of estimated-vs-reported gap on the platforms in the last closed quarter, across {artists, plural, one {# artist} other {# artists}} — on works as on masters, it's the platform we question, never the publisher.”",
       "values": {
         "1": {
           "promise": "18 months late on their own royalties",
@@ -113,7 +113,7 @@
           "desc": "The label Pulse, calibrated on your data: growth signals, contractual alerts, DSP gaps to claim."
         }
       },
-      "firstInsight": "“Across the 3 pilot artists, <accent>{gap}</accent> of estimated vs. reported gap on the platforms over the last closed quarter. DSP claim file ready.”",
+      "firstInsight": "“Across the demo roster, <accent>{gap}</accent> of estimated-vs-reported gap on the platforms in the last closed quarter, across {artists, plural, one {# artist} other {# artists}}. DSP claim file ready.”",
       "values": {
         "1": {
           "promise": "Artist statement transparency",
@@ -156,7 +156,7 @@
           "desc": "The daily strategic brief calibrated on your Believe data. Concrete action #1 to take today."
         }
       },
-      "firstInsight": "“We detected <accent>{gap}</accent> to recover on your latest statements (Spotify underpayment). Audit letter ready to send.”",
+      "firstInsight": "“Example on the demo roster: <accent>{gap}</accent> of estimated-vs-reported gap at Spotify in the last closed quarter. Audit letter ready — a gap is a question to ask, not money in hand.”",
       "values": {
         "1": {
           "promise": "Believe vs DistroKid differentiation",
@@ -195,7 +195,7 @@
           "desc": "Streams, estimated earnings, gaps to claim."
         }
       },
-      "firstInsight": "“Your first brief is ready: <accent>{gap}</accent> of gap detected on your latest statement.”",
+      "firstInsight": "“This is what a first brief looks like: <accent>{gap}</accent> of estimated-vs-reported gap on the platforms, in the demo roster's last closed quarter.”",
       "values": {
         "1": {
           "promise": "See what your label sees",

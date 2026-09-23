@@ -27,7 +27,7 @@
           "desc": "Pulse roster : ce qui a bougé cette nuit, titre moteur, plateforme en tête, TikTok, écart à réclamer — avant la réunion, pas pendant."
         }
       },
-      "firstInsight": "« Sur les 3 artistes du pilote, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos : la réclamation est prête, et c'est la plateforme qu'on interroge, jamais le label. »",
+      "firstInsight": "« Sur le roster de démonstration, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos, chez {artists, plural, one {# artiste} other {# artistes}} : la réclamation est prête, et c'est la plateforme qu'on interroge, jamais le label. »",
       "values": {
         "1": {
           "promise": "Six onglets pour une question",
@@ -70,7 +70,7 @@
           "desc": "Historique 24 mois, prévisionnel 12 mois, valorisation en fourchette, attestation de votre éditeur : le dossier financeur que votre banque sait lire."
         }
       },
-      "firstInsight": "« Sur les 3 artistes de la démo, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos — sur les œuvres comme sur les masters, c'est la plateforme qu'on interroge, jamais l'éditeur. »",
+      "firstInsight": "« Sur le roster de démonstration, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos, chez {artists, plural, one {# artiste} other {# artistes}} — sur les œuvres comme sur les masters, c'est la plateforme qu'on interroge, jamais l'éditeur. »",
       "values": {
         "1": {
           "promise": "18 mois de retard sur ses propres droits",
@@ -113,7 +113,7 @@
           "desc": "Le Pulse label, calibré sur vos données : signaux de croissance, alertes contractuelles, écarts DSP à réclamer."
         }
       },
-      "firstInsight": "« Sur les 3 artistes du pilote, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos. Dossier de réclamation DSP prêt. »",
+      "firstInsight": "« Sur le roster de démonstration, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos, chez {artists, plural, one {# artiste} other {# artistes}}. Dossier de réclamation DSP prêt. »",
       "values": {
         "1": {
           "promise": "Transparence des relevés artistes",
@@ -156,7 +156,7 @@
           "desc": "Le brief stratégique du jour calibré sur ta data Believe. Action concrète n°1 à faire aujourd'hui."
         }
       },
-      "firstInsight": "« On a détecté <accent>{gap}</accent> à récupérer sur tes derniers relevés (sous-paiement Spotify). Lettre d'audit prête à envoyer. »",
+      "firstInsight": "« Exemple sur le roster de démonstration : <accent>{gap}</accent> d'écart estimé / déclaré chez Spotify au dernier trimestre clos. Lettre d'audit prête — un écart est une question à poser, pas une somme acquise. »",
       "values": {
         "1": {
           "promise": "Différenciation Believe vs DistroKid",
@@ -195,7 +195,7 @@
           "desc": "Streams, gains estimés, écarts à réclamer."
         }
       },
-      "firstInsight": "« Ton premier brief est prêt : <accent>{gap}</accent> d'écart détecté sur ton dernier relevé. »",
+      "firstInsight": "« Voilà à quoi ressemble un premier brief : <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes, au dernier trimestre clos du roster de démonstration. »",
       "values": {
         "1": {
           "promise": "Voir ce que ton label voit",

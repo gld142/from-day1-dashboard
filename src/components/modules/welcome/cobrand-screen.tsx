@@ -36,9 +36,12 @@ const STEPS = [1, 2, 3] as const;
 export function CobrandScreen({
   source,
   gapEur,
+  gapArtists,
 }: {
   source: SourceConfig;
   gapEur: number;
+  /** Nombre d'artistes réellement concernés par un écart — mesuré, pas écrit. */
+  gapArtists: number;
 }) {
   const t = useTranslations("welcome");
   const tn = useTranslations("nav.items");
@@ -147,6 +150,7 @@ export function CobrandScreen({
                 {t.rich(`${k}.firstInsight`, {
                   accent: figure,
                   gap: fmtEur(locale, gapEur),
+                  artists: gapArtists,
                 })}
               </blockquote>
               <figcaption className="mt-3 text-[11px] font-bold uppercase tracking-widest text-brand">
