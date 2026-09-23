@@ -6,7 +6,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { useEffect, useState, useTransition } from "react";
+import { useSyncExternalStore, useTransition } from "react";
 import { Building2, EyeOff, Lock, MicVocal, Moon, RotateCcw, Sun, Sunrise } from "lucide-react";
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
@@ -18,12 +18,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
+import { RestRow } from "@/components/modules/pilotage/pulse-blocks";
 
 const THEME_META = [
   { id: "night", icon: Moon },
   { id: "dawn", icon: Sunrise },
   { id: "day", icon: Sun },
 ] as const;
+
+/** Aucune source externe à écouter : l'abonnement est un no-op stable. */
+const subscribeNever = () => () => {};
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
@@ -37,22 +42,23 @@ export default function SettingsPage() {
     (n, s) => n + s.items.filter((i) => !isVisible(i)).length,
     0,
   );
-  const [mounted, setMounted] = useState(false);
   const [, startTransition] = useTransition();
-  useEffect(() => setMounted(true), []);
+  /* « Suis-je côté client ? » — next-themes ne connaît le thème qu'après
+     hydratation. `useSyncExternalStore` le dit sans setState dans un effet,
+     qui déclencherait un second rendu en cascade. */
+  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
+      <div className="space-y-3">
       {/* ─── Modules à la carte ─── */}
-      <section className="rise-in mb-6 rounded-xl border bg-card">
-        <div className="flex flex-wrap items-center justify-between gap-2 p-5 pb-3">
+      <Sheet family="catalog">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="font-heading text-base font-semibold">
-              {t("modules.title")}
-            </h2>
-            <p className="mt-1 max-w-xl text-[13px] text-muted-foreground">
+            <SheetHeading>{t("modules.title")}</SheetHeading>
+            <p className="sheet-ink max-w-xl text-[12.5px] leading-relaxed">
               {t("modules.subtitle")}
             </p>
           </div>
@@ -141,14 +147,12 @@ export default function SettingsPage() {
             </div>
           ))}
         </div>
-      </section>
+      </Sheet>
 
       {/* ─── Apparence ─── */}
-      <section className="rise-in mb-6 rounded-xl border bg-card p-5">
-        <h2 className="font-heading text-base font-semibold">
-          {t("appearance.title")}
-        </h2>
-        <p className="mt-1 text-[13px] text-muted-foreground">
+      <Sheet family="catalog">
+        <SheetHeading>{t("appearance.title")}</SheetHeading>
+        <p className="sheet-ink text-[12.5px] leading-relaxed">
           {t("appearance.description")}
         </p>
         <div className="mt-4 flex flex-wrap gap-6">
@@ -199,17 +203,15 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </section>
+      </Sheet>
 
       {/* ─── Compte ─── */}
-      <section className="rise-in rounded-xl border bg-card p-5">
-        <h2 className="font-heading text-base font-semibold">
-          {t("account.title")}
-        </h2>
-        <p className="mt-1 text-[13px] text-muted-foreground">
+      <Sheet family="catalog">
+        <SheetHeading>{t("account.title")}</SheetHeading>
+        <p className="sheet-ink text-[12.5px] leading-relaxed">
           {t("account.description")}
         </p>
-        <div className="mt-4 flex items-center gap-3 rounded-lg border bg-surface-2 p-3">
+        <div className="mt-3 flex items-center gap-3 rounded-lg bg-[color-mix(in_oklab,var(--sheet-line)_12%,transparent)] p-3">
           {persona === "artist" ? (
             <MicVocal className="size-4 text-brand" aria-hidden />
           ) : (
@@ -222,7 +224,20 @@ export default function SettingsPage() {
             </span>
           </span>
         </div>
-      </section>
+      </Sheet>
+
+      <RestRow
+        title={tc("blocks.rest")}
+        items={[
+          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+          { key: "team", href: "/team", label: t("rest.team") },
+          { key: "import", href: "/import", label: t("rest.import") },
+          { key: "revenue", href: "/revenue", label: t("rest.revenue") },
+          { key: "catalog", href: "/catalog", label: t("rest.catalog") },
+          { key: "copilot", href: "/copilot", label: t("rest.copilot") },
+        ]}
+      />
+      </div>
     </div>
   );
 }
