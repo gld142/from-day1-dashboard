@@ -77,19 +77,27 @@ export function OrganismCard({
   rows,
   received12m,
   receivedProvenance,
+  bare = false,
 }: {
   organism: RightsOrganism;
   rows: RightsRow[];
   received12m: number;
   /** Badge à côté de « Reçu 12 mois » : le reçu est un relevé simulé tant qu'aucun vrai relevé n'est importé. */
   receivedProvenance?: Provenance;
+  /** Dans une feuille teintée : pas de carte, l'encre de la famille. */
+  bare?: boolean;
 }) {
   const t = useTranslations("rights");
   const locale = useLocale();
   const color = ORGANISM_COLORS[organism];
 
   return (
-    <section className="rounded-xl border bg-card p-5">
+    <section
+      className={cn(
+        "min-w-0",
+        bare ? "sheet-rule pt-3 first:border-t-0 first:pt-0" : "bg-card rounded-xl border p-5",
+      )}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="flex items-center gap-2 text-sm font-semibold">
@@ -100,15 +108,15 @@ export function OrganismCard({
             />
             {organism.toUpperCase()}
           </h3>
-          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+          <p className={cn("mt-0.5 truncate text-[11px]", bare ? "sheet-ink" : "text-muted-foreground")}>
             {t(`organisms.${organism}.name`)}
           </p>
-          <p className="mt-1 text-xs leading-snug text-muted-foreground">
+          <p className={cn("mt-1 text-xs leading-snug", bare ? "sheet-ink" : "text-muted-foreground")}>
             {t(`organisms.${organism}.desc`)}
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="flex items-center justify-end gap-1.5 text-[11px] text-muted-foreground">
+          <p className={cn("flex items-center justify-end gap-1.5 text-[11px]", bare ? "sheet-ink" : "text-muted-foreground")}>
             {t("orgCard.received12m")}
             {receivedProvenance && <ProvenanceBadge provenance={receivedProvenance} />}
           </p>
@@ -116,7 +124,7 @@ export function OrganismCard({
         </div>
       </div>
 
-      <div className="mt-3 overflow-x-auto">
+      <div className="mt-2 min-w-0 overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -175,30 +183,44 @@ export type ScheduledPayment = {
   estimated: number;
 };
 
-export function PaymentsTimeline({ payments }: { payments: ScheduledPayment[] }) {
+export function PaymentsTimeline({
+  payments,
+  bare = false,
+}: {
+  payments: ScheduledPayment[];
+  /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
+  bare?: boolean;
+}) {
   const t = useTranslations("rights");
   const locale = useLocale();
 
   return (
-    <section className="rounded-xl border bg-card p-5">
-      <h2 className="flex items-center gap-2 text-sm font-semibold">
-        <CalendarDays className="size-4 text-muted-foreground" aria-hidden />
-        {t("timeline.heading")}
-      </h2>
-      <p className="mt-0.5 text-xs text-muted-foreground">{t("timeline.sub")}</p>
+    <section className={bare ? "min-w-0" : "bg-card rounded-xl border p-5"}>
+      {!bare && (
+        <>
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            <CalendarDays className="text-muted-foreground size-4" aria-hidden />
+            {t("timeline.heading")}
+          </h2>
+          <p className="text-muted-foreground mt-0.5 text-xs">{t("timeline.sub")}</p>
+        </>
+      )}
 
-      <ol className="mt-4 flex flex-col">
+      <ol className={cn("flex flex-col", bare ? "mt-2" : "mt-4")}>
         {payments.map((p, i) => (
           <li key={`${p.organism}-${p.date}`} className="relative flex gap-3 pb-4 last:pb-0">
             {i < payments.length - 1 && (
               <span
                 aria-hidden
-                className="absolute left-[5px] top-4 h-full w-px bg-border"
+                className="bg-border absolute top-4 left-[5px] h-full w-px"
               />
             )}
             <span
               aria-hidden
-              className="mt-1.5 size-[11px] shrink-0 rounded-full border-2 border-card"
+              className={cn(
+                "mt-1.5 size-[11px] shrink-0 rounded-full border-2",
+                bare ? "border-[var(--sheet-paper)]" : "border-card",
+              )}
               style={{ background: ORGANISM_COLORS[p.organism] }}
             />
             <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-0.5">
@@ -209,7 +231,7 @@ export function PaymentsTimeline({ payments }: { payments: ScheduledPayment[] })
               <Badge variant="outline" className="text-muted-foreground">
                 {t(`timeline.frequency.${p.frequency}`)}
               </Badge>
-              <span className="num ml-auto text-sm text-muted-foreground">
+              <span className={cn("num ml-auto text-sm", bare ? "sheet-ink" : "text-muted-foreground")}>
                 {t("timeline.estimated", {
                   amount: fmtEur(locale, p.estimated, { compact: true }),
                 })}

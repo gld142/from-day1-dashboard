@@ -1,7 +1,7 @@
 {
   "title": "Droits FR",
-  "subtitle": "Vos droits d'auteur et droits voisins en France : ce que Day 1 estime, ce que les organismes versent, et les écarts détectés.",
-  "subtitleLabel": "Les droits d'auteur et droits voisins {scope, select, roster {du roster} other {de {name}}} : ce que Day 1 estime, ce que les organismes versent, les écarts détectés.",
+  "subtitle": "Ce que la SACEM, l'ADAMI, la SPEDIDAM et la SPRÉ te versent — et ce qui manque.",
+  "subtitleLabel": "Ce que les organismes versent {scope, select, roster {au roster} other {à {name}}} — et ce qui manque.",
   "kpis": {
     "received12m": "Reçu sur 12 mois",
     "expected": "Attendu (en cours)",
@@ -10,7 +10,13 @@
     "nextOn": "Prochain : {date}",
     "last4Quarters": "4 derniers trimestres",
     "pendingPeriod": "Répartitions en cours de traitement",
-    "gapsHint": "Montants potentiellement non versés"
+    "gapsHint": "{count, plural, one {sur # période} other {sur # périodes}}",
+    "gapsNone": "aucun écart détecté",
+    "nextPayment": "Prochain versement",
+    "nextHint": "{organism} · {frequency}",
+    "nextNone": "rien de programmé",
+    "topOrganism": "Premier organisme",
+    "topOrganismHint": "{amount} · {share} du reçu"
   },
   "chart": {
     "heading": "Attendu vs reçu par période",
@@ -118,5 +124,34 @@
       "semiannual": "Semestriel"
     },
     "estimated": "≈ {amount} estimés"
+  },
+  "hero": {
+    "title": "Reçu sur 12 mois",
+    "caption": "versés par les quatre organismes",
+    "window": "sur les 4 derniers trimestres"
+  },
+  "organismsHeading": "Organisme par organisme",
+  "doors": {
+    "audit": "Audit royalties",
+    "auditValue": "{amount} à réclamer",
+    "auditValueNone": "aucun écart ouvert",
+    "revenue": "Revenus",
+    "revenueValue": "tous tes revenus consolidés",
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi sur chaque titre",
+    "contracts": "Contrats",
+    "contractsValue": "taux et échéances",
+    "catalog": "Catalogue",
+    "catalogValue": "les œuvres qui génèrent ces droits",
+    "urssaf": "URSSAF · artiste-auteur",
+    "urssafValue": "cotisations sur ces droits"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Dépenses & P&L",
+    "calculator": "Simulateur",
+    "import": "Importer un relevé",
+    "sync": "Sync & Licensing",
+    "tour": "Tournée"
   }
 }

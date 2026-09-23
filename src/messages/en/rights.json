@@ -1,7 +1,7 @@
 {
   "title": "French rights",
-  "subtitle": "Your author and neighbouring rights in France: what Day 1 estimates, what the societies pay, and the gaps we detect.",
-  "subtitleLabel": "{scope, select, roster {The roster's} other {{name}'s}} author and neighbouring rights: what Day 1 estimates, what the societies pay, the gaps detected.",
+  "subtitle": "What SACEM, ADAMI, SPEDIDAM and SPRÉ pay you — and what's missing.",
+  "subtitleLabel": "What the collecting societies pay {scope, select, roster {the roster} other {{name}}} — and what's missing.",
   "kpis": {
     "received12m": "Received over 12 months",
     "expected": "Expected (in progress)",
@@ -10,7 +10,13 @@
     "nextOn": "Next: {date}",
     "last4Quarters": "Last 4 quarters",
     "pendingPeriod": "Distributions being processed",
-    "gapsHint": "Amounts potentially unpaid"
+    "gapsHint": "{count, plural, one {across # period} other {across # periods}}",
+    "gapsNone": "no gap detected",
+    "nextPayment": "Next payout",
+    "nextHint": "{organism} · {frequency}",
+    "nextNone": "nothing scheduled",
+    "topOrganism": "Top society",
+    "topOrganismHint": "{amount} · {share} of what's received"
   },
   "chart": {
     "heading": "Expected vs received by period",
@@ -118,5 +124,34 @@
       "semiannual": "Semi-annual"
     },
     "estimated": "≈ {amount} estimated"
+  },
+  "hero": {
+    "title": "Received over 12 months",
+    "caption": "paid by the four societies",
+    "window": "over the last 4 quarters"
+  },
+  "organismsHeading": "Society by society",
+  "doors": {
+    "audit": "Royalty audit",
+    "auditValue": "{amount} to claim",
+    "auditValueNone": "no open gap",
+    "revenue": "Revenue",
+    "revenueValue": "all your revenue consolidated",
+    "splits": "Splits",
+    "splitsValue": "who gets what on each track",
+    "contracts": "Contracts",
+    "contractsValue": "rates and deadlines",
+    "catalog": "Catalog",
+    "catalogValue": "the works generating these rights",
+    "urssaf": "URSSAF · artist-author",
+    "urssafValue": "contributions on these rights"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Expenses & P&L",
+    "calculator": "Simulator",
+    "import": "Import a statement",
+    "sync": "Sync & Licensing",
+    "tour": "Touring"
   }
 }
