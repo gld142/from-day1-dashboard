@@ -1,6 +1,6 @@
 {
   "title": "Importer mes données",
-  "subtitle": "Dépose ton relevé distributeur — ton dashboard devient le tien, avec tes vrais chiffres.",
+  "subtitle": "Dépose ton relevé distributeur : les estimations deviennent tes vrais chiffres.",
   "privacy": "100 % local : ton fichier ne quitte jamais ton navigateur. Aucune donnée envoyée à un serveur.",
   "dropzone": {
     "title": "Dépose ton relevé CSV ici",
@@ -62,5 +62,17 @@
     "distrokid": "DistroKid → Bank → Download earnings data (CSV)",
     "tunecore": "TuneCore → Revenus → Télécharger le rapport de ventes",
     "believe": "Believe Backstage → Rapports financiers → Export CSV"
+  },
+  "impact": {
+    "title": "Ce que ça change",
+    "subtitle": "Quatre pages cessent d'estimer",
+    "revenue": "Revenus",
+    "revenueValue": "le taux €/stream cesse d'être un taux par défaut",
+    "audit": "Audit royalties",
+    "auditValue": "l'écart se calcule sur ton relevé, pas sur un modèle",
+    "rights": "Droits FR",
+    "rightsValue": "le reçu cesse d'être un relevé simulé",
+    "streams": "Streams",
+    "streamsValue": "les volumes par plateforme se recalent"
   }
 }

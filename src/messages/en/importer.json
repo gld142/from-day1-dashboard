@@ -1,6 +1,6 @@
 {
   "title": "Import my data",
-  "subtitle": "Drop your distributor statement — the dashboard becomes yours, with your real numbers.",
+  "subtitle": "Drop your distributor statement: estimates become your real figures.",
   "privacy": "100% local: your file never leaves your browser. No data is sent to any server.",
   "dropzone": {
     "title": "Drop your CSV statement here",
@@ -62,5 +62,17 @@
     "distrokid": "DistroKid → Bank → Download earnings data (CSV)",
     "tunecore": "TuneCore → Revenue → Download sales report",
     "believe": "Believe Backstage → Financial reports → CSV export"
+  },
+  "impact": {
+    "title": "What it changes",
+    "subtitle": "Four pages stop estimating",
+    "revenue": "Revenue",
+    "revenueValue": "the €/stream rate stops being a default",
+    "audit": "Royalty audit",
+    "auditValue": "the gap is computed on your statement, not a model",
+    "rights": "French rights",
+    "rightsValue": "what you received stops being a simulated statement",
+    "streams": "Streams",
+    "streamsValue": "per-platform volumes get recalibrated"
   }
 }

@@ -33,6 +33,7 @@ import { useSyncExternalStore } from "react";
 import { fmtCompact, fmtDate, fmtEur, fmtMonth, fmtInt } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
+import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -284,23 +285,38 @@ export default function ImportPage() {
             </p>
           )}
 
+          {/* Ce que l'import rend exact — la raison de le faire. */}
+          <Sheet family="money" className="mt-3">
+            <SheetHeading action={t("impact.subtitle")}>
+              {t("impact.title")}
+            </SheetHeading>
+            <div className="mt-1">
+              {(["revenue", "audit", "rights", "streams"] as const).map((k) => (
+                <div
+                  key={k}
+                  className="border-border/50 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-t py-2 text-[12.5px] first:border-t-0"
+                >
+                  <b className="font-semibold">{t(`impact.${k}`)}</b>
+                  <span className="sheet-ink">{t(`impact.${k}Value`)}</span>
+                </div>
+              ))}
+            </div>
+          </Sheet>
+
           {/* Où trouver son relevé */}
-          <section className="rise-in mt-6 rounded-xl border bg-card p-5">
-            <h2 className="mb-3 flex items-center gap-2 font-heading text-base font-semibold">
-              <Sparkles className="size-4 text-brand" aria-hidden />
-              {t("howto.title")}
-            </h2>
-            <ul className="flex flex-col gap-2 text-[13px] text-muted-foreground">
+          <Sheet family="money" className="mt-3">
+            <SheetHeading>{t("howto.title")}</SheetHeading>
+            <ul className="sheet-ink mt-1 flex flex-col gap-2 text-[13px]">
               {(["distrokid", "tunecore", "believe"] as const).map((k) => (
                 <li key={k} className="flex items-center gap-2">
-                  <span className="num flex h-5 items-center rounded bg-surface-2 px-1.5 text-[10px] font-semibold uppercase">
+                  <span className="flex h-5 items-center rounded bg-[color-mix(in_oklab,var(--sheet-line)_14%,transparent)] px-1.5 text-[10px] font-semibold tabular-nums uppercase">
                     {t(`preview.formatNames.${k}`)}
                   </span>
                   {t(`howto.${k}`)}
                 </li>
               ))}
             </ul>
-          </section>
+          </Sheet>
         </>
       ) : (
         /* ─────────── Aperçu ─────────── */
