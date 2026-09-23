@@ -22,7 +22,7 @@
     "vsPrevYear": "vs {year}",
     "marginHint": "Share of revenue kept after expenses",
     "expensesShort": "Expenses {year}",
-    "heaviest": "Heaviest line",
+    "heaviest": "Largest line item",
     "heaviestHint": "{amount} · {share} of expenses",
     "worstMonth": "Costliest month"
   },
@@ -38,7 +38,7 @@
     "subtitle": "Breakdown on the filtered scope",
     "total": "Total",
     "empty": "No expenses on this scope",
-    "filterHint": "Click a category to keep only it in the register",
+    "filterHint": "Click a category to narrow the register down to it",
     "allCategories": "All categories"
   },
   "categories": {
@@ -66,9 +66,9 @@
   "register": {
     "title": "Expense register",
     "count": "{count, plural, =0 {no expenses} one {# expense} other {# expenses}}",
-    "searchPlaceholder": "Search a label, project, track…",
+    "searchPlaceholder": "Search by description, project, track…",
     "date": "Date",
-    "label": "Label",
+    "label": "Description",
     "category": "Category",
     "project": "Project",
     "track": "Track",
@@ -89,7 +89,7 @@
     "cta": "Add an expense",
     "title": "New expense",
     "description": "Record a manual expense. It will immediately appear in the register and the P&L.",
-    "label": "Label",
+    "label": "Description",
     "labelPlaceholder": "E.g. EP mix & mastering",
     "amount": "Amount (€)",
     "date": "Date",

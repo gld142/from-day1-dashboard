@@ -56,7 +56,7 @@
     "subtitle": "From brief to signature",
     "received": "Brief in",
     "proposed": "Pitched",
-    "negotiation": "Nego",
+    "negotiation": "In talks",
     "signed": "Signed"
   },
   "commission": {
@@ -85,7 +85,7 @@
   },
   "rest": {
     "pulse": "Pulse",
-    "fans": "Fans CRM",
+    "fans": "Fan CRM",
     "tour": "Touring",
     "market": "Market",
     "valuation": "Valuation",

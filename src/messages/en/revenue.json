@@ -4,7 +4,7 @@
   "subtitleLabel": "Your roster's revenue, consolidated in one place.",
   "subtitleFocused": "All of {name}'s revenue, every source combined — finally readable.",
   "kpis": {
-    "total12m": "Revenue (12mo)",
+    "total12m": "Revenue 12m",
     "monthlyAvg": "Monthly average",
     "topSource": "Top source",
     "vsPrevYear": "vs previous 12 months",
@@ -60,7 +60,7 @@
     },
     "fields": {
       "master": "Artist share on the master (%)",
-      "masterHelp": "The royalty rate in your artist or licence contract (often 15–25% on an artist deal, 50–100% on distribution).",
+      "masterHelp": "The royalty rate in your artist or license contract (often 15–25% on an artist deal, 50–100% on distribution).",
       "isAuthor": "I am a songwriter and/or composer",
       "author": "My share of the songwriter royalties on my tracks (%)",
       "authorHelp": "Check your SACEM statements: it's your share on each work.",
@@ -79,7 +79,7 @@
       "copied": "Copied",
       "open": "Open in my email app",
       "subject": "Request for a copy of my contract and royalty statements",
-      "body": "Subject: request for a copy of my contract and royalty statements\n\nHello,\n\nAs part of tracking my income, I would be grateful if you could send me:\n– a copy of my current artist / licence contract, including any amendments;\n– my royalty statements for the last four half-years, broken down by platform and territory.\n\nThank you in advance.\n\n{artistName}"
+      "body": "Subject: request for a copy of my contract and royalty statements\n\nHello,\n\nAs part of tracking my income, I would be grateful if you could send me:\n– a copy of my current artist / license contract, including any amendments;\n– my royalty statements for the last four half-years, broken down by platform and territory.\n\nThank you in advance.\n\n{artistName}"
     },
     "compact": {
       "text": "Your artist share is simulated (<num>{pct}%</num>). Enter your percentages or import your contract to know what you really receive.",
@@ -105,7 +105,7 @@
       },
       "fields": {
         "master": "Artist share on the master (%)",
-        "masterHelp": "The royalty rate in their artist or licence contract (often 15–25% on an artist deal, 50–100% on distribution).",
+        "masterHelp": "The royalty rate in their artist or license contract (often 15–25% on an artist deal, 50–100% on distribution).",
         "isAuthor": "{artist} is a songwriter and/or composer",
         "author": "Their share of the songwriter royalties on their tracks (%)",
         "authorHelp": "Their SACEM statements are the reference: it's their share on each work.",
@@ -124,14 +124,14 @@
         "copied": "Copied",
         "open": "Open in my email app",
         "subject": "Request for a copy of my contract and royalty statements",
-        "body": "Subject: request for a copy of my contract and royalty statements\n\nHello,\n\nAs part of tracking my income, I would be grateful if you could send me:\n– a copy of my current artist / licence contract, including any amendments;\n– my royalty statements for the last four half-years, broken down by platform and territory.\n\nThank you in advance.\n\n{artistName}"
+        "body": "Subject: request for a copy of my contract and royalty statements\n\nHello,\n\nAs part of tracking my income, I would be grateful if you could send me:\n– a copy of my current artist / license contract, including any amendments;\n– my royalty statements for the last four half-years, broken down by platform and territory.\n\nThank you in advance.\n\n{artistName}"
       }
     }
   },
   "sources": {
     "streaming": "Streaming",
     "sacem": "SACEM",
-    "neighboring": "Neighboring rights",
+    "neighboring": "Neighbouring rights",
     "spre": "Equitable remuneration",
     "sync": "Sync licensing",
     "live": "Live & shows",

@@ -14,7 +14,7 @@
   },
   "greeting": {
     "artist": "Hi {name} — I have your last 24 months in front of me. Ask me anything about your streams, revenue or rights.",
-    "label": "Hi — I am looking at the consolidated data of the {count} artists on {label}. Ask me your management questions."
+    "label": "Hi — I have the consolidated data of the {count} artists on {label} in front of me. Ask me anything about running the roster."
   },
   "suggestions": {
     "bestMonth": "What was my best month?",
@@ -28,7 +28,7 @@
   },
   "answers": {
     "bestMonth": "Over 24 months, your best month is {month}: {amount} in revenue across all sources, {pct} above your monthly average ({avg}). The peak comes mostly from streaming and live.",
-    "growth": "Over the last 30 days, your streams are moving {delta} versus the previous 30 days, with {streams} total streams. Your monthly listener base stands at {listeners} — the underlying trend is still carried by your {growthRate} monthly growth.",
+    "growth": "Over the last 30 days, your streams are moving {delta} versus the previous 30 days, with {streams} total streams. Your monthly listener base stands at {listeners}, and your underlying pace is {growthRate} per month.",
     "topSource": "Over 12 months, your top revenue source is {source}: {amount}, or {pct} of your total ({total}).",
     "audit": "My reconciliation finds {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totalling {amount}. That's a question to ask, not money in hand: the Audit page holds the verification letters.",
     "bestMonthLabel": "Over 24 months, the roster's best month is {month}: {amount} in consolidated revenue, {pct} above the monthly average ({avg}).",
@@ -39,7 +39,7 @@
   "sources": {
     "streaming": "streaming",
     "sacem": "SACEM",
-    "neighboring": "neighboring rights",
+    "neighboring": "neighbouring rights",
     "spre": "SPRÉ",
     "sync": "sync",
     "live": "live",

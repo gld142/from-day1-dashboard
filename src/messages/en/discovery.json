@@ -35,7 +35,7 @@
     "bpm": "BPM",
     "analyzing": "Audio analysis in progress — score available in a few minutes.",
     "analyzingBadge": "Analyzing…",
-    "hint": "The four dimensions are broken down in the comparison beside"
+    "hint": "The four dimensions are broken down in the comparison alongside"
   },
   "compare": {
     "title": "Demo comparison",
@@ -94,7 +94,7 @@
   },
   "rest": {
     "pulse": "Pulse",
-    "fans": "Fans CRM",
+    "fans": "Fan CRM",
     "tour": "Touring",
     "index": "Day 1 Index",
     "arwatch": "A&R Watch",

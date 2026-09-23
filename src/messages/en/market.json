@@ -4,7 +4,7 @@
   "header": {
     "chartDate": "Spotify France chart of {date}",
     "captured": "captured {date} at {time}",
-    "scope": "Scope: Spotify France streams of the 200 tracks in the daily chart (kworb.net) — not the whole market. The group comes from the ℗ / © lines of each track's Spotify page: a label distributed under licence without saying so in its ℗ shows up as “Indie / other”."
+    "scope": "Scope: Spotify France streams of the 200 tracks in the daily chart (kworb.net) — not the whole market. The group comes from the ℗ / © lines of each track's Spotify page: a label distributed under license without saying so in its ℗ shows up as “Indie / other”."
   },
   "legend": {
     "title": "Provenance",
@@ -56,7 +56,7 @@
     "unknown": "Unidentified"
   },
   "groupsHint": {
-    "other": "℗ without a group: self-released, or distributed under licence without saying so",
+    "other": "℗ without a group: self-released, or distributed under license without saying so",
     "unknown": "Spotify page without a ℗ / © line"
   },
   "genres": {
@@ -117,7 +117,7 @@
     "leader": "leading group"
   },
   "doors": {
-    "algo": "Algorithm position",
+    "algo": "Algorithmic position",
     "algoValue": "your ranks per platform",
     "streams": "Streams",
     "streamsValue": "your actual volume",
@@ -133,7 +133,7 @@
   "rest": {
     "pulse": "Pulse",
     "revenue": "Revenue",
-    "catalog": "Catalogue",
+    "catalog": "Catalog",
     "index": "Day 1 Index"
   }
 }

@@ -5,11 +5,11 @@
     "title": "Gap detected",
     "titleLabel": "Gap detected across the roster",
     "caption": "between what the model expects and what is reported",
-    "notClaim": "A gap is not a debt owed: it's a question to ask, not money in hand.",
+    "notClaim": "A gap is not a claim: it's a question to ask, not money in hand.",
     "barReported": "Reported",
     "barGap": "Gap",
     "expectedTotal": "Expected {amount}",
-    "scanned": "24 months of statements analysed",
+    "scanned": "24 months of statements analyzed",
     "findings": "{count, plural, =0 {no gap} one {# gap} other {# gaps}}"
   },
   "finding": {
@@ -22,7 +22,7 @@
     "period": "Period {period}"
   },
   "status": {
-    "open": "To handle",
+    "open": "Action needed",
     "letterGenerated": "Letter generated",
     "resolved": "Resolved"
   },
@@ -33,10 +33,10 @@
     "to": "To the royalties department — {source}",
     "subject": "Subject: royalty verification request — period {period}",
     "greeting": "Dear Sir or Madam,",
-    "body1": "Following the automatic reconciliation between our certified consumption data and your statement for the period {period}, we have identified a significant discrepancy between the expected amount ({expected}) and the reported amount ({reported}).",
+    "body1": "Following the automatic reconciliation between our certified consumption data and your statement for the period {period}, we have identified a significant gap between the expected amount ({expected}) and the reported amount ({reported}).",
     "body2": "The identified gap amounts to {gap}. Our reconciliation model — cross-referencing observed streams per platform, applicable contractual rates and payment history — establishes this finding with a confidence level of {confidence}.",
     "body3": "We kindly ask you to carry out a detailed verification of the period in question, to provide us with the details of the bases and calculations applied and, where applicable, to proceed with the corresponding adjustment payment.",
-    "signoff": "Awaiting your response within 30 days, we remain at your disposal for any further information.",
+    "signoff": "We look forward to your response within 30 days. Please let us know if you need any further information.",
     "signature": "{artist} — represented via From Day 1",
     "copy": "Copy",
     "copied": "Copied",
@@ -46,7 +46,7 @@
     "title": "How this gap is computed",
     "subtitle": "A systematic reconciliation, not a back-of-the-envelope estimate.",
     "step1Title": "Ingestion",
-    "step1Desc": "DSP statements, collection societies, neighboring rights and label reports are normalized into a single reference.",
+    "step1Desc": "DSP statements, SACEM, neighbouring rights and label reports are normalized into a single reference.",
     "step2Title": "Reconciliation",
     "step2Desc": "The model cross-references observed streams, per-platform rates and contractual clauses to estimate the expected amount.",
     "step3Title": "Confidence score",
@@ -56,7 +56,6 @@
     "disclaimer": "Demo data — expected amounts are model estimates, not certain claims."
   },
   "label": {
-    "heroLabel": "Recoverable amount across the roster",
     "byArtist": "Gaps by artist",
     "artistTotal": "Total gap: {amount}",
     "artistsWithFindings": "{count, plural, one {# artist affected} other {# artists affected}}"
@@ -73,9 +72,9 @@
     "confidenceHint": "lowest: {low}",
     "biggest": "Largest gap",
     "biggestHint": "{source} · {period}",
-    "artists": "Artists concerned",
+    "artists": "Artists affected",
     "artistsHint": "of {total} on the roster",
-    "window": "Periods concerned",
+    "window": "Periods affected",
     "windowHint": "{from} → {to}",
     "windowNote": "where a gap shows up"
   },

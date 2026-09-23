@@ -52,17 +52,17 @@
     "high": "High"
   },
   "donut": {
-    "title": "Projected split by source",
+    "title": "Projected breakdown by source",
     "subtitle": "Last 12 months proportions applied to the projected total",
     "total": "Projected",
     "emptyTitle": "No revenue sources yet",
-    "emptyDescription": "As soon as revenue is recorded, the split by source will appear here."
+    "emptyDescription": "As soon as revenue is recorded, the breakdown by source will appear here."
   },
   "sources": {
     "streaming": "Streaming",
     "sacem": "SACEM",
-    "neighboring": "Neighboring rights",
-    "spre": "SPRE",
+    "neighboring": "Neighbouring rights",
+    "spre": "SPRÉ",
     "sync": "Sync",
     "live": "Live",
     "merch": "Merch"

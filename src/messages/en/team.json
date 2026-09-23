@@ -39,11 +39,11 @@
   "invite": {
     "cta": "Invite a member",
     "title": "Invite a member",
-    "description": "The invitee receives an access link scoped to their role and artist perimeter.",
+    "description": "The invitee receives an access link scoped to their role and artist scope.",
     "email": "Email address",
     "emailPlaceholder": "name@label.com",
     "role": "Role",
-    "access": "Artist perimeter",
+    "access": "Artist scope",
     "allArtists": "Whole roster",
     "send": "Send invitation",
     "sent": "Invitation sent to {email}"

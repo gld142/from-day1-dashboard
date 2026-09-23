@@ -86,7 +86,7 @@
     "streamsValue": "the volume behind the share",
     "audience": "Audience",
     "audienceValue": "who the algorithm sends you",
-    "catalog": "Catalogue",
+    "catalog": "Catalog",
     "catalogValue": "the tracks that carry",
     "sync": "Sync & Licensing",
     "syncValue": "place your tracks",
@@ -98,7 +98,7 @@
   "rest": {
     "pulse": "Pulse",
     "revenue": "Revenue",
-    "fans": "Fans CRM",
+    "fans": "Fan CRM",
     "index": "Day 1 Index",
     "roster": "Roster"
   }

@@ -8,7 +8,7 @@
     "features": {
       "frRights": {
         "title": "Native French rights",
-        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE — tracked and reconciled automatically"
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRÉ — tracked and reconciled automatically"
       },
       "urssaf": {
         "title": "Auto URSSAF",
@@ -64,7 +64,7 @@
     "rows": {
       "analytics": "Real-time multi-DSP analytics",
       "revenue": "Consolidated revenue (7 sources)",
-      "frRights": "Native French rights (SACEM, ADAMI, SPEDIDAM, SPRE)",
+      "frRights": "Native French rights (SACEM, ADAMI, SPEDIDAM, SPRÉ)",
       "urssaf": "URSSAF filings",
       "splits": "Splits + e-signatures",
       "audit": "AI royalty audit",
@@ -93,7 +93,7 @@
       },
       "barrier": {
         "title": "18 months of R&D",
-        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE: the French regulatory barrier costs any US player at least 18 months of R&D to enter. Ours is already built."
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRÉ: the French regulatory barrier costs any US player at least 18 months of R&D to enter. Ours is already built."
       },
       "risk": {
         "title": "The real risk",

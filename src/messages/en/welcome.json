@@ -53,7 +53,7 @@
     },
     "umpg": {
       "name": "Universal Music Publishing France",
-      "welcomeTitle": "Welcome, <accent>Universal Music Publishing</accent> songwriters — your work, in continuous",
+      "welcomeTitle": "Welcome, <accent>Universal Music Publishing</accent> songwriters — your work, tracked continuously",
       "welcomeBody": "Your royalties arrive 6 to 18 months late. Day One tracks what your songs generate every day, your writer's share, your SACEM statements — and prepares the file that shows your catalog as an asset.",
       "offer": "90-day pilot — 3 songwriters, 1 A&R",
       "steps": {
@@ -78,7 +78,7 @@
         },
         "2": {
           "promise": "Fuzzy splits, undeclared songs",
-          "delivery": "Splits signed per song, France Rights: expected vs. received, songs to declare"
+          "delivery": "Splits signed per song, French rights: expected vs. received, songs to declare"
         },
         "3": {
           "promise": "“Your income isn't stable”",
@@ -101,7 +101,7 @@
       "offer": "Pilot on a targeted roster, 90 days",
       "steps": {
         "1": {
-          "title": "Connect the Universal catalogue",
+          "title": "Connect the Universal catalog",
           "desc": "Roster, contracts, half-yearly statements: secure import, role-based permissions (label, team, artist)."
         },
         "2": {
@@ -139,8 +139,8 @@
     },
     "believe": {
       "name": "Believe",
-      "welcomeTitle": "Welcome among the <accent>Believe artists</accent> on From Day 1",
-      "welcomeBody": "Ismaël Kané (Believe Music Publishing France) recommended the tool to you. In 3 minutes, we import your Believe catalogue and deliver your first strategic report.",
+      "welcomeTitle": "Welcome to From Day 1, <accent>Believe artists</accent>",
+      "welcomeBody": "Ismaël Kané (Believe Music Publishing France) recommended the tool to you. In 3 minutes, we import your Believe catalog and deliver your first strategic report.",
       "offer": "3 months of Pro for free",
       "steps": {
         "1": {
@@ -148,7 +148,7 @@
           "desc": "1-click OAuth. We automatically import your distributed tracks, your splits, your 12-month revenue."
         },
         "2": {
-          "title": "Check your splits and FR rights",
+          "title": "Check your splits and French rights",
           "desc": "We detect your co-writers and offer a sync with Sentric / Believe Music Publishing for your publishing."
         },
         "3": {
@@ -160,7 +160,7 @@
       "values": {
         "1": {
           "promise": "Believe vs DistroKid differentiation",
-          "delivery": "Intelligence + FR rights + AI audit as an upsell"
+          "delivery": "Intelligence + French rights + AI audit as an upsell"
         },
         "2": {
           "promise": "Retention of artists > 50K listeners",
@@ -188,7 +188,7 @@
         },
         "2": {
           "title": "Check your tracks and splits",
-          "desc": "We recognise your tracks and suggest the splits to sign."
+          "desc": "We recognize your tracks and suggest the splits to sign."
         },
         "3": {
           "title": "Receive your first Pulse",

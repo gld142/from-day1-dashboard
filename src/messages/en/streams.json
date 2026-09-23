@@ -83,9 +83,9 @@
     "audienceValue": "{count} countries",
     "market": "Market",
     "marketValue": "French Top 200",
-    "algo": "Algorithm position",
+    "algo": "Algorithmic position",
     "algoValue": "ranks per platform",
-    "catalog": "Catalogue",
+    "catalog": "Catalog",
     "catalogValue": "{count} leading tracks",
     "audit": "Royalty audit",
     "auditValue": "gap with statements"

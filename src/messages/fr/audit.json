@@ -56,7 +56,6 @@
     "disclaimer": "Données de démonstration — les montants attendus sont des estimations du modèle, pas des créances certaines."
   },
   "label": {
-    "heroLabel": "Montant récupérable sur le roster",
     "byArtist": "Écarts par artiste",
     "artistTotal": "Écart total : {amount}",
     "artistsWithFindings": "{count, plural, one {# artiste concerné} other {# artistes concernés}}"

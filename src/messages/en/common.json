@@ -6,7 +6,7 @@
   },
   "roles": {
     "artist": "Artist",
-    "label": "Structure",
+    "label": "Label",
     "switchTo": "{role} view",
     "viewingAs": "Viewing the dashboard as: {name}"
   },
@@ -81,7 +81,7 @@
     "tip": {
       "measured": "Read from public counters (Spotify, Kworb, YouTube) or from an imported statement.",
       "declared": "Entered by you: contract percentages or imported contract.",
-      "reconstructed": "History rebuilt from the cumulative total and today's real daily rate — plausible, not read day by day.",
+      "reconstructed": "History rebuilt from the cumulative total and the actual daily rate — plausible, not read day by day.",
       "estimated": "Extrapolated from Spotify with the artist's DSP mix — no platform publishes these figures.",
       "simulated": "Demo data, invented to stay consistent with the real numbers."
     },
@@ -96,7 +96,7 @@
     "money": "What it earns",
     "audience": "Audience",
     "trends": "Trends",
-    "catalog": "Catalogue",
+    "catalog": "Catalog",
     "rights": "Rights",
     "streamsRoster": "Roster streams",
     "moneyRoster": "What the roster earns",
@@ -106,7 +106,7 @@
     "doors": "Go further",
     "rest": "The rest of your dashboard",
     "restLabel": "The rest of the dashboard",
-    "collect": "Money to go and claim",
+    "collect": "Money worth chasing",
     "legend": "Every number carries its provenance.",
     "detail": "see details →",
     "seeAll": "see all →"

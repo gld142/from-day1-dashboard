@@ -1,12 +1,12 @@
 {
   "title": "Audience",
-  "subtitle": "Who listens to you, where, and how they discover you.",
+  "subtitle": "Who listens to you, from where, and how they found you.",
   "kpi": {
     "listeners": "Monthly listeners",
     "followers": "Estimated followers",
     "followersHint": "across all platforms",
     "superfans": "Superfans",
-    "superfansHint": "activable core fanbase",
+    "superfansHint": "the core fanbase you can activate",
     "growth": "Monthly growth",
     "growthHint": "audience-weighted average",
     "superfansShare": "{share} of the fanbase",
@@ -81,17 +81,17 @@
     "topMarket": "Top market"
   },
   "doors": {
-    "fans": "Fans CRM",
+    "fans": "Fan CRM",
     "fansValue": "{count} superfans to activate",
     "streams": "Streams",
     "streamsValue": "volume and platforms",
     "market": "Market",
     "marketValue": "your share of the French Top 200",
-    "algo": "Algorithm position",
+    "algo": "Algorithmic position",
     "algoValue": "where the algorithm places you",
     "index": "Day 1 Index",
     "indexValue": "your overall score",
-    "tour": "Tour",
+    "tour": "Touring",
     "tourValue": "where to play"
   },
   "rest": {
@@ -99,6 +99,6 @@
     "revenue": "Revenue",
     "sync": "Sync & Licensing",
     "discoveryLab": "Discovery Lab",
-    "catalog": "Catalogue"
+    "catalog": "Catalog"
   }
 }

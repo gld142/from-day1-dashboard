@@ -67,7 +67,7 @@
       "import": "Import my SACEM statement",
       "imported": "{file} imported — reconciliation coming soon",
       "request": "Request my statement",
-      "audit": "See the audit"
+      "audit": "View audit"
     },
     "dialog": {
       "title": "Import a distribution statement",
@@ -94,7 +94,7 @@
         "import": "{scope, select, roster {Import the roster's statements} other {Import {name}'s statement}}",
         "imported": "{file} imported — reconciliation coming soon",
         "request": "{scope, select, roster {Request the statements} other {Request {name}'s statement}}",
-        "audit": "See the audit"
+        "audit": "View audit"
       },
       "dialog": {
         "title": "Import a distribution statement",
@@ -112,7 +112,7 @@
       },
       "request": {
         "subject": "Request for distribution statements",
-        "body": "Dear Sir or Madam,\n\nWe represent {scope, select, roster {the artists of our roster} other {{name}}} and would like to obtain {scope, select, roster {their} other {his or her}} detailed distribution statements — per work, per period and per source of exploitation — for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to us as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
+        "body": "Dear Sir or Madam,\n\nWe represent {scope, select, roster {the artists of our roster} other {{name}}} and would like to obtain {scope, select, roster {their} other {their}} detailed distribution statements — per work, per period and per source of exploitation — for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to us as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
       }
     }
   },

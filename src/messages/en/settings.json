@@ -15,7 +15,7 @@
       "streams": "Performance by platform, territory and track, updated daily.",
       "market": "Spotify France Top 200 shares by group, artist and genre — captured every morning, labels read from Spotify.",
       "revenue": "All revenue, every source, finally readable.",
-      "audience": "Who listens, from where, and how they found you.",
+      "audience": "Who listens to you, from where, and how they found you.",
       "algoposition": "Where Spotify recommendation streams come from, and how to earn more.",
       "finances": "Every euro invested and the net result, by artist, project and track.",
       "calculator": "What your revenue could become in 6 to 24 months, given what you're preparing.",
@@ -49,7 +49,7 @@
   },
   "account": {
     "title": "Account",
-    "description": "Your role shapes what you see: an artist only sees themselves, a structure sees its whole roster.",
+    "description": "Your role shapes what you see: an artist only sees themselves, a label sees its whole roster.",
     "currentRole": "Active role"
   },
   "rest": {
