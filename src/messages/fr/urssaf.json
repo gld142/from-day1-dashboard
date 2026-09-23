@@ -1,17 +1,23 @@
 {
   "title": "URSSAF artiste-auteur",
-  "subtitle": "Estimez vos cotisations sociales, anticipez les échéances et préparez votre déclaration trimestrielle.",
+  "subtitle": "Ce que tu dois à l'URSSAF sur tes droits d'auteur — et pour quand.",
   "kpis": {
     "declarable": "Revenus déclarables (12 m)",
     "declarableHint": "Droits d'auteur : SACEM + sync",
     "contributions": "Cotisations estimées",
     "rateNote": "Taux global indicatif : {rate}",
     "nextDeadline": "Prochaine échéance (jours)",
-    "deadlineOn": "Le {date} · déclaration {quarter}"
+    "deadlineOn": "Le {date} · déclaration {quarter}",
+    "net": "Net après cotisations",
+    "netHint": "sur les mêmes 12 mois",
+    "quarter": "À déclarer ce trimestre",
+    "quarterHint": "{quarter} · {amount} de cotisations",
+    "quarterOpen": "{quarter} en cours — le total bougera encore",
+    "deadlineIn": "dans {days} jours"
   },
   "sim": {
-    "heading": "Simulateur de cotisations",
-    "sub": "Ajustez le montant déclaré : le détail se recalcule en direct.",
+    "heading": "Et si le montant changeait ?",
+    "sub": "Change le montant déclaré : le détail se recalcule en direct.",
     "amountLabel": "Revenus artistiques à déclarer",
     "line": "Cotisation",
     "rate": "Taux",
@@ -48,9 +54,10 @@
       "contributions": "Cotisations estimées ({rate})",
       "net": "Net estimé"
     },
-    "periodValue": "{quarter} (avril – juin 2026)",
+    "periodValue": "{quarter} ({months})",
     "download": "Télécharger le brouillon",
-    "disclaimer": "Document de travail : ne remplace pas la déclaration officielle sur urssaf.fr."
+    "disclaimer": "Document de travail : ne remplace pas la déclaration officielle sur urssaf.fr.",
+    "band": "Day 1 assemble tes droits d'auteur du trimestre dans le formulaire URSSAF, prêt à vérifier."
   },
   "export": {
     "button": "Exporter",
@@ -69,5 +76,34 @@
     "declarable": "Revenus déclarables (12 m)",
     "contributions": "Cotisations estimées",
     "share": "Part du roster"
+  },
+  "subtitleLabel": "Ce que le roster doit à l'URSSAF sur ses droits d'auteur — et pour quand.",
+  "hero": {
+    "title": "Cotisations estimées",
+    "caption": "{rate} de {base} de droits d'auteur sur 12 mois",
+    "barNet": "Net après cotisations",
+    "barDue": "Cotisations"
+  },
+  "doors": {
+    "rights": "Droits FR",
+    "rightsValue": "d'où viennent ces droits d'auteur",
+    "revenue": "Revenus",
+    "revenueValue": "tous tes revenus consolidés",
+    "finances": "Dépenses & P&L",
+    "financesValue": "ce qu'il reste après dépenses",
+    "contracts": "Contrats",
+    "contractsValue": "taux et échéances",
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi sur chaque titre",
+    "calculator": "Simulateur de revenus",
+    "calculatorValue": "ce qui arrive dans 12 mois"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "audit": "Audit royalties",
+    "catalog": "Catalogue",
+    "team": "Équipe",
+    "tour": "Tournée",
+    "settings": "Réglages"
   }
 }

@@ -1,17 +1,23 @@
 {
   "title": "URSSAF artist-author",
-  "subtitle": "Estimate your social contributions, anticipate deadlines and prepare your quarterly filing.",
+  "subtitle": "What you owe URSSAF on your author rights — and by when.",
   "kpis": {
     "declarable": "Declarable income (12m)",
     "declarableHint": "Author rights: SACEM + sync",
     "contributions": "Estimated contributions",
     "rateNote": "Indicative overall rate: {rate}",
     "nextDeadline": "Next deadline (days)",
-    "deadlineOn": "On {date} · {quarter} filing"
+    "deadlineOn": "On {date} · {quarter} filing",
+    "net": "Net after contributions",
+    "netHint": "over the same 12 months",
+    "quarter": "To declare this quarter",
+    "quarterHint": "{quarter} · {amount} in contributions",
+    "quarterOpen": "{quarter} still open — the total will move",
+    "deadlineIn": "in {days} days"
   },
   "sim": {
-    "heading": "Contribution simulator",
-    "sub": "Adjust the declared amount: the breakdown recalculates live.",
+    "heading": "What if the amount changed?",
+    "sub": "Change the declared amount: the breakdown recomputes live.",
     "amountLabel": "Artistic income to declare",
     "line": "Contribution",
     "rate": "Rate",
@@ -48,9 +54,10 @@
       "contributions": "Estimated contributions ({rate})",
       "net": "Estimated net"
     },
-    "periodValue": "{quarter} (April – June 2026)",
+    "periodValue": "{quarter} ({months})",
     "download": "Download draft",
-    "disclaimer": "Working document: does not replace the official filing on urssaf.fr."
+    "disclaimer": "Working document: does not replace the official filing on urssaf.fr.",
+    "band": "Day 1 assembles your author rights for the quarter into the URSSAF form, ready to check."
   },
   "export": {
     "button": "Export",
@@ -69,5 +76,34 @@
     "declarable": "Declarable income (12m)",
     "contributions": "Estimated contributions",
     "share": "Roster share"
+  },
+  "subtitleLabel": "What the roster owes URSSAF on its author rights — and by when.",
+  "hero": {
+    "title": "Estimated contributions",
+    "caption": "{rate} of {base} of author rights over 12 months",
+    "barNet": "Net after contributions",
+    "barDue": "Contributions"
+  },
+  "doors": {
+    "rights": "French rights",
+    "rightsValue": "where these author rights come from",
+    "revenue": "Revenue",
+    "revenueValue": "all your revenue consolidated",
+    "finances": "Expenses & P&L",
+    "financesValue": "what's left after expenses",
+    "contracts": "Contracts",
+    "contractsValue": "rates and deadlines",
+    "splits": "Splits",
+    "splitsValue": "who gets what on each track",
+    "calculator": "Revenue simulator",
+    "calculatorValue": "what's coming in 12 months"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "audit": "Royalty audit",
+    "catalog": "Catalog",
+    "team": "Team",
+    "tour": "Touring",
+    "settings": "Settings"
   }
 }
