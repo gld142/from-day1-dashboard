@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
+import { RankMedal } from "@/components/dashboard/rank-medal";
 import { PageHeader } from "@/components/dashboard/page-header";
 import {
   AffiliatedPoints,
@@ -911,7 +912,10 @@ export default function PulsePage() {
                         i === 0 ? "sheet-rule" : "border-border/30 border-t"
                       }`}
                     >
-                      <span className="font-medium">{m.name}</span>
+                      <span className="flex min-w-0 items-center gap-2 font-medium">
+                        <RankMedal rank={i + 1} size="sm" awarded={m.delta30d >= 0} />
+                        <span className="truncate">{m.name}</span>
+                      </span>
                       <span className="sheet-ink tabular-nums">
                         {fmtCompact(locale, m.streams30d)}
                       </span>
