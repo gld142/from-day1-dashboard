@@ -43,6 +43,20 @@ export function fmtMonth(locale: string, isoMonth: string): string {
   );
 }
 
+/**
+ * Le mois sans son année — pour les bornes d'un intervalle, où l'année est
+ * écrite une seule fois à la fin (« janv. → août 2025 »).
+ */
+export function fmtMonthName(
+  locale: string,
+  isoMonth: string,
+  style: "short" | "long" = "short",
+): string {
+  return new Intl.DateTimeFormat(locale, { month: style }).format(
+    new Date(`${isoMonth}-01T00:00:00Z`),
+  );
+}
+
 /** Gradient de signature d'un artiste (identité chromatique). */
 export function artistGradient(hue: number): string {
   return `linear-gradient(135deg, oklch(0.55 0.16 ${hue}) 0%, oklch(0.4 0.12 ${(hue + 40) % 360}) 100%)`;

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Bar,
@@ -52,19 +53,19 @@ function SpendBars({ rows, label }: { rows: SpendRow[]; label: string }) {
           data={rows}
           margin={{ top: 8, right: 4, bottom: 0, left: 0 }}
         >
-          <CartesianGrid vertical={false} strokeOpacity={0.07} />
+          <CartesianGrid vertical={false} strokeOpacity={0.12} />
           <XAxis
             dataKey="name"
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
             tickFormatter={(s: string) => truncate(s)}
             interval={0}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
             tickFormatter={(v: number) => fmtCompact(locale, v)}
             width={44}
           />
@@ -78,7 +79,7 @@ function SpendBars({ rows, label }: { rows: SpendRow[]; label: string }) {
             fill="var(--chart-4)"
             radius={[4, 4, 0, 0]}
             maxBarSize={36}
-            animationDuration={600}
+            isAnimationActive={false}
           />
         </ComposedChart>
       </ResponsiveContainer>
@@ -86,15 +87,24 @@ function SpendBars({ rows, label }: { rows: SpendRow[]; label: string }) {
   );
 }
 
-/** Comparaisons P&L : par année (barres groupées), par projet, par titre. */
+/**
+ * Comparaisons P&L : par année (barres groupées), par projet, par titre.
+ *
+ * `yearNote` dit sur quels mois porte la comparaison d'années. Elle n'est pas
+ * facultative dans l'usage : les séries de démo ne remontent qu'à 24 mois, si
+ * bien qu'une année de bord de fenêtre n'a que trois mois de données. Posée
+ * nue, sa barre passerait pour un effondrement.
+ */
 export function PnlComparisons({
   byYear,
   byProject,
   byTrack,
+  yearNote,
 }: {
   byYear: YearPnlRow[];
   byProject: SpendRow[];
   byTrack: SpendRow[];
+  yearNote?: ReactNode;
 }) {
   const locale = useLocale();
   const t = useTranslations("finances.compare");
@@ -114,17 +124,17 @@ export function PnlComparisons({
               data={byYear}
               margin={{ top: 8, right: 4, bottom: 0, left: 0 }}
             >
-              <CartesianGrid vertical={false} strokeOpacity={0.07} />
+              <CartesianGrid vertical={false} strokeOpacity={0.12} />
               <XAxis
                 dataKey="year"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 11, fill: "var(--sheet-ink, currentColor)" }}
                 tickFormatter={(v: number) => fmtCompact(locale, v)}
                 width={44}
               />
@@ -142,7 +152,7 @@ export function PnlComparisons({
                 fill="var(--chart-1)"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={28}
-                animationDuration={600}
+                isAnimationActive={false}
               />
               <Bar
                 dataKey="expenses"
@@ -150,7 +160,7 @@ export function PnlComparisons({
                 fill="var(--chart-4)"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={28}
-                animationDuration={600}
+                isAnimationActive={false}
               />
               <Bar
                 dataKey="net"
@@ -158,12 +168,12 @@ export function PnlComparisons({
                 fill="var(--chart-2)"
                 radius={[4, 4, 0, 0]}
                 maxBarSize={28}
-                animationDuration={600}
+                isAnimationActive={false}
               />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+        <div className="sheet-ink mt-3 flex flex-wrap items-center gap-4 text-xs">
           {(
             [
               ["revenue", "var(--chart-1)"],
@@ -181,6 +191,9 @@ export function PnlComparisons({
             </span>
           ))}
         </div>
+        {yearNote ? (
+          <p className="sheet-ink mt-2 text-[11.5px] leading-relaxed">{yearNote}</p>
+        ) : null}
       </TabsContent>
 
       <TabsContent value="project" className="mt-4">

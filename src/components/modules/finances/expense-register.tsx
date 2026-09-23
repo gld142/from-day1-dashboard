@@ -22,12 +22,22 @@ import {
 import { PROJECTS, TEAM, TRACKS } from "@/lib/demo/api";
 import type { Expense } from "@/lib/demo/types";
 import { fmtDate, fmtEur } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { CategoryBadge } from "./category-badge";
 
 const PAGE_SIZE = 20;
 
-/** Registre des dépenses : recherche plein-texte + tableau riche + badge Wavely. */
-export function ExpenseRegister({ items }: { items: Expense[] }) {
+/**
+ * Registre des dépenses : recherche plein-texte + tableau riche + badge Wavely.
+ * `bare` le pose dans une feuille teintée, sans redoubler la carte ni le titre.
+ */
+export function ExpenseRegister({
+  items,
+  bare = false,
+}: {
+  items: Expense[];
+  bare?: boolean;
+}) {
   const locale = useLocale();
   const t = useTranslations("finances.register");
   const [query, setQuery] = useState("");
@@ -59,11 +69,21 @@ export function ExpenseRegister({ items }: { items: Expense[] }) {
   const visible = filtered.slice(0, limit);
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b p-5 pb-4">
+    <div className={bare ? "min-w-0" : "rounded-xl border bg-card"}>
+      <div
+        className={cn(
+          "flex flex-wrap items-center justify-between gap-3",
+          bare ? "mt-1" : "border-b p-5 pb-4",
+        )}
+      >
         <div>
-          <h2 className="text-sm font-semibold">{t("title")}</h2>
-          <p className="num mt-0.5 text-xs text-muted-foreground">
+          {!bare && <h2 className="text-sm font-semibold">{t("title")}</h2>}
+          <p
+            className={cn(
+              "num text-xs",
+              bare ? "sheet-ink" : "mt-0.5 text-muted-foreground",
+            )}
+          >
             {t("count", { count: filtered.length })}
           </p>
         </div>
@@ -84,18 +104,18 @@ export function ExpenseRegister({ items }: { items: Expense[] }) {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className={cn("overflow-x-auto", bare && "mt-2")}>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="pl-5">{t("date")}</TableHead>
+              <TableHead className={bare ? undefined : "pl-5"}>{t("date")}</TableHead>
               <TableHead>{t("label")}</TableHead>
               <TableHead>{t("category")}</TableHead>
               <TableHead className="hidden md:table-cell">{t("project")}</TableHead>
               <TableHead className="hidden lg:table-cell">{t("track")}</TableHead>
               <TableHead className="text-right">{t("amount")}</TableHead>
               <TableHead className="hidden md:table-cell">{t("addedBy")}</TableHead>
-              <TableHead className="pr-5">{t("source")}</TableHead>
+              <TableHead className={bare ? undefined : "pr-5"}>{t("source")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -111,7 +131,7 @@ export function ExpenseRegister({ items }: { items: Expense[] }) {
             )}
             {visible.map((e) => (
               <TableRow key={e.id}>
-                <TableCell className="num whitespace-nowrap pl-5 text-xs text-muted-foreground">
+                <TableCell className={cn("num whitespace-nowrap text-xs text-muted-foreground", !bare && "pl-5")}>
                   {fmtDate(locale, e.date, { day: "2-digit", month: "short", year: "2-digit" })}
                 </TableCell>
                 <TableCell className="max-w-56 truncate font-medium">
@@ -132,7 +152,7 @@ export function ExpenseRegister({ items }: { items: Expense[] }) {
                 <TableCell className="hidden whitespace-nowrap text-xs text-muted-foreground md:table-cell">
                   {memberName.get(e.addedBy) ?? e.addedBy}
                 </TableCell>
-                <TableCell className="pr-5">
+                <TableCell className={bare ? undefined : "pr-5"}>
                   {e.source === "wavely" ? (
                     <TooltipProvider>
                       <Tooltip>
@@ -158,7 +178,12 @@ export function ExpenseRegister({ items }: { items: Expense[] }) {
       </div>
 
       {filtered.length > limit && (
-        <div className="flex items-center justify-between border-t p-3 px-5">
+        <div
+          className={cn(
+            "flex items-center justify-between border-t",
+            bare ? "mt-1 pt-2" : "p-3 px-5",
+          )}
+        >
           <span className="num text-xs text-muted-foreground">
             {t("shown", { shown: visible.length, total: filtered.length })}
           </span>

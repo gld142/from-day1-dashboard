@@ -1,6 +1,6 @@
 {
   "title": "Expenses & P&L",
-  "subtitle": "Track every euro invested and the net result, by artist, project and track.",
+  "subtitle": "What's left once expenses are paid — year by year, project by project.",
   "scope": {
     "roster": "Whole roster",
     "artists": "{count} artists"
@@ -20,7 +20,11 @@
     "net": "Net result",
     "margin": "Net margin",
     "vsPrevYear": "vs {year}",
-    "marginHint": "Share of revenue kept after expenses"
+    "marginHint": "Share of revenue kept after expenses",
+    "expensesShort": "Expenses {year}",
+    "heaviest": "Heaviest line",
+    "heaviestHint": "{amount} · {share} of expenses",
+    "worstMonth": "Costliest month"
   },
   "chart": {
     "title": "Revenue vs expenses — {year}",
@@ -33,7 +37,9 @@
     "title": "Expenses by category",
     "subtitle": "Breakdown on the filtered scope",
     "total": "Total",
-    "empty": "No expenses on this scope"
+    "empty": "No expenses on this scope",
+    "filterHint": "Click a category to keep only it in the register",
+    "allCategories": "All categories"
   },
   "categories": {
     "studio": "Studio",
@@ -46,15 +52,16 @@
   },
   "compare": {
     "title": "Comparisons",
-    "subtitle": "Where the money goes, year by year and project by project",
-    "byYear": "By year",
+    "subtitle": "What each year, each project, each track costs",
+    "byYear": "Year on year",
     "byProject": "By project",
     "byTrack": "By track",
     "revenue": "Revenue",
     "expenses": "Expenses",
     "net": "Net",
     "empty": "No expenses on this scope",
-    "topSpend": "Cumulative spend"
+    "topSpend": "Cumulative spend",
+    "yearNote": "Same months on both sides — {span}. Series only go back 24 months: further back, a year wouldn't have all its months."
   },
   "register": {
     "title": "Expense register",
@@ -73,7 +80,10 @@
     "wavelyTooltip": "Synced from Wavely",
     "showMore": "Show more",
     "shown": "{shown} of {total}",
-    "noResults": "No expense matches your search"
+    "noResults": "No expense matches your search",
+    "filteredBy": "Filtered on {category}",
+    "reset": "Show all",
+    "scopeNote": "The filter only affects this register: the net result above is still computed on the whole year."
   },
   "add": {
     "cta": "Add an expense",
@@ -100,6 +110,40 @@
     "title": "Wavely integration",
     "description": "Connect your Wavely account to automatically sync your production and marketing expenses — no more double entry.",
     "syncedCount": "{count, plural, one {# expense already synced} other {# expenses already synced}}",
-    "connect": "Connect Wavely"
+    "connect": "Connect Wavely",
+    "inline": "{count, plural, =0 {No expense synced from Wavely yet.} one {# expense comes from Wavely.} other {# expenses come from Wavely.}}",
+    "inlineCta": "Connect Wavely to stop double entry"
+  },
+  "subtitleLabel": "What's left to the roster once expenses are paid.",
+  "subtitleFocused": "What's left to {name} once their expenses are paid.",
+  "hero": {
+    "caption": "Net result {year}",
+    "vsPrevYear": "vs {year}",
+    "formula": "{revenue} revenue − {expenses} expenses",
+    "noPrevYear": "first tracked year",
+    "spanNote": "Like-for-like comparison: {span} {prev} against the same months of {year}.",
+    "partialNote": "The current month ({month}) isn't over: it counts in the result, never in the comparison."
+  },
+  "doors": {
+    "revenue": "Revenue",
+    "revenueValue": "where the money comes from",
+    "calculator": "Deal simulator",
+    "calculatorValue": "test before signing",
+    "urssaf": "URSSAF · artist-author",
+    "urssafValue": "contributions and filing",
+    "contracts": "Contracts",
+    "contractsValue": "rates and deadlines",
+    "splits": "Splits",
+    "splitsValue": "who gets what",
+    "audit": "Royalty audit",
+    "auditValue": "gap with statements"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "valuation": "Valuation",
+    "import": "Import a statement",
+    "catalog": "Catalog",
+    "team": "Team",
+    "tour": "Touring"
   }
 }

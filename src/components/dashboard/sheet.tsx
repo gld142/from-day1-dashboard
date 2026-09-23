@@ -192,3 +192,51 @@ export function AttachedLines({
     </div>
   );
 }
+
+/**
+ * Le sélecteur d'une feuille — période, année, granularité. Il vit dans le
+ * `action` d'un `SheetHeading`, à la teinte de la famille, pour qu'un choix de
+ * cadrage ne ressemble jamais à un bouton d'action.
+ *
+ * Même dessin que le sélecteur de période du héros de Pulse : le même geste
+ * doit se reconnaître d'une page à l'autre.
+ */
+export function SheetSegments<T extends string | number>({
+  value,
+  options,
+  onChange,
+  label,
+  className,
+}: {
+  value: T;
+  options: ReadonlyArray<{ value: T; label: ReactNode }>;
+  onChange: (value: T) => void;
+  /** Nom du groupe pour les lecteurs d'écran (ex. « Année »). */
+  label: string;
+  className?: string;
+}) {
+  return (
+    <div
+      role="group"
+      aria-label={label}
+      className={cn("flex gap-0.5 text-[11px]", className)}
+    >
+      {options.map((o) => (
+        <button
+          key={String(o.value)}
+          type="button"
+          onClick={() => onChange(o.value)}
+          aria-pressed={o.value === value}
+          className={cn(
+            "rounded-md px-2.5 py-1 tracking-normal normal-case transition-colors",
+            o.value === value
+              ? "text-foreground bg-[color-mix(in_oklab,var(--sheet-line)_18%,transparent)] font-semibold"
+              : "sheet-ink hover:bg-[color-mix(in_oklab,var(--sheet-line)_10%,transparent)]",
+          )}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  );
+}

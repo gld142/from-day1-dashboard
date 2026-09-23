@@ -1,6 +1,6 @@
 {
   "title": "Dépenses & P&L",
-  "subtitle": "Suivez chaque euro investi et le résultat net, par artiste, projet et titre.",
+  "subtitle": "Ce qu'il reste une fois les dépenses payées — année par année, projet par projet.",
   "scope": {
     "roster": "Tout le roster",
     "artists": "{count} artistes"
@@ -20,7 +20,11 @@
     "net": "Résultat net",
     "margin": "Marge nette",
     "vsPrevYear": "vs {year}",
-    "marginHint": "Part des revenus conservée après dépenses"
+    "marginHint": "Part des revenus conservée après dépenses",
+    "expensesShort": "Dépenses {year}",
+    "heaviest": "Poste le plus lourd",
+    "heaviestHint": "{amount} · {share} des dépenses",
+    "worstMonth": "Mois le plus coûteux"
   },
   "chart": {
     "title": "Revenus vs dépenses — {year}",
@@ -33,7 +37,9 @@
     "title": "Dépenses par catégorie",
     "subtitle": "Répartition sur le périmètre filtré",
     "total": "Total",
-    "empty": "Aucune dépense sur ce périmètre"
+    "empty": "Aucune dépense sur ce périmètre",
+    "filterHint": "Clique une catégorie pour ne garder qu'elle dans le registre",
+    "allCategories": "Toutes catégories"
   },
   "categories": {
     "studio": "Studio",
@@ -46,15 +52,16 @@
   },
   "compare": {
     "title": "Comparaisons",
-    "subtitle": "Où part l'argent, année par année et projet par projet",
-    "byYear": "Par année",
+    "subtitle": "Ce que coûte chaque année, chaque projet, chaque titre",
+    "byYear": "Année sur année",
     "byProject": "Par projet",
     "byTrack": "Par titre",
     "revenue": "Revenus",
     "expenses": "Dépenses",
     "net": "Net",
     "empty": "Aucune dépense sur ce périmètre",
-    "topSpend": "Dépenses cumulées"
+    "topSpend": "Dépenses cumulées",
+    "yearNote": "Mêmes mois des deux côtés — {span}. Les séries ne remontent qu'à 24 mois : plus loin, une année n'aurait pas tous ses mois."
   },
   "register": {
     "title": "Registre des dépenses",
@@ -73,7 +80,10 @@
     "wavelyTooltip": "Synchronisé depuis Wavely",
     "showMore": "Afficher plus",
     "shown": "{shown} sur {total}",
-    "noResults": "Aucune dépense ne correspond à votre recherche"
+    "noResults": "Aucune dépense ne correspond à votre recherche",
+    "filteredBy": "Filtré sur {category}",
+    "reset": "Tout afficher",
+    "scopeNote": "Le filtre n'agit que sur ce registre : le résultat net ci-dessus reste calculé sur l'année entière."
   },
   "add": {
     "cta": "Ajouter une dépense",
@@ -100,6 +110,40 @@
     "title": "Intégration Wavely",
     "description": "Connectez votre compte Wavely pour synchroniser automatiquement vos dépenses de production et de marketing — fini la double saisie.",
     "syncedCount": "{count, plural, one {# dépense déjà synchronisée} other {# dépenses déjà synchronisées}}",
-    "connect": "Connecter Wavely"
+    "connect": "Connecter Wavely",
+    "inline": "{count, plural, =0 {Aucune dépense synchronisée depuis Wavely pour l'instant.} one {# dépense vient de Wavely.} other {# dépenses viennent de Wavely.}}",
+    "inlineCta": "Connecter Wavely pour arrêter la double saisie"
+  },
+  "subtitleLabel": "Ce qu'il reste au roster une fois les dépenses payées.",
+  "subtitleFocused": "Ce qu'il reste à {name} une fois ses dépenses payées.",
+  "hero": {
+    "caption": "Résultat net {year}",
+    "vsPrevYear": "vs {year}",
+    "formula": "{revenue} de revenus − {expenses} de dépenses",
+    "noPrevYear": "première année suivie",
+    "spanNote": "Comparaison à périmètre égal : {span} {prev} face aux mêmes mois de {year}.",
+    "partialNote": "Le mois en cours ({month}) n'est pas terminé : il compte dans le résultat, jamais dans la comparaison."
+  },
+  "doors": {
+    "revenue": "Revenus",
+    "revenueValue": "d'où vient l'argent",
+    "calculator": "Simulateur de deals",
+    "calculatorValue": "tester avant de signer",
+    "urssaf": "URSSAF · artiste-auteur",
+    "urssafValue": "cotisations et déclaration",
+    "contracts": "Contrats",
+    "contractsValue": "taux et échéances",
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi",
+    "audit": "Audit royalties",
+    "auditValue": "écart avec les relevés"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "valuation": "Valorisation",
+    "import": "Importer un relevé",
+    "catalog": "Catalogue",
+    "team": "Équipe",
+    "tour": "Tournée"
   }
 }
