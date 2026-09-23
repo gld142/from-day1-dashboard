@@ -1,6 +1,6 @@
 {
   "title": "A&R Watch",
-  "subtitle": "Radar de scouting {label} — {count} artistes émergents sous surveillance.",
+  "subtitle": "Qui monte, et à quelle vitesse — {count} artistes émergents sur le radar de {label}.",
   "guard": {
     "title": "Réservé à la vue structure",
     "description": "L'A&R Watch est l'outil de scouting du label : détection de talents émergents et scoring d'investissement. En vue artiste, ce module n'est pas disponible.",
@@ -9,16 +9,19 @@
   "kpis": {
     "tracked": "Artistes sur le radar",
     "watchlisted": "En watchlist",
-    "avgMomentum": "Momentum moyen 30 j",
-    "listeners": "Auditeurs cumulés"
+    "watchlistedHint": "suivis de près",
+    "avgMomentum": "Accélération moyenne",
+    "avgMomentumHint": "sur les 30 derniers jours",
+    "listeners": "Auditeurs cumulés",
+    "listenersHint": "tous les artistes du radar"
   },
   "signal": {
     "badge": "Signal fort",
-    "hint": "Plus forte accélération du radar sur 30 jours"
+    "hint": "Trié par accélération sur 30 jours"
   },
   "card": {
     "listeners": "auditeurs/mois",
-    "momentum": "momentum 30 j",
+    "momentum": "sur 30 jours",
     "index": "Index Day 1",
     "watch": "Suivre",
     "watching": "Suivi",
@@ -28,7 +31,7 @@
     "genre": "Genre",
     "allGenres": "Tous les genres",
     "sort": "Tri",
-    "sortMomentum": "Momentum 30 j",
+    "sortMomentum": "Accélération 30 j",
     "sortListeners": "Auditeurs",
     "sortIndex": "Index Day 1"
   },
@@ -48,5 +51,34 @@
     "revenue12m": "Revenus streaming 12 m",
     "breakEven": "Retour sur avance estimé : {months} mois",
     "disclaimer": "Modèle de démonstration : projection purement indicative calculée sur des données simulées. Ne constitue ni une valorisation ni un conseil d'investissement."
+  },
+  "hero": {
+    "title": "La plus forte accélération",
+    "caption": "{name} · {genre} · {country}",
+    "window": "streams des 30 derniers jours face aux 30 d'avant",
+    "none": "Aucun artiste sur le radar."
+  },
+  "feedTitle": "Le radar",
+  "doors": {
+    "roster": "Roster",
+    "rosterValue": "les artistes déjà signés",
+    "market": "Marché",
+    "marketValue": "ce qui monte dans le genre",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "d'où viennent les découvertes",
+    "index": "Day 1 Index",
+    "indexValue": "comment se lit un score",
+    "valuation": "Valorisation",
+    "valuationValue": "ce que vaut un catalogue",
+    "calculator": "Simulateur de deals",
+    "calculatorValue": "tester avant de signer"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "audience": "Audience",
+    "catalog": "Catalogue",
+    "tour": "Tournée",
+    "sync": "Sync & Licensing"
   }
 }

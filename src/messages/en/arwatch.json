@@ -1,24 +1,27 @@
 {
   "title": "A&R Watch",
-  "subtitle": "{label} scouting radar — {count} emerging artists under watch.",
+  "subtitle": "Who's rising, and how fast — {count} emerging artists on {label}'s radar.",
   "guard": {
     "title": "Label view only",
     "description": "A&R Watch is the label's scouting tool: emerging talent detection and investment scoring. It is not available in artist view.",
     "cta": "Switch to label view"
   },
   "kpis": {
-    "tracked": "Artists on radar",
-    "watchlisted": "Watchlisted",
-    "avgMomentum": "Avg momentum 30d",
-    "listeners": "Combined listeners"
+    "tracked": "Artists on the radar",
+    "watchlisted": "On the watchlist",
+    "watchlistedHint": "closely followed",
+    "avgMomentum": "Average acceleration",
+    "avgMomentumHint": "over the last 30 days",
+    "listeners": "Combined listeners",
+    "listenersHint": "all radar artists"
   },
   "signal": {
     "badge": "Strong signal",
-    "hint": "Fastest 30-day acceleration on the radar"
+    "hint": "Sorted by 30-day acceleration"
   },
   "card": {
     "listeners": "monthly listeners",
-    "momentum": "30d momentum",
+    "momentum": "over 30 days",
     "index": "Day 1 Index",
     "watch": "Watch",
     "watching": "Watching",
@@ -28,7 +31,7 @@
     "genre": "Genre",
     "allGenres": "All genres",
     "sort": "Sort",
-    "sortMomentum": "Momentum 30d",
+    "sortMomentum": "30-day acceleration",
     "sortListeners": "Listeners",
     "sortIndex": "Day 1 Index"
   },
@@ -48,5 +51,34 @@
     "revenue12m": "Streaming revenue 12m",
     "breakEven": "Estimated advance payback: {months} months",
     "disclaimer": "Demo model: purely indicative projection computed on simulated data. This is neither a valuation nor investment advice."
+  },
+  "hero": {
+    "title": "Fastest riser",
+    "caption": "{name} · {genre} · {country}",
+    "window": "last 30 days of streams against the 30 before",
+    "none": "No artist on the radar."
+  },
+  "feedTitle": "The radar",
+  "doors": {
+    "roster": "Roster",
+    "rosterValue": "artists already signed",
+    "market": "Market",
+    "marketValue": "what's rising in the genre",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "where discoveries come from",
+    "index": "Day 1 Index",
+    "indexValue": "how a score reads",
+    "valuation": "Valuation",
+    "valuationValue": "what a catalog is worth",
+    "calculator": "Deal simulator",
+    "calculatorValue": "test before signing"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "audience": "Audience",
+    "catalog": "Catalog",
+    "tour": "Touring",
+    "sync": "Sync & Licensing"
   }
 }
