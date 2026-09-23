@@ -55,7 +55,10 @@ export function SplitStatusBadge({ status }: { status: TrackSplit["status"] }) {
     draft: "bg-muted text-muted-foreground",
   };
   return (
-    <Badge variant="outline" className={cn("border-transparent", styles[status])}>
+    <Badge
+      variant="outline"
+      className={cn("border-transparent", styles[status])}
+    >
       {status === "signed" ? (
         <Check aria-hidden />
       ) : status === "pending" ? (
@@ -102,93 +105,112 @@ export function SplitTrackCard({
   const locale = useLocale();
   const [reminded, setReminded] = useState(false);
   const hasPending = split.shares.some((s) => !s.signed);
+  const canSignNow = canSign && split.status !== "signed";
+  /* Une seule action par carte. Relancer ses co-signataires avant d'avoir signé
+     soi-même n'a pas de sens : le bouton n'apparaît qu'une fois sa propre part
+     réglée — ou en vue label, où l'on ne signe pas. */
+  const canRemind = hasPending && !canSignNow;
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border bg-card p-5">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{track.title}</p>
-          <p className="truncate text-[11px] text-muted-foreground">
-            {project.title} · {project.year}
-          </p>
+    <Dialog>
+      <div className="flex flex-col gap-3 rounded-xl border bg-card p-5">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            {/* Le titre ouvre le détail : sur vingt cartes, un bouton « Détail »
+              de plus par carte finit par remplir l'écran de boutons. */}
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                title={t("card.detailHint")}
+                className="block min-w-0 max-w-full truncate text-left text-sm font-medium hover:underline"
+              >
+                {track.title}
+              </button>
+            </DialogTrigger>
+            <p className="truncate text-[11px] text-muted-foreground">
+              {project.title} · {project.year}
+            </p>
+          </div>
+          <SplitStatusBadge status={split.status} />
         </div>
-        <SplitStatusBadge status={split.status} />
-      </div>
 
-      <SplitBar shares={split.shares} />
+        <SplitBar shares={split.shares} />
 
-      <ul className="flex flex-col gap-1.5">
-        {split.shares.map((s, i) => (
-          <li key={`${s.name}-${i}`} className="flex items-center gap-2 text-xs">
+        <ul className="flex flex-col gap-1.5">
+          {split.shares.map((s, i) => (
+            <li
+              key={`${s.name}-${i}`}
+              className="flex items-center gap-2 text-xs"
+            >
+              <span
+                aria-hidden
+                className="size-2 shrink-0 rounded-full"
+                style={{ background: shareColor(i) }}
+              />
+              <span className="min-w-0 flex-1 truncate">
+                <span className="font-medium">{s.name}</span>{" "}
+                <span className="text-muted-foreground">
+                  · {t(`roles.${ROLE_KEYS[s.role]}`)}
+                </span>
+              </span>
+              {s.signed ? (
+                <Check className="size-3.5 text-success" aria-hidden />
+              ) : (
+                <Clock className="size-3.5 text-warning" aria-hidden />
+              )}
+              <span className="num w-10 text-right font-medium">
+                {s.share} %
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
+          {signature ? (
             <span
-              aria-hidden
-              className="size-2 shrink-0 rounded-full"
-              style={{ background: shareColor(i) }}
-            />
-            <span className="min-w-0 flex-1 truncate">
-              <span className="font-medium">{s.name}</span>{" "}
-              <span className="text-muted-foreground">
-                · {t(`roles.${ROLE_KEYS[s.role]}`)}
+              data-testid="split-signed"
+              className="flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground"
+            >
+              {/* Aperçu de la signature (24 px) : PNG local, jamais optimisé côté serveur. */}
+              <Image
+                src={signature.dataUrl}
+                alt=""
+                width={64}
+                height={24}
+                unoptimized
+                className="h-6 w-auto max-w-16 shrink-0 object-contain"
+              />
+              {/* Passe à la ligne comme « Mis à jour le », plutôt que de se tronquer
+                quand « Relancer » reste (un co-signataire en attente). */}
+              <span className="min-w-0">
+                {t("sign.signedOn", {
+                  date: fmtDate(locale, signature.signedAt),
+                })}
               </span>
             </span>
-            {s.signed ? (
-              <Check className="size-3.5 text-success" aria-hidden />
-            ) : (
-              <Clock className="size-3.5 text-warning" aria-hidden />
-            )}
-            <span className="num w-10 text-right font-medium">{s.share} %</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
-        {signature ? (
-          <span
-            data-testid="split-signed"
-            className="flex min-w-0 items-center gap-2 text-[11px] text-muted-foreground"
-          >
-            {/* Aperçu de la signature (24 px) : PNG local, jamais optimisé côté serveur. */}
-            <Image
-              src={signature.dataUrl}
-              alt=""
-              width={64}
-              height={24}
-              unoptimized
-              className="h-6 w-auto max-w-16 shrink-0 object-contain"
-            />
-            {/* Passe à la ligne comme « Mis à jour le », plutôt que de se tronquer
-                quand « Relancer » reste (un co-signataire en attente). */}
-            <span className="min-w-0">
-              {t("sign.signedOn", { date: fmtDate(locale, signature.signedAt) })}
+          ) : (
+            <span className="text-[11px] text-muted-foreground">
+              {t("card.updatedAt", { date: fmtDate(locale, split.updatedAt) })}
             </span>
-          </span>
-        ) : (
-          <span className="text-[11px] text-muted-foreground">
-            {t("card.updatedAt", { date: fmtDate(locale, split.updatedAt) })}
-          </span>
-        )}
-        <div className="flex items-center gap-1.5">
-          {canSign && split.status !== "signed" && <SignSplitDialog track={track} />}
-          {hasPending && (
-            <Button
-              size="sm"
-              variant="outline"
-              disabled={reminded}
-              onClick={() => setReminded(true)}
-            >
-              {reminded ? <Check aria-hidden /> : <BellRing aria-hidden />}
-              {reminded ? t("card.reminded") : t("card.remind")}
-            </Button>
           )}
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="ghost">
-                {t("card.detail")}
+          <div className="flex items-center gap-1.5">
+            {canSignNow && <SignSplitDialog track={track} />}
+            {canRemind && (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={reminded}
+                onClick={() => setReminded(true)}
+              >
+                {reminded ? <Check aria-hidden /> : <BellRing aria-hidden />}
+                {reminded ? t("card.reminded") : t("card.remind")}
               </Button>
-            </DialogTrigger>
+            )}
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{t("dialog.title", { track: track.title })}</DialogTitle>
+                <DialogTitle>
+                  {t("dialog.title", { track: track.title })}
+                </DialogTitle>
                 <DialogDescription>
                   {t("dialog.description", {
                     project: project.title,
@@ -202,8 +224,12 @@ export function SplitTrackCard({
                   <TableRow>
                     <TableHead>{t("dialog.holder")}</TableHead>
                     <TableHead>{t("dialog.role")}</TableHead>
-                    <TableHead className="text-right">{t("dialog.share")}</TableHead>
-                    <TableHead className="text-right">{t("dialog.status")}</TableHead>
+                    <TableHead className="text-right">
+                      {t("dialog.share")}
+                    </TableHead>
+                    <TableHead className="text-right">
+                      {t("dialog.status")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -222,7 +248,9 @@ export function SplitTrackCard({
                       <TableCell className="text-muted-foreground">
                         {t(`roles.${ROLE_KEYS[s.role]}`)}
                       </TableCell>
-                      <TableCell className="num text-right">{s.share} %</TableCell>
+                      <TableCell className="num text-right">
+                        {s.share} %
+                      </TableCell>
                       <TableCell className="text-right">
                         {s.signed ? (
                           <span className="inline-flex items-center gap-1 text-xs text-success">
@@ -239,7 +267,9 @@ export function SplitTrackCard({
                     </TableRow>
                   ))}
                   <TableRow>
-                    <TableCell className="font-medium">{t("dialog.total")}</TableCell>
+                    <TableCell className="font-medium">
+                      {t("dialog.total")}
+                    </TableCell>
                     <TableCell />
                     <TableCell className="num text-right font-semibold">
                       {split.shares.reduce((s, x) => s + x.share, 0)} %
@@ -249,9 +279,9 @@ export function SplitTrackCard({
                 </TableBody>
               </Table>
             </DialogContent>
-          </Dialog>
+          </div>
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 }

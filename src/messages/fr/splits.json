@@ -1,11 +1,15 @@
 {
   "title": "Splits",
-  "subtitle": "La répartition des droits de chaque titre : qui touche quoi, et qui a signé.",
+  "subtitle": "Qui touche quoi sur chacun de tes titres — et qui n'a pas encore signé.",
   "kpis": {
     "signed": "Splits signés",
     "pending": "En attente de signature",
     "draft": "Brouillons",
-    "collaborators": "Collaborateurs uniques"
+    "collaborators": "Collaborateurs",
+    "avgShare": "Ta part moyenne",
+    "avgShareLabel": "Part moyenne de l'artiste",
+    "avgShareHint": "sur {count, plural, one {# titre} other {# titres}}",
+    "collaboratorsHint": "hors artistes du roster"
   },
   "filters": {
     "all": "Tous",
@@ -29,7 +33,8 @@
     "remind": "Relancer",
     "reminded": "Relance envoyée",
     "detail": "Détail",
-    "updatedAt": "Mis à jour le {date}"
+    "updatedAt": "Mis à jour le {date}",
+    "detailHint": "Voir le détail du partage"
   },
   "dialog": {
     "title": "Split — {track}",
@@ -53,5 +58,41 @@
   "labelView": {
     "meta": "{tracks, plural, one {# titre} other {# titres}} · {pending, plural, =0 {tout est signé} one {# split à signer} other {# splits à signer}}"
   },
-  "empty": "Aucun split ne correspond à ce filtre."
+  "empty": "Aucun split ne correspond à ce filtre.",
+  "subtitleLabel": "Qui touche quoi sur chaque titre du roster — et ce qui reste à signer.",
+  "subtitleFocused": "Qui touche quoi sur les titres de {name} — et ce qui reste à signer.",
+  "hero": {
+    "title": "Partages signés",
+    "value": "{signed} / {total}",
+    "caption": "titres dont le partage est signé",
+    "allSigned": "Tout est signé : chaque titre a son partage arrêté.",
+    "toSign": "{count, plural, one {# titre attend encore une signature} other {# titres attendent encore une signature}}"
+  },
+  "list": {
+    "title": "Tes titres",
+    "titleLabel": "Les titres du roster",
+    "hint": "Clique un titre pour voir le détail de son partage"
+  },
+  "doors": {
+    "contracts": "Contrats",
+    "contractsValue": "ce que dit ton contrat",
+    "rights": "Droits FR",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM",
+    "revenue": "Revenus",
+    "revenueValue": "ce que ces parts rapportent",
+    "catalog": "Catalogue",
+    "catalogValue": "tous tes titres",
+    "audit": "Audit royalties",
+    "auditValue": "écart avec les relevés",
+    "team": "Équipe",
+    "teamValue": "qui travaille sur quoi"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "finances": "Dépenses & P&L",
+    "calculator": "Simulateur",
+    "valuation": "Valorisation",
+    "urssaf": "URSSAF",
+    "import": "Importer un relevé"
+  }
 }
