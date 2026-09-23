@@ -1,26 +1,44 @@
 /**
  * Formatage des nombres — TOUJOURS via Intl, jamais de format en dur.
  * `locale` vient de useLocale() (next-intl).
+ *
+ * Intl sépare les milliers français par une espace fine insécable (U+202F).
+ * Mesuré dans le navigateur sur la police du produit : elle fait **2 px** en
+ * Geist (corps de texte) contre 4 px pour l'espace insécable ordinaire. À 13 px
+ * de texte, « 7 907 594 € » se lit « 7907594 € » — un chiffre de sept
+ * caractères d'affilée, illisible d'un coup d'œil. On échange donc U+202F
+ * contre U+00A0 : même comportement (insécable), deux fois plus visible.
  */
 
+/** Espace fine insécable → espace insécable ordinaire. Voir ci-dessus. */
+function widenGroupSeparator(s: string): string {
+  return s.replace(/\u202f/g, "\u00a0");
+}
+
 export function fmtCompact(locale: string, n: number): string {
-  return new Intl.NumberFormat(locale, {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(n);
+  return widenGroupSeparator(
+    new Intl.NumberFormat(locale, {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(n),
+  );
 }
 
 export function fmtInt(locale: string, n: number): string {
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(n);
+  return widenGroupSeparator(
+    new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(n),
+  );
 }
 
 export function fmtEur(locale: string, n: number, opts?: { compact?: boolean }): string {
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: "EUR",
-    notation: opts?.compact ? "compact" : "standard",
-    maximumFractionDigits: opts?.compact ? 1 : 0,
-  }).format(n);
+  return widenGroupSeparator(
+    new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: "EUR",
+      notation: opts?.compact ? "compact" : "standard",
+      maximumFractionDigits: opts?.compact ? 1 : 0,
+    }).format(n),
+  );
 }
 
 export function fmtPct(locale: string, n: number, digits = 1): string {

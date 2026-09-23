@@ -6,7 +6,12 @@
     "midValue": "Estimated valuation",
     "nps": "NPS (annual net revenue)",
     "multiple": "Applied multiple",
-    "range": "Range"
+    "range": "Range",
+    "rangeHint": "spread around the estimate",
+    "npsHint": "net catalog revenue over 12 months",
+    "multipleHint": "maturity: {stage}",
+    "future": "In 12 months",
+    "futureHint": "if the projected growth holds"
   },
   "method": {
     "title": "How we compute it",
@@ -26,15 +31,6 @@
     "description": "Drag the multiple to see what a buyer would pay depending on their conviction.",
     "atMultiple": "At {multiple}×",
     "yourRange": "Your market zone"
-  },
-  "scenarios": {
-    "title": "Three scenarios",
-    "pessimistic": "Conservative",
-    "pessimisticDesc": "Low end — negotiation discount",
-    "nominal": "Nominal",
-    "nominalDesc": "Mid-range — typical transaction",
-    "optimistic": "Optimistic",
-    "optimisticDesc": "High end — bidding war or strategic buyer"
   },
   "byArtist": {
     "title": "Valuation by artist",
@@ -67,5 +63,32 @@
       "body": "Hello,\n\nI saw on Day One that {name}'s back catalogue is estimated at {mid}. Could you enter the exact value with your account on the dashboard?\n\nThanks."
     },
     "note": "Stored locally on this device; the artist sees neither the estimate nor the exact value."
+  },
+  "hero": {
+    "range": "{low} to {high}",
+    "rangeHint": "low end: negotiation discount · high end: auction or strategic buyer",
+    "portfolioHint": "{count, plural, one {# catalog} other {# catalogs}} added up"
+  },
+  "doors": {
+    "calculator": "Revenue simulator",
+    "calculatorValue": "the full projection",
+    "catalog": "Catalog",
+    "catalogValue": "the tracks carrying this value",
+    "revenue": "Revenue",
+    "revenueValue": "the net revenue behind the maths",
+    "finances": "Expenses & P&L",
+    "financesValue": "what's left after expenses",
+    "contracts": "Contracts",
+    "contractsValue": "what can weigh on the value",
+    "splits": "Splits",
+    "splitsValue": "who gets what on each track"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "roster": "Roster",
+    "audit": "Royalty audit",
+    "rights": "French rights",
+    "sync": "Sync & Licensing",
+    "index": "Day 1 Index"
   }
 }

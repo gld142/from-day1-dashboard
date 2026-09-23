@@ -6,7 +6,12 @@
     "midValue": "Valorisation estimée",
     "nps": "NPS (revenu net annuel)",
     "multiple": "Multiple appliqué",
-    "range": "Fourchette"
+    "range": "Fourchette",
+    "rangeHint": "d'écart autour de l'estimation",
+    "npsHint": "revenu net de catalogue sur 12 mois",
+    "multipleHint": "maturité : {stage}",
+    "future": "Dans 12 mois",
+    "futureHint": "si la croissance projetée tient"
   },
   "method": {
     "title": "Comment on calcule",
@@ -26,15 +31,6 @@
     "description": "Fais glisser le multiple pour voir ce qu'un acheteur paierait selon son niveau de conviction.",
     "atMultiple": "À {multiple}×",
     "yourRange": "Ta zone de marché"
-  },
-  "scenarios": {
-    "title": "Trois scénarios",
-    "pessimistic": "Prudent",
-    "pessimisticDesc": "Bas de fourchette — décote de négociation",
-    "nominal": "Nominal",
-    "nominalDesc": "Milieu de fourchette — transaction type",
-    "optimistic": "Optimiste",
-    "optimisticDesc": "Haut de fourchette — enchères ou acheteur stratégique"
   },
   "byArtist": {
     "title": "Valorisation par artiste",
@@ -67,5 +63,32 @@
       "body": "Bonjour,\n\nJ'ai vu sur Day One que l'estimation du back catalogue de {name} est à {mid}. Peux-tu renseigner la valeur exacte avec ton compte sur le dashboard ?\n\nMerci."
     },
     "note": "Renseigné localement sur cet appareil ; l'artiste ne voit ni l'estimation ni la valeur exacte."
+  },
+  "hero": {
+    "range": "{low} à {high}",
+    "rangeHint": "bas de fourchette : décote de négociation · haut : enchères ou acheteur stratégique",
+    "portfolioHint": "{count, plural, one {# catalogue} other {# catalogues}} additionnés"
+  },
+  "doors": {
+    "calculator": "Simulateur de revenus",
+    "calculatorValue": "la projection complète",
+    "catalog": "Catalogue",
+    "catalogValue": "les titres qui portent cette valeur",
+    "revenue": "Revenus",
+    "revenueValue": "le revenu net qui fonde le calcul",
+    "finances": "Dépenses & P&L",
+    "financesValue": "ce qu'il reste après dépenses",
+    "contracts": "Contrats",
+    "contractsValue": "ce qui peut peser sur la valeur",
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi sur chaque titre"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "roster": "Roster",
+    "audit": "Audit royalties",
+    "rights": "Droits FR",
+    "sync": "Sync & Licensing",
+    "index": "Day 1 Index"
   }
 }
