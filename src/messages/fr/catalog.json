@@ -1,14 +1,19 @@
 {
   "title": "Catalogue",
-  "subtitle": "Projets, titres, métadonnées — la source de vérité de votre répertoire",
-  "labelSubtitle": "Le répertoire complet du roster, projet par projet",
+  "subtitle": "Tes projets, tes titres, et ce que chacun pèse.",
+  "labelSubtitle": "Le répertoire du roster, projet par projet, et ce que chacun pèse.",
   "searchPlaceholder": "Rechercher un titre, un projet, un ISRC…",
   "allArtists": "Tout le roster",
   "kpis": {
     "tracks": "Titres au catalogue",
     "projects": "Projets",
     "streams": "Streams 12 mois",
-    "topShare": "Part du top titre"
+    "topShare": "Part du top titre",
+    "topShareHint": "{title} porte cette part à lui seul",
+    "tracksHint": "répartis sur {count, plural, one {# projet} other {# projets}}",
+    "unsigned": "Splits à signer",
+    "unsignedHint": "sans eux, pas de sync ni de versement propre",
+    "unsignedNone": "tout est signé"
   },
   "types": {
     "album": "Album",
@@ -52,5 +57,31 @@
     "pendingSignature": "Signature en attente",
     "updatedAt": "Mis à jour le {date}"
   },
-  "empty": "Aucun résultat pour cette recherche"
+  "empty": "Aucun résultat pour cette recherche",
+  "hero": {
+    "title": "Streams sur 12 mois",
+    "caption": "tout le catalogue confondu"
+  },
+  "doors": {
+    "splits": "Splits",
+    "splitsValue": "qui touche quoi sur chaque titre",
+    "streams": "Streams",
+    "streamsValue": "ce que chaque titre fait au jour le jour",
+    "sync": "Sync & Licensing",
+    "syncValue": "placer un titre en synchro",
+    "valuation": "Valorisation",
+    "valuationValue": "ce que vaut ce catalogue",
+    "rights": "Droits FR",
+    "rightsValue": "les droits que ces œuvres génèrent",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "ce qui n'est pas encore sorti"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenus",
+    "audience": "Audience",
+    "tour": "Tournée",
+    "audit": "Audit royalties",
+    "import": "Importer un relevé"
+  }
 }

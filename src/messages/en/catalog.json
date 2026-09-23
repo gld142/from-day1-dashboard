@@ -1,14 +1,19 @@
 {
   "title": "Catalog",
-  "subtitle": "Projects, tracks, metadata — the source of truth for your repertoire",
-  "labelSubtitle": "The roster's full repertoire, project by project",
+  "subtitle": "Your projects, your tracks, and what each one weighs.",
+  "labelSubtitle": "The roster's repertoire, project by project, and what each one weighs.",
   "searchPlaceholder": "Search a track, a project, an ISRC…",
   "allArtists": "Whole roster",
   "kpis": {
     "tracks": "Tracks in catalog",
     "projects": "Projects",
     "streams": "Streams 12m",
-    "topShare": "Top track share"
+    "topShare": "Top track share",
+    "topShareHint": "{title} carries that share on its own",
+    "tracksHint": "across {count, plural, one {# project} other {# projects}}",
+    "unsigned": "Splits to sign",
+    "unsignedHint": "without them, no sync and no clean payout",
+    "unsignedNone": "everything is signed"
   },
   "types": {
     "album": "Album",
@@ -52,5 +57,31 @@
     "pendingSignature": "Awaiting signature",
     "updatedAt": "Updated {date}"
   },
-  "empty": "No result for this search"
+  "empty": "No result for this search",
+  "hero": {
+    "title": "Streams over 12 months",
+    "caption": "across the whole catalog"
+  },
+  "doors": {
+    "splits": "Splits",
+    "splitsValue": "who gets what on each track",
+    "streams": "Streams",
+    "streamsValue": "what each track does day to day",
+    "sync": "Sync & Licensing",
+    "syncValue": "place a track in sync",
+    "valuation": "Valuation",
+    "valuationValue": "what this catalog is worth",
+    "rights": "French rights",
+    "rightsValue": "the rights these works generate",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "what isn't out yet"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "revenue": "Revenue",
+    "audience": "Audience",
+    "tour": "Touring",
+    "audit": "Royalty audit",
+    "import": "Import a statement"
+  }
 }

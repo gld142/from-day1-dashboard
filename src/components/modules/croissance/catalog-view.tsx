@@ -18,8 +18,13 @@ import {
 } from "@/lib/demo/api";
 import type { Artist, Project, Track, TrackSplit } from "@/lib/demo/types";
 import { useRole } from "@/lib/role";
-import { fmtCompact, fmtDate, fmtInt } from "@/lib/format";
-import { KpiCard } from "@/components/dashboard/kpi";
+import { fmtCompact, fmtDate, fmtInt, fmtPct } from "@/lib/format";
+import {
+  AffiliatedPoints,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
@@ -74,6 +79,7 @@ type ScopedTrack = Track & { streams12m: number; splitStatus: SplitStatus };
 
 export function CatalogView() {
   const t = useTranslations("catalog");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { artistId, focusedArtistId, isLabel, setFocusedArtistId } = useRole();
   const rosterMode = isLabel && focusedArtistId === null;
@@ -180,6 +186,12 @@ export function CatalogView() {
     };
   }, [openTrackId, artistTotals]);
 
+  /* Les titres dont le partage n'est pas arrêté : c'est ce qui bloque un sync
+     et un versement propre, et rien ne le disait sur cette page. */
+  const unsignedCount = allTracks.filter(
+    (tr) => tr.splitStatus !== "signed",
+  ).length;
+
   return (
     <div className="rise-in">
       <PageHeader
@@ -206,34 +218,49 @@ export function CatalogView() {
         )}
       </PageHeader>
 
-      {/* ─── KPIs ─── */}
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          id="catalog-tracks"
-          label={t("kpis.tracks")}
-          value={allTracks.length}
-          format="int"
+      <div className="space-y-3">
+      {/* Ce que pèse le catalogue, et ce qui l'empêche de rapporter. */}
+      <Sheet family="catalog">
+        <SheetHeading action={t("hero.caption")}>{t("hero.title")}</SheetHeading>
+        <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+          {fmtCompact(locale, totalStreams)}
+        </p>
+        <AffiliatedPoints
+          className="mt-2"
+          points={[
+            {
+              key: "tracks",
+              value: fmtInt(locale, allTracks.length),
+              label: t("kpis.tracks"),
+              note: t("kpis.tracksHint", { count: projects.length }),
+            },
+            {
+              key: "top",
+              value: fmtPct(locale, topShare).replace("+", ""),
+              label: t("kpis.topShare"),
+              note: topTrack
+                ? t("kpis.topShareHint", { title: topTrack.title })
+                : undefined,
+            },
+            {
+              key: "unsigned",
+              value: (
+                <span className={unsignedCount > 0 ? "text-warning" : undefined}>
+                  {fmtInt(locale, unsignedCount)}
+                </span>
+              ),
+              label: t("kpis.unsigned"),
+              note:
+                unsignedCount > 0 ? t("kpis.unsignedHint") : t("kpis.unsignedNone"),
+            },
+            {
+              key: "projects",
+              value: fmtInt(locale, projects.length),
+              label: t("kpis.projects"),
+            },
+          ]}
         />
-        <KpiCard
-          id="catalog-projects"
-          label={t("kpis.projects")}
-          value={projects.length}
-          format="int"
-        />
-        <KpiCard
-          id="catalog-streams"
-          label={t("kpis.streams")}
-          value={totalStreams}
-          format="compact"
-        />
-        <KpiCard
-          id="catalog-top-share"
-          label={t("kpis.topShare")}
-          value={topShare}
-          format="pct"
-          deltaLabel={topTrack?.title}
-        />
-      </div>
+      </Sheet>
 
       {/* ─── Recherche ─── */}
       <div className="relative mt-4 max-w-md">
@@ -478,6 +505,33 @@ export function CatalogView() {
           )}
         </DialogContent>
       </Dialog>
+
+      <Doors
+        title={tc("blocks.doors")}
+        doors={[
+          { key: "splits", family: "money", href: "/splits", label: t("doors.splits"), value: t("doors.splitsValue") },
+          { key: "streams", family: "streams", href: "/streams", label: t("doors.streams"), value: t("doors.streamsValue") },
+          { key: "sync", family: "money", href: "/sync", label: t("doors.sync"), value: t("doors.syncValue") },
+          { key: "valuation", family: "money", href: "/valuation", label: t("doors.valuation"), value: t("doors.valuationValue") },
+          { key: "rights", family: "money", href: "/rights", label: t("doors.rights"), value: t("doors.rightsValue") },
+          { key: "discovery", family: "trends", href: "/discovery", label: t("doors.discovery"), value: t("doors.discoveryValue") },
+        ]}
+      />
+
+      <RestRow
+        title={rosterMode ? tc("blocks.restLabel") : tc("blocks.rest")}
+        items={[
+          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+          { key: "revenue", href: "/revenue", label: t("rest.revenue") },
+          { key: "audience", href: "/audience", label: t("rest.audience") },
+          { key: "tour", href: "/tour", label: t("rest.tour") },
+          { key: "audit", href: "/audit", label: t("rest.audit") },
+          { key: "import", href: "/import", label: t("rest.import") },
+        ]}
+      />
+
+      <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+      </div>
     </div>
   );
 }
