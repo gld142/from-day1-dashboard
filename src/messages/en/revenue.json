@@ -7,7 +7,10 @@
     "total12m": "Revenue (12mo)",
     "monthlyAvg": "Monthly average",
     "topSource": "Top source",
-    "vsPrevYear": "vs previous 12 months"
+    "vsPrevYear": "vs previous 12 months",
+    "sourceCount": "revenue sources",
+    "sourceCountNote": "over the last 12 months",
+    "bestMonth": "best month"
   },
   "estimate": {
     "title": "Live estimate",
@@ -143,7 +146,8 @@
   },
   "chart": {
     "title": "Monthly evolution by source",
-    "subtitle": "Last 24 months, stacked by source"
+    "subtitle": "Last 24 months, stacked by source",
+    "window12": "the last 12 complete months"
   },
   "breakdown": {
     "title": "Breakdown by source",
@@ -169,5 +173,27 @@
     "diversification": "{count, plural, one {# active source} other {# active sources}} — {top} accounts for {share} of revenue",
     "concentrated": "Heads up: over 70% of revenue comes from a single source",
     "balanced": "Healthy diversification — no channel exceeds 70%"
+  },
+  "doors": {
+    "finances": "Expenses & P&L",
+    "financesValue": "what's left after expenses",
+    "rights": "French rights",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM",
+    "audit": "Royalty audit",
+    "auditValue": "gap with statements",
+    "contracts": "Contracts",
+    "contractsValue": "rates and deadlines",
+    "urssaf": "URSSAF · artist-author",
+    "urssafValue": "contributions and filing",
+    "calculator": "Deal simulator",
+    "calculatorValue": "test a contract"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "splits": "Splits",
+    "import": "Import a statement",
+    "valuation": "Valuation",
+    "sync": "Sync & Licensing"
   }
 }

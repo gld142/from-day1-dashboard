@@ -59,20 +59,20 @@ export function SheetHeading({
   className?: string;
 }) {
   return (
-    <p
+    <div
       className={cn(
-        "sheet-ink mb-1.5 flex items-baseline gap-3 text-[11px] font-semibold tracking-[0.08em] uppercase",
+        "sheet-ink mb-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 text-[11px] font-semibold tracking-[0.08em] uppercase",
         centered ? "justify-center" : "justify-between",
         className,
       )}
     >
       <span>{children}</span>
       {action ? (
-        <span className="text-[11px] font-medium tracking-normal normal-case opacity-75">
+        <span className="min-w-0 max-w-full overflow-x-auto text-[11px] font-medium tracking-normal normal-case opacity-75">
           {action}
         </span>
       ) : null}
-    </p>
+    </div>
   );
 }
 

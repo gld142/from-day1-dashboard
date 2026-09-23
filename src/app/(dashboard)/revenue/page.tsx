@@ -10,27 +10,16 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   Pie,
   PieChart,
+  ReferenceArea,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  AudioLines,
-  Clapperboard,
-  Landmark,
-  Mic2,
-  PieChart as PieIcon,
-  Radio,
-  Scale,
-  Shirt,
-} from "lucide-react";
 import {
   ARTISTS,
   ESTIMATE_PERIODS,
@@ -53,14 +42,20 @@ import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format"
 import { useRole } from "@/lib/role";
 import { useUrlParam } from "@/lib/url-param";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
-import { cn } from "@/lib/utils";
-import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
+import { DeltaChip } from "@/components/dashboard/kpi";
+import {
+  AffiliatedPoints,
+  CenteredValue,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { RevenueCascade } from "@/components/modules/finances/revenue-cascade";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { SharesPanel } from "@/components/modules/finances/shares-panel";
-import { EstimateBoard } from "@/components/modules/pilotage/estimate-board";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -82,29 +77,6 @@ const SOURCE_COLOR: Record<RevenueSource, string> = {
   merch: "var(--chart-3)",
 };
 
-const SOURCE_ICON: Record<
-  RevenueSource,
-  React.ComponentType<{ className?: string }>
-> = {
-  streaming: AudioLines,
-  sacem: Scale,
-  neighboring: Mic2,
-  spre: Radio,
-  sync: Clapperboard,
-  live: Landmark,
-  merch: Shirt,
-};
-
-const STACK_COLORS = [
-  "var(--chart-1)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-  "var(--chart-4)",
-  "var(--chart-5)",
-  "var(--chart-2)",
-  "var(--chart-3)",
-];
-
 /** `?period=` : une des cinq périodes de l'estimateur, sinon null. */
 function parsePeriod(raw: string | null): EstimatePeriod | null {
   return ESTIMATE_PERIODS.includes(raw as EstimatePeriod) ? (raw as EstimatePeriod) : null;
@@ -119,6 +91,7 @@ const TOOLTIP_STYLE = {
 
 export default function RevenuePage() {
   const t = useTranslations("revenue");
+  const tc = useTranslations("common");
   const tDsp = useTranslations("streams.dsp.names");
   const locale = useLocale();
   const { persona, artistId, isLabel, focusedArtistId, setFocusedArtistId } =
@@ -161,13 +134,14 @@ export default function RevenuePage() {
       .sort((a, b) => b.amount - a.amount);
     const total12 = sources.reduce((s, r) => s + r.amount, 0);
 
-    // Delta vs les 12 mois précédents.
+    /* Delta d'année : on écarte le mois en cours, partiel. Le comparer à un
+       mois complet fabriquerait une chute qui n'existe pas. */
     let prev12 = 0;
     let cur12 = 0;
     for (const id of ids) {
-      const months = monthlyRevenueTotals(id, 24);
-      prev12 += months.slice(0, 12).reduce((s, m) => s + m.amount, 0);
-      cur12 += months.slice(12).reduce((s, m) => s + m.amount, 0);
+      const complete = monthlyRevenueTotals(id, 25).slice(0, -1);
+      prev12 += complete.slice(-24, -12).reduce((s, m) => s + m.amount, 0);
+      cur12 += complete.slice(-12).reduce((s, m) => s + m.amount, 0);
     }
     const delta = prev12 === 0 ? 0 : ((cur12 - prev12) / prev12) * 100;
 
@@ -220,6 +194,36 @@ export default function RevenuePage() {
     return hasReal(artistId) ? dspEstimates(artistId, period) : [];
   }, [aggregated, artistId, period]);
 
+  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
+  /** Une part, sans signe. */
+  const pct = (points: number) =>
+    new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1 }).format(
+      points / 100,
+    );
+  /* Les 12 mois que résume le chiffre du centre, dans une série qui en montre
+     24 : la zone ombrée dit lesquels. */
+  const window12 = useMemo(() => {
+    const months = data.stacked.map((r) => r.month);
+    const complete = months.slice(0, -1);
+    return complete.length >= 12
+      ? { from: complete[complete.length - 12], to: complete[complete.length - 1] }
+      : null;
+  }, [data.stacked]);
+
+  /* Le meilleur mois de la série empilée — un total d'année ne raconte rien,
+     un mois nommé si. */
+  const bestMonth = useMemo(() => {
+    let best: { month: string; total: number } | null = null;
+    for (const row of data.stacked) {
+      const total = Object.entries(row).reduce(
+        (sum, [k, v]) => (k === "month" ? sum : sum + Number(v ?? 0)),
+        0,
+      );
+      if (!best || total > best.total) best = { month: row.month, total };
+    }
+    return best;
+  }, [data.stacked]);
+
   const fmtRate = (rate: number) =>
     new Intl.NumberFormat(locale, {
       minimumFractionDigits: 4,
@@ -246,9 +250,8 @@ export default function RevenuePage() {
       { header: t("breakdown.amount"), cell: (r) => round2(r.amount) },
     ]);
   };
-
   return (
-    <div>
+    <div className="rise-in">
       <PrintStyles />
       <PageHeader
         title={t("title")}
@@ -260,364 +263,400 @@ export default function RevenuePage() {
               : t("subtitle")
         }
       >
-        {focused && <ArtistBadge artist={focused} size="md" />}
+        {focused && <ArtistBadge artist={focused} meta={focused.genre} />}
         <ExportMenu
+          onExportCsv={exportMonthlyCsv}
           label={t("export.button")}
           csvLabel={t("export.csv")}
           printLabel={t("export.print")}
-          onExportCsv={exportMonthlyCsv}
         />
       </PageHeader>
 
-      {/* Estimation live — fourchettes jour / semaine / mois / année, la période
-          choisie en relief. Le sélecteur pilote aussi le tableau par plateforme. */}
-      {est && (
-        <EstimateBoard
-          className="rise-in mb-4"
-          summaries={est}
-          line={persona === "artist" ? "artistShare" : "grossMaster"}
-          focus={period}
-          title={aggregated ? t("estimate.titleLabel") : t("estimate.title")}
-          subtitle={t("estimate.subtitle")}
-          actions={
-            <Tabs value={period} onValueChange={setPeriod}>
-              <TabsList aria-label={t("estimate.selectPeriod")}>
-                {ESTIMATE_PERIODS.map((p) => (
-                  <TabsTrigger key={p} value={p} className="num text-xs">
-                    {t(`estimate.period.${p}`)}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          }
-        />
-      )}
-
-      {/* Ta part, c'est ton contrat — un artiste (persona artiste ou label zoomé),
-          jamais le roster agrégé : les pourcentages sont propres à chacun. */}
-      {est && !aggregated && (
-        <SharesPanel className="rise-in mb-4" artistId={artistId} gross={est.day.grossMaster.mid} />
-      )}
-
-      {/* Par plateforme · période — provenance, volume, taux effectif, brut */}
-      {byDsp.length > 0 && (
-        <section className="rise-in mb-4 rounded-xl border bg-card p-5">
-          <h2 className="font-heading text-base font-semibold tracking-tight">
-            {t("estimate.byDspPeriod", { period: t(`estimate.period.${period}`) })}
-          </h2>
-          <Table className="mt-3">
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("estimate.colPlatform")}</TableHead>
-                <TableHead>{t("estimate.colProvenance")}</TableHead>
-                <TableHead className="text-right">{t("estimate.colStreams")}</TableHead>
-                <TableHead className="text-right">{t("estimate.colRate")}</TableHead>
-                <TableHead className="text-right">{t("estimate.colGross")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {byDsp.map((row) => (
-                <TableRow key={row.dsp}>
-                  <TableCell className="font-medium">{tDsp(row.dsp)}</TableCell>
-                  <TableCell>
-                    <ProvenanceBadge provenance={row.provenance} />
-                  </TableCell>
-                  <TableCell className="num text-right">
-                    {fmtCompact(locale, row.streams)}
-                  </TableCell>
-                  <TableCell className="num text-right text-muted-foreground">
-                    {t("estimate.dspRate", { rate: fmtRate(row.rate) })}
-                  </TableCell>
-                  <TableCell className="num text-right font-semibold">
-                    {fmtEur(locale, row.gross)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </section>
-      )}
-
-      {/* KPIs */}
-      <div className="rise-in grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KpiCard
-          id="rev-total"
-          label={t("kpis.total12m")}
-          value={data.total12}
-          format="eur"
-          delta={data.delta}
-          deltaLabel={t("kpis.vsPrevYear")}
-          spark={data.spark}
-          hero
-        />
-        <KpiCard
-          id="rev-avg"
-          label={t("kpis.monthlyAvg")}
-          value={Math.round(data.monthlyAvg)}
-          format="eur"
-        />
-        <div className="flex flex-col gap-1 rounded-xl border bg-card p-4">
-          <span className="text-xs font-medium text-muted-foreground">
-            {t("kpis.topSource")}
-          </span>
-          <span className="text-2xl font-semibold tracking-tight">
-            {data.sources[0] ? t(`sources.${data.sources[0].source}`) : "—"}
-          </span>
-          <span className="num text-xs text-muted-foreground">
-            {fmtPct(locale, topShare * 100, 0)}
-          </span>
-        </div>
-        <div className="flex flex-col justify-between gap-1 rounded-xl border bg-card p-4">
-          <span className="text-xs font-medium text-muted-foreground">
-            {t("breakdown.title")}
-          </span>
-          <p className="text-[13px] leading-snug">
-            {t("insight.diversification", {
-              count: data.sources.filter((s) => s.amount > 0).length,
-              top: data.sources[0] ? t(`sources.${data.sources[0].source}`) : "—",
-              share: fmtPct(locale, topShare * 100, 0),
-            })}
-          </p>
-          <p
-            className={cn(
-              "text-xs",
-              topShare > 0.7 ? "text-warning" : "text-success",
-            )}
-          >
-            {topShare > 0.7 ? t("insight.concentrated") : t("insight.balanced")}
-          </p>
-        </div>
-      </div>
-
-      {/* Chart empilé par source */}
-      <section className="rise-in mt-4 rounded-xl border bg-card p-5">
-        <div className="mb-4">
-          <h2 className="font-heading text-base font-semibold">{t("chart.title")}</h2>
-          <p className="text-xs text-muted-foreground">{t("chart.subtitle")}</p>
-        </div>
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={data.stacked}
-              margin={{ top: 4, right: 4, bottom: 0, left: 4 }}
-            >
-              <defs>
-                {REVENUE_SOURCES.map((s, i) => (
-                  <linearGradient key={s} id={`rev-${s}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={STACK_COLORS[i]} stopOpacity={0.5} />
-                    <stop offset="100%" stopColor={STACK_COLORS[i]} stopOpacity={0.08} />
-                  </linearGradient>
-                ))}
-              </defs>
-              <CartesianGrid vertical={false} strokeOpacity={0.07} />
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 11 }}
-                tickFormatter={(m: string) => fmtMonth(locale, m)}
-                interval={3}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 11 }}
-                tickFormatter={(v: number) => fmtEur(locale, v, { compact: true })}
-                width={64}
-              />
-              <Tooltip
-                contentStyle={TOOLTIP_STYLE}
-                formatter={(value, name) => [
-                  fmtEur(locale, Number(value)),
-                  t(`sources.${name as RevenueSource}`),
-                ]}
-                labelFormatter={(m) => fmtMonth(locale, String(m))}
-              />
-              {REVENUE_SOURCES.map((s, i) => (
-                <Area
-                  key={s}
-                  type="monotone"
-                  dataKey={s}
-                  stackId="rev"
-                  stroke={STACK_COLORS[i]}
-                  strokeWidth={1.5}
-                  fill={`url(#rev-${s})`}
-                  animationDuration={600}
-                />
-              ))}
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-5">
-        {/* Donut — min-w-0 : la colonne de grille ne s'élargit pas au
-            contenu minimal de la liste voisine (débordement sur mobile). */}
-        <section className="rise-in min-w-0 rounded-xl border bg-card p-5 lg:col-span-2">
-          <h2 className="mb-1 flex items-center gap-2 font-heading text-base font-semibold">
-            <PieIcon className="size-4 text-brand" aria-hidden />
-            {t("breakdown.title")}
-          </h2>
-          <p className="mb-3 text-xs text-muted-foreground">
-            {t("breakdown.period12m")}
-          </p>
-          <div className="h-52">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={data.sources}
-                  dataKey="amount"
-                  nameKey="source"
-                  innerRadius="62%"
-                  outerRadius="90%"
-                  paddingAngle={2}
-                  strokeWidth={0}
-                  animationDuration={600}
-                >
-                  {data.sources.map((s) => (
-                    <Cell key={s.source} fill={SOURCE_COLOR[s.source]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  formatter={(value, name) => [
-                    fmtEur(locale, Number(value)),
-                    t(`sources.${name as RevenueSource}`),
-                  ]}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-
-        {/* Liste par source */}
-        <section className="rise-in min-w-0 rounded-xl border bg-card p-5 lg:col-span-3">
-          <h2 className="mb-3 font-heading text-base font-semibold">
-            {t("breakdown.source")}
-          </h2>
-          <ul className="flex flex-col">
-            {data.sources.map((s) => {
-              const Icon = SOURCE_ICON[s.source];
-              const share =
-                data.total12 === 0 ? 0 : (s.amount / data.total12) * 100;
-              const trend = data.trendBySource.get(s.source) ?? 0;
-              return (
-                <li
-                  key={s.source}
-                  className="hairline-b flex items-center gap-3 py-2.5 last:shadow-none"
-                >
-                  <span
-                    className="flex size-7 shrink-0 items-center justify-center rounded-md"
-                    style={{
-                      background: `color-mix(in oklch, ${SOURCE_COLOR[s.source]} 15%, transparent)`,
-                    }}
-                  >
-                    <Icon className="size-3.5" aria-hidden />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium leading-tight">
-                      {t(`sources.${s.source}`)}
-                    </p>
-                    {/* La description s'enroule sur deux lignes plutôt que d'être tronquée. */}
-                    <p className="text-xs leading-snug text-muted-foreground">
-                      {t(`sourceDescriptions.${s.source}`)}
-                    </p>
-                  </div>
-                  <DeltaChip value={trend} />
-                  <span className="num w-14 text-right text-xs text-muted-foreground">
-                    {fmtPct(locale, share, 0)}
-                  </span>
-                  <span className="num w-24 text-right text-sm font-semibold">
-                    {fmtEur(locale, s.amount, { compact: true })}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      </div>
-
-      {/* Vue label : revenus par artiste */}
-      {aggregated && (
-        <section className="rise-in mt-4 rounded-xl border bg-card p-5">
-          <h2 className="font-heading text-base font-semibold">
-            {t("byArtist.title")}
-          </h2>
-          <p className="mb-4 text-xs text-muted-foreground">{t("byArtist.subtitle")}</p>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={data.pnl.map((p) => ({
-                  ...p,
-                  name: getArtist(p.artistId).name,
-                }))}
-                margin={{ top: 4, right: 4, bottom: 0, left: 4 }}
-              >
-                <CartesianGrid vertical={false} strokeOpacity={0.07} />
-                <XAxis
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 11 }}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 11 }}
-                  tickFormatter={(v: number) => fmtEur(locale, v, { compact: true })}
-                  width={64}
-                />
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  formatter={(value) => [
-                    fmtEur(locale, Number(value)),
-                    t("kpis.total12m"),
-                  ]}
-                  cursor={{ fill: "var(--surface-2)", opacity: 0.5 }}
-                />
-                <Bar dataKey="revenue" radius={[6, 6, 0, 0]} animationDuration={600}>
-                  {data.pnl.map((p) => (
-                    <Cell
-                      key={p.artistId}
-                      fill={artistColor(getArtist(p.artistId).hue)}
-                      cursor="pointer"
-                      onClick={() => setFocusedArtistId(p.artistId)}
+      <div className="space-y-3">
+        {/* L'année : le total au centre de sa composition mois par mois. */}
+        <Sheet family="money">
+          <SheetHeading action={`${t("chart.subtitle")} · ${t("chart.window12")}`}>
+            {t("chart.title")}
+          </SheetHeading>
+          <div className="relative">
+            <CenteredValue
+              value={eur(data.total12)}
+              caption={
+                <>
+                  {t("kpis.total12m")}{" "}
+                  <b className={data.delta >= 0 ? "text-success" : "text-destructive"}>
+                    {fmtPct(locale, data.delta)}
+                  </b>{" "}
+                  <span className="opacity-75">{t("kpis.vsPrevYear")}</span>
+                </>
+              }
+            />
+            <div className="h-[210px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={data.stacked} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
+                  <CartesianGrid vertical={false} strokeOpacity={0.14} />
+                  <XAxis
+                    dataKey="month"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 11, fill: "var(--sheet-ink)" }}
+                    minTickGap={48}
+                    tickFormatter={(m: string) => fmtMonth(locale, m)}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 11, fill: "var(--sheet-ink)" }}
+                    width={56}
+                    tickFormatter={(v: number) => fmtEur(locale, v, { compact: true })}
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    labelFormatter={(m) => fmtMonth(locale, String(m))}
+                    formatter={(value, name) => [
+                      fmtEur(locale, Number(value)),
+                      t(`sources.${name as RevenueSource}`),
+                    ]}
+                  />
+                  {window12 && (
+                    <ReferenceArea
+                      x1={window12.from}
+                      x2={window12.to}
+                      fill="var(--sheet-line)"
+                      fillOpacity={0.07}
+                      ifOverflow="extendDomain"
+                    />
+                  )}
+                  {REVENUE_SOURCES.map((source) => (
+                    <Area
+                      key={source}
+                      type="monotone"
+                      dataKey={source}
+                      stackId="rev"
+                      stroke={SOURCE_COLOR[source]}
+                      fill={SOURCE_COLOR[source]}
+                      fillOpacity={0.22}
+                      strokeWidth={1.5}
+                      isAnimationActive={false}
                     />
                   ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {data.pnl.map((p) => {
-              const a = getArtist(p.artistId);
-              return (
-                <li key={p.artistId}>
-                  <button
-                    onClick={() => setFocusedArtistId(p.artistId)}
-                    className="flex w-full items-center gap-2 rounded-lg border bg-surface-2 p-2.5 text-left transition-colors hover:border-brand/40"
+          <AffiliatedPoints
+            points={[
+              {
+                key: "avg",
+                value: eur(data.monthlyAvg),
+                label: t("kpis.monthlyAvg"),
+              },
+              {
+                key: "top",
+                value: data.sources[0] ? t(`sources.${data.sources[0].source}`) : "—",
+                label: t("kpis.topSource"),
+                note: pct(topShare * 100),
+              },
+              {
+                key: "sources",
+                value: data.sources.length,
+                label: t("kpis.sourceCount"),
+                note: t("kpis.sourceCountNote"),
+              },
+              {
+                key: "best",
+                value: bestMonth ? fmtMonth(locale, bestMonth.month) : "—",
+                label: t("kpis.bestMonth"),
+                note: bestMonth ? eur(bestMonth.total) : undefined,
+              },
+            ]}
+          />
+        </Sheet>
+
+        {/* Ce que les streams rapportent — et où passe chaque euro. */}
+        {est && (
+          <div className="grid gap-3 lg:grid-cols-[1.15fr_1fr]">
+            <Sheet family="money">
+              <SheetHeading
+                action={
+                  <Tabs value={period} onValueChange={setPeriod}>
+                    <TabsList className="h-7" aria-label={t("estimate.selectPeriod")}>
+                      {ESTIMATE_PERIODS.map((p) => (
+                        <TabsTrigger key={p} value={p} className="num px-2 text-[11px]">
+                          {t(`estimate.period.${p}`)}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </Tabs>
+                }
+              >
+                {aggregated ? t("estimate.titleLabel") : t("estimate.title")}
+              </SheetHeading>
+              <p className="sheet-ink text-xs">
+                {t("estimate.streams", {
+                  streams: fmtCompact(locale, est[period].streams),
+                  payable: fmtCompact(locale, est[period].payableStreams),
+                })}
+              </p>
+              <RevenueCascade
+                format={(n) => eur(n)}
+                steps={[
+                  {
+                    key: "gross",
+                    label: t("estimate.gross"),
+                    amount: est[period].grossMaster.mid,
+                    range: {
+                      low: est[period].grossMaster.low,
+                      high: est[period].grossMaster.high,
+                    },
+                    emphasis: persona !== "artist",
+                    note: <ProvenanceBadge provenance="estimated" className="align-middle" />,
+                  },
+                  {
+                    key: "artist",
+                    label: t("estimate.artist"),
+                    amount: est[period].artistShare.mid,
+                    emphasis: persona === "artist",
+                    note: (
+                      <ProvenanceBadge
+                        provenance={est[period].sharesProvenance}
+                        className="align-middle"
+                      />
+                    ),
+                  },
+                  {
+                    key: "publishing",
+                    label: t("estimate.publishing"),
+                    amount: est[period].publishing.mid,
+                    note: (
+                      <ProvenanceBadge
+                        provenance={est[period].publishingProvenance}
+                        className="align-middle"
+                      />
+                    ),
+                  },
+                ]}
+              />
+              <p className="text-muted-foreground mt-3 text-[11.5px] leading-relaxed">
+                {t("estimate.subtitle")}
+              </p>
+            </Sheet>
+
+            {/* Par plateforme, sur la période choisie. */}
+            <Sheet family="streams">
+              <SheetHeading>
+                {t("estimate.byDspPeriod", { period: t(`estimate.period.${period}`) })}
+              </SheetHeading>
+              <Table className="mt-1">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("estimate.colPlatform")}</TableHead>
+                    <TableHead className="text-right">{t("estimate.colStreams")}</TableHead>
+                    <TableHead className="text-right">{t("estimate.colRate")}</TableHead>
+                    <TableHead className="text-right">{t("estimate.colGross")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {byDsp.map((row) => (
+                    <TableRow key={row.dsp}>
+                      <TableCell className="font-medium">
+                        {tDsp(row.dsp)}
+                        <ProvenanceBadge
+                          provenance={row.provenance}
+                          className="ml-1.5 align-middle"
+                        />
+                      </TableCell>
+                      <TableCell className="num text-right">
+                        {fmtCompact(locale, row.streams)}
+                      </TableCell>
+                      <TableCell className="num text-right opacity-75">
+                        {t("estimate.dspRate", { rate: fmtRate(row.rate) })}
+                      </TableCell>
+                      <TableCell className="num text-right font-medium">
+                        {eur(row.gross)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Sheet>
+          </div>
+        )}
+
+        {/* Ta part, c'est ton contrat — jamais sur le roster agrégé. */}
+        {est && !aggregated && <SharesPanel artistId={artistId} gross={est.day.grossMaster.mid} />}
+
+        {/* D'où vient l'argent — les sources relèvent du catalogue et des droits. */}
+        <Sheet family="catalog">
+          <SheetHeading action={t("breakdown.period12m")}>
+            {t("breakdown.title")}
+          </SheetHeading>
+          <div className="mt-1 grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:items-center">
+            <div className="relative mx-auto h-40 w-40">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(value, name) => [
+                      fmtEur(locale, Number(value)),
+                      t(`sources.${name as RevenueSource}`),
+                    ]}
+                  />
+                  <Pie
+                    data={data.sources}
+                    dataKey="amount"
+                    nameKey="source"
+                    innerRadius="62%"
+                    outerRadius="100%"
+                    paddingAngle={2}
+                    stroke="var(--sheet-paper)"
+                    strokeWidth={2}
+                    isAnimationActive={false}
                   >
-                    <ArtistBadge artist={a} size="sm" meta={a.genre} className="flex-1" />
-                    <span className="text-right">
-                      <span className="num block text-sm font-semibold">
-                        {fmtEur(locale, p.revenue, { compact: true })}
-                      </span>
+                    {data.sources.map((r) => (
+                      <Cell key={r.source} fill={SOURCE_COLOR[r.source]} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="num text-lg font-semibold tracking-tight">
+                  {eur(data.total12)}
+                </span>
+                <span className="sheet-ink text-[10px] tracking-wide uppercase">
+                  {t("breakdown.period12m")}
+                </span>
+              </div>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("breakdown.source")}</TableHead>
+                  <TableHead className="text-right">{t("breakdown.amount")}</TableHead>
+                  <TableHead className="text-right">{t("breakdown.share")}</TableHead>
+                  <TableHead className="text-right">{t("breakdown.trend")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.sources.map((r) => (
+                  <TableRow key={r.source}>
+                    <TableCell className="flex items-center gap-2 font-medium">
                       <span
-                        className={cn(
-                          "num block text-xs",
-                          p.net >= 0 ? "text-success" : "text-destructive",
-                        )}
-                      >
-                        {t("byArtist.net")} {fmtEur(locale, p.net, { compact: true })}
+                        aria-hidden
+                        className="size-2 shrink-0 rounded-full"
+                        style={{ background: SOURCE_COLOR[r.source] }}
+                      />
+                      {t(`sources.${r.source}`)}
+                    </TableCell>
+                    <TableCell className="num text-right">{eur(r.amount)}</TableCell>
+                    <TableCell className="num text-right opacity-75">
+                      {pct(data.total12 === 0 ? 0 : (r.amount / data.total12) * 100)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DeltaChip value={data.trendBySource.get(r.source) ?? 0} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </Sheet>
+
+        {/* Qui rapporte quoi — vue structure seulement. */}
+        {aggregated && data.pnl.length > 0 && (
+          <Sheet family="money">
+            <SheetHeading action={t("byArtist.subtitle")}>{t("byArtist.title")}</SheetHeading>
+            <div className="mt-1 space-y-2">
+              {data.pnl.map((p) => {
+                const maxRev = Math.max(1, ...data.pnl.map((x) => x.revenue));
+                return (
+                  <button
+                    key={p.artistId}
+                    type="button"
+                    onClick={() => setFocusedArtistId(p.artistId)}
+                    className="block w-full text-left"
+                  >
+                    <div className="flex items-baseline justify-between gap-3 text-[12.5px]">
+                      <span className="font-medium">{getArtist(p.artistId).name}</span>
+                      <span className="flex items-baseline gap-3 tabular-nums">
+                        <span className="sheet-ink">
+                          {t("byArtist.net")} {eur(p.net)}
+                        </span>
+                        <b className="font-semibold">{eur(p.revenue)}</b>
                       </span>
-                    </span>
+                    </div>
+                    <div className="mt-1 h-2 rounded-full bg-[color-mix(in_oklab,var(--sheet-line)_14%,transparent)]">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${(p.revenue / maxRev) * 100}%`,
+                          background: artistColor(getArtist(p.artistId).hue),
+                        }}
+                      />
+                    </div>
                   </button>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
+                );
+              })}
+            </div>
+          </Sheet>
+        )}
+
+        <Doors
+          title={tc("blocks.doors")}
+          doors={[
+            {
+              key: "finances",
+              href: "/finances",
+              label: t("doors.finances"),
+              value: t("doors.financesValue"),
+            },
+            {
+              key: "rights",
+              href: "/rights",
+              label: t("doors.rights"),
+              value: t("doors.rightsValue"),
+            },
+            {
+              key: "audit",
+              href: "/audit",
+              label: t("doors.audit"),
+              value: t("doors.auditValue"),
+            },
+            {
+              key: "contracts",
+              href: "/contracts",
+              label: t("doors.contracts"),
+              value: t("doors.contractsValue"),
+            },
+            {
+              key: "urssaf",
+              href: "/urssaf",
+              label: t("doors.urssaf"),
+              value: t("doors.urssafValue"),
+            },
+            {
+              key: "calculator",
+              href: "/calculator",
+              label: t("doors.calculator"),
+              value: t("doors.calculatorValue"),
+            },
+          ]}
+        />
+
+        <RestRow
+          title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
+          items={[
+            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+            { key: "streams", href: "/streams", label: t("rest.streams") },
+            { key: "splits", href: "/splits", label: t("rest.splits") },
+            { key: "import", href: "/import", label: t("rest.import") },
+            { key: "valuation", href: "/valuation", label: t("rest.valuation") },
+            { key: "sync", href: "/sync", label: t("rest.sync") },
+          ]}
+        />
+
+        <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+      </div>
     </div>
   );
 }

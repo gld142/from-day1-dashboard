@@ -408,6 +408,10 @@
 }
 
 .sheet {
+  /* Un item de grille ne rétrécit pas sous la largeur de son contenu sans
+     min-width:0 — un tableau large déborderait alors la page entière au lieu
+     de défiler dans sa propre boîte. */
+  min-width: 0;
   border-radius: calc(var(--radius) + 2px);
   background: var(--sheet-paper);
   color: var(--foreground);

@@ -7,7 +7,10 @@
     "total12m": "Revenus 12 mois",
     "monthlyAvg": "Moyenne mensuelle",
     "topSource": "Première source",
-    "vsPrevYear": "vs 12 mois précédents"
+    "vsPrevYear": "vs 12 mois précédents",
+    "sourceCount": "sources de revenus",
+    "sourceCountNote": "sur les 12 derniers mois",
+    "bestMonth": "meilleur mois"
   },
   "estimate": {
     "title": "Estimation live",
@@ -143,7 +146,8 @@
   },
   "chart": {
     "title": "Évolution mensuelle par source",
-    "subtitle": "24 derniers mois, empilés par source"
+    "subtitle": "24 derniers mois, empilés par source",
+    "window12": "les 12 derniers mois complets"
   },
   "breakdown": {
     "title": "Répartition par source",
@@ -169,5 +173,27 @@
     "diversification": "{count, plural, one {# source active} other {# sources actives}} — {top} représente {share} des revenus",
     "concentrated": "Attention : plus de 70 % des revenus viennent d'une seule source",
     "balanced": "Bonne diversification — aucun canal ne dépasse 70 %"
+  },
+  "doors": {
+    "finances": "Dépenses & P&L",
+    "financesValue": "ce qu'il reste après dépenses",
+    "rights": "Droits FR",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM",
+    "audit": "Audit royalties",
+    "auditValue": "écart avec les relevés",
+    "contracts": "Contrats",
+    "contractsValue": "taux et échéances",
+    "urssaf": "URSSAF · artiste-auteur",
+    "urssafValue": "cotisations et déclaration",
+    "calculator": "Simulateur de deals",
+    "calculatorValue": "tester un contrat"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "splits": "Splits",
+    "import": "Importer un relevé",
+    "valuation": "Valorisation",
+    "sync": "Sync & Licensing"
   }
 }
