@@ -1,6 +1,6 @@
 {
   "title": "Sync & Licensing",
-  "subtitle": "Votre catalogue exposé aux superviseurs — pub, film, série, jeu vidéo.",
+  "subtitle": "Ton catalogue exposé aux superviseurs — pub, film, série, jeu vidéo.",
   "subtitleLabel": "Le catalogue du roster exposé aux superviseurs — pub, film, série, jeu vidéo.",
   "filterAll": "Tous les artistes",
   "kpis": {
@@ -11,7 +11,9 @@
     "proposals": "Propositions en cours",
     "proposalsHint": "en attente de retour superviseur",
     "syncRevenue": "Revenus sync 12 mois",
-    "syncRevenueHint": "vs 12 mois précédents"
+    "syncRevenueHint": "vs 12 mois précédents",
+    "signed": "Deals signés",
+    "signedHint": "sur la période"
   },
   "briefs": {
     "title": "Briefs ouverts",
@@ -58,9 +60,35 @@
     "signed": "Signé"
   },
   "commission": {
-    "title": "Commission transparente",
+    "title": "Ce que Day 1 prend",
     "rate": "15–20 %",
     "rateLabel": "sur les deals conclus",
     "body": "From Day 1 prend 15 à 20 % uniquement sur les deals sync conclus — rien en amont, rien sur vos autres revenus. Les splits signés sont appliqués automatiquement au versement."
+  },
+  "hero": {
+    "title": "Revenus sync sur 12 mois",
+    "caption": "vs les 12 mois précédents"
+  },
+  "doors": {
+    "splits": "Splits",
+    "splitsValue": "sans splits signés, pas de sync",
+    "catalog": "Catalogue",
+    "catalogValue": "tous tes titres",
+    "revenue": "Revenus",
+    "revenueValue": "où va cet argent",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "le potentiel de tes inédits",
+    "contracts": "Contrats",
+    "contractsValue": "ce que tu peux céder",
+    "rights": "Droits FR",
+    "rightsValue": "les droits d'auteur liés"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "fans": "Fans CRM",
+    "tour": "Tournée",
+    "market": "Marché",
+    "valuation": "Valorisation",
+    "team": "Équipe"
   }
 }

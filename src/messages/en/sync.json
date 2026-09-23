@@ -1,7 +1,7 @@
 {
   "title": "Sync & Licensing",
-  "subtitle": "Your catalog in front of supervisors — ads, film, series, video games.",
-  "subtitleLabel": "The roster's catalog in front of supervisors — ads, film, series, video games.",
+  "subtitle": "Your catalog in front of music supervisors — ads, film, TV, games.",
+  "subtitleLabel": "The roster's catalog in front of music supervisors — ads, film, TV, games.",
   "filterAll": "All artists",
   "kpis": {
     "readyTracks": "Sync-ready tracks",
@@ -11,7 +11,9 @@
     "proposals": "Open proposals",
     "proposalsHint": "awaiting supervisor feedback",
     "syncRevenue": "Sync revenue 12 months",
-    "syncRevenueHint": "vs previous 12 months"
+    "syncRevenueHint": "vs previous 12 months",
+    "signed": "Signed deals",
+    "signedHint": "over the period"
   },
   "briefs": {
     "title": "Open briefs",
@@ -58,9 +60,35 @@
     "signed": "Signed"
   },
   "commission": {
-    "title": "Transparent commission",
+    "title": "What Day 1 takes",
     "rate": "15–20%",
     "rateLabel": "on closed deals",
     "body": "From Day 1 takes 15 to 20% only on closed sync deals — nothing upfront, nothing on your other revenue. Signed splits are applied automatically on payout."
+  },
+  "hero": {
+    "title": "Sync revenue over 12 months",
+    "caption": "vs the previous 12 months"
+  },
+  "doors": {
+    "splits": "Splits",
+    "splitsValue": "no signed splits, no sync",
+    "catalog": "Catalog",
+    "catalogValue": "all your tracks",
+    "revenue": "Revenue",
+    "revenueValue": "where this money goes",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "your unreleased potential",
+    "contracts": "Contracts",
+    "contractsValue": "what you can license",
+    "rights": "French rights",
+    "rightsValue": "the author rights involved"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "fans": "Fans CRM",
+    "tour": "Touring",
+    "market": "Market",
+    "valuation": "Valuation",
+    "team": "Team"
   }
 }

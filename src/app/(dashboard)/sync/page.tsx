@@ -11,8 +11,6 @@ import {
   Check,
   Film,
   Gamepad2,
-  HandCoins,
-  Inbox,
   MonitorPlay,
   Music4,
   Send,
@@ -22,7 +20,7 @@ import {
 import { ARTISTS, SPLITS, TRACKS, getArtist, revenueSeries } from "@/lib/demo/api";
 import type { Artist, Track } from "@/lib/demo/types";
 import { hashString } from "@/lib/demo/seed";
-import { fmtDate, fmtEur } from "@/lib/format";
+import { fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +32,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { KpiCard } from "@/components/dashboard/kpi";
+import {
+  AffiliatedPoints,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 
@@ -163,6 +166,7 @@ const CATALOG_LIMIT = 12;
 
 export default function SyncPage() {
   const t = useTranslations("sync");
+  const tc = useTranslations("common");
   const locale = useLocale();
   const { artistId, isLabel, focusedArtistId } = useRole();
   const aggregated = isLabel && !focusedArtistId;
@@ -284,46 +288,56 @@ export default function SyncPage() {
         )}
       </PageHeader>
 
-      {/* ─── KPIs ─── */}
-      <div className="rise-in grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KpiCard
-          id="sync-ready"
-          label={t("kpis.readyTracks")}
-          value={data.readyCount}
-          format="int"
-          deltaLabel={t("kpis.readyHint", { total: data.tracks.length })}
+      <div className="space-y-3">
+      {/* Ce que le sync rapporte, et l'état du pipeline. */}
+      <Sheet family="money">
+        <SheetHeading action={t("hero.caption")}>{t("hero.title")}</SheetHeading>
+        <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+          {fmtEur(locale, data.syncCur, { compact: data.syncCur >= 100_000 })}
+        </p>
+        <p className="sheet-ink mt-1.5 text-[13px]">
+          <b className={data.syncDelta >= 0 ? "text-success" : "text-destructive"}>
+            {fmtPct(locale, data.syncDelta)}
+          </b>{" "}
+          {t("kpis.syncRevenueHint")}
+        </p>
+        <AffiliatedPoints
+          points={[
+            {
+              key: "ready",
+              value: fmtInt(locale, data.readyCount),
+              label: t("kpis.readyTracks"),
+              note: t("kpis.readyHint", { total: data.tracks.length }),
+            },
+            {
+              key: "briefs",
+              value: fmtInt(locale, BRIEFS.length),
+              label: t("kpis.briefs"),
+              note: t("kpis.briefsHint"),
+            },
+            {
+              key: "proposals",
+              value: fmtInt(locale, proposalsCount),
+              label: t("kpis.proposals"),
+              note: t("kpis.proposalsHint"),
+            },
+            {
+              key: "signed",
+              value: fmtInt(locale, data.pipe.signed),
+              label: t("kpis.signed"),
+              note: t("kpis.signedHint"),
+            },
+          ]}
         />
-        <KpiCard
-          id="sync-briefs"
-          label={t("kpis.briefs")}
-          value={BRIEFS.length}
-          format="int"
-          deltaLabel={t("kpis.briefsHint")}
-        />
-        <KpiCard
-          id="sync-proposals"
-          label={t("kpis.proposals")}
-          value={proposalsCount}
-          format="int"
-          deltaLabel={t("kpis.proposalsHint")}
-        />
-        <KpiCard
-          id="sync-revenue"
-          label={t("kpis.syncRevenue")}
-          value={data.syncCur}
-          format="eur"
-          delta={data.syncDelta}
-          deltaLabel={t("kpis.syncRevenueHint")}
-          spark={data.spark}
-          sparkColor="var(--chart-4)"
-        />
-      </div>
+      </Sheet>
 
       {/* ─── Briefs ouverts ─── */}
-      <section className="rise-in mt-4">
-        <div className="mb-3">
-          <h2 className="font-heading text-base font-semibold">{t("briefs.title")}</h2>
-          <p className="text-xs text-muted-foreground">{t("briefs.subtitle")}</p>
+      <section className="mt-1">
+        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <h2 className="text-muted-foreground text-[11px] font-semibold tracking-[0.08em] uppercase">
+            {t("briefs.title")}
+          </h2>
+          <p className="text-muted-foreground text-[11.5px]">{t("briefs.subtitle")}</p>
         </div>
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {data.briefs.map(({ brief, artist, match, topTracks }) => {
@@ -435,12 +449,13 @@ export default function SyncPage() {
         </div>
       </section>
 
-      <div className="mt-4 grid items-start gap-4 lg:grid-cols-3">
+      <div className="grid items-start gap-3 lg:grid-cols-3">
         {/* ─── Catalogue tagué ─── */}
-        <section className="rise-in rounded-xl border bg-card p-5 lg:col-span-2">
-          <h2 className="font-heading text-base font-semibold">{t("catalog.title")}</h2>
-          <p className="mb-3 text-xs text-muted-foreground">{t("catalog.subtitle")}</p>
-          <ul className="flex flex-col">
+        <Sheet family="catalog" className="lg:col-span-2">
+          <SheetHeading action={t("catalog.subtitle")}>
+            {t("catalog.title")}
+          </SheetHeading>
+          <ul className="mt-1 flex flex-col">
             {data.catalog.slice(0, CATALOG_LIMIT).map((track) => {
               const [m1, m2] = trackMoods(track.id);
               const signed = splitsByTrack.get(track.id) === "signed";
@@ -448,7 +463,7 @@ export default function SyncPage() {
               return (
                 <li
                   key={track.id}
-                  className="hairline-b flex items-center gap-3 py-2.5 last:shadow-none"
+                  className="border-border/50 flex items-center gap-3 border-t py-2.5 first:border-t-0"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium leading-tight">
@@ -494,21 +509,19 @@ export default function SyncPage() {
             })}
           </ul>
           {data.catalog.length > CATALOG_LIMIT && (
-            <p className="num mt-3 text-[11px] text-muted-foreground">
+            <p className="sheet-ink mt-3 text-[11px] tabular-nums">
               {t("catalog.more", { count: data.catalog.length - CATALOG_LIMIT })}
             </p>
           )}
-        </section>
+        </Sheet>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {/* ─── Pipeline ─── */}
-          <section className="rise-in rounded-xl border bg-card p-5">
-            <h2 className="flex items-center gap-2 font-heading text-base font-semibold">
-              <Inbox className="size-4 text-brand" aria-hidden />
+          <Sheet family="money">
+            <SheetHeading action={t("pipeline.subtitle")}>
               {t("pipeline.title")}
-            </h2>
-            <p className="mb-4 text-xs text-muted-foreground">{t("pipeline.subtitle")}</p>
-            <div className="grid grid-cols-4 gap-2">
+            </SheetHeading>
+            <div className="mt-1 grid grid-cols-4 gap-2">
               {(
                 [
                   ["received", BRIEFS.length],
@@ -520,41 +533,67 @@ export default function SyncPage() {
                 <div
                   key={key}
                   className={cn(
-                    "rounded-lg bg-surface-2 px-2 py-3 text-center",
-                    i === 3 && "bg-success/10",
+                    "rounded-lg px-2 py-3 text-center",
+                    i === 3
+                      ? "bg-success/10"
+                      : "bg-[color-mix(in_oklab,var(--sheet-line)_12%,transparent)]",
                   )}
                 >
                   <p
                     className={cn(
-                      "num text-lg font-semibold leading-none",
+                      "text-lg leading-none font-semibold tabular-nums",
                       i === 3 && "text-success",
                     )}
                   >
                     {count}
                   </p>
-                  <p className="mt-1.5 text-[10px] leading-tight text-muted-foreground">
+                  <p className="sheet-ink mt-1.5 text-[10px] leading-tight">
                     {t(`pipeline.${key}`)}
                   </p>
                 </div>
               ))}
             </div>
-          </section>
+          </Sheet>
 
           {/* ─── Commission ─── */}
-          <section className="rise-in rounded-xl border bg-gradient-to-b from-card to-surface-2 p-5">
-            <h2 className="flex items-center gap-2 font-heading text-base font-semibold">
-              <HandCoins className="size-4 text-brand" aria-hidden />
-              {t("commission.title")}
-            </h2>
-            <p className="num mt-3 text-3xl font-semibold tracking-tight">
+          <Sheet family="money">
+            <SheetHeading>{t("commission.title")}</SheetHeading>
+            <p className="text-3xl font-semibold tracking-[-0.03em] tabular-nums">
               {t("commission.rate")}
             </p>
-            <p className="text-xs text-muted-foreground">{t("commission.rateLabel")}</p>
-            <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
+            <p className="sheet-ink text-xs">{t("commission.rateLabel")}</p>
+            <p className="sheet-ink mt-2 text-[11.5px] leading-relaxed">
               {t("commission.body")}
             </p>
-          </section>
+          </Sheet>
         </div>
+      </div>
+
+      <Doors
+        title={tc("blocks.doors")}
+        doors={[
+          { key: "splits", family: "money", href: "/splits", label: t("doors.splits"), value: t("doors.splitsValue") },
+          { key: "catalog", family: "catalog", href: "/catalog", label: t("doors.catalog"), value: t("doors.catalogValue") },
+          { key: "revenue", family: "money", href: "/revenue", label: t("doors.revenue"), value: t("doors.revenueValue") },
+          { key: "discovery", family: "trends", href: "/discovery", label: t("doors.discovery"), value: t("doors.discoveryValue") },
+          { key: "contracts", family: "money", href: "/contracts", label: t("doors.contracts"), value: t("doors.contractsValue") },
+          { key: "rights", family: "money", href: "/rights", label: t("doors.rights"), value: t("doors.rightsValue") },
+        ]}
+      />
+
+      <RestRow
+        title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
+        items={[
+          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+          { key: "fans", href: "/fans", label: t("rest.fans") },
+          { key: "tour", href: "/tour", label: t("rest.tour") },
+          { key: "market", href: "/market", label: t("rest.market") },
+          { key: "valuation", href: "/valuation", label: t("rest.valuation") },
+          { key: "team", href: "/team", label: t("rest.team") },
+        ]}
+      />
+
+      <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>
   );
