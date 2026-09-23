@@ -1,7 +1,7 @@
 {
   "title": "Fans CRM",
-  "subtitle": "Comprenez qui écoute vraiment — et transformez l'écoute en engagement",
-  "labelSubtitle": "Segments agrégés du roster — comparez l'engagement artiste par artiste",
+  "subtitle": "Qui écoute vraiment — et quoi leur envoyer.",
+  "labelSubtitle": "Les fans du roster par intensité de relation, et quoi leur envoyer.",
   "segments": {
     "superfans": {
       "label": "Super-fans",
@@ -25,8 +25,8 @@
     }
   },
   "funnel": {
-    "title": "Entonnoir d'engagement",
-    "description": "Répartition de la base fans par intensité de relation",
+    "title": "Que faire de chaque segment",
+    "description": "Une action par intensité de relation",
     "ofBase": "{pct} de la base",
     "suggested": "Action suggérée"
   },
@@ -37,7 +37,8 @@
     "score": "Engagement",
     "invitePresale": "Inviter à la présale",
     "exclusiveDrop": "Drop exclusif",
-    "sent": "Envoyé"
+    "sent": "Envoyé",
+    "listTitle": "Qui ils sont"
   },
   "ideas": {
     "title": "Idées d'activation",
@@ -62,5 +63,39 @@
     "artist": "Artiste",
     "total": "Total",
     "trend": "Super-fans 30 j"
+  },
+  "hero": {
+    "title": "Tes super-fans",
+    "titleLabel": "Les super-fans du roster",
+    "caption": "{pct} d'une base de {total} fans",
+    "trendUp": "en hausse de {delta} sur 30 jours",
+    "trendDown": "en baisse de {delta} sur 30 jours"
+  },
+  "kpis": {
+    "share": "{pct} de la base",
+    "total": "Base fans totale",
+    "totalHint": "tous segments confondus"
+  },
+  "doors": {
+    "audience": "Audience",
+    "audienceValue": "d'où ils écoutent",
+    "tour": "Tournée",
+    "tourValue": "les villes où ils sont",
+    "catalog": "Catalogue",
+    "catalogValue": "ce qu'ils écoutent",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "comment ils t'ont trouvé",
+    "index": "Day 1 Index",
+    "indexValue": "ce que pèse leur fidélité",
+    "streams": "Streams",
+    "streamsValue": "ce qu'ils écoutent, jour après jour"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "market": "Marché",
+    "revenue": "Revenus",
+    "sync": "Sync & Licensing",
+    "roster": "Roster",
+    "settings": "Réglages"
   }
 }

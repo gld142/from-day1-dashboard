@@ -1,7 +1,7 @@
 {
   "title": "Fan CRM",
-  "subtitle": "Understand who really listens — and turn listening into engagement",
-  "labelSubtitle": "Aggregated roster segments — compare engagement artist by artist",
+  "subtitle": "Who really listens — and what to send them.",
+  "labelSubtitle": "The roster's fans by relationship intensity, and what to send them.",
   "segments": {
     "superfans": {
       "label": "Superfans",
@@ -25,8 +25,8 @@
     }
   },
   "funnel": {
-    "title": "Engagement funnel",
-    "description": "Fan base distribution by relationship intensity",
+    "title": "What to do with each segment",
+    "description": "One action per relationship intensity",
     "ofBase": "{pct} of base",
     "suggested": "Suggested action"
   },
@@ -37,7 +37,8 @@
     "score": "Engagement",
     "invitePresale": "Invite to presale",
     "exclusiveDrop": "Exclusive drop",
-    "sent": "Sent"
+    "sent": "Sent",
+    "listTitle": "Who they are"
   },
   "ideas": {
     "title": "Activation ideas",
@@ -62,5 +63,39 @@
     "artist": "Artist",
     "total": "Total",
     "trend": "Superfans 30d"
+  },
+  "hero": {
+    "title": "Your superfans",
+    "titleLabel": "The roster's superfans",
+    "caption": "{pct} of a base of {total} fans",
+    "trendUp": "up {delta} over 30 days",
+    "trendDown": "down {delta} over 30 days"
+  },
+  "kpis": {
+    "share": "{pct} of the base",
+    "total": "Total fan base",
+    "totalHint": "all segments combined"
+  },
+  "doors": {
+    "audience": "Audience",
+    "audienceValue": "where they listen from",
+    "tour": "Touring",
+    "tourValue": "the cities they're in",
+    "catalog": "Catalog",
+    "catalogValue": "what they listen to",
+    "discovery": "Discovery Lab",
+    "discoveryValue": "how they found you",
+    "index": "Day 1 Index",
+    "indexValue": "what their loyalty weighs",
+    "streams": "Streams",
+    "streamsValue": "what they play, day after day"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "market": "Market",
+    "revenue": "Revenue",
+    "sync": "Sync & Licensing",
+    "roster": "Roster",
+    "settings": "Settings"
   }
 }

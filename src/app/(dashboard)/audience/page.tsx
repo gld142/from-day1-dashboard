@@ -8,6 +8,12 @@
  * l'intensité de leur engagement, leur âge, leurs villes, et par quel chemin
  * ils sont arrivés. Aucun chiffre de Pulse n'est répété en héros.
  *
+ * Les quatre segments de fans (super-fans, engagés, occasionnels, dormants)
+ * s'affichaient ici et sur /fans, aux mêmes chiffres et aux mêmes tendances.
+ * Ils ne vivent plus que sur /fans, où ils s'accompagnent de l'action qui va
+ * avec chacun ; ici il reste le nombre de super-fans en point affilié et la
+ * porte vers Fans CRM.
+ *
  * Pas de graphique sous le chiffre clé, contrairement aux autres héros : l'API
  * ne fournit que la valeur courante des auditeurs mensuels, aucun historique.
  * Poser une courbe de streams sous un chiffre d'auditeurs laisserait croire
@@ -32,7 +38,6 @@ import {
   weightedGrowth,
 } from "@/components/modules/data/derive";
 import { DiscoveryDonut } from "@/components/modules/data/discovery-donut";
-import { FanSegments } from "@/components/modules/data/fan-segments";
 import { TopCities } from "@/components/modules/data/top-cities";
 import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 
@@ -128,12 +133,6 @@ export default function AudiencePage() {
                 : []),
             ]}
           />
-        </Sheet>
-
-        {/* L'intensité de l'engagement : le cœur du sujet de cette page. */}
-        <Sheet family="audience">
-          <SheetHeading action={t("segments.subtitle")}>{t("segments.title")}</SheetHeading>
-          <FanSegments ids={ids} bare />
         </Sheet>
 
         {/* Qui ils sont, et où ils sont. */}

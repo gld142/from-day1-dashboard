@@ -1,7 +1,19 @@
 "use client";
 
 /**
- * /fans — CRM fan : segments, entonnoir d'engagement, super-fans, activations.
+ * /fans — qui écoute vraiment, et quoi leur envoyer. Refondue le 23/09.
+ * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
+ *
+ * Les quatre effectifs de segments s'affichaient ici **et** sur /audience, aux
+ * mêmes chiffres et aux mêmes tendances. Ils vivent désormais ici seulement :
+ * /audience garde le nombre de super-fans en point affilié et une porte vers
+ * cette page. C'est la règle des portes d'entrée, appliquée à un bloc entier.
+ *
+ * Les effectifs ne sont plus répétés deux fois dans la page non plus : la barre
+ * du héros et ses points affiliés les donnent une fois, et l'ancien « entonnoir »
+ * ne garde que ce qu'il seul disait — la description d'un segment et l'action
+ * qui lui correspond.
+ *
  * Persona artiste : sa base fans. Persona label : agrégat roster + comparatif.
  */
 import { useMemo, useState } from "react";
@@ -19,9 +31,16 @@ import { ARTISTS, fanSegments, getArtist } from "@/lib/demo/api";
 import type { Artist, FanSegment } from "@/lib/demo/types";
 import { useRole } from "@/lib/role";
 import { fmtCompact, fmtInt } from "@/lib/format";
-import { DeltaChip, KpiCard } from "@/components/dashboard/kpi";
+import { DeltaChip } from "@/components/dashboard/kpi";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistAvatar, ArtistBadge } from "@/components/dashboard/artist-badge";
+import { AudienceGlyph } from "@/components/dashboard/audience-glyph";
+import {
+  AffiliatedPoints,
+  Sheet,
+  SheetHeading,
+} from "@/components/dashboard/sheet";
+import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -170,7 +189,6 @@ export function FansView() {
   }, [rosterMode, artistId]);
 
   const totalFans = segments.reduce((s, seg) => s + seg.count, 0);
-  const maxCount = Math.max(...segments.map((s) => s.count), 1);
 
   /* Super-fans : liste déterministe dérivée de l'artiste (ou du roster) */
   const superfans = useMemo(() => {
@@ -217,6 +235,14 @@ export function FansView() {
     { key: "listening", icon: Headphones, soon: true },
   ];
 
+  const superSeg = segments.find((s) => s.id === "superfans");
+  const pct = (points: number) =>
+    new Intl.NumberFormat(locale, {
+      style: "percent",
+      maximumFractionDigits: 1,
+    }).format(points / 100);
+  const share = (n: number) => (totalFans === 0 ? 0 : (n / totalFans) * 100);
+
   return (
     <div className="rise-in">
       <PageHeader
@@ -224,95 +250,126 @@ export function FansView() {
         subtitle={rosterMode ? t("labelSubtitle") : t("subtitle")}
       />
 
-      {/* ─── KPIs : les 4 segments ─── */}
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {segments.map((seg) => (
-          <KpiCard
-            key={seg.id}
-            id={`fans-${seg.id}`}
-            label={t(`segments.${seg.id}.label`)}
-            value={seg.count}
-            format="compact"
-            delta={seg.trend}
-            deltaLabel={t("funnel.ofBase", {
-              pct: `${fmtCompact(locale, (seg.count / totalFans) * 100)} %`,
+      <div className="space-y-3">
+        {/* Combien de vrais fans, et ce que pèse le reste de la base. */}
+        <Sheet family="audience">
+          <SheetHeading>
+            {rosterMode ? t("hero.titleLabel") : t("hero.title")}
+          </SheetHeading>
+          <p className="flex items-center gap-3 text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+            <AudienceGlyph size="lg" className="opacity-80" />
+            <span>{fmtCompact(locale, superSeg?.count ?? 0)}</span>
+          </p>
+          <p className="sheet-ink mt-1.5 text-[13px]">
+            {t("hero.caption", {
+              pct: pct(share(superSeg?.count ?? 0)),
+              total: fmtCompact(locale, totalFans),
             })}
-          />
-        ))}
-      </div>
+            {superSeg && (
+              <>
+                {" — "}
+                <b
+                  className={
+                    superSeg.trend >= 0 ? "text-success" : "text-destructive"
+                  }
+                >
+                  {t(superSeg.trend >= 0 ? "hero.trendUp" : "hero.trendDown", {
+                    delta: pct(Math.abs(superSeg.trend)),
+                  })}
+                </b>
+              </>
+            )}
+          </p>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-5">
-        {/* ─── Entonnoir d'engagement ─── */}
-        <section className="rounded-xl border bg-card p-5 lg:col-span-3">
-          <div className="mb-2">
-            <h2 className="text-sm font-semibold">{t("funnel.title")}</h2>
-            <p className="text-xs text-muted-foreground">{t("funnel.description")}</p>
+          {/* Les quatre segments à l'échelle : une barre dit la forme de la
+              base plus vite que quatre nombres alignés. */}
+          <div className="mt-3 flex h-2.5 w-full overflow-hidden rounded-full">
+            {segments.map((seg) =>
+              seg.count === 0 ? null : (
+                <div
+                  key={seg.id}
+                  className="h-full"
+                  style={{
+                    width: `${share(seg.count)}%`,
+                    background: SEGMENT_COLORS[seg.id],
+                  }}
+                  title={`${t(`segments.${seg.id}.label`)} · ${fmtCompact(locale, seg.count)}`}
+                />
+              ),
+            )}
           </div>
-          <div>
+
+          <AffiliatedPoints
+            points={[
+              ...segments
+                .filter((seg) => seg.id !== "superfans")
+                .map((seg) => ({
+                  key: String(seg.id),
+                  value: fmtCompact(locale, seg.count),
+                  label: t(`segments.${seg.id}.label`),
+                  note: t("kpis.share", { pct: pct(share(seg.count)) }),
+                })),
+              {
+                key: "total",
+                value: fmtCompact(locale, totalFans),
+                label: t("kpis.total"),
+                note: t("kpis.totalHint"),
+              },
+            ]}
+          />
+        </Sheet>
+
+        {/* Ce qu'on fait de chacun — les effectifs sont déjà dits au-dessus. */}
+        <Sheet family="audience">
+          <SheetHeading action={t("funnel.description")}>
+            {t("funnel.title")}
+          </SheetHeading>
+          <div className="mt-1">
             {segments.map((seg) => (
               <div
                 key={seg.id}
-                className="flex flex-col gap-3 border-b py-4 last:border-0 last:pb-1 sm:flex-row sm:items-center"
+                className="border-border/50 flex flex-col gap-2 border-t py-2.5 first:border-t-0 sm:flex-row sm:items-center sm:gap-4"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <p className="flex items-center gap-2 text-[13px] font-medium">
                     <span
                       aria-hidden
                       className="size-2 shrink-0 rounded-full"
                       style={{ background: SEGMENT_COLORS[seg.id] }}
                     />
-                    <span className="text-sm font-medium">
-                      {t(`segments.${seg.id}.label`)}
-                    </span>
+                    {t(`segments.${seg.id}.label`)}
                     <DeltaChip value={seg.trend} />
-                    <span className="num ml-auto text-sm font-semibold">
-                      {fmtCompact(locale, seg.count)}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-surface-2">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${Math.max(4, (seg.count / maxCount) * 100)}%`,
-                        background: SEGMENT_COLORS[seg.id],
-                        opacity: 0.9,
-                      }}
-                    />
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">
+                  </p>
+                  <p className="sheet-ink mt-0.5 text-[11.5px] leading-relaxed">
                     {t(`segments.${seg.id}.description`)}
                   </p>
                 </div>
-                <div className="shrink-0 sm:w-52 sm:text-right">
-                  <span className="block text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                    {t("funnel.suggested")}
-                  </span>
-                  <DemoButton
-                    className="mt-1.5"
-                    label={t(`segments.${seg.id}.action`)}
-                    sentLabel={t("superfans.sent")}
-                    icon={seg.id === "dormant" ? Sparkles : undefined}
-                    variant={seg.id === "dormant" ? "secondary" : "outline"}
-                  />
-                </div>
+                <DemoButton
+                  className="shrink-0 self-start sm:self-auto"
+                  label={t(`segments.${seg.id}.action`)}
+                  sentLabel={t("superfans.sent")}
+                  icon={seg.id === "dormant" ? Sparkles : undefined}
+                  variant={seg.id === "dormant" ? "secondary" : "outline"}
+                />
               </div>
             ))}
           </div>
-        </section>
+        </Sheet>
 
-        {/* ─── Super-fans ─── */}
-        <section className="rounded-xl border bg-card p-5 lg:col-span-2">
-          <div className="mb-2">
-            <h2 className="text-sm font-semibold">{t("superfans.title")}</h2>
-            <p className="text-xs text-muted-foreground">
-              {rosterMode ? t("superfans.rosterDescription") : t("superfans.description")}
-            </p>
-          </div>
-          <ul>
+        {/* Les super-fans, par leur nom. */}
+        <Sheet family="audience">
+          <SheetHeading
+            action={
+              rosterMode ? t("superfans.rosterDescription") : t("superfans.description")
+            }
+          >
+            {t("superfans.listTitle")}
+          </SheetHeading>
+          <ul className="mt-1">
             {superfans.map((f) => (
               <li
                 key={`${f.artist.id}-${f.name}`}
-                className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-surface-2/60"
+                className="border-border/50 flex items-center gap-3 border-t py-2 first:border-t-0"
               >
                 <ArtistAvatar
                   artist={{ hue: f.hue, initials: f.initials, name: f.name }}
@@ -322,21 +379,21 @@ export function FansView() {
                   <div className="flex items-baseline gap-1.5">
                     <span className="truncate text-sm font-medium">{f.name}</span>
                     {rosterMode && (
-                      <span className="truncate text-[11px] text-muted-foreground">
+                      <span className="sheet-ink truncate text-[11px]">
                         · {f.artist.name}
                       </span>
                     )}
                   </div>
-                  <div className="truncate text-[11px] text-muted-foreground">
+                  <div className="sheet-ink truncate text-[11px]">
                     {f.city} · {f.platforms.join(" · ")}
                   </div>
                 </div>
                 <span
-                  className="num shrink-0 text-xs font-semibold text-brand"
+                  className="shrink-0 text-xs font-semibold tabular-nums"
                   title={t("superfans.score")}
                 >
                   {fmtInt(locale, f.score)}
-                  <span className="text-[10px] font-normal text-muted-foreground">/100</span>
+                  <span className="sheet-ink text-[10px] font-normal">/100</span>
                 </span>
                 <div className="flex shrink-0 items-center">
                   <FanActionButton
@@ -357,88 +414,145 @@ export function FansView() {
               </li>
             ))}
           </ul>
-        </section>
-      </div>
+        </Sheet>
 
-      {/* ─── Idées d'activation ─── */}
-      <section className="mt-4">
-        <div className="mb-3">
-          <h2 className="text-sm font-semibold">{t("ideas.title")}</h2>
-          <p className="text-xs text-muted-foreground">{t("ideas.description")}</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {ideas.map(({ key, icon: Icon, soon }) => (
-            <div
-              key={key}
-              className="flex flex-col gap-2 rounded-xl border bg-card p-4 transition-colors hover:border-foreground/15"
-            >
-              <div className="flex items-center justify-between">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-                  <Icon className="size-4" aria-hidden />
-                </span>
-                {soon && <Badge variant="secondary">{tc("actions.soon")}</Badge>}
+        {/* Ce qu'on peut lancer. */}
+        <Sheet family="audience">
+          <SheetHeading action={t("ideas.description")}>{t("ideas.title")}</SheetHeading>
+          <div className="mt-1 grid gap-x-6 gap-y-3 sm:grid-cols-3">
+            {ideas.map(({ key, icon: Icon, soon }) => (
+              <div key={key} className="border-border/50 border-t pt-2.5 sm:border-t-0 sm:pt-0">
+                <p className="flex items-center gap-2 text-[13px] font-medium">
+                  <Icon className="size-4 shrink-0" aria-hidden />
+                  {t(`ideas.${key}.title`)}
+                  {soon && <Badge variant="secondary">{tc("actions.soon")}</Badge>}
+                </p>
+                <p className="sheet-ink mt-0.5 text-[11.5px] leading-relaxed">
+                  {t(`ideas.${key}.description`)}
+                </p>
+                {!soon && (
+                  <DemoButton
+                    className="mt-1.5"
+                    label={t("ideas.prepare")}
+                    sentLabel={t("superfans.sent")}
+                  />
+                )}
               </div>
-              <div className="text-sm font-medium">{t(`ideas.${key}.title`)}</div>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {t(`ideas.${key}.description`)}
-              </p>
-              {!soon && (
-                <DemoButton
-                  className="mt-auto self-start"
-                  label={t("ideas.prepare")}
-                  sentLabel={t("superfans.sent")}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </Sheet>
 
-      {/* ─── Comparatif par artiste (label, vue roster) ─── */}
-      {rosterMode && (
-        <section className="mt-4 overflow-hidden rounded-xl border bg-card">
-          <div className="p-5 pb-3">
-            <h2 className="text-sm font-semibold">{t("table.title")}</h2>
-            <p className="text-xs text-muted-foreground">{t("table.description")}</p>
-          </div>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("table.artist")}</TableHead>
-                  {SEGMENT_ORDER.map((id) => (
-                    <TableHead key={id} className="text-right">
-                      {t(`segments.${id}.label`)}
-                    </TableHead>
-                  ))}
-                  <TableHead className="text-right">{t("table.total")}</TableHead>
-                  <TableHead className="text-right">{t("table.trend")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {byArtist.map((row) => (
-                  <TableRow key={row.artist.id}>
-                    <TableCell>
-                      <ArtistBadge artist={row.artist} meta={row.artist.genre} size="sm" />
-                    </TableCell>
+        {/* Comparatif par artiste (label, vue roster). */}
+        {rosterMode && (
+          <Sheet family="audience">
+            <SheetHeading action={t("table.description")}>
+              {t("table.title")}
+            </SheetHeading>
+            <div className="mt-1 min-w-0 overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("table.artist")}</TableHead>
                     {SEGMENT_ORDER.map((id) => (
-                      <TableCell key={id} className="num text-right">
-                        {fmtCompact(locale, row[id]?.count ?? 0)}
-                      </TableCell>
+                      <TableHead key={id} className="text-right">
+                        {t(`segments.${id}.label`)}
+                      </TableHead>
                     ))}
-                    <TableCell className="num text-right font-medium">
-                      {fmtCompact(locale, row.total)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DeltaChip value={row.superfans?.trend ?? 0} />
-                    </TableCell>
+                    <TableHead className="text-right">{t("table.total")}</TableHead>
+                    <TableHead className="text-right">{t("table.trend")}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </section>
-      )}
+                </TableHeader>
+                <TableBody>
+                  {byArtist.map((row) => (
+                    <TableRow key={row.artist.id}>
+                      <TableCell>
+                        <ArtistBadge
+                          artist={row.artist}
+                          meta={row.artist.genre}
+                          size="sm"
+                        />
+                      </TableCell>
+                      {SEGMENT_ORDER.map((id) => (
+                        <TableCell key={id} className="num text-right">
+                          {fmtCompact(locale, row[id]?.count ?? 0)}
+                        </TableCell>
+                      ))}
+                      <TableCell className="num text-right font-medium">
+                        {fmtCompact(locale, row.total)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DeltaChip value={row.superfans?.trend ?? 0} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Sheet>
+        )}
+
+        <Doors
+          title={tc("blocks.doors")}
+          doors={[
+            {
+              key: "audience",
+              family: "audience",
+              href: "/audience",
+              label: t("doors.audience"),
+              value: t("doors.audienceValue"),
+            },
+            {
+              key: "tour",
+              family: "catalog",
+              href: "/tour",
+              label: t("doors.tour"),
+              value: t("doors.tourValue"),
+            },
+            {
+              key: "catalog",
+              family: "catalog",
+              href: "/catalog",
+              label: t("doors.catalog"),
+              value: t("doors.catalogValue"),
+            },
+            {
+              key: "discovery",
+              family: "trends",
+              href: "/discovery",
+              label: t("doors.discovery"),
+              value: t("doors.discoveryValue"),
+            },
+            {
+              key: "index",
+              family: "trends",
+              href: "/day1-index",
+              label: t("doors.index"),
+              value: t("doors.indexValue"),
+            },
+            {
+              key: "streams",
+              family: "streams",
+              href: "/streams",
+              label: t("doors.streams"),
+              value: t("doors.streamsValue"),
+            },
+          ]}
+        />
+
+        <RestRow
+          title={rosterMode ? tc("blocks.restLabel") : tc("blocks.rest")}
+          items={[
+            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
+            { key: "market", href: "/market", label: t("rest.market") },
+            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
+            { key: "sync", href: "/sync", label: t("rest.sync") },
+            { key: "roster", href: "/roster", label: t("rest.roster") },
+            { key: "settings", href: "/settings", label: t("rest.settings") },
+          ]}
+        />
+
+        <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
+      </div>
     </div>
   );
 }
