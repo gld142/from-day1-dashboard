@@ -37,7 +37,14 @@ function median(values: number[]): number {
   return s.length % 2 === 0 ? (s[mid - 1] + s[mid]) / 2 : s[mid];
 }
 
-export function RosterMatrix({ rows }: { rows: RosterRow[] }) {
+export function RosterMatrix({
+  rows,
+  bare = false,
+}: {
+  rows: RosterRow[];
+  /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
+  bare?: boolean;
+}) {
   const t = useTranslations("roster");
   const locale = useLocale();
 
@@ -58,12 +65,16 @@ export function RosterMatrix({ rows }: { rows: RosterRow[] }) {
   const medMargin = useMemo(() => median(points.map((p) => p.margin)), [points]);
 
   return (
-    <div className="rounded-xl border bg-card p-5">
-      <h2 className="text-sm font-semibold">{t("matrix.title")}</h2>
-      <p className="mt-0.5 text-[11px] text-muted-foreground">
-        {t("matrix.subtitle")}
-      </p>
-      <div className="relative mt-4 h-72">
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border p-5"}>
+      {!bare && (
+        <>
+          <h2 className="text-sm font-semibold">{t("matrix.title")}</h2>
+          <p className="text-muted-foreground mt-0.5 text-[11px]">
+            {t("matrix.subtitle")}
+          </p>
+        </>
+      )}
+      <div className={bare ? "relative mt-2 h-72" : "relative mt-4 h-72"}>
         {/* Étiquettes de quadrants (haut = marge élevée, droite = croissance élevée) */}
         <span className="pointer-events-none absolute left-14 top-2 z-10 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
           {t("matrix.quadrants.cash")}
@@ -154,7 +165,7 @@ export function RosterMatrix({ rows }: { rows: RosterRow[] }) {
                 );
               }}
             />
-            <Scatter data={points} animationDuration={600}>
+            <Scatter data={points} isAnimationActive={false}>
               {points.map((p) => (
                 <Cell
                   key={p.id}

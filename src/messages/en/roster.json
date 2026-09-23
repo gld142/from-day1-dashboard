@@ -1,6 +1,6 @@
 {
   "title": "Roster",
-  "subtitle": "Comparative view of {label}'s {count} artists — health, profitability, valuation.",
+  "subtitle": "Who carries {label}, and who's slipping — all {count} artists compared.",
   "guard": {
     "title": "Label view only",
     "description": "The roster compares every artist on the label side by side. In artist view you only access your own data.",
@@ -11,7 +11,11 @@
     "streams30d": "Streams 30d",
     "revenue12m": "Revenue 12 months",
     "net12m": "Net 12 months",
-    "valuation": "Catalog valuation"
+    "valuation": "Catalog valuation",
+    "revenue12mHint": "rolling 12 months",
+    "net12mHint": "after expenses",
+    "valuationHint": "median estimate",
+    "artistsHint": "{count, plural, one {# declining over 30d} other {# declining over 30d}}"
   },
   "table": {
     "title": "Roster comparison",
@@ -66,5 +70,34 @@
     "decline": "Streams declining over 30 days",
     "declineMeta": "vs previous 30 days",
     "empty": "No alerts — the whole roster is in the green"
+  },
+  "hero": {
+    "title": "Revenue concentration",
+    "caption": "of roster revenue comes from {artist}",
+    "captionEven": "revenue spreads out with no dominant artist",
+    "risk": "A roster resting on one name rests on one contract: that dependency is what's watched here.",
+    "topThree": "Top three: {share}"
+  },
+  "doors": {
+    "valuation": "Valuation",
+    "valuationValue": "what the catalog is worth",
+    "finances": "Expenses & P&L",
+    "financesValue": "what's left after expenses",
+    "contracts": "Contracts",
+    "contractsValue": "rates and deadlines",
+    "arwatch": "A&R Watch",
+    "arwatchValue": "who to sign next",
+    "index": "Day 1 Index",
+    "indexValue": "the detailed ranking",
+    "team": "Team",
+    "teamValue": "who works on what"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "streams": "Streams",
+    "revenue": "Revenue",
+    "catalog": "Catalog",
+    "tour": "Touring",
+    "market": "Market"
   }
 }

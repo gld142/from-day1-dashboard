@@ -14,7 +14,14 @@ import type { Locale } from "@/i18n/config";
 import { fmtDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
+export function RosterAlerts({
+  rows,
+  bare = false,
+}: {
+  rows: RosterRow[];
+  /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
+  bare?: boolean;
+}) {
   const t = useTranslations("roster");
   const locale = useLocale();
 
@@ -36,11 +43,15 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
   const empty = contractAlerts.length === 0 && declining.length === 0;
 
   return (
-    <div className="rounded-xl border bg-card p-5">
-      <h2 className="text-sm font-semibold">{t("alerts.title")}</h2>
-      <p className="mt-0.5 text-[11px] text-muted-foreground">
-        {t("alerts.subtitle")}
-      </p>
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border p-5"}>
+      {!bare && (
+        <>
+          <h2 className="text-sm font-semibold">{t("alerts.title")}</h2>
+          <p className="text-muted-foreground mt-0.5 text-[11px]">
+            {t("alerts.subtitle")}
+          </p>
+        </>
+      )}
 
       {empty ? (
         <p className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
@@ -48,7 +59,7 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
           {t("alerts.empty")}
         </p>
       ) : (
-        <ul className="mt-4 space-y-2.5">
+        <ul className={bare ? "mt-1" : "mt-4 space-y-2.5"}>
           {contractAlerts.map(({ contract, alert }, i) => {
             const artist = getArtist(contract.artistId);
             const danger = alert.severity === "danger";
@@ -57,10 +68,15 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
               <li
                 key={`${contract.id}-${i}`}
                 className={cn(
-                  "flex items-start gap-3 rounded-lg border p-3",
-                  danger
-                    ? "border-destructive/30 bg-destructive/5"
-                    : "border-warning/30 bg-warning/5",
+                  "flex items-start gap-3",
+                  bare
+                    ? "border-border/50 border-t py-2.5 first:border-t-0 first:pt-0"
+                    : cn(
+                        "rounded-lg border p-3",
+                        danger
+                          ? "border-destructive/30 bg-destructive/5"
+                          : "border-warning/30 bg-warning/5",
+                      ),
                 )}
               >
                 <Icon
@@ -74,7 +90,7 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <ArtistBadge artist={artist} size="sm" />
                     {alert.dueDate && (
-                      <span className="num text-[11px] text-muted-foreground">
+                      <span className={cn("num text-[11px]", bare ? "sheet-ink" : "text-muted-foreground")}>
                         {t("alerts.due", {
                           date: fmtDate(locale, alert.dueDate),
                         })}
@@ -84,7 +100,7 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
                   <p className="mt-1.5 text-xs leading-relaxed">
                     {alert.message[locale as Locale] ?? alert.message.fr}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                  <p className={cn("mt-0.5 text-[11px]", bare ? "sheet-ink" : "text-muted-foreground")}>
                     {t("alerts.contractMeta", {
                       type: contract.type,
                       counterparty: contract.counterparty,
@@ -98,7 +114,12 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
           {declining.map((r) => (
             <li
               key={r.id}
-              className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3"
+              className={cn(
+                "flex items-start gap-3",
+                bare
+                  ? "border-border/50 border-t py-2.5"
+                  : "border-destructive/30 bg-destructive/5 rounded-lg border p-3",
+              )}
             >
               <TrendingDown
                 className="mt-0.5 size-4 shrink-0 text-destructive"
@@ -112,7 +133,7 @@ export function RosterAlerts({ rows }: { rows: RosterRow[] }) {
                 <p className="mt-1.5 text-xs leading-relaxed">
                   {t("alerts.decline")}
                 </p>
-                <p className="mt-0.5 text-[11px] text-muted-foreground">
+                <p className={cn("mt-0.5 text-[11px]", bare ? "sheet-ink" : "text-muted-foreground")}>
                   {t("alerts.declineMeta")}
                 </p>
               </div>

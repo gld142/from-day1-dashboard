@@ -23,7 +23,7 @@ const SERIES = [
   { key: "net", color: "var(--chart-2)" },
 ] as const;
 
-export function RosterPnlBars() {
+export function RosterPnlBars({ bare = false }: { bare?: boolean } = {}) {
   const t = useTranslations("roster");
   const locale = useLocale();
 
@@ -37,9 +37,9 @@ export function RosterPnlBars() {
   );
 
   return (
-    <div className="rounded-xl border bg-card p-5">
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border p-5"}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-sm font-semibold">{t("pnl.title")}</h2>
+        {!bare && <h2 className="text-sm font-semibold">{t("pnl.title")}</h2>}
         <div className="flex items-center gap-3">
           {SERIES.map((s) => (
             <span
@@ -92,7 +92,7 @@ export function RosterPnlBars() {
                 fill={s.color}
                 radius={[4, 4, 0, 0]}
                 maxBarSize={26}
-                animationDuration={600}
+                isAnimationActive={false}
               />
             ))}
           </BarChart>

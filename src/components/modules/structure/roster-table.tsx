@@ -40,14 +40,59 @@ const STAGE_TONE: Record<CareerStage, string> = {
 const MotionTableRow = motion.create(TableRow);
 const ROW_LAYOUT_TRANSITION = { layout: { duration: 0.25, ease: "easeOut" } } as const;
 
+/**
+ * En-tête de colonne triable. Défini au niveau du module : à l'intérieur du
+ * composant, React le recréait à chaque rendu et le traitait comme un nouveau
+ * type à chaque tri.
+ */
+function SortHead({
+  column,
+  label,
+  className,
+  sortKey,
+  desc,
+  onToggle,
+  sortLabel,
+}: {
+  column: SortKey;
+  label: string;
+  className?: string;
+  sortKey: SortKey;
+  desc: boolean;
+  onToggle: (key: SortKey) => void;
+  sortLabel: string;
+}) {
+  const active = sortKey === column;
+  const Icon = active ? (desc ? ArrowDown : ArrowUp) : ArrowUpDown;
+  return (
+    <TableHead className={cn("text-right", className)}>
+      <button
+        type="button"
+        onClick={() => onToggle(column)}
+        aria-label={sortLabel}
+        className={cn(
+          "hover:text-foreground inline-flex items-center gap-1 transition-colors",
+          active && "text-foreground",
+        )}
+      >
+        {label}
+        <Icon className="size-3" aria-hidden />
+      </button>
+    </TableHead>
+  );
+}
+
 export function RosterTable({
   rows,
   focusedArtistId,
   onFocus,
+  bare = false,
 }: {
   rows: RosterRow[];
   focusedArtistId: string | null;
   onFocus: (id: string | null) => void;
+  /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
+  bare?: boolean;
 }) {
   const t = useTranslations("roster");
   const locale = useLocale();
@@ -71,54 +116,49 @@ export function RosterTable({
     }
   }
 
-  function SortHead({
-    column,
-    label,
-    className,
-  }: {
-    column: SortKey;
-    label: string;
-    className?: string;
-  }) {
-    const active = sortKey === column;
-    const Icon = active ? (desc ? ArrowDown : ArrowUp) : ArrowUpDown;
-    return (
-      <TableHead className={cn("text-right", className)}>
-        <button
-          type="button"
-          onClick={() => toggleSort(column)}
-          aria-label={t("table.sort", { column: label })}
-          className={cn(
-            "inline-flex items-center gap-1 transition-colors hover:text-foreground",
-            active && "text-foreground",
-          )}
-        >
-          {label}
-          <Icon className="size-3" aria-hidden />
-        </button>
-      </TableHead>
-    );
-  }
-
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pb-2 pt-5">
-        <h2 className="text-sm font-semibold">{t("table.title")}</h2>
-        <p className="text-[11px] text-muted-foreground">{t("table.hint")}</p>
-      </div>
-      <div className="overflow-x-auto">
+    <div className={bare ? "min-w-0" : "bg-card rounded-xl border"}>
+      {!bare && (
+        <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5 pb-2">
+          <h2 className="text-sm font-semibold">{t("table.title")}</h2>
+          <p className="text-muted-foreground text-[11px]">{t("table.hint")}</p>
+        </div>
+      )}
+      <div className={cn("min-w-0 overflow-x-auto", bare && "mt-1")}>
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="pl-5">{t("table.artist")}</TableHead>
+              <TableHead className={bare ? undefined : "pl-5"}>{t("table.artist")}</TableHead>
               <TableHead>{t("table.stage")}</TableHead>
-              <SortHead column="streams30d" label={t("table.streams30d")} />
+              <SortHead
+                column="streams30d"
+                label={t("table.streams30d")}
+                sortKey={sortKey}
+                desc={desc}
+                onToggle={toggleSort}
+                sortLabel={t("table.sort", { column: t("table.streams30d") })}
+              />
               <TableHead className="text-right">{t("table.delta30d")}</TableHead>
-              <SortHead column="revenue12m" label={t("table.revenue12m")} />
+              <SortHead
+                column="revenue12m"
+                label={t("table.revenue12m")}
+                sortKey={sortKey}
+                desc={desc}
+                onToggle={toggleSort}
+                sortLabel={t("table.sort", { column: t("table.revenue12m") })}
+              />
               <TableHead className="text-right">{t("table.net12m")}</TableHead>
               <TableHead className="text-right">{t("table.margin")}</TableHead>
               <TableHead className="text-right">{t("table.valuation")}</TableHead>
-              <SortHead column="day1Index" label={t("table.index")} className="pr-5" />
+              <SortHead
+                column="day1Index"
+                label={t("table.index")}
+                className={bare ? undefined : "pr-5"}
+                sortKey={sortKey}
+                desc={desc}
+                onToggle={toggleSort}
+                sortLabel={t("table.sort", { column: t("table.index") })}
+              />
             </TableRow>
           </TableHeader>
           <LayoutGroup>
