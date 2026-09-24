@@ -4,13 +4,15 @@
  * le serveur et le client produisent exactement les mêmes chiffres.
  */
 import {
+  artistTopCities,
   countryBreakdown,
   dailyTotals,
   fanSegments,
   getArtist,
   streamsByDsp,
 } from "@/lib/demo/api";
-import type { CountryStreams, FanSegment } from "@/lib/demo/types";
+import type { CountryStreams, FanSegment, Provenance } from "@/lib/demo/types";
+import { weakest } from "@/lib/real";
 
 /* ─────────────────────────── Hash déterministe ─────────────────────────── */
 
@@ -282,9 +284,54 @@ export type CityRow = {
 };
 
 /** Top villes dérivé du countryBreakdown (part pays × poids ville × jitter seedé). */
+/**
+ * Provenance du top villes : « mesuré » si TOUS les artistes demandés ont un
+ * relevé, « simulé » sinon — la provenance la plus faible l'emporte, comme
+ * partout ailleurs.
+ */
+export function topCitiesProvenance(ids: string[]): Provenance {
+  return weakest(ids.map((id) => (artistTopCities(id) ? "measured" : "simulated")));
+}
+
+/**
+ * Quelques villes du relevé Spotify n'ont pas le même nom en français et en
+ * anglais. Le relevé ne donne qu'une graphie : on traduit celles qu'on connaît,
+ * les autres s'écrivent pareil dans les deux langues.
+ */
+const CITY_FR: Record<string, string> = {
+  Montreal: "Montréal",
+  Brussels: "Bruxelles",
+  Geneva: "Genève",
+  London: "Londres",
+  Algiers: "Alger",
+};
+
+/**
+ * Top villes : le relevé quand il existe, le vivier sinon.
+ *
+ * Mesuré : le relevé du 18/09 porte cinq villes par artiste. Cette fonction
+ * les ignorait et reconstruisait tout depuis `CITY_POOL`, seize pays — dont
+ * aucun des quatre de Kiko (TG, BJ, CD, GN), qui n'affichait donc qu'Abidjan
+ * face aux cinq villes de Dadju. Le relevé passe devant : il est mesuré, il
+ * couvre tout le monde, et il donne de vrais nombres d'auditeurs.
+ */
 export function topCities(ids: string[], limit = 8): CityRow[] {
   const acc = new Map<string, CityRow>();
   for (const id of ids) {
+    const releve = artistTopCities(id);
+    if (releve) {
+      for (const c of releve) {
+        const key = `${c.country}:${c.city}`;
+        const prev = acc.get(key);
+        acc.set(key, {
+          key,
+          nameFr: CITY_FR[c.city] ?? c.city,
+          nameEn: c.city,
+          listeners: (prev?.listeners ?? 0) + c.listeners,
+        });
+      }
+      continue;
+    }
     const a = getArtist(id);
     const bd = countryBreakdown(id, 30);
     const total = Math.max(

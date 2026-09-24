@@ -38,6 +38,11 @@ export function daysAgo(n: number): Date {
   return d;
 }
 
+/** L'inverse de `daysAgo` : une date à venir, toujours relative à aujourd'hui. */
+export function daysAhead(n: number): Date {
+  return daysAgo(-n);
+}
+
 export function isoDay(d: Date): string {
   return d.toISOString().slice(0, 10);
 }

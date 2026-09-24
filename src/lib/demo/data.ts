@@ -10,11 +10,12 @@ import type {
   Contract,
   EmergingArtist,
   Project,
+  SyncBrief,
   TeamMember,
   Track,
   TrackSplit,
 } from "./types";
-import { daysAgo, isoDay } from "./seed";
+import { daysAgo, daysAhead, isoDay } from "./seed";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
 
 export const LABEL = {
@@ -438,5 +439,66 @@ export const EMERGING: EmergingArtist[] = [
     day1Index: 43,
     watchlisted: true,
     hue: 140,
+  },
+];
+
+/* ─────────────────────────── Briefs de synchro ─────────────────────────── */
+
+/**
+ * Les briefs de synchronisation ouverts. Leur échéance est donnée en JOURS à
+ * partir d'aujourd'hui, pas en date fixe.
+ *
+ * Mesuré le 24/09 : les cinq dates étaient figées en juillet-août 2026 et
+ * toutes dépassées, sous un titre « Briefs ouverts » — la page annonçait
+ * ouvert ce qui était fermé. Une démo dont les dates vieillissent finit par
+ * mentir toute seule ; des décalages relatifs restent vrais.
+ *
+ * Deux briefs ferment à sept jours ou moins : c'est ce que /pulse compte.
+ */
+export const SYNC_BRIEFS: SyncBrief[] = [
+  {
+    id: "nova-tv",
+    brand: "Nova Motors",
+    type: "tv",
+    budgetLow: 18_000,
+    budgetHigh: 35_000,
+    deadline: isoDay(daysAhead(4)),
+    mood: "energetic",
+  },
+  {
+    id: "meridien-film",
+    brand: "Les Films du Méridien",
+    type: "film",
+    budgetLow: 3_000,
+    budgetHigh: 7_000,
+    deadline: isoDay(daysAhead(6)),
+    mood: "melancholic",
+  },
+  {
+    id: "palier-series",
+    brand: "Studio Palier",
+    type: "series",
+    budgetLow: 8_000,
+    budgetHigh: 15_000,
+    deadline: isoDay(daysAhead(15)),
+    mood: "nocturnal",
+  },
+  {
+    id: "ondine-tv",
+    brand: "Maison Ondine",
+    type: "tv",
+    budgetLow: 12_000,
+    budgetHigh: 20_000,
+    deadline: isoDay(daysAhead(27)),
+    mood: "dreamy",
+  },
+  {
+    id: "helios-game",
+    brand: "Helios Games",
+    type: "game",
+    budgetLow: 22_000,
+    budgetHigh: 45_000,
+    deadline: isoDay(daysAhead(41)),
+    mood: "cinematic",
   },
 ];

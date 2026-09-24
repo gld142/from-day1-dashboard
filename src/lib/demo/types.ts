@@ -258,3 +258,31 @@ export type CountryStreams = {
   nameEn: string;
   streams: number;
 };
+
+/* ─────────────────────────── Synchro ─────────────────────────── */
+
+export const SYNC_MOODS = [
+  "melancholic",
+  "energetic",
+  "nocturnal",
+  "cinematic",
+  "dreamy",
+  "dark",
+  "uplifting",
+  "raw",
+] as const;
+export type SyncMood = (typeof SYNC_MOODS)[number];
+
+export type SyncBriefType = "tv" | "series" | "game" | "film";
+
+/** Un brief de synchro ouvert : qui cherche, pour quoi, jusqu'à quand. */
+export type SyncBrief = {
+  id: string;
+  brand: string;
+  type: SyncBriefType;
+  budgetLow: number;
+  budgetHigh: number;
+  /** ISO, recalculée à chaque build depuis un décalage en jours. */
+  deadline: string;
+  mood: SyncMood;
+};

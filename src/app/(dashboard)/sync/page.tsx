@@ -17,8 +17,16 @@ import {
   TriangleAlert,
   Tv,
 } from "lucide-react";
-import { ARTISTS, SPLITS, TRACKS, getArtist, revenueSeries } from "@/lib/demo/api";
-import type { Artist, Track } from "@/lib/demo/types";
+import {
+  ARTISTS,
+  SPLITS,
+  TRACKS,
+  getArtist,
+  revenueSeries,
+  syncBriefs,
+} from "@/lib/demo/api";
+import { SYNC_MOODS } from "@/lib/demo/types";
+import type { Artist, SyncBriefType, SyncMood, Track } from "@/lib/demo/types";
 import { hashString } from "@/lib/demo/seed";
 import { fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
@@ -43,77 +51,13 @@ import { ArtistBadge } from "@/components/dashboard/artist-badge";
 
 /* ─────────────────────────── Constantes démo ─────────────────────────── */
 
-const MOODS = [
-  "melancholic",
-  "energetic",
-  "nocturnal",
-  "cinematic",
-  "dreamy",
-  "dark",
-  "uplifting",
-  "raw",
-] as const;
-type Mood = (typeof MOODS)[number];
-
-type BriefType = "tv" | "series" | "game" | "film";
-
-type Brief = {
-  id: string;
-  brand: string;
-  type: BriefType;
-  budgetLow: number;
-  budgetHigh: number;
-  deadline: string; // ISO — figé pour la démo
-  mood: Mood;
-};
-
-const BRIEFS: Brief[] = [
-  {
-    id: "nova-tv",
-    brand: "Nova Motors",
-    type: "tv",
-    budgetLow: 18_000,
-    budgetHigh: 35_000,
-    deadline: "2026-07-17",
-    mood: "energetic",
-  },
-  {
-    id: "palier-series",
-    brand: "Studio Palier",
-    type: "series",
-    budgetLow: 8_000,
-    budgetHigh: 15_000,
-    deadline: "2026-07-28",
-    mood: "nocturnal",
-  },
-  {
-    id: "helios-game",
-    brand: "Helios Games",
-    type: "game",
-    budgetLow: 22_000,
-    budgetHigh: 45_000,
-    deadline: "2026-08-14",
-    mood: "cinematic",
-  },
-  {
-    id: "meridien-film",
-    brand: "Les Films du Méridien",
-    type: "film",
-    budgetLow: 3_000,
-    budgetHigh: 7_000,
-    deadline: "2026-07-10",
-    mood: "melancholic",
-  },
-  {
-    id: "ondine-tv",
-    brand: "Maison Ondine",
-    type: "tv",
-    budgetLow: 12_000,
-    budgetHigh: 20_000,
-    deadline: "2026-08-03",
-    mood: "dreamy",
-  },
-];
+/* Moods, types et briefs vivent dans la couche de données : /pulse les
+   compte, cette page les détaille — une seule source, des échéances
+   relatives à aujourd'hui plutôt que des dates figées. */
+const MOODS = SYNC_MOODS;
+type Mood = SyncMood;
+type BriefType = SyncBriefType;
+const BRIEFS = syncBriefs();
 
 const BRIEF_ICON: Record<BriefType, React.ComponentType<{ className?: string }>> = {
   tv: MonitorPlay,

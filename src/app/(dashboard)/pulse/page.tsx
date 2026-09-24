@@ -73,6 +73,8 @@ import {
   streamsByDsp,
   streamsDelta,
   sumStreams,
+  syncBriefs,
+  syncBriefsClosingSoon,
   tiktokSignal,
   topTracks,
   tourDates,
@@ -140,6 +142,10 @@ export default function PulsePage() {
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
   const sharesKey = useSharesSnapshot();
+  /* Les briefs de synchro sont les mêmes pour tout le roster : on les compte
+     une fois, et les deux personas lisent le même nombre. */
+  const syncOpen = useMemo(() => syncBriefs().length, []);
+  const syncSoon = useMemo(() => syncBriefsClosingSoon(), []);
 
   const dateChip = fmtDate(locale, DEMO_TODAY.toISOString(), {
     weekday: "long",
@@ -851,8 +857,10 @@ export default function PulsePage() {
                   key: "sync",
                   href: "/sync",
                   label: t("collect.sync"),
-                  amount: t("collect.syncValue", { count: 3 }),
-                  deadline: t("collect.syncDeadline", { count: 2 }),
+                  /* Compté, pas écrit : 3 côté artiste et 5 côté label pour
+                     la même liste de briefs, c'était l'un des deux qui mentait. */
+                  amount: t("collect.syncValue", { count: syncOpen }),
+                  deadline: t("collect.syncDeadline", { count: syncSoon }),
                 },
                 v.leads.rightsPending > 0 && {
                   key: "rights",
@@ -1281,8 +1289,8 @@ export default function PulsePage() {
                   key: "sync",
                   href: "/sync",
                   label: t("collect.sync"),
-                  amount: t("collect.syncValue", { count: 5 }),
-                  deadline: t("collect.syncDeadline", { count: 2 }),
+                  amount: t("collect.syncValue", { count: syncOpen }),
+                  deadline: t("collect.syncDeadline", { count: syncSoon }),
                 },
                 l.leads.rightsPending > 0 && {
                   key: "rights",

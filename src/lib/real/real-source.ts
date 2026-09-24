@@ -28,7 +28,7 @@ import { SPOTIFY_MIN_STREAMS_12M, TIER_FR } from "./params";
 import { reconstructTrack, type ReconstructedDay } from "./reconstruct";
 import { SNAPSHOTS } from "./snapshots";
 import { countriesFromCities, territoryCoefficient, zoneDistribution } from "./territory";
-import type { DailyEstimate, Snapshot } from "./types";
+import type { DailyEstimate, Snapshot, SnapshotCity } from "./types";
 
 export type Snaps = Record<string, Snapshot[]>;
 
@@ -473,6 +473,19 @@ export function realTopTracks(
     })
     .sort((a, b) => b.streams - a.streams || a.title.localeCompare(b.title))
     .slice(0, limit);
+}
+
+/**
+ * Les villes du relevé Spotify — mesurées, avec leur nombre d'auditeurs.
+ * null si le relevé n'en porte pas.
+ */
+export function realTopCities(
+  artistId: string,
+  snapshots: Snaps = SNAPSHOTS,
+): SnapshotCity[] | null {
+  if (!hasRealData(artistId, snapshots)) return null;
+  const cities = latestSnapshot(artistId, snapshots).topCities;
+  return cities && cities.length > 0 ? cities : null;
 }
 
 /** Pays d'écoute déduits des villes Spotify ; null si le relevé n'en a pas. */

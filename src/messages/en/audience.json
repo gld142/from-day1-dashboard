@@ -46,7 +46,8 @@
     "nonbinary": "Other",
     "cities": "Top cities",
     "citiesHint": "Estimated monthly listeners per city",
-    "listeners": "listeners"
+    "listeners": "listeners",
+    "citiesHintMeasured": "Monthly listeners measured per city"
   },
   "discovery": {
     "title": "Discovery sources",

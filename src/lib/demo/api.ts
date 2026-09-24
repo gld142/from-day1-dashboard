@@ -16,6 +16,7 @@ import {
   LABEL,
   PROJECTS,
   SPLITS,
+  SYNC_BRIEFS,
   TEAM,
   TRACKS,
   getArtist as getDemoArtist,
@@ -39,7 +40,7 @@ import {
   tourDates as genTourDates,
   type ForecastPoint,
 } from "./generators";
-import { DEMO_TODAY, isoMonth, rngFor } from "./seed";
+import { DEMO_TODAY, daysAhead, isoDay, isoMonth, rngFor } from "./seed";
 import {
   AUTHOR_SHARE_OF_PUBLISHING,
   DEAL_SHARE,
@@ -52,6 +53,7 @@ import {
   calibrationFromUserData,
   hasRealData,
   realCountryBreakdown,
+  realTopCities,
   realDailyEstimates,
   realProvenanceByDsp,
   realStreamSeries,
@@ -77,6 +79,7 @@ import {
   type MorningReading,
   type Provenance,
   type Range,
+  type SnapshotCity,
   type TikTokSignal,
 } from "@/lib/real";
 import {
@@ -99,6 +102,7 @@ import type {
   FanSegment,
   RevenuePoint,
   RevenueSource,
+  SyncBrief,
   RightsStatement,
   StreamPoint,
   TourDate,
@@ -396,6 +400,33 @@ export function marketRosterTracks(date?: string): number {
 /** Date, instant de capture, date du classement, titres sans label lu… null sans relevé. */
 export function marketMeta(date?: string): MarketMeta | null {
   return realMarketMeta(date);
+}
+
+/**
+ * Villes d'écoute RELEVÉES pour cet artiste, null s'il n'en a pas.
+ *
+ * Mesuré : le relevé du 18/09 porte cinq villes par artiste, y compris pour
+ * Kiko (Lomé, Abidjan, Cotonou, Kinshasa, Conakry). La page /audience les
+ * ignorait et reconstruisait des villes depuis un vivier codé en dur de
+ * seize pays — dont aucun des quatre de Kiko, qui n'affichait donc qu'Abidjan.
+ * Une donnée mesurée qui existe ne doit pas être remplacée par une synthèse.
+ */
+export function artistTopCities(artistId: string): SnapshotCity[] | null {
+  return realTopCities(artistId);
+}
+
+/** Les briefs de synchro encore ouverts, du plus proche au plus lointain. */
+export function syncBriefs(): SyncBrief[] {
+  const today = isoDay(DEMO_TODAY);
+  return SYNC_BRIEFS.filter((b) => b.deadline >= today).sort((a, b) =>
+    a.deadline.localeCompare(b.deadline),
+  );
+}
+
+/** Parmi eux, ceux qui ferment dans les sept jours. */
+export function syncBriefsClosingSoon(days = 7): number {
+  const limite = isoDay(daysAhead(days));
+  return syncBriefs().filter((b) => b.deadline <= limite).length;
 }
 
 /* ─────────────── Séries — utilisateur > réel > démo ─────────────── */

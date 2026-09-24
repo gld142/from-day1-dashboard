@@ -1,12 +1,15 @@
 "use client";
 
 /**
- * Top villes — dérivé du countryBreakdown (part pays × poids ville, seedé).
+ * Top villes — le relevé Spotify quand il existe, sinon une dérivation du
+ * countryBreakdown (part pays × poids ville, seedée). Le libellé et le badge
+ * suivent la source : le bloc ne dit « estimé » que lorsqu'il l'est.
  */
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { fmtCompact } from "@/lib/format";
-import { topCities } from "./derive";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import { topCities, topCitiesProvenance } from "./derive";
 
 export function TopCities({
   ids,
@@ -20,6 +23,8 @@ export function TopCities({
   const t = useTranslations("audience");
 
   const rows = useMemo(() => topCities(ids, 8), [ids]);
+  const provenance = useMemo(() => topCitiesProvenance(ids), [ids]);
+  const mesure = provenance === "measured";
   const max = Math.max(1, ...rows.map((r) => r.listeners));
 
   const Frame = bare ? "div" : "section";
@@ -31,8 +36,9 @@ export function TopCities({
           <h2 className="font-heading text-base font-semibold tracking-tight">
             {t("demo.cities")}
           </h2>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            {t("demo.citiesHint")}
+          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <ProvenanceBadge provenance={provenance} />
+            {t(mesure ? "demo.citiesHintMeasured" : "demo.citiesHint")}
           </p>
         </header>
       )}

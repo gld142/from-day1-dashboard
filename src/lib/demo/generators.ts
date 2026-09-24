@@ -7,6 +7,7 @@ import { ARTISTS, PROJECTS, TRACKS, getArtist } from "./data";
 import { daysAgo, isoDay, isoMonth, monthsAgo, rngFor, DEMO_TODAY } from "./seed";
 import { TIER_FR, blendedRate } from "@/lib/real/params";
 import { defaultDistribution, territoryCoefficient } from "@/lib/real/territory";
+import { ZONES, type Zone } from "@/lib/real/params";
 import type {
   AuditFinding,
   CountryStreams,
@@ -616,18 +617,74 @@ export function auditFindings(artistId: string): AuditFinding[] {
 
 /* ─────────────────────────── Tournée ─────────────────────────── */
 
-const VENUES: Array<[string, string, string, number]> = [
-  ["Paris", "FR", "La Cigale", 1400],
-  ["Lyon", "FR", "Le Transbordeur", 1800],
-  ["Bruxelles", "BE", "Ancienne Belgique", 2000],
-  ["Genève", "CH", "L'Usine", 800],
-  ["Bordeaux", "FR", "Rock School Barbey", 700],
-  ["Lille", "FR", "L'Aéronef", 1200],
-  ["Marseille", "FR", "Le Moulin", 900],
-  ["Montréal", "CA", "MTELUS", 2300],
-  ["Nantes", "FR", "Stereolux", 1200],
-  ["Toulouse", "FR", "Le Bikini", 1500],
-];
+/**
+ * Les salles, rangées par zone d'écoute.
+ *
+ * Mesuré : Kiko a 100 % de ses auditeurs relevés en Afrique de l'Ouest et
+ * centrale (Lomé, Abidjan, Cotonou, Kinshasa, Conakry), et le générateur lui
+ * donnait une tournée entièrement française et belge — jusqu'à la même ville
+ * que Dadju en prochaine date, dans un vivier de dix salles. On tire
+ * désormais la zone selon son audience, puis la salle dans cette zone.
+ */
+type Venue = [city: string, country: string, venue: string, capacity: number];
+
+const VENUES_BY_ZONE: Record<Zone, Venue[]> = {
+  frbech: [
+    ["Paris", "FR", "La Cigale", 1400],
+    ["Lyon", "FR", "Le Transbordeur", 1800],
+    ["Bruxelles", "BE", "Ancienne Belgique", 2000],
+    ["Genève", "CH", "L'Usine", 800],
+    ["Bordeaux", "FR", "Rock School Barbey", 700],
+    ["Lille", "FR", "L'Aéronef", 1200],
+    ["Marseille", "FR", "Le Moulin", 900],
+    ["Nantes", "FR", "Stereolux", 1200],
+    ["Toulouse", "FR", "Le Bikini", 1500],
+  ],
+  europe: [
+    ["Londres", "GB", "O2 Forum Kentish Town", 2300],
+    ["Amsterdam", "NL", "Melkweg", 1500],
+    ["Berlin", "DE", "Huxleys", 1600],
+    ["Madrid", "ES", "La Riviera", 2500],
+  ],
+  northAmerica: [
+    ["Montréal", "CA", "MTELUS", 2300],
+    ["New York", "US", "Racket", 1000],
+    ["Toronto", "CA", "The Danforth", 1400],
+  ],
+  africa: [
+    ["Abidjan", "CI", "Palais de la Culture", 3500],
+    ["Lomé", "TG", "Palais des Congrès", 2000],
+    ["Dakar", "SN", "Grand Théâtre", 1800],
+    ["Cotonou", "BJ", "Palais des Congrès", 1500],
+    ["Kinshasa", "CD", "Halle de la Gombe", 1200],
+    ["Douala", "CM", "Palais des Sports", 2500],
+  ],
+  rest: [
+    ["Port-au-Prince", "HT", "Karibe", 900],
+    ["São Paulo", "BR", "Cine Joia", 1200],
+    ["Tokyo", "JP", "Shibuya WWW", 700],
+  ],
+};
+
+/**
+ * Tire une zone selon la répartition d'écoute de l'artiste, puis une salle
+ * dedans. Une zone sans salle retombe sur la France : mieux vaut une date
+ * plausible qu'aucune date.
+ */
+function pickVenue(dist: Record<Zone, number>, rand: () => number): Venue {
+  let seuil = rand();
+  let zone: Zone = "frbech";
+  for (const z of ZONES) {
+    seuil -= dist[z];
+    if (seuil <= 0) {
+      zone = z;
+      break;
+    }
+  }
+  const salles = VENUES_BY_ZONE[zone];
+  const pool = salles.length > 0 ? salles : VENUES_BY_ZONE.frbech;
+  return pool[Math.floor(rand() * pool.length)];
+}
 
 export function tourDates(artistId: string): TourDate[] {
   const rand = rngFor(`${artistId}:tour`);
@@ -635,9 +692,10 @@ export function tourDates(artistId: string): TourDate[] {
   const nPast = a.careerStage === "established" ? 8 : a.careerStage === "developing" ? 5 : 2;
   const nFuture = a.careerStage === "established" ? 5 : 3;
   const out: TourDate[] = [];
+  /* Calculée une fois, hors boucle : elle ne consomme aucun tirage. */
+  const dist = defaultDistribution(a.country);
   for (let i = 0; i < nPast + nFuture; i++) {
-    const [city, country, venue, capacity] =
-      VENUES[Math.floor(rand() * VENUES.length)];
+    const [city, country, venue, capacity] = pickVenue(dist, rand);
     const isPast = i < nPast;
     const offset = isPast
       ? -(20 + Math.floor(rand() * 300))

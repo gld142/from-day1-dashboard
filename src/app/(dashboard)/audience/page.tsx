@@ -35,6 +35,7 @@ import {
   followersFor,
   segmentsFor,
   topCities as topCitiesFor,
+  topCitiesProvenance,
   weightedGrowth,
 } from "@/components/modules/data/derive";
 import { DiscoveryDonut } from "@/components/modules/data/discovery-donut";
@@ -63,6 +64,7 @@ export default function AudiencePage() {
   const superfans = segments.find((s) => s.id === "superfans");
   const growth = useMemo(() => weightedGrowth(ids), [ids]);
   const topCity = useMemo(() => topCitiesFor(ids, 1)[0], [ids]);
+  const citiesProvenance = useMemo(() => topCitiesProvenance(ids), [ids]);
 
   /** Part des superfans dans la fanbase — ce que « 93 k » ne dit pas seul. */
   const fanbase = Math.max(
@@ -142,7 +144,15 @@ export default function AudiencePage() {
             <Demographics ids={ids} bare />
           </Sheet>
           <Sheet family="audience">
-            <SheetHeading action={t("demo.citiesHint")}>{t("demo.cities")}</SheetHeading>
+            {/* Les villes viennent du relevé Spotify quand il existe : l'en-tête
+                ne doit pas annoncer « estimé » devant une donnée mesurée. */}
+            <SheetHeading
+              action={t(
+                citiesProvenance === "measured" ? "demo.citiesHintMeasured" : "demo.citiesHint",
+              )}
+            >
+              {t("demo.cities")}
+            </SheetHeading>
             <TopCities ids={ids} bare />
           </Sheet>
         </div>

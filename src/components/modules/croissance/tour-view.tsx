@@ -20,9 +20,9 @@ import {
   ARTISTS,
   countryBreakdown,
   getArtist,
-  revenueSeries,
   tourDates,
 } from "@/lib/demo/api";
+import { DEMO_TODAY } from "@/lib/demo/seed";
 import type { Artist, TourDate } from "@/lib/demo/types";
 import { useRole } from "@/lib/role";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtMonth, fmtPct } from "@/lib/format";
@@ -92,18 +92,45 @@ const CITY_SUGGEST: Record<string, { fr: string; en: string }> = {
 
 type ScopedDate = TourDate & { artist: Artist };
 
-function liveMonthly(ids: string[]): Array<{ month: string; amount: number }> {
+/**
+ * La billetterie brute par mois, sommée sur les DATES PASSÉES de la page.
+ *
+ * Mesuré : la série venait de `revenueSeries(source: "live")`, c'est-à-dire de
+ * ce que l'artiste ENCAISSE — un cachet, une fraction de la recette. Sous un
+ * titre qui dit « billetterie brute », Kiko affichait 438 € sur douze mois à
+ * côté d'une « meilleure salle » à 54,4 k €, lue sur les mêmes concerts.
+ * Deux générateurs indépendants pour un même fait : c'est le titre qui dit
+ * lequel est le bon, et il dit « brut ».
+ *
+ * Ce que l'artiste touche reste sur /revenue, ligne « live », et n'a pas à
+ * égaler la recette du guichet.
+ */
+function grossMonthly(dates: TourDate[]): Array<{ month: string; amount: number }> {
   const acc = new Map<string, number>();
-  for (const id of ids) {
-    for (const p of revenueSeries(id, 24)) {
-      if (p.source !== "live") continue;
-      acc.set(p.month, (acc.get(p.month) ?? 0) + p.amount);
-    }
+  const depuis = isoMonth12mAgo();
+  for (const d of dates) {
+    if (d.status !== "past") continue;
+    const month = d.date.slice(0, 7);
+    if (month < depuis) continue;
+    acc.set(month, (acc.get(month) ?? 0) + d.grossRevenue);
   }
-  return Array.from(acc.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .slice(-12)
-    .map(([month, amount]) => ({ month, amount }));
+  /* Les mois sans date doivent exister : sinon la courbe relie deux concerts
+     distants par une pente, et laisse croire à une saison continue. */
+  const out: Array<{ month: string; amount: number }> = [];
+  const d = new Date(`${depuis}-01T00:00:00Z`);
+  for (let i = 0; i < 12; i++) {
+    const m = d.toISOString().slice(0, 7);
+    out.push({ month: m, amount: acc.get(m) ?? 0 });
+    d.setUTCMonth(d.getUTCMonth() + 1);
+  }
+  return out;
+}
+
+/** Premier des douze derniers mois, au format « AAAA-MM ». */
+function isoMonth12mAgo(): string {
+  const d = new Date(DEMO_TODAY);
+  d.setUTCMonth(d.getUTCMonth() - 11);
+  return d.toISOString().slice(0, 7);
 }
 
 /* ─────────────────────────── Vue ─────────────────────────── */
@@ -151,7 +178,7 @@ export function TourView() {
     return cap === 0 ? 0 : (sold / cap) * 100;
   }, [past]);
 
-  const liveSeries = useMemo(() => liveMonthly(scopeIds), [scopeIds]);
+  const liveSeries = useMemo(() => grossMonthly(dates), [dates]);
   const liveRevenue12m = liveSeries.reduce((s, m) => s + m.amount, 0);
 
   const bestVenue = useMemo(
