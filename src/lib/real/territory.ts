@@ -7,7 +7,7 @@
  * "Côte d'Ivoire") : `findCountry` normalise et accepte les deux formes.
  */
 import type { CountryStreams } from "@/lib/demo/types";
-import { TERRITORY_COEF, ZONE_DEFAULTS, ZONES, type Zone } from "./params";
+import { TERRITORY_COEF, ZONE_DEFAULTS, ZONE_FALLBACKS, ZONES, type Zone } from "./params";
 import type { SnapshotCity } from "./types";
 
 export type CountryDef = { iso2: string; iso3: string; nameFr: string; nameEn: string; zone: Zone };
@@ -126,7 +126,7 @@ export function zoneDistribution(
   artistCountry: string,
   audience?: number,
 ): Record<Zone, number> {
-  const fallback = () => ({ ...(ZONE_DEFAULTS[artistCountry] ?? ZONE_DEFAULTS.default) });
+  const fallback = () => ({ ...defaultDistribution(artistCountry) });
   if (!cities || cities.length === 0) return fallback();
 
   const sums: Record<Zone, number> = { frbech: 0, europe: 0, northAmerica: 0, africa: 0, rest: 0 };
@@ -151,6 +151,17 @@ export function zoneDistribution(
     out[zone] = couverture * mesure[zone] + (1 - couverture) * defaut[zone];
   }
   return out;
+}
+
+/**
+ * Répartition supposée pour un artiste dont on n'a pas les villes : sa table
+ * de pays si elle existe, sinon le profil de sa ZONE — jamais un défaut
+ * européen appliqué à un artiste africain.
+ */
+export function defaultDistribution(artistCountry: string): Record<Zone, number> {
+  const parPays = ZONE_DEFAULTS[artistCountry];
+  if (parPays) return { ...parPays };
+  return { ...ZONE_FALLBACKS[zoneOfCountry(artistCountry)] };
 }
 
 /** Coefficient de taux du territoire : moyenne des coefficients pondérée par la répartition. */

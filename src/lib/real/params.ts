@@ -89,11 +89,36 @@ export const TERRITORY_COEF: Record<Zone, number> = {
   africa: 0.15,
   rest: 0.5,
 };
-/** Répartition par défaut quand on n'a pas les villes, selon le pays de l'artiste. */
+/**
+ * Répartition par défaut quand on n'a pas les villes, selon le pays de l'artiste.
+ *
+ * Cette table ne peut pas lister tous les pays. Le repli ne doit donc PAS être
+ * une moyenne européenne, sinon un artiste ivoirien ou sénégalais absent de la
+ * table hérite d'un taux quasi français — l'erreur exacte que le coefficient
+ * territorial existe pour éviter. `ZONE_FALLBACKS` donne un profil par ZONE, et
+ * `zoneOfCountry` sait déjà ranger un pays dans sa zone : un pays non listé
+ * ici retombe donc sur le profil de sa région, pas sur celui de l'Europe.
+ */
 export const ZONE_DEFAULTS: Record<string, Record<Zone, number>> = {
   FR: { frbech: 0.7, europe: 0.12, northAmerica: 0.08, africa: 0.05, rest: 0.05 },
   TG: { frbech: 0.35, europe: 0.08, northAmerica: 0.05, africa: 0.45, rest: 0.07 },
   default: { frbech: 0.6, europe: 0.15, northAmerica: 0.1, africa: 0.05, rest: 0.1 },
+};
+
+/**
+ * Profil de repli par zone d'origine — HYPOTHÈSES.
+ *
+ * Un artiste d'Afrique francophone garde une diaspora réelle en France (d'où
+ * une part frbech qui n'est pas nulle), mais son audience reste majoritairement
+ * locale : c'est l'inverse du profil européen. Sans ces lignes, le repli seul
+ * écrasait la différence que tout le reste du calcul cherche à rendre.
+ */
+export const ZONE_FALLBACKS: Record<Zone, Record<Zone, number>> = {
+  frbech: { frbech: 0.7, europe: 0.12, northAmerica: 0.08, africa: 0.05, rest: 0.05 },
+  europe: { frbech: 0.15, europe: 0.6, northAmerica: 0.12, africa: 0.03, rest: 0.1 },
+  northAmerica: { frbech: 0.05, europe: 0.15, northAmerica: 0.65, africa: 0.03, rest: 0.12 },
+  africa: { frbech: 0.3, europe: 0.08, northAmerica: 0.05, africa: 0.5, rest: 0.07 },
+  rest: { frbech: 0.1, europe: 0.2, northAmerica: 0.2, africa: 0.05, rest: 0.45 },
 };
 
 /* ─── Cascades — HYPOTHÈSES cohérentes avec dealType ─── */

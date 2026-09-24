@@ -5,6 +5,8 @@
  */
 import { ARTISTS, PROJECTS, TRACKS, getArtist } from "./data";
 import { daysAgo, isoDay, isoMonth, monthsAgo, rngFor, DEMO_TODAY } from "./seed";
+import { TIER_FR, blendedRate } from "@/lib/real/params";
+import { defaultDistribution, territoryCoefficient } from "@/lib/real/territory";
 import type {
   AuditFinding,
   CountryStreams,
@@ -33,10 +35,38 @@ const DSP_SHARE: Record<DSP, number> = {
   other: 0.025,
 };
 
+/**
+ * Streams mensuels par auditeur mensuel Spotify — HYPOTHÈSE.
+ *
+ * Le générateur ne connaît qu'un artiste par ses auditeurs mensuels : tout le
+ * reste (streams quotidiens, revenus) en descend. Le facteur qui relie les deux
+ * est donc l'hypothèse la plus structurante du chemin pur, et il valait 2,6.
+ *
+ * 2,6 est faux d'un facteur 3 à 9. Mesuré sur les trois artistes à relevés, sur
+ * les 23 mois complets de l'historique (Σ streams tous DSP du mois ÷ auditeurs
+ * mensuels d'aujourd'hui) :
+ *
+ *   dadju 23,5 · kiko 15,4 · nono 8,5   — et 17,2 pour le roster entier
+ *   (Σ streams ÷ Σ auditeurs, donc dominé par le plus gros).
+ *
+ * L'écart entre 8,5 et 23,5 n'est pas du bruit : un auditeur mensuel n'écoute
+ * pas au même rythme selon la profondeur du catalogue et l'âge des sorties.
+ * Aucune valeur unique n'est juste pour les trois ; 16 est le compromis retenu,
+ * entre la médiane des trois (15,4) et la moyenne pondérée du roster (17,2).
+ * C'est une HYPOTHÈSE, à remplacer par une mesure dès qu'un artiste sans relevé
+ * en obtient un.
+ *
+ * La constante est partagée par `dailyBase` (série quotidienne) et
+ * `revenueSeries` (série mensuelle) : les deux DOIVENT bouger ensemble, sinon
+ * le graphique de streams et celui des revenus ne racontent plus le même
+ * artiste.
+ */
+const STREAMS_PER_LISTENER = 16;
+
 /** Streams quotidiens de base ≈ auditeurs mensuels × facteur d'écoute. */
 function dailyBase(artistId: string): number {
   const a = getArtist(artistId);
-  return (a.monthlyListeners * 2.6) / 30;
+  return (a.monthlyListeners * STREAMS_PER_LISTENER) / 30;
 }
 
 function releaseBoost(artistId: string, date: Date): number {
@@ -91,7 +121,41 @@ export function dailyTotals(artistId: string, days = 365) {
 
 /* ─────────────────────────── Revenus ─────────────────────────── */
 
-const STREAM_RATE = 0.0032; // € / stream moyen pondéré
+/**
+ * Taux € / stream du chemin pur — ancrage France × territoire de l'artiste.
+ *
+ * Il valait 0,0032 €, plat pour tout le monde. Un taux plat dit qu'un stream
+ * vaut la même chose à Paris et à Lomé, ce que le produit affirme faux
+ * partout ailleurs : l'estimateur de la couche réelle part du même ancrage
+ * France (SNEP 2025, mixé premium/gratuit) puis le corrige du territoire
+ * d'écoute. Mesuré sur les trois artistes à relevés, le taux réalisé s'étale
+ * de 0,00060 € (kiko, audience ouest-africaine) à 0,0042 € (dadju) — un
+ * facteur 7 que le taux plat ne voyait pas.
+ *
+ * Le chemin pur reprend donc les deux morceaux déjà publiés par la couche
+ * réelle, sans en réécrire aucun :
+ *   - `blendedRate(TIER_FR)` : le taux France, MESURÉ (SNEP 2025) ;
+ *   - `territoryCoefficient(...)` : la moyenne des coefficients de zone,
+ *     pondérée par la répartition de l'audience.
+ *
+ * La répartition, elle, est une HYPOTHÈSE : un artiste sans relevé n'a pas de
+ * villes, donc pas d'audience observée. On prend `ZONE_DEFAULTS[pays]`, la
+ * répartition par défaut que le produit associe déjà à ce pays — elle modélise
+ * la diaspora (un artiste togolais y est supposé écouté à 35 % en
+ * France/Belgique/Suisse), et c'est exactement la même table que la couche
+ * réelle utilise pour la part d'audience que les villes relevées ne couvrent
+ * pas. Les deux chemins racontent ainsi le même modèle de territoire.
+ *
+ * `ZONE_DEFAULTS` ne porte aujourd'hui que FR et TG : tout autre pays retombe
+ * sur `default`, dont le profil est majoritairement européen. Un artiste
+ * sénégalais ou ivoirien hérite donc d'un taux quasi français — c'est une
+ * limite connue de la table, pas du générateur.
+ */
+function streamRate(artistId: string): number {
+  const a = getArtist(artistId);
+  const dist = defaultDistribution(a.country);
+  return blendedRate(TIER_FR) * territoryCoefficient(dist);
+}
 
 /** Part relative de chaque source hors streaming, par artiste. */
 function sourceProfile(artistId: string): Record<RevenueSource, number> {
@@ -150,15 +214,19 @@ export function revenueSeries(artistId: string, months = 24, streamingOverride?:
   // tarif est celui du marché, pas celui de l'audience : le facteur plafonne
   // à 1 et les gros artistes gardent exactement leurs montants.
   const syncScale = Math.min(1, a.monthlyListeners / 1_000_000);
+  // Hors boucle : le taux ne dépend que de l'artiste, et surtout il ne doit
+  // consommer AUCUN tirage — le flux de `rand()` est partagé avec le reste de
+  // la série, le déplacer déplacerait toutes les données de démo.
+  const rate = streamRate(artistId);
 
   for (let i = months - 1; i >= 0; i--) {
     const m = monthsAgo(i);
     const month = isoMonth(m);
     // L'historique se lit à rebours : le mois i est i mois avant aujourd'hui,
     // donc i mois de croissance composée EN MOINS que le niveau d'aujourd'hui.
-    const monthlyStreams = a.monthlyListeners * 2.6 * Math.pow(1 + a.growthRate, -i);
+    const monthlyStreams = a.monthlyListeners * STREAMS_PER_LISTENER * Math.pow(1 + a.growthRate, -i);
     // `rand()` est consommé dans les deux cas : le bruit du reste de la série ne bouge pas.
-    const synthetic = monthlyStreams * STREAM_RATE * (0.92 + rand() * 0.16);
+    const synthetic = monthlyStreams * rate * (0.92 + rand() * 0.16);
     const streaming = streamingOverride?.get(month) ?? synthetic;
 
     out.push({ month, source: "streaming", amount: Math.round(streaming), artistId });
@@ -309,20 +377,39 @@ export function expensesFor(artistId: string, months = 24): Expense[] {
   // Au-dessus de 300 k auditeurs, les budgets (clips, marketing, tournée) grossissent
   // avec l'artiste ; plafond ×25 pour garder des montants plausibles sur une major.
   //
-  // En dessous, une décroissance linéaire ne suffit pas : elle suppose que
-  // l'émergent commande les mêmes postes en miniature. Or un artiste à 24 k
-  // auditeurs ne tourne pas un clip à 14 k € divisé par douze — il ne le tourne
-  // pas du tout, il n'a pas d'attaché de presse et sa tournée tient dans une
-  // voiture. Le générateur ne peut pas sauter ces postes (le tirage du RNG est
-  // séquentiel : changer le nombre de tirages déplacerait TOUTES les données de
-  // démo), alors on reproduit l'effet sur le montant, avec un exposant > 1.
-  // 1,4 est calibré sur l'émergent du roster : il ramène sa marge 12 mois de
-  // −217 % à une quinzaine de points négatifs, ce qu'on attend d'un artiste qui
-  // réinvestit un peu plus qu'il n'encaisse. L'exposant ne touche que les
-  // artistes sous le seuil — à 300 k il vaut exactement 1, donc la courbe reste
-  // continue et les artistes plus gros gardent leurs montants au centime près.
+  // En dessous, une décroissance linéaire suppose que l'émergent commande les
+  // mêmes postes en miniature. Or un artiste à 24 k auditeurs ne tourne pas un
+  // clip à 14 k € divisé par douze — il ne le tourne pas du tout, il n'a pas
+  // d'attaché de presse et sa tournée tient dans une voiture. Le générateur ne
+  // peut pas sauter ces postes (le tirage du RNG est séquentiel : changer le
+  // nombre de tirages déplacerait TOUTES les données de démo), alors on
+  // reproduit l'effet sur le montant, avec un exposant > 1. L'exposant ne touche
+  // que les artistes sous le seuil — à 300 k il vaut exactement 1, donc la
+  // courbe reste continue et les artistes plus gros gardent leurs montants au
+  // centime près.
+  //
+  // ATTENTION, CALIBRATION FRAGILE. L'exposant est réglé sur une MARGE, donc sur
+  // un rapport entre des dépenses qui sortent d'ici et des revenus qui, pour les
+  // artistes à relevés, sortent de la couche réelle. Toute correction du taux
+  // € / stream de cette couche déplace la marge sans que ce fichier bouge.
+  // C'est arrivé : le 24/09/2026 la pondération des villes par leur couverture
+  // d'audience (`zoneDistribution`) a multiplié le streaming de l'émergent par
+  // 2,65, et sa marge 12 mois est passée de ≈ −15 % à +56,4 % — plus rentable
+  // que l'artiste établi du roster, ce qui n'est pas crédible.
+  //
+  // Mesuré aujourd'hui, marge 12 mois de l'émergent (24 k auditeurs) :
+  //   exposant 1,40 → +56,4 %   1,15 → +18,0 %   1,10 → +6,9 %
+  //   exposant 1,05 →  −5,6 %   1,02 → −14,0 %   1,00 → −19,8 %
+  // On retient 1,02, qui rend la quinzaine de points négatifs visée à l'origine :
+  // un artiste qui réinvestit un peu plus qu'il n'encaisse. Les deux artistes
+  // au-dessus du seuil ne bougent pas (49,8 % et 50,2 % à tous les exposants).
+  //
+  // Le nombre n'est donc PAS une propriété de l'émergent : c'est un réglage
+  // contre une cible mouvante, à re-mesurer à chaque fois que le taux de la
+  // couche réelle change. La sortie structurelle serait d'exprimer les dépenses
+  // en part du revenu plutôt qu'en part de l'audience ; hors périmètre ici.
   const sizeRatio = a.monthlyListeners / 300_000;
-  const sizeFactor = sizeRatio >= 1 ? Math.min(25, sizeRatio) : Math.pow(sizeRatio, 1.4);
+  const sizeFactor = sizeRatio >= 1 ? Math.min(25, sizeRatio) : Math.pow(sizeRatio, 1.02);
   const scale = stageScale * sizeFactor;
   const projects = PROJECTS.filter((p) => p.artistId === artistId);
   const out: Expense[] = [];
@@ -504,7 +591,12 @@ export function auditFindings(artistId: string): AuditFinding[] {
   // Écart label sur le streaming (le "feature killer" du doc stratégie).
   const a = getArtist(artistId);
   if (a.dealType === "licence") {
-    const expected = Math.round(a.monthlyListeners * 2.6 * STREAM_RATE * 3 * 0.24);
+    // Trois mois de streaming pur × la part licence (24 %) — mêmes hypothèses
+    // de volume et de taux que `revenueSeries`, sinon l'écart signalé ici ne
+    // serait pas au même ordre de grandeur que les revenus affichés ailleurs.
+    const expected = Math.round(
+      a.monthlyListeners * STREAMS_PER_LISTENER * streamRate(artistId) * 3 * 0.24,
+    );
     fromRights.push({
       id: `${artistId}-af-label`,
       artistId,
