@@ -2,43 +2,21 @@
   "title": "vs Concurrents",
   "subtitle": "Chaque concurrent fait une partie du travail. From Day 1 est le seul à tout réunir — nativement, en France.",
   "hero": {
-    "kicker": "La thèse",
-    "title": "Personne ne réunit les 7",
-    "description": "Sept capacités Tier S. Chacune existe quelque part chez un concurrent — aucune plateforme au monde ne les réunit toutes.",
-    "features": {
-      "frRights": {
-        "title": "Droits FR natifs",
-        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE — suivis et réconciliés automatiquement"
-      },
-      "urssaf": {
-        "title": "URSSAF auto",
-        "desc": "Déclarations sociales générées et pré-remplies, zéro angoisse trimestrielle"
-      },
-      "audit": {
-        "title": "Audit royalties IA",
-        "desc": "Écarts entre attendu et versé détectés, courrier de réclamation généré"
-      },
-      "copilot": {
-        "title": "Copilot IA",
-        "desc": "Des réponses en français sur tes données — pas des dashboards muets"
-      },
-      "fractional": {
-        "title": "Fractional",
-        "desc": "Investissement fractionné dans les catalogues, le rail V3"
-      },
-      "index": {
-        "title": "Day 1 Index public",
-        "desc": "Score de santé carrière 0-100, comparable et partageable"
-      },
-      "valuation": {
-        "title": "Valorisation + simulateur",
-        "desc": "NPS × multiple, fourchette transparente, simulateur de deal"
-      }
-    }
+    "title": "Ce que personne d'autre ne réunit",
+    "caption": "capacités qu'aucun des {rivals} concurrents ne couvre entièrement, sur les {total} comparées ligne à ligne dans le tableau ci-dessous."
+  },
+  "kpis": {
+    "capabilities": "capacités comparées",
+    "capabilitiesHint": "From Day 1 les coche toutes",
+    "best": "le maximum chez un seul concurrent",
+    "covered": "capacités qui existent déjà ailleurs",
+    "price": "le prix d'entrée, par mois",
+    "priceValue": "{low} – {high}",
+    "priceHint": "du bedroom producer au label indé"
   },
   "table": {
-    "title": "Le tableau comparatif",
-    "subtitle": "12 capacités × 6 plateformes. Une seule colonne est pleine.",
+    "title": "Le tableau, capacité par capacité",
+    "scope": "{total} capacités × {products} plateformes",
     "capability": "Capacité",
     "legend": {
       "yes": "Inclus",
@@ -86,24 +64,47 @@
   },
   "window": {
     "title": "La fenêtre de marché",
-    "cards": {
+    "source": "deux ordres de grandeur, pas des relevés",
+    "facts": {
       "market": {
-        "title": "33 % du marché",
-        "desc": "Un tiers des revenus de la musique enregistrée vient d'artistes indépendants. En France, aucun outil consolidé ne les sert dans leur langue ni dans leur droit."
+        "value": "33 %",
+        "label": "des revenus de la musique enregistrée",
+        "desc": "Un tiers vient d'artistes indépendants. En France, aucun outil consolidé ne les sert dans leur langue ni dans leur droit."
       },
       "barrier": {
-        "title": "18 mois de R&D",
-        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE : la barrière réglementaire française coûte au moins 18 mois de R&D à n'importe quel acteur US qui voudrait entrer. Nous, c'est déjà construit."
-      },
-      "risk": {
-        "title": "Le vrai risque",
-        "desc": "Un géant — Spotify, Believe, Chartmetric — étend son offre vers le consolidé. La seule réponse : la vitesse d'exécution, et la profondeur France d'abord."
+        "value": "18 mois",
+        "label": "de R&D avant d'entrer en France",
+        "desc": "SACEM, ADAMI, SPEDIDAM, SPRE : c'est ce que coûterait la conformité française à un acteur américain qui voudrait entrer. Ici, c'est déjà construit."
       }
-    }
+    },
+    "readingTitle": "Ce qu'on en déduit",
+    "reading": "Un géant — Spotify, Believe, Chartmetric — peut étendre son offre vers le consolidé. La seule réponse tient en deux points : la vitesse d'exécution, et la profondeur France d'abord. C'est une lecture, pas une mesure."
   },
   "pitch": {
-    "kicker": "Pitch 90 secondes",
-    "quote": "Un artiste indépendant en France jongle entre six outils sans jamais voir sa carrière en entier : les stats d'un côté, un Excel de dépenses de l'autre, la SACEM qui verse avec 18 mois de retard, l'URSSAF en angoisse trimestrielle. From Day 1 réunit tout — analytics multi-DSP, revenus consolidés, droits français réconciliés, audit IA des royalties, valorisation de catalogue en temps réel. Chartmetric fait les stats. Stem fait les splits. Songtrust fait l'édition. Personne ne fait les sept, et personne ne les fera en France avant 18 mois. Nous, on est déjà là. De {low} à {high} par mois, du bedroom producer au label indé.",
+    "kicker": "Le pitch, en 90 secondes",
+    "quote": "Un artiste indépendant en France jongle entre six outils sans jamais voir sa carrière en entier : les stats d'un côté, un Excel de dépenses de l'autre, la SACEM qui verse avec 18 mois de retard, l'URSSAF en angoisse trimestrielle. From Day 1 réunit tout — analytics multi-DSP, revenus consolidés, droits français réconciliés, audit IA des royalties, valorisation de catalogue en temps réel. Chartmetric fait les stats. Stem fait les splits. Songtrust fait l'édition. Personne ne fait tout, et personne ne le fera en France sans reconstruire la conformité d'abord. De {low} à {high} par mois, du bedroom producer au label indé.",
     "author": "Le pitch investisseur — From Day 1"
+  },
+  "doors": {
+    "rights": "Les droits français, réconciliés",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM, SPRE",
+    "urssaf": "Les déclarations sociales",
+    "urssafValue": "générées, pré-remplies",
+    "audit": "L'écart entre attendu et versé",
+    "auditValue": "avec le courrier de réclamation",
+    "valuation": "Ce que vaut le catalogue",
+    "valuationValue": "NPS × multiple, fourchette",
+    "index": "Le score de carrière partageable",
+    "indexValue": "0 à 100",
+    "copilot": "Les réponses en français sur les données",
+    "copilotValue": "pas un dashboard muet"
+  },
+  "rest": {
+    "onboardings": "Pipeline partenaires",
+    "pulse": "Pulse",
+    "market": "Marché",
+    "revenue": "Revenus",
+    "roster": "Roster",
+    "catalog": "Catalogue"
   }
 }

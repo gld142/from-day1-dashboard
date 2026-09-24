@@ -1,46 +1,49 @@
 {
   "title": "Onboardings partenaires",
-  "subtitle": "Le pipeline qui fait de From Day 1 un standard de place — pas juste un outil de plus.",
+  "subtitle": "Les canaux par lesquels un artiste peut arriver ici, et où en est chacun.",
+  "hero": {
+    "title": "Partenaires déjà engagés",
+    "caption": "sur {total} canaux visés — en discussion, en pilote ou signés. {toContact, plural, =0 {Tous ont été contactés.} one {Un canal reste à contacter.} other {# canaux restent à contacter.}}"
+  },
   "kpis": {
-    "targeted": "Partenaires ciblés",
-    "targetedHint": "9 canaux, un owner chacun",
-    "inDiscussion": "En discussion",
-    "inDiscussionHint": "Conversations actives ce mois-ci",
-    "pilots": "Pilotes visés M+3",
-    "pilotsHint": "Believe 500 artistes + MaMA",
-    "goal": "Objectif M18",
-    "goalHint": "des inscriptions via partenaires"
+    "next": "prochaine échéance",
+    "nextNone": "plus rien devant",
+    "overdue": "échéances déjà passées",
+    "overdueHint": "par rapport au dernier relevé",
+    "signed": "partenaires signés",
+    "signedNone": "aucun à ce jour",
+    "owners": "owners nommés",
+    "ownersHint": "aucun partenaire orphelin"
   },
   "board": {
-    "title": "Pipeline",
-    "subtitle": "Change le statut d'un partenaire pour le faire avancer. Clique sur une card pour le détail complet.",
+    "title": "Les canaux, par étape puis par échéance",
+    "hint": "Changez un statut, ouvrez une fiche.",
     "columns": {
       "toContact": "À contacter",
       "discussion": "En discussion",
       "pilot": "Pilote",
       "signed": "Signé"
     },
-    "empty": "Personne ici pour l'instant.",
     "brings": "Ils apportent",
     "weBring": "On apporte",
-    "nextAction": "Prochaine action",
-    "owner": "Owner",
+    "ownedBy": "porté par {name}",
     "statusLabel": "Statut",
     "priority": "Priorité absolue",
-    "details": "Voir le détail"
+    "details": "Ouvrir la fiche du partenaire"
   },
   "dialog": {
-    "pitchTitle": "Pitch 90 secondes",
-    "metricsTitle": "Métriques de succès",
-    "risksTitle": "Risques & mitigations",
-    "mitigation": "Mitigation",
+    "pitchTitle": "Le pitch tenu devant eux",
+    "metricsTitle": "Ce à quoi on accepte d'être mesuré",
+    "metricsHint": "Des cibles écrites avant la signature, pas des résultats acquis.",
+    "risksTitle": "Ce qui peut faire échouer le deal",
+    "mitigation": "Parade",
     "m3": "M+3",
     "m9": "M+9",
     "m18": "M+18"
   },
   "method": {
-    "title": "La méthode",
-    "subtitle": "Cinq principes non négociables, appliqués à chaque partenariat.",
+    "title": "La méthode, cinq principes non négociables",
+    "targets": "Cible à M+18 : {share} % des inscriptions arrivent par un partenaire ; {pilots} pilotes sont visés à M+3. Ce sont des cibles d'équipe, pas des engagements signés — aucun chiffre de cette page ne les compte comme acquis.",
     "principles": {
       "activable": {
         "title": "Activable en moins de 6 mois",
@@ -51,7 +54,7 @@
         "desc": "Une personne, un partenaire. Pas de responsabilité diluée, pas de deal orphelin."
       },
       "metrics": {
-        "title": "Métriques claires",
+        "title": "Des cibles écrites d'avance",
         "desc": "Chaque partenariat a ses cibles M+3 / M+9 / M+18 écrites avant la signature."
       },
       "pilot": {
@@ -63,6 +66,28 @@
         "desc": "L'exclusivité se gagne avec des résultats — elle ne se donne jamais à la signature."
       }
     }
+  },
+  "doors": {
+    "comparatif": "Ce que personne d'autre ne réunit",
+    "comparatifValue": "le tableau, capacité par capacité",
+    "audit": "L'écart entre attendu et versé",
+    "auditValue": "l'argument n° 1 face à un label",
+    "rights": "Les droits français, réconciliés",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM, SPRE",
+    "roster": "Le roster, artiste par artiste",
+    "rosterValue": "ce qu'un partenaire verra",
+    "index": "Le score de carrière partageable",
+    "indexValue": "0 à 100",
+    "team": "Qui porte quel partenaire",
+    "teamValue": "{count, plural, one {# owner} other {# owners}}"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "welcome": "Le portail co-brandé",
+    "copilot": "Copilot",
+    "import": "Importer un relevé",
+    "catalog": "Catalogue",
+    "settings": "Réglages"
   },
   "partners": {
     "capitol": {

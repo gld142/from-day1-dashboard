@@ -1,46 +1,49 @@
 {
   "title": "Partner onboardings",
-  "subtitle": "The pipeline that makes From Day 1 an industry standard — not just another tool.",
+  "subtitle": "The channels an artist can arrive through, and where each one stands.",
+  "hero": {
+    "title": "Partners already engaged",
+    "caption": "out of {total} targeted channels — in discussion, in pilot or signed. {toContact, plural, =0 {All have been contacted.} one {One channel is still to contact.} other {# channels are still to contact.}}"
+  },
   "kpis": {
-    "targeted": "Targeted partners",
-    "targetedHint": "9 channels, one owner each",
-    "inDiscussion": "In discussion",
-    "inDiscussionHint": "Active conversations this month",
-    "pilots": "Pilots targeted M+3",
-    "pilotsHint": "Believe 500 artists + MaMA",
-    "goal": "M18 goal",
-    "goalHint": "of signups via partners"
+    "next": "next deadline",
+    "nextNone": "nothing ahead",
+    "overdue": "deadlines already past",
+    "overdueHint": "against the latest reading",
+    "signed": "signed partners",
+    "signedNone": "none so far",
+    "owners": "named owners",
+    "ownersHint": "no orphaned partner"
   },
   "board": {
-    "title": "Pipeline",
-    "subtitle": "Change a partner's status to move it forward. Click a card for the full detail.",
+    "title": "The channels, by stage then by deadline",
+    "hint": "Change a status, open a card.",
     "columns": {
       "toContact": "To contact",
       "discussion": "In discussion",
       "pilot": "Pilot",
       "signed": "Signed"
     },
-    "empty": "Nobody here yet.",
     "brings": "They bring",
     "weBring": "We bring",
-    "nextAction": "Next action",
-    "owner": "Owner",
+    "ownedBy": "owned by {name}",
     "statusLabel": "Status",
     "priority": "Top priority",
-    "details": "View details"
+    "details": "Open the partner card"
   },
   "dialog": {
-    "pitchTitle": "90-second pitch",
-    "metricsTitle": "Success metrics",
-    "risksTitle": "Risks & mitigations",
-    "mitigation": "Mitigation",
+    "pitchTitle": "The pitch we make to them",
+    "metricsTitle": "What we accept to be measured on",
+    "metricsHint": "Targets written before signing, not results already earned.",
+    "risksTitle": "What could sink the deal",
+    "mitigation": "Counter",
     "m3": "M+3",
     "m9": "M+9",
     "m18": "M+18"
   },
   "method": {
-    "title": "The method",
-    "subtitle": "Five non-negotiable principles, applied to every partnership.",
+    "title": "The method, five non-negotiable principles",
+    "targets": "M+18 target: {share}% of signups arrive through a partner; {pilots} pilots are aimed at M+3. These are team targets, not signed commitments — no number on this page counts them as earned.",
     "principles": {
       "activable": {
         "title": "Activable within 6 months",
@@ -51,7 +54,7 @@
         "desc": "One person, one partner. No diluted responsibility, no orphaned deal."
       },
       "metrics": {
-        "title": "Clear metrics",
+        "title": "Targets written up front",
         "desc": "Every partnership has its M+3 / M+9 / M+18 targets written before signing."
       },
       "pilot": {
@@ -63,6 +66,28 @@
         "desc": "Exclusivity is earned with results — it is never granted at signature."
       }
     }
+  },
+  "doors": {
+    "comparatif": "What nobody else brings together",
+    "comparatifValue": "the table, capability by capability",
+    "audit": "The gap between expected and paid",
+    "auditValue": "argument no. 1 facing a label",
+    "rights": "French rights, reconciled",
+    "rightsValue": "SACEM, ADAMI, SPEDIDAM, SPRÉ",
+    "roster": "The roster, artist by artist",
+    "rosterValue": "what a partner will see",
+    "index": "The shareable career score",
+    "indexValue": "0 to 100",
+    "team": "Who owns which partner",
+    "teamValue": "{count, plural, one {# owner} other {# owners}}"
+  },
+  "rest": {
+    "pulse": "Pulse",
+    "welcome": "The co-branded portal",
+    "copilot": "Copilot",
+    "import": "Import a statement",
+    "catalog": "Catalog",
+    "settings": "Settings"
   },
   "partners": {
     "capitol": {

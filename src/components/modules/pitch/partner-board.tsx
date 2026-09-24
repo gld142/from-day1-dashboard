@@ -1,23 +1,27 @@
 "use client";
 
 /**
- * Pipeline partenariats — kanban 4 colonnes + fiche détail (Dialog).
- * Les statuts vivent en state local (démo) : un Select par card fait
- * avancer le partenaire, pas besoin de drag & drop.
+ * Le pipeline partenaires — la liste, et la fiche détail.
+ * Refondue le 24/09 avec la page /onboardings.
+ *
+ * Le kanban à quatre colonnes est retiré. Il promettait un équilibre qui
+ * n'existe pas : six partenaires s'entassaient dans « En discussion » pendant
+ * que « Signé » affichait une boîte vide sur toute la hauteur de l'écran, et
+ * la colonne la plus chargée était celle qu'on lisait le moins bien. Les
+ * partenaires vivent désormais dans une liste, groupés par étape et **triés
+ * par échéance** : c'est la date qui dit quoi faire ensuite, pas la colonne.
+ *
+ * Une échéance dépassée est en rouge. C'est l'information que le kanban ne
+ * donnait nulle part — quatre des neuf dates étaient déjà derrière nous sans
+ * que rien ne le signale.
+ *
+ * Le statut reste modifiable partenaire par partenaire (select) : les
+ * comptes de la feuille d'en-tête se recalculent avec lui.
  */
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  ArrowUpRight,
-  CalendarClock,
-  Flame,
-  Gift,
-  HandHeart,
-  ShieldAlert,
-  Target,
-  UserRound,
-} from "lucide-react";
+import { ArrowUpRight, Flame, ShieldAlert, Target } from "lucide-react";
 import { TEAM } from "@/lib/demo/api";
 import { hashString } from "@/lib/demo/seed";
 import { artistGradient, fmtDate } from "@/lib/format";
@@ -40,6 +44,7 @@ import {
 
 export type PartnerStatus = "toContact" | "discussion" | "pilot" | "signed";
 
+/** Ordre du pipeline : de la porte fermée à la signature. */
 export const PARTNER_STATUSES: PartnerStatus[] = [
   "toContact",
   "discussion",
@@ -66,7 +71,7 @@ export type Partner = {
   /** Échéance de la prochaine action (ISO). */
   due: string;
   priority?: boolean;
-  /** Pilote visé à M+3 (alimente le KPI). */
+  /** Pilote visé à M+3 — une intention d'équipe, pas un engagement signé. */
   pilotM3?: boolean;
   /** Nombre de risques documentés dans le namespace i18n. */
   riskCount: 2 | 3;
@@ -182,7 +187,7 @@ function PartnerLogo({
     <span
       aria-hidden
       className={cn(
-        "inline-flex shrink-0 select-none items-center justify-center rounded-lg font-semibold text-white/95",
+        "inline-flex shrink-0 items-center justify-center rounded-lg font-semibold text-white/95 select-none",
         size === "lg" ? "size-11 text-sm" : "size-8 text-[11px]",
       )}
       style={{ background: artistGradient(partnerHue(partner.id)) }}
@@ -192,16 +197,19 @@ function PartnerLogo({
   );
 }
 
-/* ─────────────────────────── Card ─────────────────────────── */
+/* ─────────────────────────── Ligne ─────────────────────────── */
 
-function PartnerCard({
+function PartnerRow({
   partner,
   status,
+  overdue,
   onStatusChange,
   onOpen,
 }: {
   partner: Partner;
   status: PartnerStatus;
+  /** L'échéance est derrière nous : elle se lit en rouge. */
+  overdue: boolean;
   onStatusChange: (s: PartnerStatus) => void;
   onOpen: () => void;
 }) {
@@ -209,107 +217,80 @@ function PartnerCard({
   const locale = useLocale();
 
   return (
-    <div className="rounded-lg border bg-card p-3 transition-colors hover:border-brand/40">
-      <button
-        type="button"
-        onClick={onOpen}
-        className="group block w-full text-left"
-        aria-label={t("board.details")}
-      >
-        <div className="flex items-start gap-2.5">
-          <PartnerLogo partner={partner} />
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <span className="truncate text-sm font-semibold leading-tight">
-                {t(`partners.${partner.id}.name`)}
+    <li className="border-border/50 flex flex-col gap-2 border-t py-2.5 sm:flex-row sm:items-start sm:gap-4">
+      <div className="flex min-w-0 flex-1 items-start gap-2.5">
+        <PartnerLogo partner={partner} />
+        <div className="min-w-0 flex-1">
+          <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <button
+              type="button"
+              onClick={onOpen}
+              aria-label={t("board.details")}
+              className="text-left text-sm leading-tight font-semibold hover:underline"
+            >
+              {t(`partners.${partner.id}.name`)}
+              <ArrowUpRight className="ml-0.5 inline size-3.5 align-[-2px]" aria-hidden />
+            </button>
+            <span className="sheet-ink text-[11.5px]">
+              {t(`partners.${partner.id}.tag`)}
+            </span>
+            {partner.priority && (
+              <span className="text-destructive inline-flex items-center gap-1 text-[11px] font-semibold">
+                <Flame className="size-3" aria-hidden />
+                {t("board.priority")}
               </span>
-              <ArrowUpRight
-                className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-                aria-hidden
-              />
-            </div>
-            {/* Le badge Priorité vit sur la ligne du tag : à côté du nom, il
-                le tronquait (« Un… ») dans les colonnes du kanban à 1440 px. */}
-            <div className="flex items-center gap-1.5">
-              <span className="truncate text-[11px] text-muted-foreground">
-                {t(`partners.${partner.id}.tag`)}
-              </span>
-              {partner.priority && (
-                <Badge className="h-4 shrink-0 gap-1 bg-brand/15 px-1.5 text-[10px] text-brand">
-                  <Flame aria-hidden />
-                  {t("board.priority")}
-                </Badge>
+            )}
+          </p>
+
+          <p className="text-foreground/75 mt-1 text-[12px] leading-snug">
+            <span className="sheet-ink font-medium">{t("board.brings")}</span>{" "}
+            {t(`partners.${partner.id}.brings`)}
+          </p>
+          <p className="text-foreground/75 text-[12px] leading-snug">
+            <span className="sheet-ink font-medium">{t("board.weBring")}</span>{" "}
+            {t(`partners.${partner.id}.weBring`)}
+          </p>
+
+          <p className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[11.5px]">
+            <span
+              className={cn(
+                "font-semibold tabular-nums",
+                overdue && "text-destructive",
               )}
-            </div>
-          </div>
-        </div>
-
-        <dl className="mt-2.5 flex flex-col gap-1.5">
-          <div className="flex items-start gap-1.5">
-            <Gift className="mt-0.5 size-3 shrink-0 text-muted-foreground" aria-hidden />
-            <div className="min-w-0">
-              <dt className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                {t("board.brings")}
-              </dt>
-              <dd className="text-[12px] leading-snug">
-                {t(`partners.${partner.id}.brings`)}
-              </dd>
-            </div>
-          </div>
-          <div className="flex items-start gap-1.5">
-            <HandHeart className="mt-0.5 size-3 shrink-0 text-muted-foreground" aria-hidden />
-            <div className="min-w-0">
-              <dt className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                {t("board.weBring")}
-              </dt>
-              <dd className="text-[12px] leading-snug">
-                {t(`partners.${partner.id}.weBring`)}
-              </dd>
-            </div>
-          </div>
-        </dl>
-
-        <div className="mt-2.5 flex items-start gap-1.5 rounded-md bg-surface-2 px-2 py-1.5">
-          <CalendarClock className="mt-0.5 size-3 shrink-0 text-brand" aria-hidden />
-          <p className="min-w-0 text-[11px] leading-snug">
-            {t(`partners.${partner.id}.nextAction`)}
-            <span className="num mt-0.5 block text-[10px] text-muted-foreground">
+            >
               {fmtDate(locale, partner.due)}
+            </span>
+            <span className="text-foreground/75">
+              {t(`partners.${partner.id}.nextAction`)}
+            </span>
+            <span className="sheet-ink">
+              {t("board.ownedBy", { name: ownerName(partner.ownerId) })}
             </span>
           </p>
         </div>
-      </button>
-
-      <div className="mt-2.5 flex items-center justify-between gap-2">
-        <span className="inline-flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground">
-          <UserRound className="size-3 shrink-0" aria-hidden />
-          <span className="truncate">{ownerName(partner.ownerId)}</span>
-        </span>
-        <Select
-          value={status}
-          onValueChange={(v) => onStatusChange(v as PartnerStatus)}
-        >
-          <SelectTrigger
-            size="sm"
-            className="max-w-36 text-[11px]"
-            aria-label={t("board.statusLabel")}
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {PARTNER_STATUSES.map((s) => (
-              <SelectItem key={s} value={s} className="text-xs">
-                {t(`board.columns.${s}`)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
-    </div>
+
+      <Select value={status} onValueChange={(v) => onStatusChange(v as PartnerStatus)}>
+        <SelectTrigger
+          size="sm"
+          className="w-full shrink-0 text-[11px] sm:w-36"
+          aria-label={t("board.statusLabel")}
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {PARTNER_STATUSES.map((s) => (
+            <SelectItem key={s} value={s} className="text-xs">
+              {t(`board.columns.${s}`)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </li>
   );
 }
 
-/* ─────────────────────────── Dialog détail ─────────────────────────── */
+/* ─────────────────────────── Fiche détail ─────────────────────────── */
 
 function PartnerDialog({
   partner,
@@ -342,20 +323,20 @@ function PartnerDialog({
               </div>
             </DialogHeader>
 
-            {/* Pitch 90 secondes */}
+            {/* Le pitch tenu devant ce partenaire. */}
             <section>
-              <h3 className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              <h3 className="text-muted-foreground mb-1.5 text-[11px] font-medium tracking-wide uppercase">
                 {t("dialog.pitchTitle")}
               </h3>
-              <blockquote className="rounded-lg bg-brand/8 p-3 font-heading text-[13px] italic leading-relaxed">
+              <blockquote className="bg-secondary rounded-lg p-3 text-[13px] leading-relaxed italic">
                 {t(`partners.${partner.id}.pitch`)}
               </blockquote>
             </section>
 
-            {/* Métriques de succès */}
+            {/* Ce à quoi on s'engage à se mesurer — des cibles, pas des acquis. */}
             <section>
-              <h3 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                <Target className="size-3 text-brand" aria-hidden />
+              <h3 className="text-muted-foreground mb-1.5 flex items-center gap-1.5 text-[11px] font-medium tracking-wide uppercase">
+                <Target className="size-3" aria-hidden />
                 {t("dialog.metricsTitle")}
               </h3>
               <ul className="flex flex-col">
@@ -364,7 +345,7 @@ function PartnerDialog({
                     key={m}
                     className="hairline-b flex items-start gap-2.5 py-2 last:shadow-none"
                   >
-                    <span className="num mt-0.5 inline-flex w-10 shrink-0 items-center justify-center rounded-full bg-brand/15 px-1.5 py-0.5 text-[10px] font-semibold text-brand">
+                    <span className="bg-secondary text-foreground/80 mt-0.5 inline-flex w-10 shrink-0 items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
                       {t(`dialog.${m}`)}
                     </span>
                     <span className="text-[13px] leading-snug">
@@ -373,26 +354,30 @@ function PartnerDialog({
                   </li>
                 ))}
               </ul>
+              <p className="text-muted-foreground mt-1.5 text-[11px]">
+                {t("dialog.metricsHint")}
+              </p>
             </section>
 
-            {/* Risques & mitigations */}
+            {/* Ce qui peut faire échouer le deal, et la parade écrite d'avance. */}
             <section>
-              <h3 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                <ShieldAlert className="size-3 text-warning" aria-hidden />
+              <h3 className="text-muted-foreground mb-1.5 flex items-center gap-1.5 text-[11px] font-medium tracking-wide uppercase">
+                <ShieldAlert className="text-warning size-3" aria-hidden />
                 {t("dialog.risksTitle")}
               </h3>
               <ul className="flex flex-col gap-2">
                 {Array.from({ length: partner.riskCount }, (_, i) => `r${i + 1}`).map(
                   (r) => (
-                    <li key={r} className="rounded-lg bg-surface-2 p-2.5">
-                      <p className="text-[13px] font-medium leading-snug">
+                    <li key={r} className="bg-secondary rounded-lg p-2.5">
+                      <p className="text-[13px] leading-snug font-medium">
                         {t(`partners.${partner.id}.risks.${r}.risk`)}
                       </p>
-                      <p className="mt-1 text-[12px] leading-snug text-muted-foreground">
-                        <span className="font-medium text-success">
+                      <p className="text-muted-foreground mt-1 text-[12px] leading-snug">
+                        <span className="text-success font-medium">
                           {t("dialog.mitigation")}
-                        </span>{" "}
-                        — {t(`partners.${partner.id}.risks.${r}.mitigation`)}
+                        </span>
+                        {" — "}
+                        {t(`partners.${partner.id}.risks.${r}.mitigation`)}
                       </p>
                     </li>
                   ),
@@ -406,13 +391,21 @@ function PartnerDialog({
   );
 }
 
-/* ─────────────────────────── Board ─────────────────────────── */
+/* ─────────────────────────── Liste ─────────────────────────── */
 
-export function PartnerBoard({
+/**
+ * Les partenaires, par étape puis par échéance. Une étape sans personne ne
+ * laisse pas de boîte vide : elle disparaît, et son compte reste lisible dans
+ * la feuille d'en-tête de la page.
+ */
+export function PartnerList({
   statuses,
+  todayIso,
   onStatusChange,
 }: {
   statuses: Record<PartnerId, PartnerStatus>;
+  /** « Aujourd'hui » de la démo : c'est lui qui dit ce qui est en retard. */
+  todayIso: string;
   onStatusChange: (id: PartnerId, s: PartnerStatus) => void;
 }) {
   const t = useTranslations("onboardings");
@@ -421,43 +414,31 @@ export function PartnerBoard({
 
   return (
     <>
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-1">
         {PARTNER_STATUSES.map((col) => {
-          const items = PARTNERS.filter((p) => statuses[p.id] === col);
+          const items = PARTNERS.filter((p) => statuses[p.id] === col).sort((a, b) =>
+            a.due.localeCompare(b.due),
+          );
+          if (items.length === 0) return null;
           return (
-            <div key={col} className="min-w-0 rounded-xl border bg-surface-2/50 p-3">
-              <div className="mb-3 flex items-center justify-between px-0.5">
-                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  {t(`board.columns.${col}`)}
-                </h3>
-                <span
-                  className={cn(
-                    "num inline-flex size-5 items-center justify-center rounded-full text-[10px] font-semibold",
-                    items.length > 0
-                      ? "bg-brand/15 text-brand"
-                      : "bg-muted text-muted-foreground",
-                  )}
-                >
-                  {items.length}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2.5">
+            <section key={col} className="mt-3 first:mt-0">
+              <h3 className="sheet-ink flex items-baseline gap-2 text-[11px] font-semibold tracking-[0.08em] uppercase">
+                <span>{t(`board.columns.${col}`)}</span>
+                <span className="tabular-nums">{items.length}</span>
+              </h3>
+              <ul>
                 {items.map((p) => (
-                  <PartnerCard
+                  <PartnerRow
                     key={p.id}
                     partner={p}
                     status={col}
+                    overdue={p.due < todayIso}
                     onStatusChange={(s) => onStatusChange(p.id, s)}
                     onOpen={() => setOpenId(p.id)}
                   />
                 ))}
-                {items.length === 0 && (
-                  <p className="rounded-lg border border-dashed px-3 py-6 text-center text-[11px] text-muted-foreground">
-                    {t("board.empty")}
-                  </p>
-                )}
-              </div>
-            </div>
+              </ul>
+            </section>
           );
         })}
       </div>
