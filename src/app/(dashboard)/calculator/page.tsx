@@ -132,6 +132,29 @@ export default function CalculatorPage() {
     [ids, growthDelta, horizon],
   );
 
+  /* Qui porte la projection.
+   *
+   * En vue structure la courbe somme les artistes, et rien ne disait lequel
+   * la tire. Même hypothèses, même horizon que le total — c'est la même
+   * projection, simplement décomposée. */
+  const byArtist = useMemo(() => {
+    if (!aggregated) return [];
+    return ARTISTS.map((a) => {
+      const serie = revenueForecast(a.id, { growthDelta, horizon });
+      const reel = serie.filter((p) => p.actual !== null);
+      const projete = serie.filter((p) => p.projected !== null);
+      const depart = reel.slice(-12).reduce((x, p) => x + (p.actual ?? 0), 0);
+      const arrivee = projete.slice(-12).reduce((x, p) => x + (p.projected ?? 0), 0);
+      return {
+        id: a.id,
+        name: a.name,
+        depart,
+        arrivee,
+        delta: depart === 0 ? 0 : ((arrivee - depart) / depart) * 100,
+      };
+    }).sort((x, z) => z.arrivee - x.arrivee);
+  }, [aggregated, growthDelta, horizon]);
+
   const chartData = useMemo<ForecastChartPoint[]>(() => {
     const lastActualIdx = forecast.reduce(
       (idx, p, i) => (p.actual !== null ? i : idx),
@@ -284,6 +307,27 @@ export default function CalculatorPage() {
               {t("chart.band")}
             </span>
           </div>
+
+          {byArtist.length > 0 && (
+            <div className="border-line/50 mt-3 border-t pt-2.5">
+              <p className="text-muted-foreground mb-1.5 text-[10.5px] font-semibold tracking-[0.08em] uppercase">
+                {t("byArtist.title")}
+              </p>
+              <ul className="space-y-1 text-xs">
+                {byArtist.map((r) => (
+                  <li key={r.id} className="flex items-baseline justify-between gap-3">
+                    <span className="truncate font-medium">{r.name}</span>
+                    <span className="num sheet-ink shrink-0 tabular-nums">
+                      {eur(r.depart)} → {eur(r.arrivee)}{" "}
+                      <span className={r.delta >= 0 ? "text-success" : "text-destructive"}>
+                        {fmtPct(locale, r.delta)}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <AffiliatedPoints
             points={[

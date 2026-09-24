@@ -97,5 +97,8 @@
     "valuationValue": "what the catalog is worth",
     "catalog": "Catalog",
     "catalogValue": "what carries the revenue"
+  },
+  "byArtist": {
+    "title": "What each artist contributes · current 12 months → projected 12 months"
   }
 }

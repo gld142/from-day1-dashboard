@@ -97,5 +97,8 @@
     "valuationValue": "ce que vaut le catalogue",
     "catalog": "Catalogue",
     "catalogValue": "ce qui porte les revenus"
+  },
+  "byArtist": {
+    "title": "Ce que chaque artiste apporte · 12 mois actuels → 12 mois projetés"
   }
 }
