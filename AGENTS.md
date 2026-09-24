@@ -47,7 +47,16 @@ rendu serveur (persona par défaut, montants compactés) et mesurent autre chose
 que ce qu'elles croient. Toujours passer par `E2E_SERVER=prod` avec un build
 préalable dans `.next-e2e`, comme documenté dans `playwright.config.ts`.
 
-## .claude/launch.json contient un chemin propre à une machine
+## Comparer au dashboard EN LIGNE : refaire le témoin
 
-L'entrée `day1-prod-temoin` pointe vers `/tmp/day1-prod`, un worktree servi sur
-le port 3003. Le chemin n'est pas portable : ne rien bâtir dessus.
+`origin/main` est la version déployée. Pour vérifier qu'une refonte n'enlève
+rien, la servir à côté plutôt que lire des diffs :
+
+    git worktree add /tmp/day1-prod origin/main
+    cp -a node_modules /tmp/day1-prod/node_modules   # un lien symbolique casse Turbopack
+    # puis une entrée launch.json sur le port 3003, retirée après usage
+
+Le 24/09/2026, ce témoin a montré que tout ce qui avait disparu de /overview
+existait ailleurs — sauf le graphique « Revenus × streams » et le panneau
+« Brief du jour », depuis remis. Ne pas laisser l'entrée launch.json derrière
+soi : le chemin `/tmp` n'est pas portable.

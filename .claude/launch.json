@@ -9,20 +9,6 @@
         "dev"
       ],
       "port": 3000
-    },
-    {
-      "name": "day1-prod-temoin",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "--prefix",
-        "/tmp/day1-prod",
-        "run",
-        "dev",
-        "--",
-        "-p",
-        "3003"
-      ],
-      "port": 3003
     }
   ]
 }
