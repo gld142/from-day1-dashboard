@@ -99,28 +99,57 @@ export function zoneOfCountry(label: string): Zone {
 
 /**
  * Répartition par zone d'écoute d'un artiste.
- * Sans villes (relevé absent), on retombe sur la répartition par défaut du
- * pays de l'artiste (`ZONE_DEFAULTS`). Avec des villes, on pondère par les
- * auditeurs et on normalise à 1.
+ *
+ * Sans villes (relevé absent), on retombe sur la répartition par défaut du pays
+ * de l'artiste (`ZONE_DEFAULTS`). Avec des villes, on pondère par les auditeurs.
+ *
+ * `audience` — les auditeurs mensuels de l'artiste — change tout quand il est
+ * fourni. Spotify ne publie que les CINQ premières villes : elles ne couvrent
+ * qu'une fraction de l'audience, et cette fraction est par construction la plus
+ * concentrée. Normaliser à 1 sur ces seules villes revient à prêter à toute
+ * l'audience le mélange de sa pointe.
+ *
+ * Mesuré sur les artistes de la démo : les 5 villes de Kiko totalisent 10 157
+ * auditeurs sur 23 888, soit 42,5 % — et elles sont toutes africaines. Son
+ * coefficient tombait donc à 0,150, alors que le produit affirme par ailleurs
+ * (ZONE_DEFAULTS.TG) qu'un artiste togolais a 35 % d'audience France/Belgique/
+ * Suisse et 8 % d'Europe. Ses auditeurs européens existent ; ils sont seulement
+ * trop dispersés pour entrer dans un top 5.
+ *
+ * On mélange donc ce qui est MESURÉ (la part couverte) et ce qui est SUPPOSÉ
+ * (le défaut du pays, pour le reste), au prorata de la couverture. Chez Dadju
+ * et Nono l'effet est nul à 6 % près, leur pointe ressemblant déjà au défaut
+ * français ; chez Kiko le coefficient passe de 0,150 à 0,397.
  */
 export function zoneDistribution(
   cities: SnapshotCity[] | null,
   artistCountry: string,
+  audience?: number,
 ): Record<Zone, number> {
-  if (!cities || cities.length === 0) {
-    return { ...(ZONE_DEFAULTS[artistCountry] ?? ZONE_DEFAULTS.default) };
-  }
+  const fallback = () => ({ ...(ZONE_DEFAULTS[artistCountry] ?? ZONE_DEFAULTS.default) });
+  if (!cities || cities.length === 0) return fallback();
+
   const sums: Record<Zone, number> = { frbech: 0, europe: 0, northAmerica: 0, africa: 0, rest: 0 };
   let total = 0;
   for (const city of cities) {
     sums[zoneOfCountry(city.country)] += city.listeners;
     total += city.listeners;
   }
-  if (total <= 0) {
-    return { ...(ZONE_DEFAULTS[artistCountry] ?? ZONE_DEFAULTS.default) };
-  }
+  if (total <= 0) return fallback();
+
+  const mesure = {} as Record<Zone, number>;
+  for (const zone of ZONES) mesure[zone] = sums[zone] / total;
+
+  // Sans l'audience totale, on ne peut pas savoir ce que les villes couvrent :
+  // on garde l'ancien comportement plutôt que d'inventer une couverture.
+  if (!audience || audience <= total) return mesure;
+
+  const couverture = total / audience;
+  const defaut = fallback();
   const out = {} as Record<Zone, number>;
-  for (const zone of ZONES) out[zone] = sums[zone] / total;
+  for (const zone of ZONES) {
+    out[zone] = couverture * mesure[zone] + (1 - couverture) * defaut[zone];
+  }
   return out;
 }
 

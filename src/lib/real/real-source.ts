@@ -522,7 +522,16 @@ export function realDailyEstimates(
   const artist = getArtist(artistId);
   const byTrack = dailyByTrack(ctx, days);
   const byTrack365 = days === 365 ? byTrack : dailyByTrack(ctx, 365);
-  const territoryCoef = territoryCoefficient(zoneDistribution(ctx.last.topCities, artist.country));
+  /* Les auditeurs mensuels servent à savoir ce que les cinq villes du relevé
+     couvrent réellement : au-delà, la répartition retombe sur le défaut du
+     pays. Voir le commentaire de `zoneDistribution`. */
+  const territoryCoef = territoryCoefficient(
+    zoneDistribution(
+      ctx.last.topCities,
+      artist.country,
+      ctx.last.spotify.monthlyListeners ?? artist.monthlyListeners,
+    ),
+  );
   const deezerPro = isDeezerPro({
     monthlyStreams: spotifySum(byTrack365, 30),
     monthlyListeners: ctx.last.spotify.monthlyListeners ?? artist.monthlyListeners,
