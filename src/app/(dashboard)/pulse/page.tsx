@@ -448,13 +448,18 @@ export default function PulsePage() {
       {/* En-tête : la salutation, l'heure du relevé, et la question. */}
       <div className="mb-3.5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
+          {/* Une structure qui zoome sur un artiste n'EST pas cet artiste :
+              « Bonjour Dadju » s'adressait au label comme à son artiste. On
+              salue l'artiste quand on est l'artiste, on annonce le zoom
+              quand on est la structure. */}
           <h2 className="font-heading text-xl font-semibold tracking-tight">
-            {t("greeting", { name: v ? v.artist.name : LABEL.name })}
+            {isLabel && v
+              ? t("greetingFocus", { name: v.artist.name })
+              : t("greeting", { name: v ? v.artist.name : LABEL.name })}
           </h2>
           <p className="text-muted-foreground mt-0.5 text-xs">
             <span className="bg-success mr-1.5 inline-block size-1.5 rounded-full align-[1px] shadow-[0_0_0_3px_color-mix(in_oklab,var(--success)_22%,transparent)]" />
-            {dateChip} · {t("hero.reading")} ·{" "}
-            <span className="font-mono text-[10.5px]">{t("hero.nextReading")}</span>
+            {dateChip} · {t("hero.reading")}
           </p>
         </div>
         <Link
@@ -552,8 +557,10 @@ export default function PulsePage() {
               <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
                 {eur(v.est?.day.artistShare.mid ?? 0)}
               </p>
+              {/* Le chiffre est la PART ARTISTE, pas le brut : le côté label
+                  écrit « Brut master », celui-ci ne disait rien. */}
               <p className="sheet-ink mt-1 text-xs">
-                {t("money.yesterday")} ·{" "}
+                {t("money.yourShare")} · {t("money.yesterday")} ·{" "}
                 {t("money.range", {
                   low: eur(v.est?.day.artistShare.low ?? 0),
                   high: eur(v.est?.day.artistShare.high ?? 0),

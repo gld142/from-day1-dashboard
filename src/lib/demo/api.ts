@@ -640,12 +640,32 @@ export function revenueForecast(
 
 /* ─────────────── Agrégats streams ─────────────── */
 
+/**
+ * Toute fenêtre se DÉCOUPE dans la même série longue, jamais ne se demande à
+ * sa propre longueur.
+ *
+ * Mesuré : la reconstitution d'historique dépend de la longueur demandée.
+ * `dailyTotals(id, 30)` et la queue de `dailyTotals(id, 365)` ne donnaient pas
+ * la même somme — 109 645 814 contre 109 656 328 pour Dadju (+0,010 %),
+ * 444 219 contre 453 912 pour Kiko (+2,182 %). /roster sommait les premières,
+ * /pulse découpait les secondes : 158,6 M d'un côté, 158,4 M de l'autre, pour
+ * la même question. Une seule série de référence, et l'écart disparaît.
+ *
+ * C'est déjà la règle des estimations par plateforme (voir `dspEstimatesOf`).
+ */
+const WINDOW_BASE_DAYS = 365;
+
+function windowTotals(artistId: string, days: number) {
+  const base = Math.max(WINDOW_BASE_DAYS, days);
+  return dailyTotals(artistId, base).slice(-days);
+}
+
 export function sumStreams(artistId: string, days: number): number {
-  return dailyTotals(artistId, days).reduce((s, d) => s + d.streams, 0);
+  return windowTotals(artistId, days).reduce((s, d) => s + d.streams, 0);
 }
 
 export function streamsDelta(artistId: string, days: number): number {
-  const series = dailyTotals(artistId, days * 2);
+  const series = windowTotals(artistId, days * 2);
   const prev = series.slice(0, days).reduce((s, d) => s + d.streams, 0);
   const cur = series.slice(days).reduce((s, d) => s + d.streams, 0);
   return prev === 0 ? 0 : ((cur - prev) / prev) * 100;
@@ -825,14 +845,26 @@ export type PnL = {
 };
 
 /** P&L par artiste sur N mois (12 par défaut) — le cœur de la vue label. */
+/**
+ * P&L par artiste sur les `months` derniers mois COMPLETS.
+ *
+ * Le mois en cours est exclu, comme dans `yearWindow` : il est partiel, et le
+ * compter ferait mentir le total comme la marge. Mesuré avant cette exclusion :
+ * /roster annonçait 15,1 M € de revenus sur 12 mois pendant que la bande
+ * « L'année du roster » de /pulse en annonçait 15,8 M € — deux fenêtres de
+ * douze mois décalées d'un mois, sous deux libellés que rien ne distingue.
+ */
 export function pnlByArtist(months = 12): PnL[] {
-  const monthsSet = new Set(
-    monthlyRevenueTotals(ARTISTS[0].id, 24)
-      .map((m) => m.month)
-      .slice(-months),
-  );
+  /* Exactement la fenêtre de `yearWindow` : 25 mois demandés, le dernier
+     (partiel) écarté, les `months` précédents retenus. Demander 24 mois ici
+     et 25 là-bas suffisait à décaler le total — la série mensuelle dépend,
+     elle aussi, de la longueur demandée. */
+  const complets = monthlyRevenueTotals(ARTISTS[0].id, 25)
+    .map((m) => m.month)
+    .slice(0, -1);
+  const monthsSet = new Set(complets.slice(-months));
   return ARTISTS.map((a) => {
-    const rev = monthlyRevenueTotals(a.id, 24)
+    const rev = monthlyRevenueTotals(a.id, 25)
       .filter((m) => monthsSet.has(m.month))
       .reduce((s, m) => s + m.amount, 0);
     const exp = expensesFor(a.id)

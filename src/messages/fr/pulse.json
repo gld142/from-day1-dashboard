@@ -4,6 +4,7 @@
   "subtitleLabel": "Le pouls du roster ce matin — tous artistes confondus.",
   "backToRoster": "Vue roster",
   "greeting": "Bonjour {name}",
+  "greetingFocus": "Le point sur {name}",
   "hero": {
     "ranges": {
       "d7": "7 j",
@@ -14,8 +15,7 @@
     "peak": "pic {value} · {date}",
     "todayArtist": "streams hier, toutes plateformes",
     "todayLabel": "streams hier, {count} artistes",
-    "nextReading": "prochain demain 09:00",
-    "reading": "relevé de 09:00"
+    "reading": "relevé de 09:00, quotidien"
   },
   "kpis": {
     "streams7d": "Streams · 7 jours",
@@ -197,7 +197,8 @@
       "m12": "12 mois",
       "net12m": "net 12 m"
     },
-    "detail": "voir le détail →"
+    "detail": "voir le détail →",
+    "yourShare": "Ta part"
   },
   "audience": {
     "listeners": "auditeurs mensuels",
