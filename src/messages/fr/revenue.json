@@ -191,5 +191,11 @@
     "urssafValue": "cotisations et déclaration",
     "calculator": "Simulateur de deals",
     "calculatorValue": "tester un contrat"
+  },
+  "composed": {
+    "title": "Revenus × streams",
+    "subtitle": "12 mois complets, même fenêtre que le chiffre ci-dessus",
+    "revenue": "Revenus du mois",
+    "streams": "Streams du mois"
   }
 }

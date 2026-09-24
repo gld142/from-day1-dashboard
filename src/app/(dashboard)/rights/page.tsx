@@ -143,9 +143,16 @@ export default function RightsPage() {
     const expectedPending = rows
       .filter((r) => r.status === "pending")
       .reduce((s, r) => s + r.expected, 0);
-    const gapRows = rows.filter((r) => r.status === "gap-detected");
-    const gapTotal = gapRows.reduce(
-      (s, r) => s + Math.max(0, r.expected - r.received),
+    /* L'écart se compte relevé par relevé — jamais sur l'agrégat (organisme,
+       période). Une case agrégée bascule en écart dès qu'UN artiste y est
+       sous-versé : son « attendu − reçu » embarquerait alors les résidus des
+       artistes normalement payés de la même case (le reçu tourne autour de
+       l'attendu sans le toucher), un montant qu'on ne peut réclamer à
+       personne. Compté sur les relevés, le KPI vaut la somme des écarts de la
+       ventilation par artiste, et c'est le même chiffre que /audit. */
+    const gapStatements = statements.filter((s) => s.status === "gap-detected");
+    const gapTotal = gapStatements.reduce(
+      (sum, s) => sum + Math.max(0, s.expected - s.received),
       0,
     );
 
@@ -161,10 +168,10 @@ export default function RightsPage() {
       received12m,
       expectedPending,
       gapTotal,
-      gapCount: gapRows.length,
+      gapCount: gapStatements.length,
       top: top ? { organism: top[0], amount: top[1] } : null,
     };
-  }, [rows]);
+  }, [rows, statements]);
 
   /**
    * Ventilation par artiste — vue structure agrégée uniquement.

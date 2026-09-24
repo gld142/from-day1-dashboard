@@ -128,3 +128,57 @@ describe("rightsStatements (artistes réels)", () => {
     expect(findings[0].status).toBe("letter-generated");
   });
 });
+
+/**
+ * Le KPI « Écarts détectés » de /rights, en vue structure, porte le total du
+ * roster. Deux façons de le calculer, une seule est réclamable.
+ */
+describe("l'écart du roster se compte relevé par relevé", () => {
+  const roster = ARTISTS.flatMap((a) => rightsStatements(a.id));
+  const ecart = (ss: typeof roster) =>
+    ss
+      .filter((s) => s.status === "gap-detected")
+      .reduce((t, s) => t + Math.max(0, s.expected - s.received), 0);
+
+  it("le total du roster est la somme des écarts artiste par artiste", () => {
+    const parArtiste = ARTISTS.map((a) => ecart(rightsStatements(a.id)));
+    expect(parArtiste.every((v) => v >= 0)).toBe(true);
+    expect(ecart(roster)).toBe(parArtiste.reduce((s, v) => s + v, 0));
+    expect(ecart(roster)).toBeGreaterThan(0);
+  });
+
+  /**
+   * Le piège que ce découpage évite. Agrégée par (organisme, période), une case
+   * bascule en écart dès qu'UN artiste y est sous-versé ; son « attendu − reçu »
+   * embarque alors les résidus des artistes normalement payés de la même case
+   * (le reçu tourne autour de l'attendu sans le toucher). Le total enfle d'un
+   * montant qu'on ne peut réclamer à personne — 7 314 € sur les données du
+   * 24/09/2026, soit 4,6 % du total. Si cette marche venait à disparaître, ce
+   * test le dirait : le commentaire de /rights n'aurait alors plus d'objet.
+   */
+  it("l'agrégat (organisme, période) enfle le total d'un résidu non attribuable", () => {
+    const cases = new Map<string, { expected: number; received: number; gap: boolean }>();
+    for (const s of roster) {
+      const key = `${s.organism}:${s.period}`;
+      const cur = cases.get(key) ?? { expected: 0, received: 0, gap: false };
+      cur.expected += s.expected;
+      cur.received += s.received;
+      if (s.status === "gap-detected") cur.gap = true;
+      cases.set(key, cur);
+    }
+    const agrege = Array.from(cases.values())
+      .filter((c) => c.gap)
+      .reduce((t, c) => t + Math.max(0, c.expected - c.received), 0);
+    expect(agrege).toBeGreaterThan(ecart(roster));
+  });
+
+  it("/audit reprend le total du roster à l'euro près, sur les mêmes relevés", () => {
+    const findings = ARTISTS.flatMap((a) => auditFindings(a.id)).filter((f) =>
+      ORGANISM_SOURCES.has(f.source),
+    );
+    expect(findings).toHaveLength(roster.filter((s) => s.status === "gap-detected").length);
+    expect(findings.reduce((t, f) => t + Math.max(0, f.expected - f.reported), 0)).toBe(
+      ecart(roster),
+    );
+  });
+});

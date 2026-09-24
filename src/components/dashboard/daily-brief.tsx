@@ -19,6 +19,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import {
+  ARTISTS,
   CONTRACTS,
   dailyTotals,
   getArtist,
@@ -104,12 +105,20 @@ export function DailyBrief() {
     const months = monthlyRevenueTotals(id, 24);
     const monthRevenue = months[months.length - 1]?.amount ?? 0;
     const top = topTracks(id, 7, 1)[0];
-    const nextShow = tourDates(id).find((d) => d.status === "upcoming");
+    /* En vue structure sans zoom, `artistId` retombe sur l'artiste de démo :
+       lire les écarts et la prochaine date sur lui seul les présentait comme
+       ceux du roster. Les alertes de contrat, elles, balayaient déjà tout le
+       roster — c'était le seul des trois à être juste. */
+    const perimetre = aggregated ? ARTISTS.map((a) => a.id) : [id];
+    const nextShow = perimetre
+      .flatMap((x) => tourDates(x).filter((d) => d.status === "upcoming"))
+      .sort((a, b) => a.date.localeCompare(b.date))[0];
     const contractAlerts = CONTRACTS.filter((c) =>
       aggregated ? true : c.artistId === id,
     ).flatMap((c) => c.alerts.filter((a) => a.severity !== "info"));
-    const gaps = rightsStatements(id).filter((s) => s.status === "gap-detected");
-    const gapTotal = gaps.reduce((s, g) => s + (g.expected - g.received), 0);
+    const gapTotal = perimetre
+      .flatMap((x) => rightsStatements(x).filter((st) => st.status === "gap-detected"))
+      .reduce((s, g) => s + (g.expected - g.received), 0);
     const roster = aggregated ? rosterRows() : [];
     const movers = [...roster].sort((a, b) => b.delta30d - a.delta30d);
     return {

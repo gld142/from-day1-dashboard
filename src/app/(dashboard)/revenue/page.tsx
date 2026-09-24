@@ -27,6 +27,7 @@ import {
   estimateSummaries,
   getArtist,
   hasReal,
+  dailyTotals,
   monthlyRevenueTotals,
   monthsBasis,
   pnlByArtist,
@@ -55,6 +56,7 @@ import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { RevenueCascade } from "@/components/modules/finances/revenue-cascade";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
+import { RevenueStreamsChart } from "@/components/modules/pilotage/revenue-streams-chart";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { SharesPanel } from "@/components/modules/finances/shares-panel";
@@ -225,6 +227,37 @@ export default function RevenuePage() {
     () => yearWindow(aggregated ? ARTISTS.map((a) => a.id) : [artistId]),
     [aggregated, artistId],
   );
+
+  /* Revenus ET streams sur le même axe de temps.
+   *
+   * Ce graphique existait sur /overview, la page retirée par la refonte, et
+   * n'avait été repris nulle part : le dashboard donnait les deux chiffres,
+   * jamais leur courbe commune. C'est pourtant la seule façon de voir si les
+   * euros suivent les volumes — ou si le taux se dégrade pendant que les
+   * streams montent.
+   *
+   * Il est cadré sur `year.months`, les douze mois complets du chiffre
+   * principal : pas une fenêtre de plus. */
+  const composed = useMemo(() => {
+    const ids = aggregated ? ARTISTS.map((a) => a.id) : [artistId];
+    const garde = new Set(year.months);
+    const revenus = new Map<string, number>();
+    const streams = new Map<string, number>();
+    for (const id of ids) {
+      for (const m of monthlyRevenueTotals(id, 25)) {
+        if (garde.has(m.month)) revenus.set(m.month, (revenus.get(m.month) ?? 0) + m.amount);
+      }
+      for (const d of dailyTotals(id, 420)) {
+        const m = d.date.slice(0, 7);
+        if (garde.has(m)) streams.set(m, (streams.get(m) ?? 0) + d.streams);
+      }
+    }
+    return year.months.map((month) => ({
+      month,
+      revenue: revenus.get(month) ?? 0,
+      streams: streams.get(month) ?? 0,
+    }));
+  }, [aggregated, artistId, year.months]);
 
   /* Les 12 mois que résume le chiffre du centre, dans une série qui en montre
      24 : la zone ombrée dit lesquels. */
@@ -399,6 +432,20 @@ export default function RevenuePage() {
                 note: year.best ? eur(year.best.amount) : undefined,
               },
             ]}
+          />
+        </Sheet>
+
+        {/* Les euros et les volumes sur le même axe : c'est là qu'on voit si
+            le taux se dégrade pendant que les streams montent. Bloc repris de
+            /overview, la page retirée par la refonte — il n'existait nulle
+            part ailleurs. */}
+        <Sheet family="money">
+          <SheetHeading action={t("composed.subtitle")}>{t("composed.title")}</SheetHeading>
+          <RevenueStreamsChart
+            data={composed}
+            revenueLabel={t("composed.revenue")}
+            streamsLabel={t("composed.streams")}
+            height={260}
           />
         </Sheet>
 

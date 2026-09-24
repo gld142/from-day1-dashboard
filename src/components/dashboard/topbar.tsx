@@ -31,6 +31,7 @@ import {
 import { ArtistAvatar } from "@/components/dashboard/artist-badge";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { CommandPalette } from "@/components/dashboard/command-palette";
+import { DailyBrief } from "@/components/dashboard/daily-brief";
 
 const THEME_META = [
   { id: "night", icon: Moon },
@@ -146,6 +147,11 @@ export function Topbar() {
 
       <div className="ml-auto flex items-center gap-2">
         <CommandPalette />
+        {/* Le brief du jour se lit depuis N'IMPORTE QUELLE page. Retiré le
+            23/09 au motif qu'il doublait Pulse, il ne le double que si l'on
+            est déjà sur Pulse : depuis /contracts ou /rights, c'est le seul
+            accès à l'essentiel du jour. */}
+        <DailyBrief />
         {/* Ambiance : nuit / aube / jour */}
         <div
           className="flex items-center rounded-full border p-0.5"

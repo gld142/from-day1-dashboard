@@ -10,7 +10,7 @@
     "nextOn": "Next: {date}",
     "last4Quarters": "Last 4 quarters",
     "pendingPeriod": "Distributions being processed",
-    "gapsHint": "{count, plural, one {across # period} other {across # periods}}",
+    "gapsHint": "{count, plural, one {across # statement} other {across # statements}}",
     "gapsNone": "no gap detected",
     "nextPayment": "Next payout",
     "nextHint": "{organism} · {frequency}",

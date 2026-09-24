@@ -191,5 +191,11 @@
     "urssafValue": "contributions and filing",
     "calculator": "Deal simulator",
     "calculatorValue": "test a contract"
+  },
+  "composed": {
+    "title": "Revenue × streams",
+    "subtitle": "12 full months, same window as the figure above",
+    "revenue": "Monthly revenue",
+    "streams": "Monthly streams"
   }
 }

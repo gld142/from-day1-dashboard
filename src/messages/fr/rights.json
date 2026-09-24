@@ -10,7 +10,7 @@
     "nextOn": "Prochain : {date}",
     "last4Quarters": "4 derniers trimestres",
     "pendingPeriod": "Répartitions en cours de traitement",
-    "gapsHint": "{count, plural, one {sur # période} other {sur # périodes}}",
+    "gapsHint": "{count, plural, one {sur # relevé} other {sur # relevés}}",
     "gapsNone": "aucun écart détecté",
     "nextPayment": "Prochain versement",
     "nextHint": "{organism} · {frequency}",
