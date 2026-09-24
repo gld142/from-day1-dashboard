@@ -19,6 +19,7 @@ export {
   marketMeta,
   marketSnapshot,
   morningReading,
+  rosterTrackCount,
   sharesBy as marketSharesBy,
   type MarketDimension,
   type MarketMeta,

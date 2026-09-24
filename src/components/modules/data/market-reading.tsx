@@ -83,6 +83,10 @@ export function MarketReading({ reading }: { reading: MorningReading }) {
                 ? t("reading.rosterPresent", {
                     name: r.name,
                     count: r.tracks,
+                    /* Dire les featurings : sans ça, additionner les lignes
+                       donnait un total supérieur au KPI, un même titre pouvant
+                       être compté chez le principal et chez l'invité. */
+                    featured: r.featured,
                     rank: fmtInt(locale, r.bestRank),
                     title: r.bestTitle ?? "",
                   })

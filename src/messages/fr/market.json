@@ -98,7 +98,7 @@
     "genreTop": "Premier genre : {genre} ({share}).",
     "leader": "En tête : {artist} — {title}, {streams} streams.",
     "rosterTitle": "Roster Day One",
-    "rosterPresent": "{name} — {count, plural, one {# titre} other {# titres}}, meilleur rang {rank} ({title})",
+    "rosterPresent": "{name} — {count, plural, one {# titre} other {# titres}}{featured, plural, =0 {} one { dont # en featuring} other { dont # en featuring}}, meilleur rang {rank} ({title})",
     "rosterAbsent": "{name} — absent du Top 200",
     "method": "Lecture automatique à base de règles sur les parts mesurées — aucun modèle de langage."
   },

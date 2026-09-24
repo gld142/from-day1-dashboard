@@ -11,6 +11,7 @@ import {
   marketSnapshot,
   morningReading,
   rosterPresence,
+  rosterTrackCount,
   sharesBy,
   type MarketSnapshots,
 } from "../market";
@@ -211,12 +212,25 @@ describe("rosterPresence / morningReading", () => {
 
   it("repère le roster par identifiant Spotify, par nom (principal ou invité), et signale les absents", () => {
     expect(rosterPresence(ROSTER, TRACKS)).toEqual([
-      { id: "dadju", name: "Dadju", tracks: 1, bestRank: 1, bestTitle: "Reine" },
-      { id: "nono-la-grinta", name: "Nono La Grinta", tracks: 1, bestRank: 5, bestTitle: "Odjo" },
+      { id: "dadju", name: "Dadju", tracks: 1, featured: 0, bestRank: 1, bestTitle: "Reine" },
+      // Nono n'est qu'invité sur « Odjo » : le titre compte, mais comme featuring.
+      { id: "nono-la-grinta", name: "Nono La Grinta", tracks: 1, featured: 1, bestRank: 5, bestTitle: "Odjo" },
       // Kiko : identifiant Spotify absent du relevé mais le nom correspond.
-      { id: "kiko", name: "Kiko", tracks: 1, bestRank: 5, bestTitle: "Odjo" },
-      { id: "absent", name: "Personne", tracks: 0, bestRank: null, bestTitle: null },
+      { id: "kiko", name: "Kiko", tracks: 1, featured: 0, bestRank: 5, bestTitle: "Odjo" },
+      { id: "absent", name: "Personne", tracks: 0, featured: 0, bestRank: null, bestTitle: null },
     ]);
+  });
+
+  it("compte les titres DISTINCTS du roster — un titre partagé ne compte qu'une fois", () => {
+    // « Odjo » réunit Kiko (principal) et Nono (invité) ; « Reine » est à Dadju.
+    // Additionner les lignes donnerait 3 ; les titres distincts sont 2.
+    expect(rosterPresence(ROSTER, TRACKS).reduce((s, r) => s + r.tracks, 0)).toBe(3);
+    expect(rosterTrackCount(ROSTER, TRACKS)).toBe(2);
+  });
+
+  it("compte le featuring même quand l'artiste n'est jamais principal", () => {
+    const seulementInvite = [{ id: "nono-la-grinta", name: "Nono La Grinta" }];
+    expect(rosterTrackCount(seulementInvite, TRACKS)).toBe(1);
   });
 
   it("lecture du matin : majors ordonnées, indés, autres, sans label, genres, leader — estimée", () => {

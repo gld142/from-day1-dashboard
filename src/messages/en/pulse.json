@@ -215,12 +215,12 @@
     "tiktokFr": "TikTok · trending sounds FR",
     "inTop200": "roster tracks in the French Top 200",
     "rosterShare": "Roster share · Top 200",
-    "editorial": "Editorial playlist adds",
-    "editorialValue": "{count} this week",
-    "gained14": "Streams gained in 14 days",
+    "gained14": "Streams · 14 d vs previous 14",
     "others": "Apple · Deezer · Instagram",
     "rank": "#{rank}",
-    "topTrack": "Most used track"
+    "topTrack": "Most used track",
+    "tiktokVideos": "TikTok videos using their sounds",
+    "tiktokVideosValue": "{count} in total"
   },
   "night": {
     "week": {
@@ -259,7 +259,7 @@
   "importBand": {
     "title": "Two files would make these numbers exact.",
     "titleLabel": "The roster's artist shares are simulated.",
-    "status": "share simulated at {pct} · ±30 % range",
+    "status": "artist share at {pct} · ±30 % range",
     "statusLabel": "{count} of {total} contracts not filled in",
     "body": "Your distributor statement calibrates the euros and makes the audit gap exact. Your contract replaces the assumption with your real share. Both stay on your device.",
     "bodyLabel": "Fill in the real percentages or import the contracts: every cascade recalculates and the badges turn to “declared”.",

@@ -215,12 +215,12 @@
     "tiktokFr": "TikTok · sons en tendance FR",
     "inTop200": "titres du roster dans le Top 200 FR",
     "rosterShare": "Part du roster · Top 200",
-    "editorial": "Entrées en playlists édito",
-    "editorialValue": "{count} cette semaine",
-    "gained14": "Streams gagnés en 14 jours",
+    "gained14": "Streams · 14 j vs 14 j précédents",
     "others": "Apple · Deezer · Instagram",
     "rank": "n° {rank}",
-    "topTrack": "Titre le plus repris"
+    "topTrack": "Titre le plus repris",
+    "tiktokVideos": "Vidéos TikTok utilisant ses sons",
+    "tiktokVideosValue": "{count} au total"
   },
   "night": {
     "week": {
@@ -259,7 +259,7 @@
   "importBand": {
     "title": "Deux fichiers rendraient ces chiffres exacts.",
     "titleLabel": "Les parts artistes du roster sont simulées.",
-    "status": "part simulée à {pct} · fourchette ±30 %",
+    "status": "part artiste à {pct} · fourchette ±30 %",
     "statusLabel": "{count} contrats sur {total} non renseignés",
     "body": "Ton relevé distributeur calibre les euros et rend l'écart d'audit exact. Ton contrat remplace l'hypothèse par ta vraie part. Les deux restent sur ton appareil.",
     "bodyLabel": "Renseigne les pourcentages réels ou importe les contrats : toutes les cascades se recalculent et les badges passent à « renseigné ».",

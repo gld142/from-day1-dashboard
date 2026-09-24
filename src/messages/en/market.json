@@ -98,7 +98,7 @@
     "genreTop": "Top genre: {genre} ({share}).",
     "leader": "Leading: {artist} — {title}, {streams} streams.",
     "rosterTitle": "Day One roster",
-    "rosterPresent": "{name} — {count, plural, one {# track} other {# tracks}}, best rank {rank} ({title})",
+    "rosterPresent": "{name} — {count, plural, one {# track} other {# tracks}}{featured, plural, =0 {} one { incl. # as featured} other { incl. # as featured}}, best rank {rank} ({title})",
     "rosterAbsent": "{name} — not in the Top 200",
     "method": "Automatic rule-based reading of the measured shares — no language model."
   },

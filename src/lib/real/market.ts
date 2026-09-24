@@ -165,6 +165,8 @@ export type RosterPresence = {
   name: string;
   /** Titres où l'artiste est principal ou invité. */
   tracks: number;
+  /** Parmi eux, ceux où il est seulement invité — un featuring n'est pas sa sortie. */
+  featured: number;
   bestRank: number | null;
   bestTitle: string | null;
 };
@@ -200,14 +202,31 @@ const sameArtist = (t: MarketTrack, a: RosterRef): boolean => {
 export function rosterPresence(roster: RosterRef[], tracks: MarketTrack[]): RosterPresence[] {
   return roster.map((a) => {
     const mine = tracks.filter((t) => sameArtist(t, a)).sort((x, y) => x.rank - y.rank);
+    const n = a.name.trim().toLowerCase();
     return {
       id: a.id,
       name: a.name,
       tracks: mine.length,
+      featured: mine.filter((t) => t.artist.toLowerCase() !== n).length,
       bestRank: mine[0]?.rank ?? null,
       bestTitle: mine[0]?.title ?? null,
     };
   });
+}
+
+/**
+ * Titres DISTINCTS du classement où un artiste du roster figure — principal
+ * ou invité.
+ *
+ * Mesuré le 18/09 : `sharesBy("artist")` groupe par artiste PRINCIPAL, donc
+ * « RnBoi feat. Nono La Grinta » (n° 129) tombait du décompte et la page
+ * annonçait 3 titres pendant que sa propre lecture en détaillait 4. Un
+ * featuring dans le Top 200 reste un titre de l'artiste : on le compte.
+ * Le filtre porte sur les titres, donc un titre réunissant deux artistes du
+ * roster ne compte qu'une fois.
+ */
+export function rosterTrackCount(roster: RosterRef[], tracks: MarketTrack[]): number {
+  return tracks.filter((t) => roster.some((a) => sameArtist(t, a))).length;
 }
 
 export function morningReading(

@@ -16,6 +16,7 @@ import {
   ARTISTS,
   marketMeta,
   marketReading,
+  marketRosterTracks,
   marketShares,
   type MarketDimension,
   type MarketMetric,
@@ -76,7 +77,11 @@ export default function MarketPage() {
       rosterNames.has(r.label.toLowerCase()),
     );
     const share = rows.reduce((s, r) => s + r.share, 0);
-    const tracks = rows.reduce((s, r) => s + r.tracks, 0);
+    /* La part se calcule sur les lignes « artiste principal » — un featuring ne
+       rapporte pas 100 % des streams du titre. Le DÉCOMPTE, lui, doit inclure
+       les featurings : sinon la page annonçait 3 titres pendant que sa propre
+       lecture en détaillait 4 (n° 129, RnBoi feat. Nono La Grinta). */
+    const tracks = marketRosterTracks();
     const best = rows
       .map((r) => r.topTrack)
       .filter((x): x is NonNullable<typeof x> => x !== null)

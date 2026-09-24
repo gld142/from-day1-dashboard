@@ -58,9 +58,11 @@ import {
   estimateSummaries,
   expensesFor,
   fanSegments,
+  artistSharePct,
   getArtist,
   hasReal,
   labelTotals,
+  marketRosterTracks,
   marketShares,
   monthlyRevenueTotals,
   pnlByArtist,
@@ -85,8 +87,6 @@ import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 const DAY_MS = 86_400_000;
 const REVENUE_DETAIL_HREF = "/revenue?period=month";
 
-/** Part d'auteur par défaut tant que le contrat n'est pas renseigné. */
-const DEFAULT_ARTIST_PCT = 20;
 /** Taux global indicatif des cotisations artistes-auteurs, sur les revenus d'auteur seuls. */
 const AUTHOR_CONTRIB_RATE = 0.205;
 
@@ -213,6 +213,8 @@ export default function PulsePage() {
     const s7 = sumStreams(artistId, 7);
     const d7 = streamsDelta(artistId, 7);
     const s30 = sumStreams(artistId, 30);
+    /* Mesuré, pas écrit en dur : 14 jours contre les 14 précédents. */
+    const d14 = streamsDelta(artistId, 14);
 
     const monthly = monthlyRevenueTotals(artistId, 24);
     const revMonth = monthly[monthly.length - 1]?.amount ?? 0;
@@ -250,6 +252,8 @@ export default function PulsePage() {
       ? 0
       : expensesFor(artistId, 1).reduce((s, e) => s + e.amount, 0);
     const share30 = est?.month.artistShare.mid ?? 0;
+    /* Le pourcentage ANNONCÉ doit être celui que l'estimateur applique. */
+    const sharePct = artistSharePct(artistId);
     const publishing30 = est?.month.publishing.mid ?? 0;
     const contributions = publishing30 * AUTHOR_CONTRIB_RATE;
     const left = Math.max(0, share30 + publishing30 - toRecoup - ownExpenses - contributions);
@@ -291,10 +295,12 @@ export default function PulsePage() {
       s7,
       d7,
       s30,
+      d14,
       revMonth,
       revDelta,
       revForecast,
       est,
+      sharePct,
       toRecoup,
       ownExpenses,
       isSigned,
@@ -378,6 +384,11 @@ export default function PulsePage() {
       rosterNames.has(r.label.toLowerCase()),
     );
     const rosterShare = rosterMarket.reduce((s, r) => s + r.share, 0);
+    /* Le libellé dit « titres » : il faut compter les titres. `length`
+       comptait les ARTISTES du roster présents — 2 au lieu de 4, et en
+       contradiction avec /market qui lit pourtant la même capture Kworb.
+       Le décompte vient désormais de la même fonction que /market. */
+    const rosterTracks = marketRosterTracks();
     const valuation = ARTISTS.reduce((s, a) => s + catalogValuation(a.id).mid, 0);
     /* Un artiste est « renseigné » quand l'utilisateur a saisi ou importé ses
        pourcentages — pas quand le contrat de démo existe. */
@@ -402,7 +413,7 @@ export default function PulsePage() {
       valuation,
       night: { nextShow, alertCount, tiktok, topMover: movers[0] },
       leads: { gap, rightsPending },
-      doors: { splitsPending, rosterShare, rosterMarket, groupRows, alertCount },
+      doors: { splitsPending, rosterShare, rosterMarket, rosterTracks, groupRows, alertCount },
       missingContracts,
     };
   }, [showArtist, sharesKey]);
@@ -655,8 +666,14 @@ export default function PulsePage() {
               />
             </Sheet>
 
+            {/* Les deux dernières lignes valaient « +31 % » et « 6 entrées
+                playlists » écrits en dur — donc identiques pour Dadju, Nono et
+                Kiko. Elles portent maintenant des grandeurs propres à l'artiste,
+                et l'en-tête la provenance du signal au lieu d'un « simulé » fixe. */}
             <Sheet family="trends">
-              <SheetHeading action={t("legend.simulated")}>
+              <SheetHeading
+                action={<ProvenanceBadge provenance={v.night.tiktok?.provenance ?? "simulated"} />}
+              >
                 {t("families.trends")}
               </SheetHeading>
               <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
@@ -672,11 +689,19 @@ export default function PulsePage() {
                     label: t("trends.topTrack"),
                     value: v.night.topTrack ? `« ${v.night.topTrack.title} »` : "—",
                   },
-                  { key: "gained", label: t("trends.gained14"), value: "+31 %" },
                   {
-                    key: "editorial",
-                    label: t("trends.editorial"),
-                    value: t("trends.editorialValue", { count: 6 }),
+                    key: "gained",
+                    label: t("trends.gained14"),
+                    value: `${v.d14 >= 0 ? "+" : ""}${pct(v.d14 / 100)}`,
+                  },
+                  {
+                    key: "videos",
+                    label: t("trends.tiktokVideos"),
+                    value: v.night.tiktok
+                      ? t("trends.tiktokVideosValue", {
+                          count: fmtCompact(locale, v.night.tiktok.videos),
+                        })
+                      : "—",
                   },
                 ]}
               />
@@ -791,8 +816,8 @@ export default function PulsePage() {
             title={t("importBand.title")}
             status={
               <span className="text-muted-foreground text-[11px]">
-                <ProvenanceBadge provenance="simulated" className="mr-1.5 align-middle" />
-                {t("importBand.status", { pct: `${DEFAULT_ARTIST_PCT} %` })}
+                <ProvenanceBadge provenance={v.sharePct.provenance} className="mr-1.5 align-middle" />
+                {t("importBand.status", { pct: `${fmtInt(locale, v.sharePct.pct)} %` })}
               </span>
             }
             body={t("importBand.body")}
@@ -1118,11 +1143,11 @@ export default function PulsePage() {
             </Sheet>
 
             <Sheet family="trends">
-              <SheetHeading action={t("legend.simulated")}>
+              <SheetHeading action={<ProvenanceBadge provenance="measured" />}>
                 {t("families.trends")}
               </SheetHeading>
               <p className="text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-{l.doors.rosterMarket.length}
+                {fmtInt(locale, l.doors.rosterTracks)}
               </p>
               <p className="sheet-ink mt-1 text-xs">{t("trends.inTop200")}</p>
               <AttachedLines

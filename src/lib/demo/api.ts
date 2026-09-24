@@ -40,7 +40,11 @@ import {
   type ForecastPoint,
 } from "./generators";
 import { DEMO_TODAY, isoMonth, rngFor } from "./seed";
-import { AUTHOR_SHARE_OF_PUBLISHING, PUBLISHING_SHARE_OF_DSP } from "@/lib/real/params";
+import {
+  AUTHOR_SHARE_OF_PUBLISHING,
+  DEAL_SHARE,
+  PUBLISHING_SHARE_OF_DSP,
+} from "@/lib/real/params";
 import {
   ESTIMATE_PERIODS,
   PERIOD_DAYS,
@@ -57,7 +61,9 @@ import {
   tiktokSignal as realTiktokSignal,
   marketMeta as realMarketMeta,
   marketSharesBy,
+  marketSnapshot,
   morningReading,
+  rosterTrackCount,
   weakest,
   type Confidence,
   type DailyEstimate,
@@ -193,6 +199,22 @@ export function estimateSummary(artistId: string, period: EstimatePeriod): Estim
   });
   summaryMemo.set(key, out);
   return out;
+}
+
+/**
+ * Le pourcentage de part artiste que l'estimateur applique RÉELLEMENT, et d'où
+ * il vient. Toute page qui ANNONCE ce pourcentage doit le lire ici.
+ *
+ * Mesuré : écrit en dur à 20 % dans /pulse, il contredisait les euros de
+ * /revenue pour Kiko — contrat de distribution, donc 90 %. Un chiffre annoncé
+ * qui ne décrit pas le calcul affiché à côté ruine la confiance dans les deux.
+ */
+export function artistSharePct(artistId: string): { pct: number; provenance: Provenance } {
+  const shares = getShares(artistId);
+  if (shares && shares.masterSharePct !== null) {
+    return { pct: shares.masterSharePct, provenance: "declared" };
+  }
+  return { pct: DEAL_SHARE[getArtist(artistId).dealType].mid * 100, provenance: "simulated" };
 }
 
 /** Les cinq résumés (hier → 12 mois) d'un coup, pour les tuiles et le sélecteur. */
@@ -354,6 +376,20 @@ export function marketReading(date?: string): MorningReading | null {
   return morningReading(
     ARTISTS.map((a) => ({ id: a.id, name: a.name, spotifyId: a.spotifyId })),
     date,
+  );
+}
+
+/**
+ * Titres distincts du Top 200 où un artiste du roster figure, invités compris.
+ * Source unique pour /market (« N titres classés ») et /pulse : les compter
+ * séparément les faisait diverger.
+ */
+export function marketRosterTracks(date?: string): number {
+  const s = marketSnapshot(date);
+  if (!s) return 0;
+  return rosterTrackCount(
+    ARTISTS.map((a) => ({ id: a.id, name: a.name, spotifyId: a.spotifyId })),
+    s.tracks,
   );
 }
 
