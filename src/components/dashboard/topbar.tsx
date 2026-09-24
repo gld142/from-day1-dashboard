@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { useEffect, useState, useTransition } from "react";
+import { useSyncExternalStore, useTransition } from "react";
 import {
   Building2,
   Check,
@@ -38,6 +38,9 @@ const THEME_META = [
   { id: "day", icon: Sun },
 ] as const;
 
+/** Aucune source externe à écouter : l'abonnement est un no-op stable. */
+const subscribeNever = () => () => {};
+
 export function Topbar() {
   const t = useTranslations("common");
   const locale = useLocale();
@@ -50,9 +53,11 @@ export function Topbar() {
     setFocusedArtistId,
     isLabel,
   } = useRole();
-  const [mounted, setMounted] = useState(false);
   const [, startTransition] = useTransition();
-  useEffect(() => setMounted(true), []);
+  /* « Suis-je côté client ? » — next-themes ne connaît le thème qu'après
+     hydratation. `useSyncExternalStore` le dit sans setState dans un effet,
+     qui forcerait un second rendu en cascade. Même solution que /settings. */
+  const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
 
   const focused = focusedArtistId ? getArtist(focusedArtistId) : null;
   const artist = getArtist(persona === "artist" ? artistId : DEMO_ARTIST_ID);

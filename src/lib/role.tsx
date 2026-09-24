@@ -49,57 +49,112 @@ const RoleContext = createContext<RoleContextValue | null>(null);
 
 const STORAGE_KEY = "day1-role";
 
-export function RoleProvider({ children }: { children: React.ReactNode }) {
-  const [persona, setPersonaState] = useState<Persona>("artist");
-  const [focusedArtistId, setFocusedArtistId] = useState<string | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+type RoleState = { persona: Persona; focusedArtistId: string | null };
 
-  useEffect(() => {
-    try {
-      // Canal d'acquisition (/welcome → CTA) : `?persona=` force le persona et
-      // prime sur la valeur mémorisée — il sera persisté par l'effet suivant.
-      const fromUrl = new URLSearchParams(window.location.search).get("persona");
-      if (fromUrl === "artist" || fromUrl === "label") {
-        setPersonaState(fromUrl);
-        setFocusedArtistId(null);
-        setHydrated(true);
-        return;
-      }
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const saved = JSON.parse(raw) as {
-          persona?: Persona;
-          focusedArtistId?: string | null;
-        };
-        if (saved.persona === "artist" || saved.persona === "label") {
-          setPersonaState(saved.persona);
-        }
-        if (saved.focusedArtistId !== undefined) {
-          setFocusedArtistId(saved.focusedArtistId);
-        }
-      }
-    } catch {
-      /* stockage indisponible : on garde les valeurs par défaut */
-    }
-    setHydrated(true);
-  }, []);
+/**
+ * L'état de rôle vit dans localStorage, et React s'y abonne.
+ *
+ * Le lire dans un effet pour appeler `setState` ensuite déclenche un second
+ * rendu en cascade et fait renoncer le compilateur React à optimiser ce
+ * fournisseur — qui enveloppe TOUTE l'application. Le même fichier utilise
+ * déjà `useSyncExternalStore` pour `hasUserData` : on suit ce motif.
+ *
+ * Piège de référence : le snapshot est un OBJET. S'il est reconstruit à chaque
+ * appel, React boucle sans fin. On mémorise donc la chaîne brute et on ne
+ * refabrique l'objet que lorsqu'elle change.
+ */
+const DEFAULT_ROLE: RoleState = { persona: "artist", focusedArtistId: null };
 
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
+const roleListeners = new Set<() => void>();
+let roleRaw: string | null | undefined;
+let roleValue: RoleState = DEFAULT_ROLE;
+/**
+ * Canal d'acquisition (/welcome → CTA) : `?persona=` force le persona et prime
+ * sur la valeur mémorisée. Il se consomme ICI, une fois, au chargement du
+ * module — surtout PAS dans `readRole`.
+ *
+ * Mesuré : placé dans le snapshot, le paramètre était perdu. React appelle
+ * `getSnapshot` plusieurs fois et compare les résultats pour détecter une
+ * déchirure ; un snapshot qui consomme un drapeau renvoie « label » au premier
+ * appel puis « artist » au second, et React retient le dernier. Le snapshot
+ * doit être pur ; l'effet de bord vit hors du rendu.
+ */
+if (typeof window !== "undefined") {
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get("persona");
+    if (fromUrl === "artist" || fromUrl === "label") {
       window.localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ persona, focusedArtistId }),
+        JSON.stringify({ persona: fromUrl, focusedArtistId: null }),
       );
-    } catch {
-      /* noop */
     }
-  }, [persona, focusedArtistId, hydrated]);
+  } catch {
+    /* stockage indisponible : le paramètre est ignoré */
+  }
+}
+
+function persistRole(next: RoleState): void {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    roleRaw = window.localStorage.getItem(STORAGE_KEY);
+  } catch {
+    /* stockage indisponible : l'état reste en mémoire */
+  }
+}
+
+/** Pur : deux appels d'affilée renvoient la même référence tant que le
+ *  stockage n'a pas changé. C'est la condition de `useSyncExternalStore`. */
+function readRole(): RoleState {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw !== roleRaw) {
+      roleRaw = raw;
+      let next = DEFAULT_ROLE;
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<RoleState>;
+        next = {
+          persona:
+            saved.persona === "artist" || saved.persona === "label"
+              ? saved.persona
+              : "artist",
+          focusedArtistId: saved.focusedArtistId ?? null,
+        };
+      }
+      roleValue = next;
+    }
+    return roleValue;
+  } catch {
+    /* stockage indisponible : on garde les valeurs par défaut */
+    return roleValue;
+  }
+}
+
+function subscribeRole(onChange: () => void): () => void {
+  roleListeners.add(onChange);
+  window.addEventListener("storage", onChange);
+  return () => {
+    roleListeners.delete(onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function writeRole(next: RoleState): void {
+  roleValue = next;
+  persistRole(next);
+  for (const l of roleListeners) l();
+}
+
+export function RoleProvider({ children }: { children: React.ReactNode }) {
+  const role = useSyncExternalStore(subscribeRole, readRole, () => DEFAULT_ROLE);
+  const { persona, focusedArtistId } = role;
 
   const setPersona = useCallback((p: Persona) => {
-    setPersonaState(p);
     // Changement de persona = on repart de la vue par défaut.
-    setFocusedArtistId(null);
+    writeRole({ persona: p, focusedArtistId: null });
+  }, []);
+
+  const setFocusedArtistId = useCallback((id: string | null) => {
+    writeRole({ ...roleValue, focusedArtistId: id });
   }, []);
 
   // Données réelles importées : en persona artiste, le profil utilisateur
