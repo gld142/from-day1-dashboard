@@ -30,7 +30,10 @@ import {
 } from "@/components/dashboard/sheet";
 import { AddExpenseDialog } from "@/components/modules/finances/add-expense-dialog";
 import { CategoryDonut } from "@/components/modules/finances/category-donut";
-import { ExpenseRegister } from "@/components/modules/finances/expense-register";
+import {
+  ExpenseRegister,
+  useExpenseLabel,
+} from "@/components/modules/finances/expense-register";
 import {
   PnlComparisons,
   type SpendRow,
@@ -45,6 +48,7 @@ import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { Button } from "@/components/ui/button";
+import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import {
   Select,
   SelectContent,
@@ -60,6 +64,7 @@ import {
   expenses as fetchExpenses,
   getArtist,
   monthlyRevenueTotals,
+  monthsBasis,
 } from "@/lib/demo/api";
 import type { Expense, ExpenseCategory } from "@/lib/demo/types";
 import { downloadCsv } from "@/lib/export";
@@ -73,6 +78,8 @@ export default function FinancesPage() {
   const locale = useLocale();
   const t = useTranslations("finances");
   const tc = useTranslations("common");
+  /** Le CSV exporte ce que le tableau affiche : le même libellé traduit. */
+  const expenseLabel = useExpenseLabel();
   const { artistId, focusedArtistId, isLabel } = useRole();
 
   const [year, setYear] = useState<number>(2026);
@@ -225,6 +232,21 @@ export default function FinancesPage() {
       ? monthMaps.current
       : null;
 
+  /* ── Sur quoi repose la comparaison d'année ─────────────────────────────
+   *
+   * « Résultat net 2026 · −56,9 % vs 2025 » se lit comme une chute constatée.
+   * Elle ne l'est pas : les deux termes couvrent des mois antérieurs aux
+   * relevés réels, donc un historique reconstitué puis converti en euros. Le
+   * chiffre est fidèle à ce modèle — la page doit dire lequel. */
+  const spanBasis = useMemo(
+    () => (span.length === 0 ? null : monthsBasis(artistIds, [...span, ...span.map(lastYearOf)])),
+    [span, artistIds],
+  );
+  /** Les mois comparés qui contiennent une vraie mesure, écrits en clair. */
+  const measuredSpanLabel = spanBasis?.measuredMonths.length
+    ? spanBasis.measuredMonths.map((m) => fmtMonth(locale, m)).join(", ")
+    : null;
+
   /* ── Répartition par catégorie, sur l'année entière ─────────────────── */
   const byCategory = useMemo(() => {
     const acc = new Map<ExpenseCategory, number>();
@@ -292,7 +314,7 @@ export default function FinancesPage() {
     const memberName = new Map(TEAM.map((m) => [m.id, m.name]));
     downloadCsv<Expense>(`day1-expenses-${year}`, registerExpenses, [
       { header: t("register.date"), cell: (e) => e.date },
-      { header: t("register.label"), cell: (e) => e.label },
+      { header: t("register.label"), cell: (e) => expenseLabel(e) },
       { header: t("register.category"), cell: (e) => t(`categories.${e.category}`) },
       {
         header: t("register.project"),
@@ -418,6 +440,18 @@ export default function FinancesPage() {
                 {t("hero.partialNote", {
                   month: fmtMonthName(locale, partialMonth, "long"),
                 })}
+              </>
+            )}
+            {spanBasis && (
+              <>
+                {" "}
+                {measuredSpanLabel
+                  ? t("hero.basisMixed", { months: measuredSpanLabel })
+                  : t("hero.basisReconstructed")}{" "}
+                <ProvenanceBadge
+                  provenance={spanBasis.provenance}
+                  className="align-middle"
+                />
               </>
             )}
           </p>

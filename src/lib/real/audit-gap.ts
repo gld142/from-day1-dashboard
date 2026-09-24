@@ -11,6 +11,17 @@ import { AUDIT_GAP_ABS_EUR, AUDIT_GAP_REL } from "./params";
 export type EstimatedLine = { period: string; dsp: DSP; mid: number };
 export type ReportedLine = { period: string; dsp: DSP; amount: number };
 
+/**
+ * Nom de la plateforme mise en cause — et rien d'autre.
+ *
+ * Le `source` d'un signalement est affiché tel quel (carte /audit, tuile du
+ * plus gros écart, en-tête de la lettre) : toute phrase ajoutée ici se fige
+ * dans une langue. Le qualificatif « écart estimé/déclaré » que portait ce
+ * champ restait donc en français au milieu d'une interface anglaise — et il
+ * était de toute façon redondant, la carte affichant déjà attendu, déclaré et
+ * écart. Ne restent que des noms commerciaux, identiques dans les deux
+ * langues ; le panier agrégé emprunte le même registre neutre.
+ */
 const DSP_LABEL: Record<DSP, string> = {
   spotify: "Spotify",
   deezer: "Deezer",
@@ -18,7 +29,7 @@ const DSP_LABEL: Record<DSP, string> = {
   amazon: "Amazon Music",
   youtube: "YouTube",
   tiktok: "TikTok",
-  other: "Autres DSP",
+  other: "Multi-DSP",
 };
 
 export function auditGap(
@@ -45,7 +56,7 @@ export function auditGap(
       finding: {
         id: `${artistId}-gap-${e.dsp}-${e.period}`,
         artistId,
-        source: `${DSP_LABEL[e.dsp]} · écart estimé/déclaré`,
+        source: DSP_LABEL[e.dsp],
         period: e.period,
         expected: Math.round(e.mid),
         reported: Math.round(r.amount),

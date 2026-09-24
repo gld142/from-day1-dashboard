@@ -149,7 +149,9 @@
   "chart": {
     "title": "Monthly evolution by source",
     "subtitle": "Last 24 months, stacked by source",
-    "window12": "the last 12 complete months"
+    "window12": "the last 12 complete months",
+    "basisReconstructed": "Both compared windows predate the real statements: their history is reconstructed from the cumulative total and the daily rate, then converted into euros; non-streaming revenue is demo data.",
+    "basisMixed": "The comparison mixes measured months ({months}) with months reconstructed then converted into euros: the weakest provenance wins."
   },
   "breakdown": {
     "title": "Breakdown by source",

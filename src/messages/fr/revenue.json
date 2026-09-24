@@ -149,7 +149,9 @@
   "chart": {
     "title": "Évolution mensuelle par source",
     "subtitle": "24 derniers mois, empilés par source",
-    "window12": "les 12 derniers mois complets"
+    "window12": "les 12 derniers mois complets",
+    "basisReconstructed": "Les deux fenêtres comparées précèdent les relevés réels : leur historique est reconstitué depuis le cumul et le débit du jour, puis converti en euros ; les revenus hors streaming sont des données de démonstration.",
+    "basisMixed": "La comparaison mêle des mois relevés ({months}) et des mois reconstitués puis convertis en euros : la provenance la plus faible l'emporte."
   },
   "breakdown": {
     "title": "Répartition par source",

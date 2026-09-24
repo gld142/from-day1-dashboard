@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Search, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,23 @@ import { CategoryBadge } from "./category-badge";
 const PAGE_SIZE = 20;
 
 /**
+ * Libellé lisible d'une dépense.
+ *
+ * Les dépenses générées portent un identifiant stable (`studioMix`), traduit
+ * ici comme la catégorie l'est déjà ; celles saisies à la main portent le
+ * texte de l'utilisateur, qu'on affiche tel quel — le traduire n'aurait aucun
+ * sens et `t()` afficherait la clé brute. Exporté : le CSV de /finances doit
+ * écrire le même libellé que le tableau.
+ */
+export function useExpenseLabel(): (expense: Expense) => string {
+  const t = useTranslations("finances.register.labels");
+  return useCallback(
+    (expense: Expense) => (t.has(expense.label) ? t(expense.label) : expense.label),
+    [t],
+  );
+}
+
+/**
  * Registre des dépenses : recherche plein-texte + tableau riche + badge Wavely.
  * `bare` le pose dans une feuille teintée, sans redoubler la carte ni le titre.
  */
@@ -40,6 +57,7 @@ export function ExpenseRegister({
 }) {
   const locale = useLocale();
   const t = useTranslations("finances.register");
+  const expenseLabel = useExpenseLabel();
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(PAGE_SIZE);
 
@@ -55,7 +73,7 @@ export function ExpenseRegister({
     if (!q) return items;
     return items.filter((e) => {
       const haystack = [
-        e.label,
+        expenseLabel(e),
         e.projectId ? projectTitle.get(e.projectId) : "",
         e.trackId ? trackTitle.get(e.trackId) : "",
         memberName.get(e.addedBy) ?? "",
@@ -64,7 +82,7 @@ export function ExpenseRegister({
         .toLowerCase();
       return haystack.includes(q);
     });
-  }, [items, query, projectTitle, trackTitle, memberName]);
+  }, [items, query, expenseLabel, projectTitle, trackTitle, memberName]);
 
   const visible = filtered.slice(0, limit);
 
@@ -135,7 +153,7 @@ export function ExpenseRegister({
                   {fmtDate(locale, e.date, { day: "2-digit", month: "short", year: "2-digit" })}
                 </TableCell>
                 <TableCell className="max-w-56 truncate font-medium">
-                  {e.label}
+                  {expenseLabel(e)}
                 </TableCell>
                 <TableCell>
                   <CategoryBadge category={e.category} />

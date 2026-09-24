@@ -28,6 +28,7 @@ import {
   getArtist,
   hasReal,
   monthlyRevenueTotals,
+  monthsBasis,
   pnlByArtist,
   revenueBySource,
   revenueSeries,
@@ -145,6 +146,17 @@ export default function RevenuePage() {
       cur12 += complete.slice(-12).reduce((s, m) => s + m.amount, 0);
     }
     const delta = prev12 === 0 ? 0 : ((cur12 - prev12) / prev12) * 100;
+    /* Ce que vaut ce delta dépend des mois qu'il compare : tant qu'ils
+       précèdent les relevés, ses deux termes sortent d'un historique
+       reconstitué puis converti en euros, et un pourcentage affiché nu se lit
+       comme un constat. Le périmètre est relu sur la même fenêtre que le
+       calcul ci-dessus, pour qu'il ne puisse pas en diverger. */
+    const deltaBasis = monthsBasis(
+      ids,
+      monthlyRevenueTotals(ids[0], 25)
+        .slice(0, -1)
+        .map((m) => m.month),
+    );
 
     // Tendance par source : 2e semestre vs 1er semestre (12 mois).
     const trendBySource = new Map<RevenueSource, number>();
@@ -168,9 +180,16 @@ export default function RevenuePage() {
       sources,
       total12,
       delta,
+      deltaBasis,
       trendBySource,
       monthlyAvg: total12 / 12,
-      pnl: aggregated ? pnlByArtist(12) : [],
+      /* Trié par revenus, parce que c'est ce que la longueur des barres
+         encode. `pnlByArtist` trie par résultat net — légitime pour « le plus
+         rentable » du Copilot, trompeur ici : la liste descendrait dans un
+         ordre pendant que les barres en dessineraient un autre. */
+      pnl: aggregated
+        ? [...pnlByArtist(12)].sort((a, b) => b.revenue - a.revenue)
+        : [],
       spark: monthlyRevenueTotals(ids[0], 24)
         .slice(-12)
         .map((m) => ({ value: m.amount })),
@@ -339,6 +358,21 @@ export default function RevenuePage() {
               </ResponsiveContainer>
             </div>
           </div>
+          {/* Le « vs 12 mois précédents » compare deux fenêtres que personne
+              n'a relevées : sans cette ligne, il se lit comme un constat. */}
+          <p className="sheet-ink mt-1.5 text-[11.5px] leading-relaxed">
+            {data.deltaBasis.measuredMonths.length > 0
+              ? t("chart.basisMixed", {
+                  months: data.deltaBasis.measuredMonths
+                    .map((m) => fmtMonth(locale, m))
+                    .join(", "),
+                })
+              : t("chart.basisReconstructed")}{" "}
+            <ProvenanceBadge
+              provenance={data.deltaBasis.provenance}
+              className="align-middle"
+            />
+          </p>
           <AffiliatedPoints
             points={[
               {

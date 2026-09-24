@@ -659,6 +659,66 @@ export function monthlyRevenueTotals(artistId: string, months = 24) {
     .map(([month, amount]) => ({ month, amount }));
 }
 
+/** Ce sur quoi repose un total de revenus — et de résultat — sur une plage de mois. */
+export type MonthsBasis = {
+  /** La plus faible des provenances qui composent la plage (règle produit). */
+  provenance: Provenance;
+  /** Les mois de la plage où au moins un jour est réellement relevé. */
+  measuredMonths: string[];
+};
+
+/**
+ * Une comparaison d'année ne vaut que ce que valent les mois qu'elle compare.
+ *
+ * Les relevés réels ne couvrent que quelques jours — tout ce qui précède est
+ * reconstitué à partir du cumul et du débit du jour, puis converti en euros
+ * par l'estimateur. Un « −56,9 % vs 2025 » affiché nu laisse croire à une
+ * chute constatée, alors que les deux termes sortent de ce modèle. Cette
+ * fonction remonte l'information que les données portent déjà : la provenance
+ * la plus faible de la plage, et les mois qui contiennent une vraie mesure.
+ *
+ * Le streaming des artistes à relevés hérite de la provenance des estimations
+ * quotidiennes ; le reste (SACEM, droits voisins, SPRÉ, sync, live, merch) et
+ * les dépenses sortent des générateurs de démo, donc « simulé ». Un profil
+ * utilisateur, lui, n'a que ses propres chiffres importés : « renseigné ».
+ *
+ * Pas de coût caché : `dailyEstimates(id, 730)` est mémoïsé et déjà consommé
+ * par la série de revenus de la même page.
+ */
+export function monthsBasis(
+  artistIds: readonly string[],
+  months: readonly string[],
+): MonthsBasis {
+  const wanted = new Set(months);
+  const provenances: Provenance[] = [];
+  const measuredMonths = new Set<string>();
+
+  for (const id of artistIds) {
+    if (isUserArtist(id)) {
+      provenances.push("declared");
+      continue;
+    }
+    if (hasRealData(id)) {
+      for (const d of dailyEstimates(id, 730)) {
+        const month = d.date.slice(0, 7);
+        if (!wanted.has(month)) continue;
+        provenances.push(d.provenance);
+        // Un jour compte comme relevé dès qu'une plateforme l'a mesuré : le
+        // reste de la journée s'extrapole autour de cette mesure.
+        for (const v of Object.values(d.byDsp)) {
+          if (v?.provenance === "measured") measuredMonths.add(month);
+        }
+      }
+    }
+    provenances.push("simulated");
+  }
+
+  return {
+    provenance: weakest(provenances),
+    measuredMonths: Array.from(measuredMonths).sort(),
+  };
+}
+
 /* ─────────────── Dépenses & P&L ─────────────── */
 
 export type ExpenseFilter = {

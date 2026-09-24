@@ -214,18 +214,29 @@ export const SPLITS: TrackSplit[] = TRACKS.map((t, i) => {
 
 /* ─────────────────────────── Contrats ─────────────────────────── */
 
+/**
+ * `counterparty` s'affiche tel quel dans la colonne « Contrepartie », dans les
+ * alertes et dans le bandeau de recoupement : c'est le NOM d'une contrepartie,
+ * pas sa description. Les valeurs d'origine — « Label — contrat d'artiste »,
+ * « Distributeur numérique » — décrivaient en français ce que la colonne
+ * « Type » dit déjà, et restaient en français quand l'interface passe en
+ * anglais. Ne restent que des termes de métier identiques dans les deux
+ * langues. Même raison pour `territory` : « Monde » s'affichait tel quel dans
+ * la colonne « Territoire » d'une interface anglaise — « World » est le terme
+ * employé des deux côtés dans les contrats de musique.
+ */
 export const CONTRACTS: Contract[] = [
   {
     id: "c-da-artiste",
     artistId: "dadju",
     type: "licence",
-    counterparty: "Label — contrat d'artiste",
+    counterparty: "Label",
     startDate: "2017-05-19",
     endDate: "2027-05-19",
     royaltyRate: 22,
     advance: 450_000,
     recoupedPct: 100,
-    territory: "Monde",
+    territory: "World",
     exclusive: true,
     alerts: [
       {
@@ -252,13 +263,13 @@ export const CONTRACTS: Contract[] = [
     id: "c-ng-artiste",
     artistId: "nono-la-grinta",
     type: "licence",
-    counterparty: "Label — contrat d'artiste",
+    counterparty: "Label",
     startDate: "2023-03-10",
     endDate: "2027-03-10",
     royaltyRate: 20,
     advance: 90_000,
     recoupedPct: 71,
-    territory: "Monde",
+    territory: "World",
     exclusive: true,
     alerts: [
       {
@@ -275,13 +286,13 @@ export const CONTRACTS: Contract[] = [
     id: "c-ki-distribution",
     artistId: "kiko",
     type: "distribution",
-    counterparty: "Distributeur numérique",
+    counterparty: "Distro",
     startDate: "2025-01-15",
     endDate: "2027-01-15",
     royaltyRate: 85,
     advance: 0,
     recoupedPct: 100,
-    territory: "Monde",
+    territory: "World",
     exclusive: false,
     alerts: [
       {

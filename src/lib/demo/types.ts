@@ -131,6 +131,12 @@ export type Expense = {
   projectId?: string;
   trackId?: string;
   category: ExpenseCategory;
+  /**
+   * Identifiant stable du poste (`studioMix`, `tourTransport`…) que la
+   * présentation traduit via `finances.register.labels.<id>` — ou le texte
+   * saisi par l'utilisateur pour une dépense ajoutée à la main, qui n'a pas de
+   * traduction et s'affiche tel quel.
+   */
   label: string;
   amount: number; // EUR
   date: string; // ISO day

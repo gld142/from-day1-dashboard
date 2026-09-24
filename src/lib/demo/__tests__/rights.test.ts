@@ -15,6 +15,7 @@ import {
   rightsStatements,
 } from "@/lib/demo/api";
 import {
+  RIGHTS_ORGANISMS,
   RIGHTS_ORG_SCALE,
   rightsStatements as genRightsStatements,
   simulatedReceipt,
@@ -23,6 +24,8 @@ import { AUTHOR_SHARE_OF_PUBLISHING, PUBLISHING_SHARE_OF_DSP } from "@/lib/real/
 
 const quarterOf = (date: string) => `${date.slice(0, 4)}-T${Math.ceil(Number(date.slice(5, 7)) / 3)}`;
 const CLOSED = RIGHTS_PERIODS.filter((p) => p !== RIGHTS_PENDING_PERIOD);
+/** Les seuls signalements issus des relevés de droits — /audit en mêle d'autres (écarts DSP, label). */
+const ORGANISM_SOURCES = new Set(RIGHTS_ORGANISMS.map((o) => o.toUpperCase()));
 
 /** Part auteur de l'édition sur le brut master estimé (mid) d'un trimestre. */
 function publishingOfQuarter(artistId: string, period: string): number {
@@ -112,7 +115,9 @@ describe("rightsStatements (artistes réels)", () => {
   it("/audit reprend les écarts de /rights à l'euro près (mêmes relevés)", () => {
     const gaps = dadju.filter((s) => s.status === "gap-detected");
     expect(gaps.length).toBeGreaterThan(0);
-    const findings = auditFindings("dadju").filter((f) => !f.source.includes("·"));
+    // Filtré sur l'identité de l'organisme, pas sur la typographie du libellé :
+    // le `source` d'un signalement est une donnée d'affichage, il a déjà changé.
+    const findings = auditFindings("dadju").filter((f) => ORGANISM_SOURCES.has(f.source));
     expect(findings).toHaveLength(gaps.length);
     for (const [i, g] of gaps.entries()) {
       expect(findings[i].source).toBe(g.organism.toUpperCase());

@@ -227,9 +227,21 @@ export function revenueSeries(artistId: string, months = 24, streamingOverride?:
 
 /* ─────────────────────────── Dépenses ─────────────────────────── */
 
+/**
+ * Postes de dépense. `labels` porte des IDENTIFIANTS, pas des libellés : le
+ * générateur écrivait ici du français, et ce français ressortait tel quel dans
+ * la colonne « Libellé » du registre même quand l'interface est en anglais —
+ * une donnée ne parle aucune langue. Même principe que `category` : la couche
+ * données porte la clé, la couche présentation la traduit
+ * (`finances.register.labels.<id>`, cf. useExpenseLabel).
+ *
+ * L'ordre et le nombre d'entrées sont figés : le générateur tire l'index dans
+ * `labels` sur le même flux séquentiel que les montants et les dates, ajouter
+ * ou retirer un poste déplacerait toutes les données de démo.
+ */
 const EXPENSE_TEMPLATES: Array<{
   category: ExpenseCategory;
-  labels: Array<{ fr: string }>;
+  labels: string[];
   range: [number, number];
   monthlyProb: number;
   needsProject?: boolean;
@@ -237,12 +249,7 @@ const EXPENSE_TEMPLATES: Array<{
 }> = [
   {
     category: "studio",
-    labels: [
-      { fr: "Session studio — enregistrement" },
-      { fr: "Mix — ingé son" },
-      { fr: "Mastering" },
-      { fr: "Location studio (journée)" },
-    ],
+    labels: ["studioSession", "studioMix", "studioMastering", "studioDayRate"],
     range: [350, 2800],
     monthlyProb: 0.75,
     needsProject: true,
@@ -250,12 +257,7 @@ const EXPENSE_TEMPLATES: Array<{
   },
   {
     category: "clip",
-    labels: [
-      { fr: "Production clip — réalisateur" },
-      { fr: "Étalonnage & post-prod" },
-      { fr: "Location matériel caméra" },
-      { fr: "Décor & stylisme tournage" },
-    ],
+    labels: ["clipDirector", "clipGrading", "clipCameraRental", "clipSetStyling"],
     range: [1800, 14000],
     monthlyProb: 0.28,
     needsProject: true,
@@ -263,43 +265,35 @@ const EXPENSE_TEMPLATES: Array<{
   {
     category: "marketing",
     labels: [
-      { fr: "Campagne Meta Ads" },
-      { fr: "Campagne TikTok Ads" },
-      { fr: "Influence — activation créateurs" },
-      { fr: "Playlist pitching" },
+      "marketingMetaAds",
+      "marketingTiktokAds",
+      "marketingInfluence",
+      "marketingPlaylistPitching",
     ],
     range: [400, 6500],
     monthlyProb: 0.95,
   },
   {
     category: "distribution",
-    labels: [{ fr: "Frais distribution" }, { fr: "DDEX / livraison DSP" }],
+    labels: ["distributionFees", "distributionDdex"],
     range: [90, 450],
     monthlyProb: 0.5,
   },
   {
     category: "promo",
-    labels: [
-      { fr: "Attaché de presse (mensuel)" },
-      { fr: "Shooting photo presse" },
-      { fr: "Relations radio" },
-    ],
+    labels: ["promoPressAgent", "promoPhotoShoot", "promoRadio"],
     range: [500, 3200],
     monthlyProb: 0.4,
   },
   {
     category: "tour",
-    labels: [
-      { fr: "Backline & technique" },
-      { fr: "Transport tournée" },
-      { fr: "Hébergement équipe" },
-    ],
+    labels: ["tourBackline", "tourTransport", "tourLodging"],
     range: [600, 5200],
     monthlyProb: 0.3,
   },
   {
     category: "other",
-    labels: [{ fr: "Frais juridiques" }, { fr: "Assurance matériel" }],
+    labels: ["otherLegal", "otherInsurance"],
     range: [150, 1900],
     monthlyProb: 0.2,
   },
@@ -370,7 +364,7 @@ export function expensesFor(artistId: string, months = 24): Expense[] {
           projectId,
           trackId,
           category: tpl.category,
-          label: label.fr,
+          label,
           amount: Math.round(
             (tpl.range[0] + rand() * (tpl.range[1] - tpl.range[0])) * scale,
           ),
@@ -514,7 +508,10 @@ export function auditFindings(artistId: string): AuditFinding[] {
     fromRights.push({
       id: `${artistId}-af-label`,
       artistId,
-      source: "Label — relevé T1 2026",
+      // Le `source` d'un signalement s'affiche tel quel : on y met le nom de la
+      // contrepartie, jamais une phrase — « relevé T1 2026 » restait en
+      // français en anglais, et la période est déjà affichée à côté.
+      source: "Label",
       period: "2026-T1",
       expected,
       reported: Math.round(expected * 0.82),
