@@ -31,13 +31,19 @@ export function Sheet({
   family,
   className,
   children,
+  testId,
 }: {
   family: SheetFamily;
   className?: string;
   children: ReactNode;
+  /** Ancre de mesure pour la QA Playwright — n'a aucun effet sur le rendu. */
+  testId?: string;
 }) {
   return (
-    <section className={cn("sheet", FAMILY_CLASS[family], className)}>
+    <section
+      className={cn("sheet", FAMILY_CLASS[family], className)}
+      data-testid={testId}
+    >
       {children}
     </section>
   );

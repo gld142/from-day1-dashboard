@@ -54,6 +54,7 @@
     "title": "Comparisons",
     "subtitle": "What each year, each project, each track costs",
     "byYear": "Year on year",
+    "byArtist": "By artist",
     "byProject": "By project",
     "byTrack": "By track",
     "revenue": "Revenue",

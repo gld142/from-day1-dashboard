@@ -5,10 +5,17 @@
  * et timeline des prochains versements.
  */
 import { useLocale, useTranslations } from "next-intl";
-import { CalendarDays, Check, Clock, TriangleAlert } from "lucide-react";
-import type { Provenance, RightsOrganism, RightsStatement } from "@/lib/demo/types";
-import { fmtDate, fmtEur } from "@/lib/format";
+import { ArrowRight, CalendarDays, Check, Clock, TriangleAlert } from "lucide-react";
+import type {
+  Artist,
+  Provenance,
+  RightsOrganism,
+  RightsStatement,
+} from "@/lib/demo/types";
+import { artistColor, fmtDate, fmtEur } from "@/lib/format";
+import { weakest } from "@/lib/real";
 import { cn } from "@/lib/utils";
+import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import {
@@ -241,5 +248,135 @@ export function PaymentsTimeline({
         ))}
       </ol>
     </section>
+  );
+}
+
+/**
+ * Une ligne de la ventilation par artiste — l'attendu, le reçu et l'écart d'un
+ * artiste sur la fenêtre de la page. Les montants sont calculés dans la page,
+ * à partir des MÊMES relevés que l'agrégat (organisme, période) : une ligne ne
+ * peut donc pas être cadrée sur une autre période que le reste de /rights.
+ */
+export type ArtistRightsRow = {
+  artist: Pick<Artist, "id" | "hue" | "initials" | "name">;
+  expected: number;
+  received: number;
+  /** Somme des sous-versements constatés — mêmes relevés que la page zoomée. */
+  gap: number;
+  gapCount: number;
+  /** Répartition de l'écart par organisme, décroissante — « chez qui ». */
+  gapByOrganism: Array<{ organism: RightsOrganism; amount: number }>;
+  /** Part de l'attendu encore en cours de traitement (trimestre non réparti). */
+  pending: number;
+  expectedProvenance: Provenance;
+  receivedProvenance: Provenance;
+};
+
+/**
+ * Ventilation par artiste — vue structure agrégée uniquement.
+ *
+ * Répond à « quel artiste attend combien, et chez quel organisme » : l'agrégat
+ * (organisme, période) du reste de la page ne le dit pas. Trié par écart
+ * décroissant, c'est-à-dire par ce qu'on va chercher en premier.
+ *
+ * La barre reprend le langage des cartes organisme : le remplissage est le taux
+ * de versement (reçu / attendu), en ambre dès qu'un écart est constaté.
+ */
+export function ArtistRightsBreakdown({
+  rows,
+  onSelect,
+}: {
+  rows: readonly ArtistRightsRow[];
+  onSelect: (artistId: string) => void;
+}) {
+  const t = useTranslations("rights");
+  const locale = useLocale();
+  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
+
+  return (
+    <div className="mt-1 flex flex-col">
+      {rows.map((r) => {
+        const ratio = r.expected === 0 ? 0 : Math.min(100, (r.received / r.expected) * 100);
+        return (
+          <button
+            key={r.artist.id}
+            type="button"
+            onClick={() => onSelect(r.artist.id)}
+            className="sheet-rule group w-full border-t px-1 py-2.5 text-left transition-colors first:border-t-0 first:pt-0 hover:bg-[color-mix(in_oklab,var(--sheet-line)_8%,transparent)]"
+          >
+            <div className="flex items-center gap-3">
+              <ArtistBadge
+                artist={r.artist}
+                size="md"
+                meta={r.gapCount > 0 ? t("byArtist.gapCount", { count: r.gapCount }) : undefined}
+                className="min-w-0 flex-1"
+              />
+              <span className="sheet-ink shrink-0 text-[11px]">{t("byArtist.gap")}</span>
+              <span
+                className={cn(
+                  "num shrink-0 text-right text-base font-semibold",
+                  r.gap > 0 && "text-warning",
+                )}
+              >
+                {r.gap > 0 ? eur(r.gap) : "—"}
+              </span>
+              <ProvenanceBadge
+                provenance={weakest([r.expectedProvenance, r.receivedProvenance])}
+                className="hidden shrink-0 sm:inline-flex"
+              />
+              <ArrowRight
+                className="sheet-ink hidden size-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 sm:block"
+                aria-hidden
+              />
+            </div>
+
+            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${ratio}%`,
+                  background: r.gap > 0 ? "var(--warning)" : artistColor(r.artist.hue),
+                }}
+              />
+            </div>
+
+            <div className="sheet-ink mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px]">
+              <span className="inline-flex items-center gap-1.5">
+                {t("byArtist.expected")}
+                <b className="num text-foreground font-semibold">{eur(r.expected)}</b>
+                <ProvenanceBadge provenance={r.expectedProvenance} />
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                {t("byArtist.received")}
+                <b className="num text-foreground font-semibold">{eur(r.received)}</b>
+                <ProvenanceBadge provenance={r.receivedProvenance} />
+              </span>
+              {r.pending > 0 && <span>{t("byArtist.pending", { amount: eur(r.pending) })}</span>}
+            </div>
+
+            <div className="sheet-ink mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px]">
+              {r.gapByOrganism.length === 0 ? (
+                <span>{t("byArtist.noGap")}</span>
+              ) : (
+                <>
+                  <span>{t("byArtist.gapAt")}</span>
+                  {r.gapByOrganism.map((g) => (
+                    <span key={g.organism} className="inline-flex items-center gap-1.5">
+                      <span
+                        aria-hidden
+                        className="size-2 rounded-full"
+                        style={{ background: ORGANISM_COLORS[g.organism] }}
+                      />
+                      <span className="font-medium">{g.organism.toUpperCase()}</span>
+                      <b className="num text-foreground font-semibold">{eur(g.amount)}</b>
+                    </span>
+                  ))}
+                </>
+              )}
+            </div>
+          </button>
+        );
+      })}
+    </div>
   );
 }

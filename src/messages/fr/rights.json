@@ -131,6 +131,17 @@
     "window": "sur les 4 derniers trimestres"
   },
   "organismsHeading": "Organisme par organisme",
+  "byArtist": {
+    "heading": "Qui attend quoi, et chez qui",
+    "window": "{from} → {to}, la fenêtre du graphique · trié par écart décroissant",
+    "expected": "Attendu",
+    "received": "Reçu",
+    "gap": "Écart",
+    "pending": "dont {amount} en cours de traitement",
+    "gapCount": "{count, plural, one {# relevé en écart} other {# relevés en écart}}",
+    "gapAt": "Écart chez",
+    "noGap": "aucun écart sur la fenêtre"
+  },
   "doors": {
     "audit": "Audit royalties",
     "auditValue": "{amount} à réclamer",

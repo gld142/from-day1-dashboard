@@ -49,10 +49,12 @@ import {
   SheetHeading,
 } from "@/components/dashboard/sheet";
 import {
+  ArtistRightsBreakdown,
   ORGANISM_ORDER,
   OrganismCard,
   PaymentsTimeline,
   parsePeriod,
+  type ArtistRightsRow,
   type RightsRow,
   type ScheduledPayment,
 } from "@/components/modules/droits/rights-widgets";
@@ -84,48 +86,55 @@ export default function RightsPage() {
   const t = useTranslations("rights");
   const tc = useTranslations("common");
   const locale = useLocale();
-  const { isLabel, artistId, focusedArtistId } = useRole();
+  const { isLabel, artistId, focusedArtistId, setFocusedArtistId } = useRole();
   const grouped = isLabel && !focusedArtistId;
   const scope = grouped ? "roster" : "artist";
   const artistName = getArtist(artistId).name;
 
+  /**
+   * Les relevés du périmètre, à plat. Source UNIQUE de l'agrégat (organisme,
+   * période) et de la ventilation par artiste : les deux ne peuvent donc pas
+   * être cadrés sur des fenêtres différentes.
+   */
+  const statements = useMemo<RightsStatement[]>(() => {
+    const ids = grouped ? ARTISTS.map((a) => a.id) : [artistId];
+    return ids.flatMap((id) => rightsStatements(id));
+  }, [grouped, artistId]);
+
   /** Relevés agrégés par (organisme, période) sur le périmètre courant. */
   const rows = useMemo<RightsRow[]>(() => {
-    const ids = grouped ? ARTISTS.map((a) => a.id) : [artistId];
     const map = new Map<string, RightsRow>();
-    for (const id of ids) {
-      for (const s of rightsStatements(id)) {
-        const key = `${s.organism}:${s.period}`;
-        const cur =
-          map.get(key) ??
-          ({
-            organism: s.organism,
-            period: s.period,
-            expected: 0,
-            received: 0,
-            status: "received" as RightsStatement["status"],
-            expectedProvenance: s.expectedProvenance ?? "simulated",
-            receivedProvenance: s.receivedProvenance ?? "simulated",
-          } satisfies RightsRow);
-        cur.expected += s.expected;
-        cur.received += s.received;
-        // Plusieurs artistes agrégés : la provenance la plus faible l'emporte.
-        cur.expectedProvenance = weakest([
-          cur.expectedProvenance,
-          s.expectedProvenance ?? "simulated",
-        ]);
-        cur.receivedProvenance = weakest([
-          cur.receivedProvenance,
-          s.receivedProvenance ?? "simulated",
-        ]);
-        if (s.status === "gap-detected") cur.status = "gap-detected";
-        else if (s.status === "pending" && cur.status !== "gap-detected")
-          cur.status = "pending";
-        map.set(key, cur);
-      }
+    for (const s of statements) {
+      const key = `${s.organism}:${s.period}`;
+      const cur =
+        map.get(key) ??
+        ({
+          organism: s.organism,
+          period: s.period,
+          expected: 0,
+          received: 0,
+          status: "received" as RightsStatement["status"],
+          expectedProvenance: s.expectedProvenance ?? "simulated",
+          receivedProvenance: s.receivedProvenance ?? "simulated",
+        } satisfies RightsRow);
+      cur.expected += s.expected;
+      cur.received += s.received;
+      // Plusieurs artistes agrégés : la provenance la plus faible l'emporte.
+      cur.expectedProvenance = weakest([
+        cur.expectedProvenance,
+        s.expectedProvenance ?? "simulated",
+      ]);
+      cur.receivedProvenance = weakest([
+        cur.receivedProvenance,
+        s.receivedProvenance ?? "simulated",
+      ]);
+      if (s.status === "gap-detected") cur.status = "gap-detected";
+      else if (s.status === "pending" && cur.status !== "gap-detected")
+        cur.status = "pending";
+      map.set(key, cur);
     }
     return Array.from(map.values());
-  }, [grouped, artistId]);
+  }, [statements]);
 
   const facts = useMemo(() => {
     const received12m = rows
@@ -156,6 +165,70 @@ export default function RightsPage() {
       top: top ? { organism: top[0], amount: top[1] } : null,
     };
   }, [rows]);
+
+  /**
+   * Ventilation par artiste — vue structure agrégée uniquement.
+   *
+   * Construite sur `statements`, donc sur EXACTEMENT les mêmes relevés que
+   * l'agrégat (organisme, période) : même roster, mêmes six trimestres. Deux
+   * contrôles le vérifient à l'écran — la somme des attendus « en cours » vaut
+   * le point affilié « Attendu (en cours) », et l'écart d'un artiste vaut
+   * l'écart que la page affiche quand on zoome sur lui.
+   *
+   * L'écart se compte relevé par relevé (attendu − reçu sur les relevés en
+   * écart), comme sur la page zoomée et comme dans /audit : un montant qu'on
+   * peut aller réclamer, pas un résidu d'agrégation.
+   */
+  const byArtist = useMemo<ArtistRightsRow[]>(() => {
+    if (!grouped) return [];
+    const map = new Map<string, ArtistRightsRow>();
+    const gapByOrg = new Map<string, Map<RightsOrganism, number>>();
+    for (const s of statements) {
+      const cur =
+        map.get(s.artistId) ??
+        ({
+          artist: getArtist(s.artistId),
+          expected: 0,
+          received: 0,
+          gap: 0,
+          gapCount: 0,
+          gapByOrganism: [],
+          pending: 0,
+          expectedProvenance: s.expectedProvenance ?? "simulated",
+          receivedProvenance: s.receivedProvenance ?? "simulated",
+        } satisfies ArtistRightsRow);
+      cur.expected += s.expected;
+      cur.received += s.received;
+      if (s.status === "pending") cur.pending += s.expected;
+      if (s.status === "gap-detected") {
+        const gap = Math.max(0, s.expected - s.received);
+        cur.gap += gap;
+        cur.gapCount += 1;
+        const orgs = gapByOrg.get(s.artistId) ?? new Map<RightsOrganism, number>();
+        orgs.set(s.organism, (orgs.get(s.organism) ?? 0) + gap);
+        gapByOrg.set(s.artistId, orgs);
+      }
+      // Un artiste peut mélanger des provenances : la plus faible l'emporte.
+      cur.expectedProvenance = weakest([
+        cur.expectedProvenance,
+        s.expectedProvenance ?? "simulated",
+      ]);
+      cur.receivedProvenance = weakest([
+        cur.receivedProvenance,
+        s.receivedProvenance ?? "simulated",
+      ]);
+      map.set(s.artistId, cur);
+    }
+    for (const [id, row] of map) {
+      row.gapByOrganism = Array.from(gapByOrg.get(id) ?? [])
+        .map(([organism, amount]) => ({ organism, amount }))
+        .sort((a, b) => b.amount - a.amount);
+    }
+    // Trié par écart décroissant : ce qu'on va chercher en premier.
+    return Array.from(map.values()).sort(
+      (a, b) => b.gap - a.gap || b.expected - a.expected,
+    );
+  }, [grouped, statements]);
 
   /** Provenance affichée : la plus faible du périmètre (sans relevé : simulé). */
   const provenance = useMemo<{ expected: Provenance; received: Provenance }>(
@@ -205,6 +278,16 @@ export default function RightsPage() {
       style: "percent",
       maximumFractionDigits: 1,
     }).format(points / 100);
+
+  /** Les bornes de la fenêtre, lues sur PERIODS — celles du graphique. */
+  const windowLabel = useMemo(() => {
+    const first = parsePeriod(PERIODS[0]);
+    const last = parsePeriod(PERIODS[PERIODS.length - 1]);
+    return {
+      from: t("periodShort", { q: first.q, year: first.year }),
+      to: t("periodShort", { q: last.q, year: last.year }),
+    };
+  }, [t]);
 
   const seriesName: Record<string, string> = {
     expected: t("chart.expected", { provenance: provenance.expected }),
@@ -354,6 +437,16 @@ export default function RightsPage() {
             ]}
           />
         </Sheet>
+
+        {/* Qui porte quoi dans l'agrégat ci-dessus — vue structure seulement. */}
+        {byArtist.length > 0 && (
+          <Sheet family="money" testId="rights-by-artist">
+            <SheetHeading action={t("byArtist.window", windowLabel)}>
+              {t("byArtist.heading")}
+            </SheetHeading>
+            <ArtistRightsBreakdown rows={byArtist} onSelect={setFocusedArtistId} />
+          </Sheet>
+        )}
 
         {/* Le reçu est simulé : voici comment passer au vrai. */}
         <StatementsPanel

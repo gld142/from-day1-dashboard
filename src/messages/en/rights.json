@@ -131,6 +131,17 @@
     "window": "over the last 4 quarters"
   },
   "organismsHeading": "Society by society",
+  "byArtist": {
+    "heading": "Who is owed what, and by whom",
+    "window": "{from} → {to}, the chart window · sorted by largest gap",
+    "expected": "Expected",
+    "received": "Received",
+    "gap": "Gap",
+    "pending": "incl. {amount} being processed",
+    "gapCount": "{count, plural, one {# statement in gap} other {# statements in gap}}",
+    "gapAt": "Gap at",
+    "noGap": "no gap over this window"
+  },
   "doors": {
     "audit": "Royalty audit",
     "auditValue": "{amount} to claim",

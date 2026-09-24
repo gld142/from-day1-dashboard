@@ -36,6 +36,7 @@ import {
 } from "@/components/modules/finances/expense-register";
 import {
   PnlComparisons,
+  type ArtistPnlRow,
   type SpendRow,
   type YearPnlRow,
 } from "@/components/modules/finances/pnl-comparisons";
@@ -65,6 +66,7 @@ import {
   getArtist,
   monthlyRevenueTotals,
   monthsBasis,
+  pnlByYear,
 } from "@/lib/demo/api";
 import type { Expense, ExpenseCategory } from "@/lib/demo/types";
 import { downloadCsv } from "@/lib/export";
@@ -294,6 +296,26 @@ export default function FinancesPage() {
     };
   }, [yearExpenses]);
 
+  /* ── P&L par artiste, sur la MÊME année que le reste de la page ─────
+   *
+   * Vue structure seulement : « quel artiste coûte quoi » n'a pas de sens sur
+   * un zoom. On lit `pnlByYear`, pas `pnlByArtist(12)` : la page est cadrée
+   * sur une année civile, une fenêtre glissante afficherait un autre total
+   * que les blocs voisins. */
+  const byArtist = useMemo<ArtistPnlRow[]>(() => {
+    if (!scopeAll) return [];
+    return ARTISTS.map((a) => {
+      const y = pnlByYear(a.id).find((r) => r.year === year);
+      return {
+        id: a.id,
+        name: a.name,
+        revenue: y?.revenue ?? 0,
+        expenses: y?.expenses ?? 0,
+        net: y?.net ?? 0,
+      };
+    }).sort((x, z) => z.net - x.net);
+  }, [scopeAll, year]);
+
   const wavelyCount = useMemo(
     () => yearExpenses.filter((e) => e.source === "wavely").length,
     [yearExpenses],
@@ -519,6 +541,7 @@ export default function FinancesPage() {
             </SheetHeading>
             <PnlComparisons
               byYear={spanRows}
+              byArtist={byArtist}
               byProject={byProject}
               byTrack={byTrack}
               yearNote={
