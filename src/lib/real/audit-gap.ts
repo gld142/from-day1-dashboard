@@ -32,6 +32,24 @@ const DSP_LABEL: Record<DSP, string> = {
   other: "Multi-DSP",
 };
 
+/**
+ * Marqueur porté par l'identifiant des écarts DSP.
+ *
+ * Il a fallu un vrai bug pour en arriver là : /welcome triait les signalements
+ * sur `source.includes("écart")`, ce qui marchait tant que `source` valait
+ * « Spotify · écart estimé/déclaré ». Le jour où ce libellé est devenu
+ * traduisible, `source` est passé à « Spotify » et l'écran d'acquisition a
+ * affiché 0 € — la première phrase que lit un prospect. Reconnaître une nature
+ * de donnée à la typographie de son libellé ne tient jamais ; elle vit
+ * désormais dans l'identifiant, que rien ne traduit.
+ */
+const DSP_GAP_MARKER = "gap";
+
+/** Vrai si ce signalement oppose l'estimation à ce qu'une plateforme a déclaré. */
+export function isDspGap(finding: { id: string }): boolean {
+  return finding.id.includes(`-${DSP_GAP_MARKER}-`);
+}
+
 export function auditGap(
   artistId: string,
   estimated: EstimatedLine[],
@@ -54,7 +72,7 @@ export function auditGap(
     candidates.push({
       gap,
       finding: {
-        id: `${artistId}-gap-${e.dsp}-${e.period}`,
+        id: `${artistId}-${DSP_GAP_MARKER}-${e.dsp}-${e.period}`,
         artistId,
         source: DSP_LABEL[e.dsp],
         period: e.period,
