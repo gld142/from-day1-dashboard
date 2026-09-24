@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Menu, Sunrise } from "lucide-react";
+import { ChevronDown, Menu, Sunrise } from "lucide-react";
 import { useModules } from "@/lib/userdata/use-modules";
+import { useNavCollapse } from "@/lib/nav-collapse";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,9 @@ export function MobileNav() {
   const t = useTranslations("nav");
   const tc = useTranslations("common");
   const { sections } = useModules();
+  // Même choix qu'en barre latérale : ce que l'utilisateur replie d'un côté
+  // reste replié de l'autre (même clé de stockage).
+  const { collapsed, toggle } = useNavCollapse();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -47,12 +51,35 @@ export function MobileNav() {
         </SheetHeader>
         <ScrollArea className="h-[calc(100svh-3.5rem)] px-2 py-3">
           <nav className="flex flex-col gap-4">
-            {sections.map((section) => (
+            {sections.map((section) => {
+              const isCollapsed = collapsed.has(section.labelKey);
+              const domId = `m-nav-${section.labelKey.replace(/[^a-zA-Z0-9]+/g, "-")}`;
+              const holdsActive = section.items.some((i) => i.href === pathname);
+              return (
               <div key={section.labelKey}>
-                <div className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
-                  {t(section.labelKey)}
-                </div>
-                <ul className="flex flex-col gap-px">
+                <button
+                  type="button"
+                  onClick={() => toggle(section.labelKey)}
+                  aria-expanded={!isCollapsed}
+                  aria-controls={domId}
+                  className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70 transition-colors hover:text-foreground"
+                >
+                  <ChevronDown
+                    className={cn(
+                      "size-3 shrink-0 transition-transform duration-200",
+                      isCollapsed && "-rotate-90",
+                    )}
+                    aria-hidden
+                  />
+                  <span className="truncate">{t(section.labelKey)}</span>
+                  {isCollapsed && holdsActive && (
+                    <span className="size-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
+                  )}
+                  {isCollapsed && (
+                    <span className="num ml-auto shrink-0 opacity-60">{section.items.length}</span>
+                  )}
+                </button>
+                <ul id={domId} className="flex flex-col gap-px" hidden={isCollapsed}>
                   {section.items.map((item) => {
                     const active = pathname === item.href;
                     const Icon = item.icon;
@@ -82,7 +109,8 @@ export function MobileNav() {
                   })}
                 </ul>
               </div>
-            ))}
+              );
+            })}
           </nav>
         </ScrollArea>
       </SheetContent>

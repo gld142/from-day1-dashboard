@@ -4,17 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Sunrise } from "lucide-react";
+import { ChevronDown, Sunrise } from "lucide-react";
 import { useModules } from "@/lib/userdata/use-modules";
+import { useNavCollapse } from "@/lib/nav-collapse";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
+/** Identifiant DOM stable pour `aria-controls` : "sections.daily" → "nav-daily". */
+function sectionDomId(labelKey: string): string {
+  return `nav-${labelKey.replace(/[^a-zA-Z0-9]+/g, "-")}`;
+}
 
 export function Sidebar() {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tc = useTranslations("common");
   const { sections } = useModules();
+  // Plier une section est un choix, pas un défaut : au premier lancement tout
+  // est déplié, et ce que l'utilisateur replie lui reste replié.
+  const { collapsed, toggle } = useNavCollapse();
 
   return (
     <aside className="sticky top-0 hidden h-svh w-60 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex">
@@ -38,12 +47,37 @@ export function Sidebar() {
           bloc, la largeur suit la sidebar et les libellés se tronquent. */}
       <ScrollArea className="min-h-0 flex-1 px-2 pb-4 [&_[data-slot=scroll-area-viewport]>div]:block!">
         <nav className="flex flex-col gap-4 pt-2">
-          {sections.map((section) => (
+          {sections.map((section) => {
+            const isCollapsed = collapsed.has(section.labelKey);
+            const domId = sectionDomId(section.labelKey);
+            // Repliée, la section perd le surlignage de la page courante : un
+            // point sur l'en-tête dit quand même où l'on se trouve.
+            const holdsActive = section.items.some((i) => i.href === pathname);
+            return (
             <div key={section.labelKey}>
-              <div className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
-                {t(section.labelKey)}
-              </div>
-              <ul className="flex flex-col gap-px">
+              <button
+                type="button"
+                onClick={() => toggle(section.labelKey)}
+                aria-expanded={!isCollapsed}
+                aria-controls={domId}
+                className="flex w-full items-center gap-1.5 rounded-md px-2 py-1 pb-1.5 text-left text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70 transition-colors hover:text-foreground"
+              >
+                <ChevronDown
+                  className={cn(
+                    "size-3 shrink-0 transition-transform duration-200",
+                    isCollapsed && "-rotate-90",
+                  )}
+                  aria-hidden
+                />
+                <span className="truncate">{t(section.labelKey)}</span>
+                {isCollapsed && holdsActive && (
+                  <span className="size-1.5 shrink-0 rounded-full bg-brand" aria-hidden />
+                )}
+                {isCollapsed && (
+                  <span className="num ml-auto shrink-0 opacity-60">{section.items.length}</span>
+                )}
+              </button>
+              <ul id={domId} className="flex flex-col gap-px" hidden={isCollapsed}>
                 {section.items.map((item) => {
                   const active = pathname === item.href;
                   const Icon = item.icon;
@@ -89,7 +123,8 @@ export function Sidebar() {
                 })}
               </ul>
             </div>
-          ))}
+            );
+          })}
         </nav>
       </ScrollArea>
 
