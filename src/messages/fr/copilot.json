@@ -59,13 +59,5 @@
     "audienceValue": "qui écoute vraiment",
     "calculator": "Simulateur",
     "calculatorValue": "ce qui arrive dans 12 mois"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "index": "Day 1 Index",
-    "market": "Marché",
-    "discovery": "Discovery Lab",
-    "catalog": "Catalogue",
-    "settings": "Réglages"
   }
 }

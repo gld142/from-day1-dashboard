@@ -82,13 +82,5 @@
     "contractsValue": "ce que tu peux céder",
     "rights": "Droits FR",
     "rightsValue": "les droits d'auteur liés"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "fans": "Fans CRM",
-    "tour": "Tournée",
-    "market": "Marché",
-    "valuation": "Valorisation",
-    "team": "Équipe"
   }
 }

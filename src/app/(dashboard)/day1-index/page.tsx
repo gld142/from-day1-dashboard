@@ -37,7 +37,7 @@ import {
   SubScoreBar,
 } from "@/components/modules/intelligence/index-gauge";
 import { PublicPreview } from "@/components/modules/intelligence/public-preview";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { Badge } from "@/components/ui/badge";
 import {
   ARTISTS,
@@ -346,19 +346,6 @@ export default function Day1IndexPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={isRoster ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "algo", href: "/algo-position", label: t("rest.algo") },
-            { key: "discovery", href: "/discovery", label: t("rest.discovery") },
-            { key: "roster", href: "/roster", label: t("rest.roster") },
-            { key: "arwatch", href: "/ar-watch", label: t("rest.arwatch") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

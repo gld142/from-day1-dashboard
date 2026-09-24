@@ -261,19 +261,18 @@ export default function OnboardingsPage() {
           ]}
         />
 
+        {/* Seul lien de cette page qui ne soit pas déjà dans la barre latérale :
+            `/welcome` vit hors de la coquille du dashboard. Les cinq autres
+            (Pulse, Copilot, Importer, Catalogue, Réglages) étaient du
+            remplissage — la barre latérale les porte déjà. */}
         <RestRow
-          title={tc("blocks.restLabel")}
+          title={t("portal.title")}
           items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
             {
               key: "welcome",
               href: "/welcome?source=universal",
-              label: t("rest.welcome"),
+              label: t("portal.link"),
             },
-            { key: "copilot", href: "/copilot", label: t("rest.copilot") },
-            { key: "import", href: "/import", label: t("rest.import") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "settings", href: "/settings", label: t("rest.settings") },
           ]}
         />
 

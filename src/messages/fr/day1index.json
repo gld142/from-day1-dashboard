@@ -77,13 +77,5 @@
     "marketValue": "ta place dans ton genre",
     "valuation": "Valorisation",
     "valuationValue": "ce que vaut le catalogue"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "algo": "Position algo",
-    "discovery": "Discovery Lab",
-    "roster": "Roster",
-    "arwatch": "A&R Watch",
-    "catalog": "Catalogue"
   }
 }

@@ -191,13 +191,5 @@
     "urssafValue": "cotisations et déclaration",
     "calculator": "Simulateur de deals",
     "calculatorValue": "tester un contrat"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "splits": "Splits",
-    "import": "Importer un relevé",
-    "valuation": "Valorisation",
-    "sync": "Sync & Licensing"
   }
 }

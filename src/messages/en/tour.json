@@ -61,13 +61,5 @@
     "catalogValue": "what you play",
     "contracts": "Contracts",
     "contractsValue": "booking and deadlines"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "market": "Market",
-    "sync": "Sync & Licensing",
-    "urssaf": "URSSAF",
-    "team": "Team"
   }
 }

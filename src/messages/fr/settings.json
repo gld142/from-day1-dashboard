@@ -51,13 +51,5 @@
     "title": "Compte",
     "description": "Ton rôle détermine ce que tu vois : un artiste ne voit que lui, une structure voit tout son roster.",
     "currentRole": "Rôle actif"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "team": "Équipe & accès",
-    "import": "Importer un relevé",
-    "revenue": "Revenus",
-    "catalog": "Catalogue",
-    "copilot": "Copilot"
   }
 }

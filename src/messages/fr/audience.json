@@ -93,12 +93,5 @@
     "indexValue": "ton score global",
     "tour": "Tournée",
     "tourValue": "où aller jouer"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenus",
-    "sync": "Sync & Licensing",
-    "discoveryLab": "Discovery Lab",
-    "catalog": "Catalogue"
   }
 }

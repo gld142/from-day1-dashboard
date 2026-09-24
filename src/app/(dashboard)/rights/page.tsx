@@ -57,7 +57,7 @@ import {
   type ScheduledPayment,
 } from "@/components/modules/droits/rights-widgets";
 import { StatementsPanel } from "@/components/modules/droits/statements-panel";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 
 const PERIODS = RIGHTS_PERIODS;
@@ -445,19 +445,6 @@ export default function RightsPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={grouped ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "finances", href: "/finances", label: t("rest.finances") },
-            { key: "calculator", href: "/calculator", label: t("rest.calculator") },
-            { key: "import", href: "/import", label: t("rest.import") },
-            { key: "sync", href: "/sync", label: t("rest.sync") },
-            { key: "tour", href: "/tour", label: t("rest.tour") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

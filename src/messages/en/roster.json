@@ -91,13 +91,5 @@
     "indexValue": "the detailed ranking",
     "team": "Team",
     "teamValue": "who works on what"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "revenue": "Revenue",
-    "catalog": "Catalog",
-    "tour": "Touring",
-    "market": "Market"
   }
 }

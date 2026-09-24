@@ -104,8 +104,6 @@
   },
   "blocks": {
     "doors": "Aller plus loin",
-    "rest": "Le reste de ton dashboard",
-    "restLabel": "Le reste du dashboard",
     "collect": "De l'argent à aller chercher",
     "legend": "Chaque chiffre porte sa provenance.",
     "detail": "voir le détail →",

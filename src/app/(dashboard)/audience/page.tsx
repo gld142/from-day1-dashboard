@@ -39,7 +39,7 @@ import {
 } from "@/components/modules/data/derive";
 import { DiscoveryDonut } from "@/components/modules/data/discovery-donut";
 import { TopCities } from "@/components/modules/data/top-cities";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 
 export default function AudiencePage() {
   const t = useTranslations("audience");
@@ -205,18 +205,6 @@ export default function AudiencePage() {
             },
           ]}
         />
-
-        <RestRow
-          title={aggregate ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-            { key: "sync", href: "/sync", label: t("rest.sync") },
-            { key: "discovery", href: "/discovery", label: t("rest.discoveryLab") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

@@ -94,12 +94,5 @@
     "discoveryValue": "test a demo",
     "arwatch": "A&R Watch",
     "arwatchValue": "artists tracked"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenue",
-    "fans": "Fan CRM",
-    "index": "Day 1 Index",
-    "roster": "Roster"
   }
 }

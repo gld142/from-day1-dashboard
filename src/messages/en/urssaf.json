@@ -97,13 +97,5 @@
     "splitsValue": "who gets what on each track",
     "calculator": "Revenue simulator",
     "calculatorValue": "what's coming in 12 months"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "audit": "Royalty audit",
-    "catalog": "Catalog",
-    "team": "Team",
-    "tour": "Touring",
-    "settings": "Settings"
   }
 }

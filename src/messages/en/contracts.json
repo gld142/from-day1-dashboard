@@ -101,13 +101,5 @@
     "calculatorValue": "test before signing",
     "valuation": "Valuation",
     "valuationValue": "what the catalog is worth"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Expenses & P&L",
-    "urssaf": "URSSAF",
-    "catalog": "Catalog",
-    "team": "Team",
-    "import": "Import a statement"
   }
 }

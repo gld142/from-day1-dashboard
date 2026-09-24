@@ -28,7 +28,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import {
   DemoCompareChart,
   demoColor,
@@ -170,20 +170,6 @@ export default function DiscoveryPage() {
     />
   );
 
-  const rest = (
-    <RestRow
-      title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
-      items={[
-        { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-        { key: "fans", href: "/fans", label: t("rest.fans") },
-        { key: "tour", href: "/tour", label: t("rest.tour") },
-        { key: "index", href: "/day1-index", label: t("rest.index") },
-        { key: "arwatch", href: "/ar-watch", label: t("rest.arwatch") },
-        { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-      ]}
-    />
-  );
-
   const legend = (
     <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
   );
@@ -265,7 +251,6 @@ export default function DiscoveryPage() {
 
           {methodDetails}
           {doors}
-          {rest}
           {legend}
         </div>
       </div>
@@ -435,7 +420,6 @@ export default function DiscoveryPage() {
 
         {methodDetails}
         {doors}
-        {rest}
         {legend}
       </div>
     </div>

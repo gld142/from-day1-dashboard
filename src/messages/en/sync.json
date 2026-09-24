@@ -82,13 +82,5 @@
     "contractsValue": "what you can license",
     "rights": "French rights",
     "rightsValue": "the author rights involved"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "fans": "Fan CRM",
-    "tour": "Touring",
-    "market": "Market",
-    "valuation": "Valuation",
-    "team": "Team"
   }
 }

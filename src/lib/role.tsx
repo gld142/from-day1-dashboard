@@ -16,9 +16,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
   useSyncExternalStore,
 } from "react";
 import {
@@ -177,7 +175,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       isLabel: persona === "label",
       hasUserData,
     }),
-    [persona, focusedArtistId, setPersona, artistSelfId, hasUserData],
+    [persona, focusedArtistId, setPersona, setFocusedArtistId, artistSelfId, hasUserData],
   );
 
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;

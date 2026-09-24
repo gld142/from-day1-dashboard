@@ -25,7 +25,7 @@ import {
 import { EmergingCard } from "@/components/modules/structure/emerging-card";
 import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { ScoringDialog } from "@/components/modules/structure/scoring-dialog";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import {
   Select,
   SelectContent,
@@ -273,19 +273,6 @@ export default function ArWatchPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={tc("blocks.restLabel")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "streams", href: "/streams", label: t("rest.streams") },
-            { key: "audience", href: "/audience", label: t("rest.audience") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "tour", href: "/tour", label: t("rest.tour") },
-            { key: "sync", href: "/sync", label: t("rest.sync") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
 

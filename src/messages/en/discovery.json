@@ -91,13 +91,5 @@
     "audienceValue": "who you're speaking to",
     "sync": "Sync & Licensing",
     "syncValue": "place a track in sync"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "fans": "Fan CRM",
-    "tour": "Touring",
-    "index": "Day 1 Index",
-    "arwatch": "A&R Watch",
-    "revenue": "Revenue"
   }
 }

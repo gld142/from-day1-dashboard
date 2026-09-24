@@ -101,13 +101,5 @@
     "calculatorValue": "tester avant de signer",
     "valuation": "Valorisation",
     "valuationValue": "ce que vaut le catalogue"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Dépenses & P&L",
-    "urssaf": "URSSAF",
-    "catalog": "Catalogue",
-    "team": "Équipe",
-    "import": "Importer un relevé"
   }
 }

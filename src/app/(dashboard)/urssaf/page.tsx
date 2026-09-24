@@ -38,7 +38,7 @@ import {
   URSSAF_RATE,
   type Deadline,
 } from "@/components/modules/droits/urssaf-widgets";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import {
@@ -389,19 +389,6 @@ export default function UrssafPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={grouped ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "audit", href: "/audit", label: t("rest.audit") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "team", href: "/team", label: t("rest.team") },
-            { key: "tour", href: "/tour", label: t("rest.tour") },
-            { key: "settings", href: "/settings", label: t("rest.settings") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

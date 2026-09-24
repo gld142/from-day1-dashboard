@@ -20,7 +20,7 @@ import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { AuditFindingCard } from "@/components/modules/intelligence/audit-finding-card";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { ARTISTS, auditFindings, getArtist } from "@/lib/demo/api";
 import type { Artist, AuditFinding } from "@/lib/demo/types";
@@ -297,19 +297,6 @@ export default function AuditPage() {
               },
             ]}
           />
-
-          <RestRow
-            title={isRoster ? tc("blocks.restLabel") : tc("blocks.rest")}
-            items={[
-              { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-              { key: "finances", href: "/finances", label: t("rest.finances") },
-              { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
-              { key: "valuation", href: "/valuation", label: t("rest.valuation") },
-              { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-              { key: "copilot", href: "/copilot", label: t("rest.copilot") },
-            ]}
-          />
-
           <p className="text-muted-foreground mt-2 text-[11.5px]">
             {tc("blocks.legend")}
           </p>

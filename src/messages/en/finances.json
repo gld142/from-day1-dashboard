@@ -163,13 +163,5 @@
     "splitsValue": "who gets what",
     "audit": "Royalty audit",
     "auditValue": "gap with statements"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "valuation": "Valuation",
-    "import": "Import a statement",
-    "catalog": "Catalog",
-    "team": "Team",
-    "tour": "Touring"
   }
 }

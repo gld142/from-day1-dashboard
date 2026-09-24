@@ -81,14 +81,6 @@
     "team": "Who owns which partner",
     "teamValue": "{count, plural, one {# owner} other {# owners}}"
   },
-  "rest": {
-    "pulse": "Pulse",
-    "welcome": "The co-branded portal",
-    "copilot": "Copilot",
-    "import": "Import a statement",
-    "catalog": "Catalog",
-    "settings": "Settings"
-  },
   "partners": {
     "capitol": {
       "name": "Capitol Music France",
@@ -283,5 +275,9 @@
         }
       }
     }
+  },
+  "portal": {
+    "title": "What your artists see",
+    "link": "The co-branded portal"
   }
 }

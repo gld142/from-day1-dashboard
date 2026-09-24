@@ -98,13 +98,5 @@
     "indexValue": "0 à 100",
     "copilot": "Les réponses en français sur les données",
     "copilotValue": "pas un dashboard muet"
-  },
-  "rest": {
-    "onboardings": "Pipeline partenaires",
-    "pulse": "Pulse",
-    "market": "Marché",
-    "revenue": "Revenus",
-    "roster": "Roster",
-    "catalog": "Catalogue"
   }
 }

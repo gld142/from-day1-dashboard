@@ -89,13 +89,5 @@
     "catalogValue": "{count} leading tracks",
     "audit": "Royalty audit",
     "auditValue": "gap with statements"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "fans": "Fans",
-    "sync": "Sync & Licensing",
-    "discovery": "Discovery Lab",
-    "index": "Day 1 Index",
-    "revenue": "Revenue"
   }
 }

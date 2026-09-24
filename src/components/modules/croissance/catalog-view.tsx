@@ -24,7 +24,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
@@ -517,19 +517,6 @@ export function CatalogView() {
           { key: "discovery", family: "trends", href: "/discovery", label: t("doors.discovery"), value: t("doors.discoveryValue") },
         ]}
       />
-
-      <RestRow
-        title={rosterMode ? tc("blocks.restLabel") : tc("blocks.rest")}
-        items={[
-          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-          { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-          { key: "audience", href: "/audience", label: t("rest.audience") },
-          { key: "tour", href: "/tour", label: t("rest.tour") },
-          { key: "audit", href: "/audit", label: t("rest.audit") },
-          { key: "import", href: "/import", label: t("rest.import") },
-        ]}
-      />
-
       <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

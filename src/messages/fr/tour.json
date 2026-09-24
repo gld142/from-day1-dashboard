@@ -61,13 +61,5 @@
     "catalogValue": "ce que tu joues",
     "contracts": "Contrats",
     "contractsValue": "booking et échéances"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "market": "Marché",
-    "sync": "Sync & Licensing",
-    "urssaf": "URSSAF",
-    "team": "Équipe"
   }
 }

@@ -86,13 +86,5 @@
     "auditValue": "gap with statements",
     "team": "Team",
     "teamValue": "who works on what"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Expenses & P&L",
-    "calculator": "Simulator",
-    "valuation": "Valuation",
-    "urssaf": "URSSAF",
-    "import": "Import a statement"
   }
 }

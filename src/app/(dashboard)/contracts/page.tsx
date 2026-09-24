@@ -27,7 +27,7 @@ import {
   ContractsTable,
   RecoupmentSteps,
 } from "@/components/modules/droits/contract-widgets";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 
 const TODAY_ISO = DEMO_TODAY.toISOString().slice(0, 10);
 
@@ -314,19 +314,6 @@ export default function ContractsPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={grouped ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "finances", href: "/finances", label: t("rest.finances") },
-            { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "team", href: "/team", label: t("rest.team") },
-            { key: "import", href: "/import", label: t("rest.import") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

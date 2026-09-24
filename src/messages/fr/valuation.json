@@ -82,13 +82,5 @@
     "contractsValue": "ce qui peut peser sur la valeur",
     "splits": "Splits",
     "splitsValue": "qui touche quoi sur chaque titre"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "roster": "Roster",
-    "audit": "Audit royalties",
-    "rights": "Droits FR",
-    "sync": "Sync & Licensing",
-    "index": "Day 1 Index"
   }
 }

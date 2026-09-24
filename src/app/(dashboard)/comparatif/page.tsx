@@ -28,7 +28,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { fmtEur, fmtInt } from "@/lib/format";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import {
   ComparisonTable,
   comparisonFacts,
@@ -212,19 +212,6 @@ export default function ComparatifPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={tc("blocks.restLabel")}
-          items={[
-            { key: "onboardings", href: "/onboardings", label: t("rest.onboardings") },
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "market", href: "/market", label: t("rest.market") },
-            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-            { key: "roster", href: "/roster", label: t("rest.roster") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

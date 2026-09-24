@@ -38,7 +38,6 @@ import {
   ImportBand,
   MoneyToCollect,
   NightStrip,
-  RestRow,
   YearBand,
   type Door,
   type MoneyLead,
@@ -896,35 +895,6 @@ export default function PulsePage() {
               ].filter(Boolean) as Door[]
             }
           />
-
-          <RestRow
-            title={t("rest.title")}
-            items={[
-              {
-                key: "fans",
-                href: "/fans",
-                label: t("rest.fans", { count: fmtCompact(locale, v.rest.superfans) }),
-              },
-              {
-                key: "catalog",
-                href: "/catalog",
-                label: t("rest.catalog", { count: v.rest.tracks }),
-              },
-              { key: "tour", href: "/tour", label: t("rest.tour", { count: v.rest.shows }) },
-              {
-                key: "discovery",
-                href: "/discovery",
-                label: t("rest.discovery", { count: EMERGING.length }),
-              },
-              {
-                key: "audience",
-                href: "/audience",
-                label: t("rest.audience", { count: v.rest.countries }),
-              },
-              { key: "calc", href: "/calculator", label: t("rest.calculator") },
-            ]}
-          />
-
           <p className="text-muted-foreground mt-2 text-[11.5px]">{t("legend.intro")}</p>
         </div>
       )}
@@ -1350,33 +1320,6 @@ export default function PulsePage() {
               },
             ]}
           />
-
-          <RestRow
-            title={t("rest.titleLabel")}
-            items={[
-              { key: "fans", href: "/fans", label: t("rest.fansLabel") },
-              {
-                key: "catalog",
-                href: "/catalog",
-                label: t("rest.catalog", { count: TRACKS.length }),
-              },
-              {
-                key: "tour",
-                href: "/tour",
-                label: t("rest.tour", {
-                  count: ARTISTS.reduce((s, a) => s + tourDates(a.id).length, 0),
-                }),
-              },
-              {
-                key: "discovery",
-                href: "/discovery",
-                label: t("rest.discovery", { count: EMERGING.length }),
-              },
-              { key: "team", href: "/team", label: t("rest.team", { count: TEAM.length }) },
-              { key: "calc", href: "/calculator", label: t("rest.calculator") },
-            ]}
-          />
-
           <p className="text-muted-foreground mt-2 text-[11.5px]">{t("legend.intro")}</p>
         </div>
       )}

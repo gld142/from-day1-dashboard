@@ -98,13 +98,5 @@
     "indexValue": "0 to 100",
     "copilot": "Plain-language answers on the data",
     "copilotValue": "not a silent dashboard"
-  },
-  "rest": {
-    "onboardings": "Partner pipeline",
-    "pulse": "Pulse",
-    "market": "Market",
-    "revenue": "Revenue",
-    "roster": "Roster",
-    "catalog": "Catalog"
   }
 }

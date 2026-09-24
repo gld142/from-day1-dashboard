@@ -51,13 +51,5 @@
     "title": "Account",
     "description": "Your role shapes what you see: an artist only sees themselves, a label sees its whole roster.",
     "currentRole": "Active role"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "team": "Team & access",
-    "import": "Import a statement",
-    "revenue": "Revenue",
-    "catalog": "Catalog",
-    "copilot": "Copilot"
   }
 }

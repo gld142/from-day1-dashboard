@@ -75,13 +75,5 @@
     "rightsValue": "the rights these works generate",
     "discovery": "Discovery Lab",
     "discoveryValue": "what isn't out yet"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenue",
-    "audience": "Audience",
-    "tour": "Touring",
-    "audit": "Royalty audit",
-    "import": "Import a statement"
   }
 }

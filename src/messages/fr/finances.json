@@ -163,13 +163,5 @@
     "splitsValue": "qui touche quoi",
     "audit": "Audit royalties",
     "auditValue": "écart avec les relevés"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "valuation": "Valorisation",
-    "import": "Importer un relevé",
-    "catalog": "Catalogue",
-    "team": "Équipe",
-    "tour": "Tournée"
   }
 }

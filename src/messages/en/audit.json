@@ -92,13 +92,5 @@
     "importValue": "to make the gap exact",
     "streams": "Streams",
     "streamsValue": "the volumes the estimate rests on"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Expenses & P&L",
-    "urssaf": "URSSAF",
-    "valuation": "Valuation",
-    "catalog": "Catalog",
-    "copilot": "Copilot"
   }
 }

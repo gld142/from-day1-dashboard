@@ -78,13 +78,5 @@
     "settingsValue": "account settings",
     "audit": "Royalty audit",
     "auditValue": "who opens claims"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "catalog": "Catalog",
-    "tour": "Touring",
-    "sync": "Sync & Licensing",
-    "import": "Import a statement",
-    "urssaf": "URSSAF"
   }
 }

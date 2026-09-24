@@ -13,7 +13,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ActivityLog } from "@/components/modules/structure/activity-log";
 import {
@@ -178,19 +178,6 @@ export default function TeamPage() {
           { key: "audit", family: "money", href: "/audit", label: t("doors.audit"), value: t("doors.auditValue") },
         ]}
       />
-
-      <RestRow
-        title={isLabel ? tc("blocks.restLabel") : tc("blocks.rest")}
-        items={[
-          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-          { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-          { key: "tour", href: "/tour", label: t("rest.tour") },
-          { key: "sync", href: "/sync", label: t("rest.sync") },
-          { key: "import", href: "/import", label: t("rest.import") },
-          { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
-        ]}
-      />
-
       <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

@@ -89,13 +89,5 @@
     "indexValue": "what their loyalty weighs",
     "streams": "Streams",
     "streamsValue": "what they play, day after day"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "market": "Market",
-    "revenue": "Revenue",
-    "sync": "Sync & Licensing",
-    "roster": "Roster",
-    "settings": "Settings"
   }
 }

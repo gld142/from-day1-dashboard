@@ -72,13 +72,5 @@
     "valuationValue": "what a catalog is worth",
     "calculator": "Deal simulator",
     "calculatorValue": "test before signing"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "audience": "Audience",
-    "catalog": "Catalog",
-    "tour": "Touring",
-    "sync": "Sync & Licensing"
   }
 }

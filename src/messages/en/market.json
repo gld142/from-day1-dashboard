@@ -129,11 +129,5 @@
     "syncValue": "place your tracks",
     "discovery": "Discovery Lab",
     "discoveryValue": "test a demo"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenue",
-    "catalog": "Catalog",
-    "index": "Day 1 Index"
   }
 }

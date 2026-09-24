@@ -44,7 +44,7 @@ import {
   PnlMonthlyChart,
   type MonthlyPnlPoint,
 } from "@/components/modules/finances/pnl-monthly-chart";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { Button } from "@/components/ui/button";
@@ -626,19 +626,6 @@ export default function FinancesPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={scopeAll ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "valuation", href: "/valuation", label: t("rest.valuation") },
-            { key: "import", href: "/import", label: t("rest.import") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "team", href: "/team", label: t("rest.team") },
-            { key: "tour", href: "/tour", label: t("rest.tour") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

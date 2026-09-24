@@ -89,13 +89,5 @@
     "indexValue": "ce que pèse leur fidélité",
     "streams": "Streams",
     "streamsValue": "ce qu'ils écoutent, jour après jour"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "market": "Marché",
-    "revenue": "Revenus",
-    "sync": "Sync & Licensing",
-    "roster": "Roster",
-    "settings": "Réglages"
   }
 }

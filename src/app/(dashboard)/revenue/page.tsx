@@ -51,7 +51,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { RevenueCascade } from "@/components/modules/finances/revenue-cascade";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -677,19 +677,6 @@ export default function RevenuePage() {
             },
           ]}
         />
-
-        <RestRow
-          title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "streams", href: "/streams", label: t("rest.streams") },
-            { key: "splits", href: "/splits", label: t("rest.splits") },
-            { key: "import", href: "/import", label: t("rest.import") },
-            { key: "valuation", href: "/valuation", label: t("rest.valuation") },
-            { key: "sync", href: "/sync", label: t("rest.sync") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

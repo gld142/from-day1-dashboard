@@ -15,7 +15,7 @@
 import { useTranslations } from "next-intl";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { CopilotChat } from "@/components/modules/intelligence/copilot-chat";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { useRole } from "@/lib/role";
 
 export default function CopilotPage() {
@@ -87,19 +87,6 @@ export default function CopilotPage() {
           },
         ]}
       />
-
-      <RestRow
-        title={isRoster ? tc("blocks.restLabel") : tc("blocks.rest")}
-        items={[
-          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-          { key: "index", href: "/day1-index", label: t("rest.index") },
-          { key: "market", href: "/market", label: t("rest.market") },
-          { key: "discovery", href: "/discovery", label: t("rest.discovery") },
-          { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-          { key: "settings", href: "/settings", label: t("rest.settings") },
-        ]}
-      />
-
       <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
     </div>
   );

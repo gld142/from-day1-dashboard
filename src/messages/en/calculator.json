@@ -97,13 +97,5 @@
     "valuationValue": "what the catalog is worth",
     "catalog": "Catalog",
     "catalogValue": "what carries the revenue"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "tour": "Touring",
-    "sync": "Sync & Licensing",
-    "urssaf": "URSSAF",
-    "audit": "Royalty audit"
   }
 }

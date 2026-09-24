@@ -191,13 +191,5 @@
     "urssafValue": "contributions and filing",
     "calculator": "Deal simulator",
     "calculatorValue": "test a contract"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "splits": "Splits",
-    "import": "Import a statement",
-    "valuation": "Valuation",
-    "sync": "Sync & Licensing"
   }
 }

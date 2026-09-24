@@ -21,7 +21,7 @@ import { RosterAlerts } from "@/components/modules/structure/roster-alerts";
 import { RosterMatrix } from "@/components/modules/structure/roster-matrix";
 import { RosterPnlBars } from "@/components/modules/structure/roster-pnl-bars";
 import { RosterTable } from "@/components/modules/structure/roster-table";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
@@ -262,19 +262,6 @@ export default function RosterPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={tc("blocks.restLabel")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "streams", href: "/streams", label: t("rest.streams") },
-            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "tour", href: "/tour", label: t("rest.tour") },
-            { key: "market", href: "/market", label: t("rest.market") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

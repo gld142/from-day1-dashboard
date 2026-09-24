@@ -129,11 +129,5 @@
     "syncValue": "placer tes titres",
     "discovery": "Discovery Lab",
     "discoveryValue": "tester un inédit"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenus",
-    "catalog": "Catalogue",
-    "index": "Day 1 Index"
   }
 }

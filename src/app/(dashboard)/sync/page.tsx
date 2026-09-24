@@ -37,7 +37,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 
@@ -580,19 +580,6 @@ export default function SyncPage() {
           { key: "rights", family: "money", href: "/rights", label: t("doors.rights"), value: t("doors.rightsValue") },
         ]}
       />
-
-      <RestRow
-        title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
-        items={[
-          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-          { key: "fans", href: "/fans", label: t("rest.fans") },
-          { key: "tour", href: "/tour", label: t("rest.tour") },
-          { key: "market", href: "/market", label: t("rest.market") },
-          { key: "valuation", href: "/valuation", label: t("rest.valuation") },
-          { key: "team", href: "/team", label: t("rest.team") },
-        ]}
-      />
-
       <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

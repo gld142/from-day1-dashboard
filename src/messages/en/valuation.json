@@ -82,13 +82,5 @@
     "contractsValue": "what can weigh on the value",
     "splits": "Splits",
     "splitsValue": "who gets what on each track"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "roster": "Roster",
-    "audit": "Royalty audit",
-    "rights": "French rights",
-    "sync": "Sync & Licensing",
-    "index": "Day 1 Index"
   }
 }

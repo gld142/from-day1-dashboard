@@ -89,13 +89,5 @@
     "catalogValue": "{count} titres en tête",
     "audit": "Audit royalties",
     "auditValue": "écart avec les relevés"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "fans": "Fans",
-    "sync": "Sync & Licensing",
-    "discovery": "Discovery Lab",
-    "index": "Day 1 Index",
-    "revenue": "Revenus"
   }
 }

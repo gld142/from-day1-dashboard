@@ -145,13 +145,5 @@
     "catalogValue": "les œuvres qui génèrent ces droits",
     "urssaf": "URSSAF · artiste-auteur",
     "urssafValue": "cotisations sur ces droits"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Dépenses & P&L",
-    "calculator": "Simulateur",
-    "import": "Importer un relevé",
-    "sync": "Sync & Licensing",
-    "tour": "Tournée"
   }
 }

@@ -86,13 +86,5 @@
     "auditValue": "écart avec les relevés",
     "team": "Équipe",
     "teamValue": "qui travaille sur quoi"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Dépenses & P&L",
-    "calculator": "Simulateur",
-    "valuation": "Valorisation",
-    "urssaf": "URSSAF",
-    "import": "Importer un relevé"
   }
 }

@@ -38,7 +38,7 @@ import {
   ForecastTable,
   type ForecastRow,
 } from "@/components/modules/calculator/forecast-table";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { Label } from "@/components/ui/label";
 import {
   ARTISTS,
@@ -454,19 +454,6 @@ export default function CalculatorPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "streams", href: "/streams", label: t("rest.streams") },
-            { key: "tour", href: "/tour", label: t("rest.tour") },
-            { key: "sync", href: "/sync", label: t("rest.sync") },
-            { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
-            { key: "audit", href: "/audit", label: t("rest.audit") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

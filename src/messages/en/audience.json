@@ -93,12 +93,5 @@
     "indexValue": "your overall score",
     "tour": "Touring",
     "tourValue": "where to play"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenue",
-    "sync": "Sync & Licensing",
-    "discoveryLab": "Discovery Lab",
-    "catalog": "Catalog"
   }
 }

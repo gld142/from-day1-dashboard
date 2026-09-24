@@ -92,13 +92,5 @@
     "importValue": "pour rendre l'écart exact",
     "streams": "Streams",
     "streamsValue": "les volumes qui fondent l'attendu"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Dépenses & P&L",
-    "urssaf": "URSSAF",
-    "valuation": "Valorisation",
-    "catalog": "Catalogue",
-    "copilot": "Copilot"
   }
 }

@@ -31,7 +31,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
@@ -499,19 +499,6 @@ export function TourView() {
           { key: "contracts", family: "money", href: "/contracts", label: t("doors.contracts"), value: t("doors.contractsValue") },
         ]}
       />
-
-      <RestRow
-        title={isLabel ? tc("blocks.restLabel") : tc("blocks.rest")}
-        items={[
-          { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-          { key: "streams", href: "/streams", label: t("rest.streams") },
-          { key: "market", href: "/market", label: t("rest.market") },
-          { key: "sync", href: "/sync", label: t("rest.sync") },
-          { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
-          { key: "team", href: "/team", label: t("rest.team") },
-        ]}
-      />
-
       <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

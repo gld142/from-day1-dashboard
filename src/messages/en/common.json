@@ -104,8 +104,6 @@
   },
   "blocks": {
     "doors": "Go further",
-    "rest": "The rest of your dashboard",
-    "restLabel": "The rest of the dashboard",
     "collect": "Money worth chasing",
     "legend": "Every number carries its provenance.",
     "detail": "see details →",

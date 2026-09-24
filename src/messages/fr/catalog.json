@@ -75,13 +75,5 @@
     "rightsValue": "les droits que ces œuvres génèrent",
     "discovery": "Discovery Lab",
     "discoveryValue": "ce qui n'est pas encore sorti"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "revenue": "Revenus",
-    "audience": "Audience",
-    "tour": "Tournée",
-    "audit": "Audit royalties",
-    "import": "Importer un relevé"
   }
 }

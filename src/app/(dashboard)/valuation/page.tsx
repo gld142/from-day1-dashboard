@@ -34,7 +34,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ExactValuePanel } from "@/components/modules/finances/exact-value-panel";
 
 /** La barre de fourchette : bas — estimation — haut, à l'échelle. */
@@ -161,20 +161,6 @@ export default function ValuationPage() {
           label: t("doors.splits"),
           value: t("doors.splitsValue"),
         },
-      ]}
-    />
-  );
-
-  const rest = (
-    <RestRow
-      title={aggregated ? tc("blocks.restLabel") : tc("blocks.rest")}
-      items={[
-        { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-        { key: "roster", href: "/roster", label: t("rest.roster") },
-        { key: "audit", href: "/audit", label: t("rest.audit") },
-        { key: "rights", href: "/rights", label: t("rest.rights") },
-        { key: "sync", href: "/sync", label: t("rest.sync") },
-        { key: "index", href: "/day1-index", label: t("rest.index") },
       ]}
     />
   );
@@ -432,7 +418,6 @@ export default function ValuationPage() {
         )}
 
         {doors}
-        {rest}
 
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>

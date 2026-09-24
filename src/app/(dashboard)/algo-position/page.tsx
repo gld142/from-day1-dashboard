@@ -23,7 +23,7 @@ import {
   Sheet,
   SheetHeading,
 } from "@/components/dashboard/sheet";
-import { Doors, NightStrip, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors, NightStrip } from "@/components/modules/pilotage/pulse-blocks";
 import { PageHeader } from "@/components/dashboard/page-header";
 import {
   PERCEPTION_THRESHOLDS,
@@ -340,17 +340,6 @@ export default function AlgoPositionPage() {
               },
             ]}
           />
-
-          <RestRow
-            title={tc("blocks.restLabel")}
-            items={[
-              { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-              { key: "roster", href: "/roster", label: t("rest.roster") },
-              { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-              { key: "index", href: "/day1-index", label: t("rest.index") },
-            ]}
-          />
-
           <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
         </div>
       ) : (
@@ -540,17 +529,6 @@ export default function AlgoPositionPage() {
               },
             ]}
           />
-
-          <RestRow
-            title={tc("blocks.rest")}
-            items={[
-              { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-              { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-              { key: "fans", href: "/fans", label: t("rest.fans") },
-              { key: "index", href: "/day1-index", label: t("rest.index") },
-            ]}
-          />
-
           <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
         </div>
       )}

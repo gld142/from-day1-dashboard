@@ -145,13 +145,5 @@
     "catalogValue": "the works generating these rights",
     "urssaf": "URSSAF · artist-author",
     "urssafValue": "contributions on these rights"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "finances": "Expenses & P&L",
-    "calculator": "Simulator",
-    "import": "Import a statement",
-    "sync": "Sync & Licensing",
-    "tour": "Touring"
   }
 }

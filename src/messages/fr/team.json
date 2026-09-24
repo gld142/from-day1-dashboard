@@ -78,13 +78,5 @@
     "settingsValue": "les réglages du compte",
     "audit": "Audit royalties",
     "auditValue": "qui ouvre les réclamations"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "catalog": "Catalogue",
-    "tour": "Tournée",
-    "sync": "Sync & Licensing",
-    "import": "Importer un relevé",
-    "urssaf": "URSSAF"
   }
 }

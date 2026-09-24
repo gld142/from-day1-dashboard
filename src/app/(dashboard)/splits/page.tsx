@@ -28,7 +28,7 @@ import {
   SheetSegments,
 } from "@/components/dashboard/sheet";
 import { SplitTrackCard } from "@/components/modules/droits/split-card";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 
 type SplitItem = {
   track: Track;
@@ -359,19 +359,6 @@ export default function SplitsPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={grouped ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "finances", href: "/finances", label: t("rest.finances") },
-            { key: "calculator", href: "/calculator", label: t("rest.calculator") },
-            { key: "valuation", href: "/valuation", label: t("rest.valuation") },
-            { key: "urssaf", href: "/urssaf", label: t("rest.urssaf") },
-            { key: "import", href: "/import", label: t("rest.import") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

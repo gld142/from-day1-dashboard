@@ -72,13 +72,5 @@
     "valuationValue": "ce que vaut un catalogue",
     "calculator": "Simulateur de deals",
     "calculatorValue": "tester avant de signer"
-  },
-  "rest": {
-    "pulse": "Pulse",
-    "streams": "Streams",
-    "audience": "Audience",
-    "catalog": "Catalogue",
-    "tour": "Tournée",
-    "sync": "Sync & Licensing"
   }
 }

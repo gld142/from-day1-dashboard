@@ -28,7 +28,7 @@ import {
   SheetHeading,
 } from "@/components/dashboard/sheet";
 import { StreamGlyph } from "@/components/dashboard/stream-glyph";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { Progress } from "@/components/ui/progress";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -341,19 +341,6 @@ export default function StreamsPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={isLabel && !focusedArtistId ? tc("blocks.restLabel") : tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-            { key: "fans", href: "/fans", label: t("rest.fans") },
-            { key: "sync", href: "/sync", label: t("rest.sync") },
-            { key: "discovery", href: "/discovery", label: t("rest.discovery") },
-            { key: "index", href: "/day1-index", label: t("rest.index") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

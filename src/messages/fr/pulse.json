@@ -299,18 +299,6 @@
     "arwatch": "A&R Watch",
     "arwatchValue": "{count} artistes suivis"
   },
-  "rest": {
-    "title": "Le reste de ton dashboard",
-    "titleLabel": "Le reste du dashboard",
-    "fans": "Fans · {count} superfans",
-    "fansLabel": "Fans · segments roster",
-    "catalog": "Catalogue · {count} titres",
-    "tour": "Tournée · {count} dates",
-    "discovery": "Discovery Lab · {count} inédits",
-    "team": "Équipe · {count} personnes",
-    "calculator": "Simulateur de deals",
-    "audience": "Audience · {count} pays"
-  },
   "ask": {
     "placeholder": "Demande-moi n'importe quoi sur tes chiffres…",
     "placeholderLabel": "Demande-moi n'importe quoi sur le roster…"

@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { RankMedal } from "@/components/dashboard/rank-medal";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
-import { Doors, RestRow } from "@/components/modules/pilotage/pulse-blocks";
+import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MarketGroupBar } from "@/components/modules/data/market-group-bar";
@@ -338,17 +338,6 @@ export default function MarketPage() {
             },
           ]}
         />
-
-        <RestRow
-          title={tc("blocks.rest")}
-          items={[
-            { key: "pulse", href: "/pulse", label: t("rest.pulse") },
-            { key: "revenue", href: "/revenue", label: t("rest.revenue") },
-            { key: "catalog", href: "/catalog", label: t("rest.catalog") },
-            { key: "index", href: "/day1-index", label: t("rest.index") },
-          ]}
-        />
-
         <p className="text-muted-foreground mt-2 text-[11.5px]">{tc("blocks.legend")}</p>
       </div>
     </div>

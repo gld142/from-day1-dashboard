@@ -81,14 +81,6 @@
     "team": "Qui porte quel partenaire",
     "teamValue": "{count, plural, one {# owner} other {# owners}}"
   },
-  "rest": {
-    "pulse": "Pulse",
-    "welcome": "Le portail co-brandé",
-    "copilot": "Copilot",
-    "import": "Importer un relevé",
-    "catalog": "Catalogue",
-    "settings": "Réglages"
-  },
   "partners": {
     "capitol": {
       "name": "Capitol Music France",
@@ -283,5 +275,9 @@
         }
       }
     }
+  },
+  "portal": {
+    "title": "Ce que voient tes artistes",
+    "link": "Le portail co-brandé"
   }
 }
