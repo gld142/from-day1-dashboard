@@ -6,3 +6,9 @@ node_modules
 legacy
 
 .claude/
+
+# 5,9 Go de build local : Vercel reconstruit de toute façon
+.next
+
+# scripts et captures de vérification, hors produit
+.superpowers
