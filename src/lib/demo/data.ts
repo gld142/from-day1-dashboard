@@ -376,6 +376,90 @@ export const CONTRACTS: Contract[] = [
     ],
   },
   {
+    /* Distribution : il garde l'essentiel du master, le distributeur prend sa
+       commission. Le taux du contrat (88 %) est volontairement proche de
+       l'hypothèse du modèle pour son type de deal (DEAL_SHARE.distribution,
+       90 %) : deux chiffres voisins se lisent comme « le contrat dit 88, le
+       modèle suppose 90 », pas comme une contradiction. */
+    id: "c-egt-distribution",
+    artistId: "elgrandetoto",
+    type: "distribution",
+    counterparty: "Universal Music MENA",
+    startDate: "2023-03-01",
+    endDate: "2027-03-01",
+    royaltyRate: 88,
+    advance: 180_000,
+    recoupedPct: 64,
+    territory: "World",
+    exclusive: true,
+    alerts: [
+      {
+        kind: "option",
+        severity: "warning",
+        dueDate: "2026-12-01",
+        message: {
+          fr: "Option de renouvellement à lever avant le 01/12 — fenêtre de renégociation ouverte",
+          en: "Renewal option to exercise before 01/12 — renegotiation window open",
+        },
+      },
+    ],
+  },
+  {
+    /* Indépendante : elle garde son master et ne paie qu'une commission de
+       distribution. 93 %, soit 7 % de frais — le cas d'un DistroKid ou d'un
+       Believe en pur service. */
+    id: "c-nu-distribution",
+    artistId: "november-ultra",
+    type: "distribution",
+    counterparty: "Believe Digital",
+    startDate: "2022-01-10",
+    endDate: "2026-12-31",
+    royaltyRate: 93,
+    advance: 0,
+    recoupedPct: 100,
+    territory: "World",
+    exclusive: false,
+    alerts: [
+      {
+        kind: "expiry",
+        severity: "warning",
+        dueDate: "2026-12-31",
+        message: {
+          fr: "Contrat de distribution à échéance le 31/12 — préavis de 90 jours, soit avant le 02/10",
+          en: "Distribution deal expires on 31/12 — 90-day notice, i.e. before 02/10",
+        },
+      },
+    ],
+  },
+  {
+    /* Le contrat qui compte pour un auteur-compositeur n'est pas un contrat
+       de master : c'est son contrat d'ÉDITION. Les 25 % qu'il cède ici sont
+       exactement le `publisher.sharePct` déclaré sur l'artiste, et ce que la
+       page /placements déduit de chaque œuvre. Un seul fait, deux endroits. */
+    id: "c-zp-edition",
+    artistId: "zeg-p",
+    type: "édition",
+    counterparty: "Day 1 Édition",
+    startDate: "2020-02-17",
+    endDate: "2028-02-17",
+    royaltyRate: 75,
+    advance: 60_000,
+    recoupedPct: 41,
+    territory: "World",
+    exclusive: true,
+    alerts: [
+      {
+        kind: "audit-window",
+        severity: "info",
+        dueDate: "2027-02-17",
+        message: {
+          fr: "Fenêtre d'audit ouverte jusqu'au 17/02/2027 — dernier moment pour vérifier les relevés d'édition",
+          en: "Audit window open until 17/02/2027 — last chance to check publishing statements",
+        },
+      },
+    ],
+  },
+  {
     id: "c-ki-distribution",
     artistId: "kiko",
     type: "distribution",
