@@ -44,6 +44,7 @@ import {
   ARTISTS,
   getArtist,
   monthlyRevenueTotals,
+  revenueBySource,
   revenueForecast,
 } from "@/lib/demo/api";
 import type { ForecastPoint } from "@/lib/demo/api";
@@ -89,6 +90,8 @@ export default function CalculatorPage() {
   const locale = useLocale();
   const t = useTranslations("calculator");
   const tc = useTranslations("common");
+  /* Les noms de source vivent dans /revenue : une seule traduction pour les deux. */
+  const tSource = useTranslations("revenue.sources");
   const { artistId, focusedArtistId, isLabel } = useRole();
 
   const [horizon, setHorizon] = useState<number>(12);
@@ -219,6 +222,31 @@ export default function CalculatorPage() {
         best,
       };
     }, [projRows, forecast, horizon]);
+
+  /* Où ira l'argent projeté.
+   *
+   * Les proportions des douze derniers mois appliquées au total projeté.
+   * Ce bloc existait sur le simulateur en ligne (camembert « Répartition
+   * projetée par source ») et la refonte l'a emporté sans le remplacer : les
+   * clés `donut.*` sont restées dans les messages, plus rien ne les lisait.
+   * /revenue donne la répartition PASSÉE, jamais celle de la projection. */
+  const projectedBySource = useMemo(() => {
+    const parSource = new Map<string, number>();
+    for (const id of ids) {
+      for (const r of revenueBySource(id, 12)) {
+        parSource.set(r.source, (parSource.get(r.source) ?? 0) + r.amount);
+      }
+    }
+    const base = [...parSource.values()].reduce((x, v) => x + v, 0);
+    if (base === 0) return [];
+    return [...parSource.entries()]
+      .map(([source, amount]) => ({
+        source,
+        part: amount / base,
+        amount: Math.round((amount / base) * totalProjected),
+      }))
+      .sort((a, z) => z.amount - a.amount);
+  }, [ids, totalProjected]);
 
   const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
   /** La largeur de la bande au terme choisi — la même règle que le générateur. */
@@ -426,6 +454,38 @@ export default function CalculatorPage() {
         </Sheet>
 
         {/* Le détail mois par mois, et la règle qui le produit. */}
+        {projectedBySource.length > 0 && (
+          <Sheet family="money">
+            <SheetHeading action={t("donut.subtitle")}>{t("donut.title")}</SheetHeading>
+            <ul className="mt-2 space-y-2">
+              {projectedBySource.map((r) => (
+                <li key={r.source} className="flex items-center gap-3 text-[12.5px]">
+                  <span className="w-28 shrink-0 truncate font-medium">
+                    {tSource(r.source)}
+                  </span>
+                  <span className="bg-surface-2 h-2 flex-1 overflow-hidden rounded-full">
+                    <span
+                      className="block h-full rounded-full"
+                      style={{ width: `${r.part * 100}%`, background: "var(--chart-2)" }}
+                    />
+                  </span>
+                  <span className="num sheet-ink w-14 shrink-0 text-right tabular-nums">
+                    {/* Une part n'a pas de signe : « +51,4 % » de streaming
+                        se lirait comme une hausse. */}
+                    {new Intl.NumberFormat(locale, {
+                      style: "percent",
+                      maximumFractionDigits: 1,
+                    }).format(r.part)}
+                  </span>
+                  <span className="num w-20 shrink-0 text-right font-medium tabular-nums">
+                    {eur(r.amount)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Sheet>
+        )}
+
         <Sheet family="money">
           <SheetHeading>{t("table.title")}</SheetHeading>
           <ForecastTable rows={projRows} bare />
