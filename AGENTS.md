@@ -49,14 +49,28 @@ préalable dans `.next-e2e`, comme documenté dans `playwright.config.ts`.
 
 ## Comparer au dashboard EN LIGNE : refaire le témoin
 
-`origin/main` est la version déployée. Pour vérifier qu'une refonte n'enlève
-rien, la servir à côté plutôt que lire des diffs :
+**Ne pas supposer que `origin/main` est ce qui tourne.** Le 25/09/2026, la
+production était `demo-universal@a1f74ab` (déployée le 18/09 à 11h51), pas
+`main`. Le déploiement se fait au CLI depuis la branche courante, sans passer
+par git. Toujours demander à Vercel ce qui est réellement en ligne :
+
+    vercel ls                                  # le dernier déploiement Production
+    vercel inspect <url>                        # sa date, ses alias
+    # puis retrouver le commit par sa date : git log --since=... --until=...
+
+Attention : le site répond 200 sur N'IMPORTE QUELLE adresse, y compris
+inexistante. Un code HTTP ne prouve donc rien — lire le CONTENU.
+
+Pour vérifier qu'une refonte n'enlève rien, servir l'ancienne version à côté
+plutôt que lire des diffs :
 
     git worktree add /tmp/day1-prod origin/main
     cp -a node_modules /tmp/day1-prod/node_modules   # un lien symbolique casse Turbopack
     # puis une entrée launch.json sur le port 3003, retirée après usage
 
 Le 24/09/2026, ce témoin a montré que tout ce qui avait disparu de /overview
-existait ailleurs — sauf le graphique « Revenus × streams » et le panneau
-« Brief du jour », depuis remis. Ne pas laisser l'entrée launch.json derrière
+existait ailleurs — sauf trois blocs, depuis remis : le graphique « Revenus ×
+streams » (/revenue), le panneau « Brief du jour » (barre du haut) et la
+« Répartition projetée par source » (/calculator). Les trois avaient la même
+signature : composant supprimé, clés de traduction restées orphelines. Ne pas laisser l'entrée launch.json derrière
 soi : le chemin `/tmp` n'est pas portable.
