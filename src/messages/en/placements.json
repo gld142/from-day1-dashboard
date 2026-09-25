@@ -1,0 +1,71 @@
+{
+  "title": "Works & placements",
+  "subtitle": "What works written for others earn — publishing, production points, and what hasn't shipped yet.",
+  "subtitleEmpty": "The page for the roster's songwriters.",
+  "empty": {
+    "title": "This artist is a performer, not a songwriter",
+    "body": "Their income comes from their own streams: read it on Revenue and French rights. This page is for those whose work mostly happens on other people's records.",
+    "open": "See {name}'s works"
+  },
+  "hero": {
+    "title": "What their works earn them",
+    "caption": "publishing + production points, since release",
+    "sub": "across {works} released works, {streams} cumulative streams"
+  },
+  "points": {
+    "publishing": "Publishing rights",
+    "publishingNote": "after {pct} % to {name}",
+    "publishingSelf": "self-published: nothing leaves",
+    "producer": "Production points",
+    "producerNote": "master share, not publishing",
+    "pipeline": "Works in progress",
+    "pipelineNote": "next: “{title}”, {date}",
+    "pipelineNone": "nothing signed to ship",
+    "pitched": "Pitches",
+    "pitchedNote": "sent, not picked up yet"
+  },
+  "undeclared": {
+    "title": "Not registered with SACEM",
+    "caption": "money that won't come in until it is",
+    "sub": "{count, plural, one {# released work is not registered} other {# released works are not registered}}: SACEM cannot pay on a work it doesn't know about."
+  },
+  "pipeline": {
+    "title": "The order book",
+    "caption": "signed or pitched — not a euro yet",
+    "legend": "A signed work has a date; a pitch has an intention. We don't add them up: the second is not future income."
+  },
+  "status": {
+    "released": "Released",
+    "unreleased": "Signed",
+    "pitched": "Pitched"
+  },
+  "roles": {
+    "auteur": "Writer",
+    "compositeur": "Composer",
+    "producteur": "Producer"
+  },
+  "table": {
+    "title": "Work by work",
+    "caption": "writer share · production points",
+    "work": "Work",
+    "performer": "Performer",
+    "roles": "Roles",
+    "share": "Their share",
+    "streams": "Streams",
+    "net": "What they get",
+    "declared": "Registered",
+    "yes": "yes",
+    "no": "no",
+    "method": "Gross master = streams × blended French rate × territory coefficient. Publishing = gross × 15 % (DSP publishing share) × their writer share, minus their publisher's cut. Production = gross × their points. The territory is theirs, for lack of per-performer audience data: hence the “estimated” provenance."
+  },
+  "doors": {
+    "rights": "What SACEM owes them",
+    "rightsValue": "expected vs received",
+    "splits": "Who signs what",
+    "splitsValue": "shares, track by track",
+    "catalog": "What they release themselves",
+    "catalogValue": "their own catalogue",
+    "sync": "Place their works",
+    "syncValue": "open briefs"
+  }
+}

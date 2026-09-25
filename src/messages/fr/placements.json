@@ -1,0 +1,71 @@
+{
+  "title": "Œuvres & placements",
+  "subtitle": "Ce que rapportent les œuvres écrites pour d'autres — édition, production, et ce qui n'est pas encore sorti.",
+  "subtitleEmpty": "La page des auteurs-compositeurs du roster.",
+  "empty": {
+    "title": "Cet artiste est interprète, pas auteur-compositeur",
+    "body": "Ses revenus viennent de ses propres streams : ils se lisent sur Revenus et sur Droits FR. Cette page sert à ceux dont l'essentiel se passe sur les disques des autres.",
+    "open": "Voir les œuvres de {name}"
+  },
+  "hero": {
+    "title": "Ce que ses œuvres lui rapportent",
+    "caption": "édition + points de production, depuis la sortie",
+    "sub": "sur {works} œuvres sorties, {streams} streams cumulés"
+  },
+  "points": {
+    "publishing": "Droits d'édition",
+    "publishingNote": "après {pct} % pour {name}",
+    "publishingSelf": "auto-édition : rien ne part",
+    "producer": "Points de production",
+    "producerNote": "part du master, pas de l'édition",
+    "pipeline": "Œuvres en cours",
+    "pipelineNote": "prochaine : « {title} », {date}",
+    "pipelineNone": "rien de signé à sortir",
+    "pitched": "Propositions",
+    "pitchedNote": "envoyées, pas encore retenues"
+  },
+  "undeclared": {
+    "title": "Non déclaré à la SACEM",
+    "caption": "argent qui ne rentrera pas tant que c'est le cas",
+    "sub": "{count, plural, one {# œuvre sortie n'est pas déposée} other {# œuvres sorties ne sont pas déposées}} : la SACEM ne peut rien verser sur une œuvre qu'elle ne connaît pas."
+  },
+  "pipeline": {
+    "title": "Le carnet de commandes",
+    "caption": "signé ou proposé — pas encore un euro",
+    "legend": "Une œuvre signée a une date ; une proposition n'a qu'une intention. On ne les additionne pas : la seconde n'est pas un revenu à venir."
+  },
+  "status": {
+    "released": "Sortie",
+    "unreleased": "Signée",
+    "pitched": "Proposée"
+  },
+  "roles": {
+    "auteur": "Auteur",
+    "compositeur": "Compositeur",
+    "producteur": "Producteur"
+  },
+  "table": {
+    "title": "Œuvre par œuvre",
+    "caption": "part d'écriture · points de production",
+    "work": "Œuvre",
+    "performer": "Interprète",
+    "roles": "Rôles",
+    "share": "Sa part",
+    "streams": "Streams",
+    "net": "Ce qu'il touche",
+    "declared": "Déclarée",
+    "yes": "oui",
+    "no": "non",
+    "method": "Brut master = streams × taux mixé France × coefficient de territoire. Édition = brut × 15 % (part édition du DSP) × sa part d'écriture, moins la part de son éditeur. Production = brut × ses points. Le territoire est le sien, faute de relever l'audience de chaque interprète : d'où la provenance « estimé »."
+  },
+  "doors": {
+    "rights": "Ce que la SACEM lui doit",
+    "rightsValue": "attendu vs reçu",
+    "splits": "Qui signe quoi",
+    "splitsValue": "les parts, titre par titre",
+    "catalog": "Ce qu'il sort sous son nom",
+    "catalogValue": "son propre catalogue",
+    "sync": "Placer ses œuvres",
+    "syncValue": "les briefs ouverts"
+  }
+}

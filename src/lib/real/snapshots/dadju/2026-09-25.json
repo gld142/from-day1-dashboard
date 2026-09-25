@@ -1,6 +1,6 @@
 {
   "date": "2026-09-25",
-  "capturedAt": "2026-09-25T08:07:11.174Z",
+  "capturedAt": "2026-09-25T08:48:09.997Z",
   "spotify": {
     "monthlyListeners": 6502787,
     "followers": 8899820,
@@ -1234,12 +1234,8 @@
     ]
   },
   "deezer": {
-    "fans": 3282905,
+    "fans": 3282933,
     "topTracks": [
-      {
-        "title": "Reine",
-        "rank": 925152
-      },
       {
         "title": "Compliqué",
         "rank": 952570
@@ -1247,6 +1243,10 @@
       {
         "title": "Jaloux",
         "rank": 949147
+      },
+      {
+        "title": "Reine",
+        "rank": 925152
       },
       {
         "title": "Oublie-le",
@@ -1285,31 +1285,31 @@
         "videoId": "tVKaN_H35xs",
         "title": "DADJU - Reine (Clip Officiel)",
         "channel": "official",
-        "views": 440661818
+        "views": 440663646
       },
       {
         "videoId": "ReK5Z0RCbSY",
         "title": "Soolking feat. Dadju - Meleğim [Clip Officiel] Prod by Nyadjiko",
         "channel": "official",
-        "views": 340909579
+        "views": 340909919
       },
       {
         "videoId": "NPSvCJ9v7vI",
         "title": "DADJU - Grand Bain ft. Ninho (Clip Officiel)",
         "channel": "official",
-        "views": 91180881
+        "views": 91181160
       },
       {
         "videoId": "bFEP26jCtsQ",
         "title": "DADJU - Compliqué (Clip Officiel)",
         "channel": "official",
-        "views": 124911695
+        "views": 124912316
       },
       {
         "videoId": "254EHfv9RvM",
         "title": "DADJU - Jaloux (Clip Officiel)",
         "channel": "official",
-        "views": 385498147
+        "views": 385499266
       }
     ]
   },

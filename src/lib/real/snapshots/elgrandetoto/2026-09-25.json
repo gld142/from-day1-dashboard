@@ -1,6 +1,6 @@
 {
   "date": "2026-09-25",
-  "capturedAt": "2026-09-25T08:07:23.016Z",
+  "capturedAt": "2026-09-25T08:48:22.518Z",
   "spotify": {
     "monthlyListeners": 5359642,
     "followers": 5573030,
@@ -719,7 +719,7 @@
     ]
   },
   "deezer": {
-    "fans": 568047,
+    "fans": 568051,
     "topTracks": [
       {
         "title": "Qui sait ? (feat. ElGrandeToto)",
@@ -738,20 +738,20 @@
         "rank": 749927
       },
       {
-        "title": "International",
-        "rank": 671589
-      },
-      {
         "title": "Mghayer",
         "rank": 664373
       },
       {
-        "title": "kafini",
-        "rank": 635893
+        "title": "International",
+        "rank": 671589
       },
       {
         "title": "Ojos Sin Ver",
         "rank": 642108
+      },
+      {
+        "title": "kafini",
+        "rank": 635893
       },
       {
         "title": "DIPLOMATICO",

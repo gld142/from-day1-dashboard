@@ -26,6 +26,7 @@ import {
   Handshake,
   HeartHandshake,
   Landmark,
+  Music4,
   LibraryBig,
   MapPin,
   MessageSquareText,
@@ -136,6 +137,7 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       { href: "/contracts", labelKey: "items.contracts", icon: FileText },
       { href: "/rights", labelKey: "items.rights", icon: Scale },
+      { href: "/placements", labelKey: "items.placements", icon: Music4 },
       { href: "/urssaf", labelKey: "items.urssaf", icon: Landmark },
     ],
   },
@@ -223,7 +225,7 @@ const LABEL_LAYOUT: ReadonlyArray<{ labelKey: string; hrefs: string[] }> = [
   },
   {
     labelKey: "sections.rights",
-    hrefs: ["/contracts", "/splits", "/rights", "/urssaf"],
+    hrefs: ["/contracts", "/splits", "/rights", "/placements", "/urssaf"],
   },
   {
     labelKey: "sections.intelligence",

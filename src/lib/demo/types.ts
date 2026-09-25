@@ -45,6 +45,18 @@ export type Artist = {
   day1Index: number; // 0-100
   signedSince: string; // ISO date
   dealType: "licence" | "distribution" | "artiste" | "indé";
+  /**
+   * Le métier. Un interprète vit de SES streams ; un auteur-compositeur vit
+   * des œuvres qu'il écrit pour d'AUTRES — deux économies, deux lectures.
+   *
+   * Signature mesurée le 25/09/2026 : Zeg P fait 1 112 230 auditeurs mensuels
+   * pour 39 001 abonnés (28 pour 1) quand Dadju fait 6 502 787 pour 8 899 820
+   * (0,73 pour 1). On écoute un compositeur sans le suivre, parce qu'on suit
+   * l'artiste qu'il produit.
+   */
+  kind?: "performer" | "composer";
+  /** Éditeur qui le représente — null s'il est en auto-édition. */
+  publisher?: { name: string; sharePct: number } | null;
   country: string;
   /** Identifiants externes (artistes réels de la démo). */
   spotifyId?: string;
@@ -285,4 +297,38 @@ export type SyncBrief = {
   /** ISO, recalculée à chaque build depuis un décalage en jours. */
   deadline: string;
   mood: SyncMood;
+};
+
+/* ─────────────────────────── Œuvres & placements ─────────────────────────── */
+
+/**
+ * Une œuvre placée chez un autre artiste.
+ *
+ * `released` : sortie, elle génère des droits.
+ * `unreleased` : signée et datée, elle ne rapporte encore rien — c'est le
+ *   carnet de commandes, invisible partout ailleurs dans le dashboard.
+ * `pitched` : proposée, pas encore retenue. Ne jamais l'additionner aux deux
+ *   autres : ce n'est pas un revenu à venir, c'est une chance.
+ */
+export type PlacementStatus = "released" | "unreleased" | "pitched";
+
+export type Placement = {
+  id: string;
+  /** L'auteur-compositeur du roster. */
+  artistId: string;
+  title: string;
+  /** L'interprète, qui n'est pas forcément du roster. */
+  performer: string;
+  roles: Array<"auteur" | "compositeur" | "producteur">;
+  /** Sa part d'écriture sur l'œuvre, en % (0-100). */
+  writerSharePct: number;
+  /** Points de production sur le master, en % (0 s'il n'a pas produit). */
+  producerPointsPct: number;
+  status: PlacementStatus;
+  /** ISO. Date de sortie, ou date visée si l'œuvre n'est pas sortie. */
+  date: string;
+  /** Déclarée à la SACEM ? Non déclarée = argent jamais perçu. */
+  declared: boolean;
+  /** Streams cumulés estimés de l'œuvre — 0 tant qu'elle n'est pas sortie. */
+  streams: number;
 };

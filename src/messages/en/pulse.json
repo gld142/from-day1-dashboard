@@ -275,7 +275,8 @@
     "sync": "Sync briefs matching your catalog",
     "syncValue": "{count} briefs",
     "syncDeadline": "{count} close this week",
-    "rights": "Estimated SACEM, not yet paid"
+    "rights": "Estimated SACEM, not yet paid",
+    "works": "{count, plural, one {# work not registered with SACEM} other {# works not registered with SACEM}}"
   },
   "doors": {
     "title": "Go further",

@@ -1,6 +1,6 @@
 {
   "date": "2026-09-25",
-  "capturedAt": "2026-09-25T08:07:05.152Z",
+  "capturedAt": "2026-09-25T08:48:04.006Z",
   "spotify": {
     "monthlyListeners": 22627,
     "followers": 22716,
@@ -37,8 +37,16 @@
     "fans": 1385,
     "topTracks": [
       {
+        "title": "Agama",
+        "rank": 173228
+      },
+      {
         "title": "Abena",
         "rank": 214404
+      },
+      {
+        "title": "Ding Deng Dong",
+        "rank": 228635
       },
       {
         "title": "Sodza",
@@ -49,10 +57,6 @@
         "rank": 205507
       },
       {
-        "title": "Ding Deng Dong",
-        "rank": 228635
-      },
-      {
         "title": "Business class",
         "rank": 187446
       },
@@ -61,20 +65,16 @@
         "rank": 167833
       },
       {
+        "title": "Aimer encore",
+        "rank": 163923
+      },
+      {
         "title": "One in a million",
         "rank": 199649
       },
       {
         "title": "Ago",
         "rank": 188488
-      },
-      {
-        "title": "Tchaka (Une nuit à Lagos)",
-        "rank": 181215
-      },
-      {
-        "title": "Mea Culpa",
-        "rank": 164615
       }
     ]
   },
@@ -85,31 +85,31 @@
         "videoId": "kAZemdOXMwc",
         "title": "Kiko - Odjo (Clip Officiel)",
         "channel": "official",
-        "views": 1460277
+        "views": 1460317
       },
       {
         "videoId": "6MEhlDvRi1Y",
         "title": "Kiko - Business Class (Clip Officiel)",
         "channel": "official",
-        "views": 452874
+        "views": 452976
       },
       {
         "videoId": "SuYvD4b5-0A",
         "title": "Kiko - One in a Million (Performance Video)",
         "channel": "official",
-        "views": 540909
+        "views": 540940
       },
       {
         "videoId": "01OPuODYWdc",
         "title": "Kiko - Ding Deng Dong (Clip Officiel)",
         "channel": "official",
-        "views": 271543
+        "views": 271554
       },
       {
         "videoId": "iLd3rKsMUcY",
         "title": "NIKANOR feat. KIKO - Rayon de soleil (Clip Officiel)",
         "channel": "official",
-        "views": 1114993
+        "views": 1115023
       },
       {
         "videoId": "DPoGSe392z4",

@@ -24,7 +24,7 @@ describe("navForPersona — structure (label)", () => {
       ["sections.daily", ["/roster", "/pulse"]],
       ["sections.data", ["/streams", "/market", "/revenue", "/audience", "/algo-position"]],
       ["sections.finances", ["/finances", "/valuation", "/calculator"]],
-      ["sections.rights", ["/contracts", "/splits", "/rights", "/urssaf"]],
+      ["sections.rights", ["/contracts", "/splits", "/rights", "/placements", "/urssaf"]],
       ["sections.intelligence", ["/audit", "/ar-watch", "/day1-index", "/copilot"]],
       ["sections.growth", ["/fans", "/tour", "/catalog", "/discovery", "/sync"]],
       ["sections.account", ["/import", "/team", "/settings"]],

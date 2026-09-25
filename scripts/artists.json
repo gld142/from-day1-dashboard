@@ -97,5 +97,23 @@
     "deezerId": "52463032",
     "youtubeChannelId": "UCVG705xosVltZb52R0hHr_g",
     "youtubeVideos": []
+  },
+  {
+    "id": "november-ultra",
+    "name": "November Ultra",
+    "country": "FR",
+    "spotifyId": "0naOCLau0NmL1kdFlbZAfr",
+    "deezerId": "68625462",
+    "youtubeChannelId": "UCzteqa2qTb6SqazU1MyHzUA",
+    "youtubeVideos": []
+  },
+  {
+    "id": "zeg-p",
+    "name": "Zeg P",
+    "country": "FR",
+    "spotifyId": "1rpxM2mBJnWdfPeieLDYOc",
+    "deezerId": "11809227",
+    "youtubeChannelId": "UC03zElk3Y0AQAuIJZ3GhnAw",
+    "youtubeVideos": []
   }
 ]

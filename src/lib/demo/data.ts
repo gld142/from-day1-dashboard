@@ -7,6 +7,7 @@
  */
 import type {
   Artist,
+  Placement,
   Contract,
   EmergingArtist,
   Project,
@@ -69,6 +70,47 @@ export const ARTISTS: Artist[] = [
     spotifyId: "4P2HohWBtvSxxwabNDdYXN",
     deezerId: "194146027",
     youtubeChannelId: "UCv3rmdK3RqjN0PNkxJEfBwg",
+  },
+  {
+    id: "november-ultra",
+    name: "November Ultra",
+    genre: "Pop / Soul",
+    hue: 330,
+    initials: "NU",
+    monthlyListeners: listenersFromSnapshot("november-ultra", 396_215),
+    growthRate: 0.018,
+    careerStage: "developing",
+    day1Index: 69,
+    signedSince: "2021-09-01",
+    dealType: "indé",
+    kind: "performer",
+    publisher: null,
+    country: "FR",
+    spotifyId: "0naOCLau0NmL1kdFlbZAfr",
+    deezerId: "68625462",
+    youtubeChannelId: "UCzteqa2qTb6SqazU1MyHzUA",
+  },
+  {
+    /* Auteur-compositeur-producteur. Sa page Spotify existe, mais l'essentiel
+       de ce qu'il gagne ne s'y voit pas : ça se passe sur les disques des
+       autres. Voir PLACEMENTS et le champ `kind` dans types.ts. */
+    id: "zeg-p",
+    name: "Zeg P",
+    genre: "Production · Rap / R&B",
+    hue: 255,
+    initials: "ZP",
+    monthlyListeners: listenersFromSnapshot("zeg-p", 1_112_230),
+    growthRate: 0.03,
+    careerStage: "established",
+    day1Index: 77,
+    signedSince: "2020-02-17",
+    dealType: "indé",
+    kind: "composer",
+    publisher: { name: "Day 1 Édition", sharePct: 25 },
+    country: "FR",
+    spotifyId: "1rpxM2mBJnWdfPeieLDYOc",
+    deezerId: "11809227",
+    youtubeChannelId: "UC03zElk3Y0AQAuIJZ3GhnAw",
   },
   {
     id: "kiko",
@@ -154,6 +196,21 @@ const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
         "Qui sait ? (feat. ElGrandeToto)",
         "Ojos Sin Ver",
       ] },
+  ],
+  /* Titres relevés le 25/09/2026 sur sa page Spotify. */
+  "november-ultra": [
+    { id: "nu-bedroom", title: "bedroom walls", type: "album", releaseDate: "2022-04-01",
+      tracks: ["come into my arms", "the end.", "soft & tender"] },
+    { id: "nu-silencio", title: "Silencio", type: "single", releaseDate: "2023-09-15",
+      tracks: ["Silencio", "Parfois"] },
+  ],
+  /* Ce que Zeg P sort SOUS SON NOM. L'essentiel de son activité est ailleurs :
+     voir PLACEMENTS. */
+  "zeg-p": [
+    { id: "zp-fade", title: "FADE UP", type: "single", releaseDate: "2020-02-17",
+      tracks: ["FADE UP", "Avion de chasse"] },
+    { id: "zp-cites", title: "Cités de France", type: "ep", releaseDate: "2022-06-10",
+      tracks: ["Cités de France", "Juste une minute", "Blood"] },
   ],
   kiko: [
     { id: "ki-golden-boy", title: "Golden Boy", type: "ep", releaseDate: "2025-11-21",
@@ -536,4 +593,50 @@ export const SYNC_BRIEFS: SyncBrief[] = [
     deadline: isoDay(daysAhead(41)),
     mood: "cinematic",
   },
+];
+
+/* ─────────────────────────── Œuvres & placements ─────────────────────────── */
+
+/**
+ * Les œuvres d'un auteur-compositeur, placées chez d'autres artistes.
+ *
+ * Les cinq premières sont SORTIES : leurs titres et leurs écoutes cumulées
+ * viennent du relevé Spotify du 25/09/2026 (page de Zeg P, cinq titres les
+ * plus écoutés avec leurs playcounts). Les parts d'écriture, les points de
+ * production et l'état des déclarations SACEM sont en revanche des
+ * HYPOTHÈSES : aucune source publique ne donne les crédits d'écriture.
+ *
+ * Les quatre suivantes — non sorties ou proposées — sont entièrement
+ * SIMULÉES. Sans elles, le carnet de commandes serait vide et la page ne
+ * montrerait pas ce qu'elle sert à montrer.
+ */
+export const PLACEMENTS: Placement[] = [
+  { id: "pl-fadeup", artistId: "zeg-p", title: "FADE UP", performer: "Hamza, SCH",
+    roles: ["compositeur", "producteur"], writerSharePct: 25, producerPointsPct: 4,
+    status: "released", date: "2020-02-17", declared: true, streams: 148_817_745 },
+  { id: "pl-avion", artistId: "zeg-p", title: "Avion de chasse", performer: "Hamza",
+    roles: ["compositeur", "producteur"], writerSharePct: 20, producerPointsPct: 3,
+    status: "released", date: "2021-03-12", declared: true, streams: 9_295_310 },
+  { id: "pl-cites", artistId: "zeg-p", title: "Cités de France", performer: "Zeg P, Hamza",
+    roles: ["auteur", "compositeur", "producteur"], writerSharePct: 40, producerPointsPct: 5,
+    status: "released", date: "2022-06-10", declared: true, streams: 7_160_506 },
+  { id: "pl-minute", artistId: "zeg-p", title: "Juste une minute", performer: "Zeg P",
+    roles: ["auteur", "compositeur"], writerSharePct: 50, producerPointsPct: 0,
+    status: "released", date: "2022-09-02", declared: false, streams: 5_816_104 },
+  { id: "pl-blood", artistId: "zeg-p", title: "Blood", performer: "Zeg P",
+    roles: ["compositeur", "producteur"], writerSharePct: 35, producerPointsPct: 4,
+    status: "released", date: "2023-01-20", declared: false, streams: 633_492 },
+
+  { id: "pl-nuit", artistId: "zeg-p", title: "Nuit blanche", performer: "Nono La Grinta",
+    roles: ["compositeur", "producteur"], writerSharePct: 30, producerPointsPct: 4,
+    status: "unreleased", date: "2026-11-14", declared: false, streams: 0 },
+  { id: "pl-loin", artistId: "zeg-p", title: "Trop loin", performer: "Dadju",
+    roles: ["compositeur"], writerSharePct: 15, producerPointsPct: 0,
+    status: "unreleased", date: "2026-10-30", declared: true, streams: 0 },
+  { id: "pl-sahara", artistId: "zeg-p", title: "Sahara", performer: "ElGrandeToto",
+    roles: ["compositeur", "producteur"], writerSharePct: 25, producerPointsPct: 3,
+    status: "pitched", date: "2027-01-15", declared: false, streams: 0 },
+  { id: "pl-encore", artistId: "zeg-p", title: "Encore une fois", performer: "November Ultra",
+    roles: ["auteur", "compositeur"], writerSharePct: 45, producerPointsPct: 0,
+    status: "pitched", date: "2027-02-20", declared: false, streams: 0 },
 ];

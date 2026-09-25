@@ -15,6 +15,7 @@ import {
   EMERGING,
   LABEL,
   PROJECTS,
+  PLACEMENTS,
   SPLITS,
   SYNC_BRIEFS,
   TEAM,
@@ -45,7 +46,10 @@ import {
   AUTHOR_SHARE_OF_PUBLISHING,
   DEAL_SHARE,
   PUBLISHING_SHARE_OF_DSP,
+  TIER_FR,
+  blendedRate,
 } from "@/lib/real/params";
+import { territoryCoefficient, zoneDistribution } from "@/lib/real/territory";
 import {
   ESTIMATE_PERIODS,
   PERIOD_DAYS,
@@ -100,6 +104,7 @@ import type {
   Expense,
   ExpenseCategory,
   FanSegment,
+  Placement,
   RevenuePoint,
   RevenueSource,
   SyncBrief,
@@ -427,6 +432,90 @@ export function syncBriefs(): SyncBrief[] {
 export function syncBriefsClosingSoon(days = 7): number {
   const limite = isoDay(daysAhead(days));
   return syncBriefs().filter((b) => b.deadline <= limite).length;
+}
+
+/* ─────────────────────────── Œuvres & placements ─────────────────────────── */
+
+/** Vrai si cet artiste vit d'abord des œuvres qu'il écrit pour d'autres. */
+export function isComposer(artistId: string): boolean {
+  return getArtist(artistId).kind === "composer";
+}
+
+export function placementsFor(artistId: string): Placement[] {
+  return PLACEMENTS.filter((p) => p.artistId === artistId);
+}
+
+export type PlacementMoney = {
+  placement: Placement;
+  /** Brut master de l'œuvre — ce qu'elle rapporte à TOUT LE MONDE. */
+  gross: number;
+  /** Sa part d'édition, après la part de son éditeur. */
+  publishing: number;
+  /** Ses points de production sur le master. */
+  producer: number;
+  /** Ce qu'il touche : édition + production. */
+  net: number;
+};
+
+/**
+ * Ce qu'une œuvre rapporte À SON AUTEUR.
+ *
+ * Trois étages, pris dans cet ordre :
+ *   1. brut master   = streams × taux mixé FR × coefficient de territoire ;
+ *   2. édition       = brut × part édition du DSP (15 %) × sa part d'écriture,
+ *                      moins ce que prend son éditeur ;
+ *   3. production    = brut × ses points de producteur.
+ *
+ * Le taux et le territoire sont ceux de l'AUTEUR, faute de mieux : on ne
+ * relève pas l'audience de l'interprète de chaque placement. C'est une
+ * approximation assumée — elle se voit dans la provenance « estimé ».
+ *
+ * Une œuvre non sortie rapporte zéro. On ne projette pas : un carnet de
+ * commandes n'est pas un revenu.
+ */
+export function placementMoney(artistId: string): PlacementMoney[] {
+  const a = getArtist(artistId);
+  const dist = zoneDistribution(
+    artistTopCities(artistId),
+    a.country,
+    a.monthlyListeners,
+  );
+  const rate = blendedRate(TIER_FR) * territoryCoefficient(dist);
+  const editeur = a.publisher ? a.publisher.sharePct / 100 : 0;
+  return placementsFor(artistId).map((placement) => {
+    const gross = placement.status === "released" ? placement.streams * rate : 0;
+    const publishing =
+      gross * PUBLISHING_SHARE_OF_DSP * (placement.writerSharePct / 100) * (1 - editeur);
+    const producer = gross * (placement.producerPointsPct / 100);
+    return { placement, gross, publishing, producer, net: publishing + producer };
+  });
+}
+
+/** Les quelques chiffres qu'un auteur-compositeur regarde le matin. */
+export function placementFacts(artistId: string) {
+  const lignes = placementMoney(artistId);
+  const sorties = lignes.filter((l) => l.placement.status === "released");
+  const enCours = lignes.filter((l) => l.placement.status === "unreleased");
+  const proposees = lignes.filter((l) => l.placement.status === "pitched");
+  /* L'argent qu'une œuvre non déclarée ne va PAS chercher : c'est sa part
+     d'édition, celle que la SACEM ne peut pas lui verser faute de dépôt. */
+  const nonDeclarees = sorties.filter((l) => !l.placement.declared);
+  return {
+    total: lignes.length,
+    released: sorties.length,
+    unreleased: enCours.length,
+    pitched: proposees.length,
+    /* Ce que les œuvres sorties lui rapportent, cumulé depuis leur sortie. */
+    earned: sorties.reduce((s, l) => s + l.net, 0),
+    publishing: sorties.reduce((s, l) => s + l.publishing, 0),
+    producer: sorties.reduce((s, l) => s + l.producer, 0),
+    streams: sorties.reduce((s, l) => s + l.placement.streams, 0),
+    undeclared: nonDeclarees.length,
+    undeclaredAtStake: nonDeclarees.reduce((s, l) => s + l.publishing, 0),
+    /* La prochaine sortie signée, pas la prochaine proposition. */
+    next: enCours.map((l) => l.placement).sort((x, y) => x.date.localeCompare(y.date))[0] ?? null,
+    publisher: getArtist(artistId).publisher ?? null,
+  };
 }
 
 /* ─────────────── Séries — utilisateur > réel > démo ─────────────── */

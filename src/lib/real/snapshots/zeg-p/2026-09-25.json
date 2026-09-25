@@ -1,0 +1,133 @@
+{
+  "date": "2026-09-25",
+  "capturedAt": "2026-09-25T08:48:34.526Z",
+  "spotify": {
+    "monthlyListeners": 1112230,
+    "followers": 39001,
+    "topTracks": [
+      {
+        "name": "FADE UP",
+        "spotifyId": "4ZpIuzx91EAPK3VimONbfB",
+        "playcount": 148817745
+      },
+      {
+        "name": "Avion de chasse",
+        "spotifyId": "3dDTJbtHZhsbe426l5Msk1",
+        "playcount": 9295310
+      },
+      {
+        "name": "Blood",
+        "spotifyId": "5snMfEYZCwQBGsqlpB6cis",
+        "playcount": 633492
+      },
+      {
+        "name": "Cités de France",
+        "spotifyId": "57BMICnS6fDk1Ynh5e5zvj",
+        "playcount": 7160506
+      },
+      {
+        "name": "Juste une minute",
+        "spotifyId": "2yiIfIO1JYMiXebaBEodWD",
+        "playcount": 5816104
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 173324423,
+    "dailyStreams": 86522,
+    "tracks": [
+      {
+        "name": "FADE UP",
+        "total": 147886924,
+        "daily": 47405
+      },
+      {
+        "name": "Avion de chasse",
+        "total": 8552234,
+        "daily": 32387
+      },
+      {
+        "name": "Cités de France",
+        "total": 7077954,
+        "daily": 3939
+      },
+      {
+        "name": "Juste une minute",
+        "total": 5782123,
+        "daily": 1423
+      },
+      {
+        "name": "Tout gâcher",
+        "total": 3360644,
+        "daily": 1273
+      },
+      {
+        "name": "Blood",
+        "total": 513152,
+        "daily": null
+      },
+      {
+        "name": "Personne d'autre",
+        "total": 151392,
+        "daily": 95
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 22524,
+    "topTracks": [
+      {
+        "title": "Avion de chasse",
+        "rank": 931643
+      },
+      {
+        "title": "FADE UP",
+        "rank": 889069
+      },
+      {
+        "title": "Blood",
+        "rank": 725324
+      },
+      {
+        "title": "Juste une minute",
+        "rank": 669826
+      },
+      {
+        "title": "Tout gâcher",
+        "rank": 504892
+      },
+      {
+        "title": "Personne d'autre",
+        "rank": 316074
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 52438
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 19502
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 18972
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 18685
+    },
+    {
+      "city": "Lille",
+      "country": "FR",
+      "listeners": 12333
+    }
+  ]
+}

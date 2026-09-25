@@ -275,7 +275,8 @@
     "sync": "Briefs de synchro pour ton catalogue",
     "syncValue": "{count} briefs",
     "syncDeadline": "{count} ferment cette semaine",
-    "rights": "SACEM estimé, pas encore versé"
+    "rights": "SACEM estimé, pas encore versé",
+    "works": "{count, plural, one {# œuvre non déposée à la SACEM} other {# œuvres non déposées à la SACEM}}"
   },
   "doors": {
     "title": "Aller plus loin",

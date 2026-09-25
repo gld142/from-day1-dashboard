@@ -11,6 +11,8 @@ import frPulse from "./fr/pulse.json";
 import enPulse from "./en/pulse.json";
 import frStreams from "./fr/streams.json";
 import enStreams from "./en/streams.json";
+import frPlacements from "./fr/placements.json";
+import enPlacements from "./en/placements.json";
 import frMarket from "./fr/market.json";
 import enMarket from "./en/market.json";
 import frRevenue from "./fr/revenue.json";
@@ -79,6 +81,7 @@ const MESSAGES = {
     pulse: frPulse,
     streams: frStreams,
     market: frMarket,
+    placements: frPlacements,
     revenue: frRevenue,
     audience: frAudience,
     finances: frFinances,
@@ -115,6 +118,7 @@ const MESSAGES = {
     pulse: enPulse,
     streams: enStreams,
     market: enMarket,
+    placements: enPlacements,
     revenue: enRevenue,
     audience: enAudience,
     finances: enFinances,

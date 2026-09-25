@@ -26,7 +26,17 @@ describe("api.ts sur les artistes réels", () => {
     expect(JSON.stringify(streamSeries(id, 7))).toBe(JSON.stringify(realStreamSeries(id, 7)));
     const today = streamSeries(id, 1).find((p) => p.dsp === "spotify")!;
     expect(today.provenance).toBeDefined();
-    if (latestSnapshot(id).kworb) expect(today.streams).toBeGreaterThan(100_000);
+    /* Ce que ce test veut prouver : le chiffre servi vient du relevé Kworb,
+       pas du générateur. Un seuil fixe ne le prouve pas — il ne faisait que
+       trier les gros artistes des petits, et November Ultra (47 230
+       streams/jour, mesurés) l'a mis en échec en entrant au roster.
+       On compare donc au relevé lui-même. */
+    const kworb = latestSnapshot(id).kworb;
+    if (kworb) {
+      expect(today.streams).toBeGreaterThan(0);
+      expect(today.streams).toBeLessThanOrEqual(kworb.dailyStreams);
+      expect(today.streams / kworb.dailyStreams).toBeGreaterThan(0.5);
+    }
   });
 
   it("dadju : le streaming des revenus mensuels vient de l'estimateur", () => {

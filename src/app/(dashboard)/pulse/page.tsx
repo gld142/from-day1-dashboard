@@ -62,9 +62,11 @@ import {
   getArtist,
   hasReal,
   labelTotals,
+  isComposer,
   marketRosterTracks,
   marketShares,
   monthlyRevenueTotals,
+  placementFacts,
   pnlByArtist,
   rightsStatements,
   rosterEstimateSummaries,
@@ -144,6 +146,22 @@ export default function PulsePage() {
   const sharesKey = useSharesSnapshot();
   /* Les briefs de synchro sont les mêmes pour tout le roster : on les compte
      une fois, et les deux personas lisent le même nombre. */
+  /* Les œuvres non déposées d'un auteur-compositeur : de l'argent qui ne
+     rentrera jamais tant que c'est le cas, et qu'aucune autre page ne
+     signale. Côté structure, on additionne tous les compositeurs du roster. */
+  const worksLead = useMemo(() => {
+    const ids = showArtist ? [artistId] : ARTISTS.map((a) => a.id);
+    const composers = ids.filter(isComposer);
+    if (composers.length === 0) return null;
+    const facts = composers.map(placementFacts);
+    const atStake = facts.reduce((s, x) => s + x.undeclaredAtStake, 0);
+    const works = facts.reduce((s, x) => s + x.undeclared, 0);
+    const next = facts
+      .map((x) => x.next)
+      .filter((x): x is NonNullable<typeof x> => x !== null)
+      .sort((a, b) => a.date.localeCompare(b.date))[0];
+    return works > 0 ? { atStake, works, next } : null;
+  }, [showArtist, artistId]);
   const syncOpen = useMemo(() => syncBriefs().length, []);
   const syncSoon = useMemo(() => syncBriefsClosingSoon(), []);
 
@@ -869,6 +887,14 @@ export default function PulsePage() {
                   amount: t("collect.syncValue", { count: syncOpen }),
                   deadline: t("collect.syncDeadline", { count: syncSoon }),
                 },
+                worksLead && {
+                  key: "works",
+                  family: "money",
+                  href: "/placements",
+                  label: t("collect.works", { count: worksLead.works }),
+                  amount: eur(worksLead.atStake),
+                  urgent: true,
+                },
                 v.leads.rightsPending > 0 && {
                   key: "rights",
                   family: "money",
@@ -1298,6 +1324,14 @@ export default function PulsePage() {
                   label: t("collect.sync"),
                   amount: t("collect.syncValue", { count: syncOpen }),
                   deadline: t("collect.syncDeadline", { count: syncSoon }),
+                },
+                worksLead && {
+                  key: "works",
+                  family: "money",
+                  href: "/placements",
+                  label: t("collect.works", { count: worksLead.works }),
+                  amount: eur(worksLead.atStake),
+                  urgent: true,
                 },
                 l.leads.rightsPending > 0 && {
                   key: "rights",

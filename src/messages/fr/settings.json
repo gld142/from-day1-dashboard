@@ -38,7 +38,8 @@
       "importer": "Dépose un relevé distributeur : le dashboard passe sur tes vrais chiffres.",
       "settings": "Modules, langue, ambiance, compte.",
       "comparatif": "Comparatif vs concurrents (usage interne From Day 1).",
-      "onboardings": "Pipeline interne des partenariats (usage From Day 1)."
+      "onboardings": "Pipeline interne des partenariats (usage From Day 1).",
+      "placements": "Ce que rapportent les œuvres écrites pour d'autres : édition, production, carnet de commandes."
     }
   },
   "appearance": {
