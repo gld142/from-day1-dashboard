@@ -1,0 +1,14 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { GATE_COOKIE, GATE_HASH, GATE_PATH } from "@/lib/gate";
+
+/** Toute page passe par la porte : sans le cookie, direction /acces (voir lib/gate). */
+export function proxy(request: NextRequest) {
+  if (request.cookies.get(GATE_COOKIE)?.value === GATE_HASH) return NextResponse.next();
+  const url = new URL(GATE_PATH, request.url);
+  url.searchParams.set("next", request.nextUrl.pathname + request.nextUrl.search);
+  return NextResponse.redirect(url);
+}
+
+export const config = {
+  matcher: ["/((?!acces|_next/static|_next/image|favicon.ico|robots.txt).*)"],
+};
