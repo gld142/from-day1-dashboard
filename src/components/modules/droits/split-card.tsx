@@ -113,7 +113,12 @@ export function SplitTrackCard({
 
   return (
     <Dialog>
-      <div className="flex flex-col gap-3 rounded-xl border bg-card p-5">
+      {/* `min-w-0` : une cellule de grille vaut par défaut la largeur
+          intrinsèque de son contenu. Un titre long — « love nwantiti
+          (feat. ElGrande Toto) - North African Remix » — élargissait
+          alors toute la colonne, et la page débordait de 146 px sur
+          téléphone. */}
+      <div className="flex min-w-0 flex-col gap-3 rounded-xl border bg-card p-5">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             {/* Le titre ouvre le détail : sur vingt cartes, un bouton « Détail »

@@ -88,5 +88,14 @@
         "title": "Nono La Grinta - Terrain"
       }
     ]
+  },
+  {
+    "id": "elgrandetoto",
+    "name": "ElGrandeToto",
+    "country": "MA",
+    "spotifyId": "4BFLElxtBEdsdwGA1kHTsx",
+    "deezerId": "52463032",
+    "youtubeChannelId": "UCVG705xosVltZb52R0hHr_g",
+    "youtubeVideos": []
   }
 ]

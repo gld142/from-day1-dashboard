@@ -87,6 +87,27 @@ export const ARTISTS: Artist[] = [
     deezerId: "188212297",
     youtubeChannelId: "UClmZnCCKgupJOucmLOvm71A",
   },
+  {
+    /* Identifiants croisés MusicBrainz × Deezer le 25/09/2026 — pas devinés.
+       Le contrat, le stade de carrière et l'index sont des HYPOTHÈSES de
+       démonstration, comme pour les trois autres : seules les audiences
+       viennent du relevé. */
+    id: "elgrandetoto",
+    name: "ElGrandeToto",
+    genre: "Rap marocain",
+    hue: 210,
+    initials: "ET",
+    monthlyListeners: listenersFromSnapshot("elgrandetoto", 3_000_000),
+    growthRate: 0.02,
+    careerStage: "established",
+    day1Index: 81,
+    signedSince: "2019-06-01",
+    dealType: "distribution",
+    country: "MA",
+    spotifyId: "4BFLElxtBEdsdwGA1kHTsx",
+    deezerId: "52463032",
+    youtubeChannelId: "UCVG705xosVltZb52R0hHr_g",
+  },
 ];
 
 export function getArtist(id: string): Artist {
@@ -119,6 +140,20 @@ const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
       tracks: ["LOVE YOU - A COLORS SHOW"] },
     { id: "ng-grinta", title: "La Grinta", type: "ep", releaseDate: "2024-03-08",
       tracks: ["LA QUOI ? (feat. La Mano 1.9)", "J'tavais dit", "Délit", "Restaurant", "Audrey Kelly", "22%"] },
+  ],
+  /* Titres RELEVÉS le 25/09/2026 sur sa page Spotify (les cinq plus écoutés,
+     avec leurs playcounts). Le regroupement en projets et les dates de sortie
+     sont des HYPOTHÈSES de démonstration : le relevé donne les titres, pas la
+     discographie. */
+  elgrandetoto: [
+    { id: "egt-ghalat", title: "GHALAT", type: "single", releaseDate: "2024-10-04",
+      tracks: ["GHALAT", "FOTO"] },
+    { id: "egt-feats", title: "Featurings", type: "ep", releaseDate: "2023-05-12",
+      tracks: [
+        "love nwantiti (feat. ElGrande Toto) - North African Remix",
+        "Qui sait ? (feat. ElGrandeToto)",
+        "Ojos Sin Ver",
+      ] },
   ],
   kiko: [
     { id: "ki-golden-boy", title: "Golden Boy", type: "ep", releaseDate: "2025-11-21",

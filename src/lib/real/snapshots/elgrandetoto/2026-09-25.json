@@ -1,0 +1,794 @@
+{
+  "date": "2026-09-25",
+  "capturedAt": "2026-09-25T08:07:23.016Z",
+  "spotify": {
+    "monthlyListeners": 5359642,
+    "followers": 5573030,
+    "topTracks": [
+      {
+        "name": "Qui sait ? (feat. ElGrandeToto)",
+        "spotifyId": "3ejjmzEsUfObGdmmQRVmM2",
+        "playcount": 125168956
+      },
+      {
+        "name": "love nwantiti (feat. ElGrande Toto) - North African Remix",
+        "spotifyId": "1EYeZGTMCjV7uVey5fNWXM",
+        "playcount": 205207321
+      },
+      {
+        "name": "Ojos Sin Ver",
+        "spotifyId": "46Npq0S6AwESyAaULRUp0r",
+        "playcount": 83235268
+      },
+      {
+        "name": "GHALAT",
+        "spotifyId": "7JKvIKNiyaBlG1pLTuVZPd",
+        "playcount": 8905294
+      },
+      {
+        "name": "FOTO",
+        "spotifyId": "68MyQ74n2P9F20sF0ojgVC",
+        "playcount": 3729620
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 1516700096,
+    "dailyStreams": 1330692,
+    "tracks": [
+      {
+        "name": "love nwantiti (feat. ElGrande Toto) - North African Remix",
+        "total": 204906593,
+        "daily": 97115
+      },
+      {
+        "name": "Qui sait ? (feat. ElGrandeToto)",
+        "total": 124727621,
+        "daily": 152892
+      },
+      {
+        "name": "Ojos Sin Ver",
+        "total": 83073340,
+        "daily": 54067
+      },
+      {
+        "name": "BLUE LOVE",
+        "total": 61982811,
+        "daily": 44458
+      },
+      {
+        "name": "Mghayer",
+        "total": 50474633,
+        "daily": 36173
+      },
+      {
+        "name": "DIPLOMATICO",
+        "total": 41402436,
+        "daily": 25680
+      },
+      {
+        "name": "DELLALI (feat. Hamza)",
+        "total": 41037238,
+        "daily": 16869
+      },
+      {
+        "name": "Obligación",
+        "total": 36265142,
+        "daily": 30798
+      },
+      {
+        "name": "Comforter (feat. Ayra Starr)",
+        "total": 34030281,
+        "daily": 15117
+      },
+      {
+        "name": "STALINE",
+        "total": 29522749,
+        "daily": 24413
+      },
+      {
+        "name": "RAZONES (feat. Morad)",
+        "total": 29510386,
+        "daily": 14491
+      },
+      {
+        "name": "BOUHALI",
+        "total": 28963184,
+        "daily": 18407
+      },
+      {
+        "name": "Totopika",
+        "total": 28659815,
+        "daily": 21950
+      },
+      {
+        "name": "MAGHRIBI",
+        "total": 28094161,
+        "daily": 17945
+      },
+      {
+        "name": "COLTELLINO (feat. Baby Gang)",
+        "total": 25304271,
+        "daily": 18358
+      },
+      {
+        "name": "BGHAWNI",
+        "total": 23934120,
+        "daily": 14189
+      },
+      {
+        "name": "Drouba",
+        "total": 23678404,
+        "daily": 4724
+      },
+      {
+        "name": "Désert",
+        "total": 20887013,
+        "daily": 16026
+      },
+      {
+        "name": "Obscurité (feat. Hamza)",
+        "total": 18967131,
+        "daily": 7397
+      },
+      {
+        "name": "Santa Fe",
+        "total": 17077169,
+        "daily": 11435
+      },
+      {
+        "name": "ALOHA!",
+        "total": 16073788,
+        "daily": 5827
+      },
+      {
+        "name": "PARA MI (feat. Beny Jr)",
+        "total": 14791540,
+        "daily": 7406
+      },
+      {
+        "name": "Très jolie",
+        "total": 14465197,
+        "daily": 4965
+      },
+      {
+        "name": "QUÉ LO QUE",
+        "total": 13485323,
+        "daily": 4133
+      },
+      {
+        "name": "kafini",
+        "total": 13157921,
+        "daily": 24268
+      },
+      {
+        "name": "Thunes",
+        "total": 12732222,
+        "daily": 14368
+      },
+      {
+        "name": "Ailleurs (feat. Lefa)",
+        "total": 12222397,
+        "daily": 3470
+      },
+      {
+        "name": "Etranger (feat. Damso)",
+        "total": 12004856,
+        "daily": 3346
+      },
+      {
+        "name": "WAH (feat. 3robi)",
+        "total": 11940635,
+        "daily": 5014
+      },
+      {
+        "name": "HACHICH/TOSEINA",
+        "total": 11487514,
+        "daily": 7379
+      },
+      {
+        "name": "SARCELLES",
+        "total": 11340333,
+        "daily": 7876
+      },
+      {
+        "name": "Bent Nass",
+        "total": 11243354,
+        "daily": 6860
+      },
+      {
+        "name": "MARADONA - Remix",
+        "total": 11106344,
+        "daily": 7095
+      },
+      {
+        "name": "Come Va (feat. ElGrandeToto)",
+        "total": 11087867,
+        "daily": 4253
+      },
+      {
+        "name": "Rassi (feat. ElGrandeToto)",
+        "total": 10999019,
+        "daily": 8897
+      },
+      {
+        "name": "Grand Soleil",
+        "total": 10481275,
+        "daily": 5269
+      },
+      {
+        "name": "SULTAN",
+        "total": 10019326,
+        "daily": 5536
+      },
+      {
+        "name": "Tchin Tchin",
+        "total": 9981201,
+        "daily": 3545
+      },
+      {
+        "name": "27",
+        "total": 8997570,
+        "daily": 4951
+      },
+      {
+        "name": "FERNANDEL (with Oli)",
+        "total": 8841383,
+        "daily": 7557
+      },
+      {
+        "name": "GHALAT",
+        "total": 8720276,
+        "daily": 61531
+      },
+      {
+        "name": "Chopin",
+        "total": 8663832,
+        "daily": 2823
+      },
+      {
+        "name": "BOOMX3",
+        "total": 8325914,
+        "daily": 9701
+      },
+      {
+        "name": "TP",
+        "total": 8202914,
+        "daily": 3752
+      },
+      {
+        "name": "R.I.P",
+        "total": 7960411,
+        "daily": 2536
+      },
+      {
+        "name": "Halla halla",
+        "total": 7839156,
+        "daily": 3813
+      },
+      {
+        "name": "GELBI T3AB (feat. Samara)",
+        "total": 7541478,
+        "daily": 6669
+      },
+      {
+        "name": "Tango",
+        "total": 7515894,
+        "daily": 1912
+      },
+      {
+        "name": "L.F.O.L.F (feat. Leto)",
+        "total": 7402972,
+        "daily": 3268
+      },
+      {
+        "name": "A LA BASE",
+        "total": 6990797,
+        "daily": 4266
+      },
+      {
+        "name": "BIP! (feat. Morad)",
+        "total": 6909748,
+        "daily": 3332
+      },
+      {
+        "name": "Thezz (feat. Smallx)",
+        "total": 6776540,
+        "daily": 1282
+      },
+      {
+        "name": "FIN DE SESSION (feat. Lacrim)",
+        "total": 6754818,
+        "daily": 4834
+      },
+      {
+        "name": "HELENA",
+        "total": 6714359,
+        "daily": 25775
+      },
+      {
+        "name": "30K",
+        "total": 6674031,
+        "daily": 4194
+      },
+      {
+        "name": "DINERO",
+        "total": 6667974,
+        "daily": 4448
+      },
+      {
+        "name": "Mikasa",
+        "total": 6637184,
+        "daily": 1689
+      },
+      {
+        "name": "WOW",
+        "total": 6543804,
+        "daily": 3319
+      },
+      {
+        "name": "HASH N' BLEM (feat. Unknown T)",
+        "total": 6385887,
+        "daily": 2677
+      },
+      {
+        "name": "BLING BLING (feat. HD La Relève & JRK 19)",
+        "total": 6055732,
+        "daily": 3050
+      },
+      {
+        "name": "5E ARRONDISSEMENT",
+        "total": 6042269,
+        "daily": 4572
+      },
+      {
+        "name": "LIKE THAT (feat. Oxlade)",
+        "total": 5948098,
+        "daily": 1603
+      },
+      {
+        "name": "SEMMI",
+        "total": 5673713,
+        "daily": 3529
+      },
+      {
+        "name": "LILLAH",
+        "total": 5596847,
+        "daily": 2320
+      },
+      {
+        "name": "WELD LAADOUL",
+        "total": 5579489,
+        "daily": 2571
+      },
+      {
+        "name": "#OuDiriHakka",
+        "total": 5504460,
+        "daily": 1187
+      },
+      {
+        "name": "ARABIA",
+        "total": 5402215,
+        "daily": 5964
+      },
+      {
+        "name": "NINJA (feat. GIMS)",
+        "total": 5009084,
+        "daily": 36243
+      },
+      {
+        "name": "INSOMNIA HOTEL",
+        "total": 4892059,
+        "daily": 10423
+      },
+      {
+        "name": "Brrr (feat. Alonzo & ElGrandeToto)",
+        "total": 4887503,
+        "daily": 2173
+      },
+      {
+        "name": "SAMEDI (feat. Shaw)",
+        "total": 4336560,
+        "daily": 27269
+      },
+      {
+        "name": "La Paille (feat. Farid Bang)",
+        "total": 4287131,
+        "daily": 1163
+      },
+      {
+        "name": "ANXIETE",
+        "total": 4060307,
+        "daily": 15303
+      },
+      {
+        "name": "BILLETS",
+        "total": 3919987,
+        "daily": 1650
+      },
+      {
+        "name": "MEZZANOTTE (feat. Rondodasosa)",
+        "total": 3778014,
+        "daily": 1255
+      },
+      {
+        "name": "Déjà-vu",
+        "total": 3737157,
+        "daily": 699
+      },
+      {
+        "name": "C.V.D.I.",
+        "total": 3729349,
+        "daily": 1067
+      },
+      {
+        "name": "Marina",
+        "total": 3726475,
+        "daily": 1177
+      },
+      {
+        "name": "Casanegra",
+        "total": 3713864,
+        "daily": 36106
+      },
+      {
+        "name": "La cité",
+        "total": 3644403,
+        "daily": 699
+      },
+      {
+        "name": "REPRÉSAILLES (feat. Kaaris)",
+        "total": 3637296,
+        "daily": 1778
+      },
+      {
+        "name": "FOTO",
+        "total": 3634027,
+        "daily": 34896
+      },
+      {
+        "name": "MON PAYS",
+        "total": 3220052,
+        "daily": 15067
+      },
+      {
+        "name": "A.D.H.D.",
+        "total": 3114659,
+        "daily": 796
+      },
+      {
+        "name": "Nodawanod",
+        "total": 2940720,
+        "daily": 723
+      },
+      {
+        "name": "PITLANE - Bonus",
+        "total": 2934686,
+        "daily": 1458
+      },
+      {
+        "name": "Ohlala",
+        "total": 2729179,
+        "daily": 528
+      },
+      {
+        "name": "GAUCHE DROITE (feat. Draganov)",
+        "total": 2690093,
+        "daily": 12953
+      },
+      {
+        "name": "CVP",
+        "total": 2676093,
+        "daily": 16294
+      },
+      {
+        "name": "DARBEDA",
+        "total": 2434239,
+        "daily": 9738
+      },
+      {
+        "name": "Bienvenue dans High & Fines Herbes",
+        "total": 2385324,
+        "daily": 696
+      },
+      {
+        "name": "SALGOAT (with Roi Heenok)",
+        "total": 2363670,
+        "daily": 1695
+      },
+      {
+        "name": "DOLORES",
+        "total": 2348407,
+        "daily": 10337
+      },
+      {
+        "name": "Picanto",
+        "total": 2334445,
+        "daily": 359
+      },
+      {
+        "name": "SOFITEL",
+        "total": 2314301,
+        "daily": 5120
+      },
+      {
+        "name": "INTRODUCTION",
+        "total": 2271597,
+        "daily": 572
+      },
+      {
+        "name": "SHEVCHENKO",
+        "total": 2099023,
+        "daily": 10165
+      },
+      {
+        "name": "Maradona",
+        "total": 2038846,
+        "daily": 3006
+      },
+      {
+        "name": "Staline",
+        "total": 1920295,
+        "daily": null
+      },
+      {
+        "name": "Mâle Alpha",
+        "total": 1879713,
+        "daily": 1514
+      },
+      {
+        "name": "Sauti vs. Diplomatico",
+        "total": 1866219,
+        "daily": 1993
+      },
+      {
+        "name": "Nharzin",
+        "total": 1840101,
+        "daily": 235
+      },
+      {
+        "name": "PASSAT",
+        "total": 1734475,
+        "daily": 9381
+      },
+      {
+        "name": "De quoi",
+        "total": 1632986,
+        "daily": 1565
+      },
+      {
+        "name": "International",
+        "total": 1596533,
+        "daily": 13611
+      },
+      {
+        "name": "TWRK",
+        "total": 1536657,
+        "daily": 7166
+      },
+      {
+        "name": "Tony Montana",
+        "total": 1516819,
+        "daily": 344
+      },
+      {
+        "name": "COMME AVANT",
+        "total": 1515604,
+        "daily": 6658
+      },
+      {
+        "name": "Intro",
+        "total": 1464194,
+        "daily": 249
+      },
+      {
+        "name": "Niya",
+        "total": 1358267,
+        "daily": 502
+      },
+      {
+        "name": "ROCKSTAR (feat. Rounhaa & Najm)",
+        "total": 1307392,
+        "daily": 5450
+      },
+      {
+        "name": "NOUVEAU FER (feat. Jolagreen23)",
+        "total": 1289056,
+        "daily": 3524
+      },
+      {
+        "name": "ROCHE MAN (feat. GELLO 4031)",
+        "total": 1238280,
+        "daily": 4054
+      },
+      {
+        "name": "TÊTE D'ARABE (feat. Zkr)",
+        "total": 1218109,
+        "daily": 3731
+      },
+      {
+        "name": "ZTAYLA & FUFU",
+        "total": 1144556,
+        "daily": 3458
+      },
+      {
+        "name": "Qualité",
+        "total": 1058745,
+        "daily": 952
+      },
+      {
+        "name": "CARABINIERI",
+        "total": 1044609,
+        "daily": 3416
+      },
+      {
+        "name": "J'SAIS PAS (feat. Timar)",
+        "total": 1042734,
+        "daily": 3270
+      },
+      {
+        "name": "LIBERTÉ",
+        "total": 1029890,
+        "daily": 3056
+      },
+      {
+        "name": "PARADIS (feat. Charlotte Cardin)",
+        "total": 1002399,
+        "daily": 4241
+      },
+      {
+        "name": "CONSUELA (feat. Lola Indigo)",
+        "total": 997634,
+        "daily": 4982
+      },
+      {
+        "name": "BARCHA",
+        "total": 985497,
+        "daily": 3881
+      },
+      {
+        "name": "RITUEL",
+        "total": 978945,
+        "daily": 2793
+      },
+      {
+        "name": "LAOS",
+        "total": 900988,
+        "daily": 7193
+      },
+      {
+        "name": "PLAIES (feat. Oumay)",
+        "total": 774229,
+        "daily": 3968
+      },
+      {
+        "name": "BIP",
+        "total": 729103,
+        "daily": 72
+      },
+      {
+        "name": "ON Y EST (feat. Niro & ElGrandeToto)",
+        "total": 704707,
+        "daily": 743
+      },
+      {
+        "name": "CPL",
+        "total": 676825,
+        "daily": 578
+      },
+      {
+        "name": "Kilogrammes",
+        "total": 666796,
+        "daily": 208
+      },
+      {
+        "name": "DNG DNG",
+        "total": 600297,
+        "daily": 709
+      },
+      {
+        "name": "ZÉROS",
+        "total": 584804,
+        "daily": 2541
+      },
+      {
+        "name": "LA BOHÈME (feat. Sofiane Pamart) - Outro",
+        "total": 408538,
+        "daily": 1335
+      },
+      {
+        "name": "PASADENA",
+        "total": 165013,
+        "daily": null
+      },
+      {
+        "name": "4FANTASTIKS",
+        "total": 160591,
+        "daily": 775
+      },
+      {
+        "name": "La Base",
+        "total": 148561,
+        "daily": null
+      },
+      {
+        "name": "Freestyle",
+        "total": 103010,
+        "daily": null
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 568047,
+    "topTracks": [
+      {
+        "title": "Qui sait ? (feat. ElGrandeToto)",
+        "rank": 879764
+      },
+      {
+        "title": "Casanegra",
+        "rank": 775076
+      },
+      {
+        "title": "PASADENA",
+        "rank": 800849
+      },
+      {
+        "title": "NINJA (feat. GIMS)",
+        "rank": 749927
+      },
+      {
+        "title": "International",
+        "rank": 671589
+      },
+      {
+        "title": "Mghayer",
+        "rank": 664373
+      },
+      {
+        "title": "kafini",
+        "rank": 635893
+      },
+      {
+        "title": "Ojos Sin Ver",
+        "rank": 642108
+      },
+      {
+        "title": "DIPLOMATICO",
+        "rank": 613867
+      },
+      {
+        "title": "BLUE LOVE",
+        "rank": 648557
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Casablanca",
+      "country": "MA",
+      "listeners": 444322
+    },
+    {
+      "city": "Rabat",
+      "country": "MA",
+      "listeners": 259312
+    },
+    {
+      "city": "Marrakesh",
+      "country": "MA",
+      "listeners": 199078
+    },
+    {
+      "city": "Tangier",
+      "country": "MA",
+      "listeners": 129167
+    },
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 124667
+    }
+  ]
+}
