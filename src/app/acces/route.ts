@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { GATE_COOKIE, GATE_HASH, GATE_PATH, sha256 } from "@/lib/gate";
+import { GATE_COOKIE, GATE_PATH, isValidToken, tokenFor } from "@/lib/gate";
 
 /** Seules les adresses internes sont acceptées comme retour (pas de redirection ouverte). */
 function safeNext(value: string | null): string {
@@ -34,10 +34,11 @@ ${error ? '<p class="e">Mot de passe incorrect.</p>' : ""}
 export async function POST(request: NextRequest) {
   const form = await request.formData();
   const next = safeNext(String(form.get("next") ?? "/"));
-  if ((await sha256(String(form.get("password") ?? ""))) !== GATE_HASH) {
+  const token = await tokenFor(String(form.get("password") ?? ""));
+  if (!(await isValidToken(token))) {
     return NextResponse.redirect(new URL(`${GATE_PATH}?e=1&next=${encodeURIComponent(next)}`, request.url), 303);
   }
   const res = NextResponse.redirect(new URL(next, request.url), 303);
-  res.cookies.set(GATE_COOKIE, GATE_HASH, { httpOnly: true, secure: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 30 });
+  res.cookies.set(GATE_COOKIE, token, { httpOnly: true, secure: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 30 });
   return res;
 }

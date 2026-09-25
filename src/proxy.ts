@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { GATE_COOKIE, GATE_HASH, GATE_PATH } from "@/lib/gate";
+import { GATE_COOKIE, GATE_PATH, isValidToken } from "@/lib/gate";
 
 /** Toute page passe par la porte : sans le cookie, direction /acces (voir lib/gate). */
-export function proxy(request: NextRequest) {
-  if (request.cookies.get(GATE_COOKIE)?.value === GATE_HASH) return NextResponse.next();
+export async function proxy(request: NextRequest) {
+  if (await isValidToken(request.cookies.get(GATE_COOKIE)?.value)) return NextResponse.next();
   const url = new URL(GATE_PATH, request.url);
   url.searchParams.set("next", request.nextUrl.pathname + request.nextUrl.search);
   return NextResponse.redirect(url);
