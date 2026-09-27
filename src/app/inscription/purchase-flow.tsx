@@ -84,7 +84,12 @@ export function PurchaseFlow() {
   const [draft, setDraft] = useState<Draft>(saved?.draft ?? { artistCount: 1, roles: [], needs: [] });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [paid, setPaid] = useState(false);
+  const [quoteSent, setQuoteSent] = useState(false);
+  // Retour de Stripe sans paiement (annulé) ou paiement non vérifiable.
+  const [notice] = useState(() => {
+    const p = new URLSearchParams(window.location.search).get("paiement");
+    return p === "annule" ? "Paiement annulé : rien n'a été débité. Tu peux reprendre quand tu veux." : p ? "Le paiement n'a pas pu être vérifié. Réessaie, rien n'a été débité deux fois." : null;
+  });
 
   useEffect(() => {
     try {
@@ -111,17 +116,18 @@ export function PurchaseFlow() {
     true,
   ][step];
 
-  // Étapes serveur : ce que la lead devient quand on quitte l'étape `step`. Le paiement
-  // simulé la laisse à « checkout » : seul un paiement confirmé par Stripe la passera à « paid ».
+  // Étapes serveur : ce que la lead devient quand on quitte l'étape `step`. Seul un paiement
+  // confirmé par Stripe la passera à « paid » (côté serveur, jamais depuis le navigateur).
   const STAGE_AFTER = ["identity", "structure", "needs", "offer", "checkout", "checkout"] as const;
 
   async function next() {
     setError(null);
+    let leadId = draft.id;
     if (step >= 1) {
       setSaving(true);
       try {
-        const id = await saveLead({ ...draft, stage: STAGE_AFTER[step] });
-        if (id && id !== draft.id) set("id", id);
+        leadId = await saveLead({ ...draft, stage: STAGE_AFTER[step] });
+        if (leadId && leadId !== draft.id) set("id", leadId);
       } catch {
         setError("Impossible d'enregistrer pour l'instant. Réessaie dans un instant.");
         setSaving(false);
@@ -129,22 +135,41 @@ export function PurchaseFlow() {
       }
       setSaving(false);
     }
-    if (step === 5) {
-      setPaid(true);
+    // Au-delà de 15 artistes : pas de paiement en ligne, on rappelle avec un devis.
+    if (step === 4 && quote.kind === "quote") {
+      setQuoteSent(true);
       try {
         localStorage.removeItem(STORAGE);
       } catch {}
       return;
     }
+    if (step === 5) {
+      // Le serveur recalcule le montant depuis la lead, puis on part sur la page sécurisée de Stripe.
+      setSaving(true);
+      try {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ leadId }),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        window.location.assign(((await res.json()) as { url: string }).url);
+      } catch {
+        setError("Le paiement n'a pas pu démarrer. Réessaie dans un instant : rien n'a été débité.");
+        setSaving(false);
+      }
+      return;
+    }
     setStep((s) => s + 1);
   }
 
-  if (paid) return <Done draft={draft} monthly={quote.kind === "price" ? quote.monthly : null} />;
+  if (quoteSent) return <Done draft={draft} />;
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-10 md:py-16">
       <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">Day 1 Pro</p>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Ouvre ton espace</h1>
+      {notice && <p className="mt-4 rounded-lg border bg-card px-4 py-3 text-sm">{notice}</p>}
 
       <ol className="mt-6 flex gap-1.5" aria-label="Étapes">
         {STEP_TITLES.map((t, i) => (
@@ -252,10 +277,11 @@ export function PurchaseFlow() {
 
         {step === 5 && (
           <Step title="Paiement" hint="Sans engagement, résiliable à tout moment.">
-            <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-              Paiement <strong className="text-foreground">simulé</strong> : le paiement sécurisé (Stripe) sera branché à cette étape.
-              {quote.kind === "price" && <> Montant : <span className="text-foreground">{eur(quote.monthly)} / mois</span>.</>}
-            </div>
+            <p className="text-sm text-muted-foreground">
+              Tu vas passer sur la page de paiement sécurisée de Stripe.
+              {quote.kind === "price" && <> Montant : <span className="text-foreground">{eur(quote.monthly)} par mois</span>.</>}
+              {" "}Ton espace s&apos;ouvre dès le paiement validé.
+            </p>
           </Step>
         )}
 
@@ -266,7 +292,7 @@ export function PurchaseFlow() {
             <ArrowLeft /> Retour
           </Button>
           <Button size="lg" onClick={next} disabled={!valid || saving}>
-            {step === 5 ? "Payer et ouvrir mon espace" : step === 4 && quote.kind === "quote" ? "Demander mon devis" : "Continuer"}
+            {step === 5 ? (quote.kind === "price" ? `Payer ${eur(quote.monthly)} / mois` : "Continuer") : step === 4 && quote.kind === "quote" ? "Demander mon devis" : "Continuer"}
             <ArrowRight />
           </Button>
         </div>
@@ -330,16 +356,15 @@ function Line({ label, value, strong }: { label: string; value: string; strong?:
   );
 }
 
-function Done({ draft, monthly }: { draft: Draft; monthly: number | null }) {
+function Done({ draft }: { draft: Draft }) {
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-16 text-center">
       <div className="mx-auto grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
         <Check />
       </div>
-      <h1 className="mt-5 text-2xl font-semibold">Bienvenue, {draft.firstName}</h1>
+      <h1 className="mt-5 text-2xl font-semibold">Merci, {draft.firstName}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        {monthly ? `Abonnement de ${eur(monthly)} / mois (simulé). ` : "Demande de devis envoyée. "}
-        Prochaine étape : créer ton espace, ajouter ton premier artiste et inviter ton équipe.
+        Demande de devis envoyée. On te rappelle sous 24 h pour construire l&apos;offre avec toi.
       </p>
     </div>
   );

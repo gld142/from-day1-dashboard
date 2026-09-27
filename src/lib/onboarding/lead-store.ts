@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { adminDb } from "@/lib/supabase/admin";
 import type { Lead } from "./lead";
 import { toRow } from "./lead-row";
 
@@ -7,18 +7,7 @@ import { toRow } from "./lead-row";
  * Écriture côté serveur avec la clé secrète : la table est fermée à l'API
  * publique (RLS sans règle), même avec la clé publishable.
  */
-let client: SupabaseClient | undefined;
-
-function db(): SupabaseClient {
-  if (client) return client;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SECRET_KEY;
-  if (!url || !key) {
-    throw new Error("Supabase non configuré : NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SECRET_KEY dans .env.local");
-  }
-  client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
-  return client;
-}
+const db = adminDb;
 
 type Saved = Pick<Lead, "id" | "stage">;
 
