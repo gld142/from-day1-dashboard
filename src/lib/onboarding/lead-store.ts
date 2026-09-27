@@ -26,7 +26,11 @@ type Saved = Pick<Lead, "id" | "stage">;
 export async function upsertLead(id: string | undefined, patch: Partial<Lead>): Promise<Saved> {
   const row = toRow(patch);
   if (id) {
-    const { data, error } = await db().from("leads").update(row).eq("id", id).select("id, stage").maybeSingle();
+    // Rien de valable à écrire (champs refusés par sanitize) : on renvoie la lead telle quelle.
+    const query = Object.keys(row).length
+      ? db().from("leads").update(row).eq("id", id)
+      : db().from("leads").select().eq("id", id);
+    const { data, error } = await query.select("id, stage").maybeSingle();
     if (error) throw error;
     if (data) return data as Saved;
   }
