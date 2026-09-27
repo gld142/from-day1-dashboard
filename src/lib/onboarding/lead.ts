@@ -6,7 +6,9 @@ export const PROFILES = ["artist", "label", "management", "publisher", "distribu
 export const TEAM_SIZES = ["solo", "2-5", "6-20", "21-50", "50+"] as const;
 export const ROLES = ["artist", "manager", "ar", "label-head", "accountant", "lawyer", "other"] as const;
 export const NEEDS = ["streams", "revenue", "rights", "audit", "splits", "roster", "contracts"] as const;
-export const STAGES = ["identity", "structure", "needs", "offer", "checkout", "paid"] as const;
+/** Étapes que le navigateur peut déclarer. « paid » n'en fait pas partie : seul le paiement confirmé (webhook Stripe) le posera. */
+export const CLIENT_STAGES = ["identity", "structure", "needs", "offer", "checkout"] as const;
+export const STAGES = [...CLIENT_STAGES, "paid"] as const;
 
 export type Lead = {
   id: string;
@@ -40,7 +42,7 @@ export function sanitize(input: Record<string, unknown>): Partial<Lead> {
   const email = text(input.email, 200)?.toLowerCase();
   const n = Number(input.artistCount);
   const out: Partial<Lead> = {
-    stage: oneOf(STAGES, input.stage),
+    stage: oneOf(CLIENT_STAGES, input.stage),
     profile: oneOf(PROFILES, input.profile),
     firstName: text(input.firstName, 80),
     lastName: text(input.lastName, 80),

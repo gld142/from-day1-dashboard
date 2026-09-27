@@ -13,6 +13,12 @@ export async function POST(request: NextRequest) {
   const id = typeof body.id === "string" && /^[0-9a-f-]{36}$/.test(body.id) ? body.id : undefined;
   const patch = sanitize(body);
   if (!id && !patch.email) return NextResponse.json({ error: "email" }, { status: 400 });
-  const lead = await upsertLead(id, patch);
-  return NextResponse.json({ id: lead.id, stage: lead.stage });
+  try {
+    const lead = await upsertLead(id, patch);
+    return NextResponse.json({ id: lead.id, stage: lead.stage });
+  } catch (err) {
+    // Le détail reste dans les logs serveur, jamais dans la réponse.
+    console.error("[api/leads]", err);
+    return NextResponse.json({ error: "store" }, { status: 500 });
+  }
 }

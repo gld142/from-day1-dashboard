@@ -1,40 +1,36 @@
-import { randomUUID } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Lead } from "./lead";
+import { toRow } from "./lead-row";
 
 /**
- * Stockage PROVISOIRE, local : un fichier JSON hors git (.data/leads.json).
- * Même interface que la future table Supabase `leads` — seul ce fichier changera.
+ * Leads du parcours d'achat, dans Supabase (table public.leads).
+ * Écriture côté serveur avec la clé secrète : la table est fermée à l'API
+ * publique (RLS sans règle), même avec la clé publishable.
  */
-const FILE = path.join(process.cwd(), ".data", "leads.json");
+let client: SupabaseClient | undefined;
 
-async function readAll(): Promise<Lead[]> {
-  try {
-    return JSON.parse(await readFile(FILE, "utf8")) as Lead[];
-  } catch {
-    return [];
+function db(): SupabaseClient {
+  if (client) return client;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SECRET_KEY;
+  if (!url || !key) {
+    throw new Error("Supabase non configuré : NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SECRET_KEY dans .env.local");
   }
-}
-async function writeAll(leads: Lead[]) {
-  await mkdir(path.dirname(FILE), { recursive: true });
-  await writeFile(FILE, JSON.stringify(leads, null, 2));
+  client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return client;
 }
 
-export async function upsertLead(id: string | undefined, patch: Partial<Lead>): Promise<Lead> {
-  const leads = await readAll();
-  const now = new Date().toISOString();
-  const i = id ? leads.findIndex((l) => l.id === id) : -1;
-  const lead: Lead =
-    i >= 0
-      ? { ...leads[i], ...patch, id: leads[i].id, createdAt: leads[i].createdAt, updatedAt: now }
-      : { stage: "identity", ...patch, id: randomUUID(), createdAt: now, updatedAt: now };
-  if (i >= 0) leads[i] = lead;
-  else leads.push(lead);
-  await writeAll(leads);
-  return lead;
-}
+type Saved = Pick<Lead, "id" | "stage">;
 
-export async function listLeads(): Promise<Lead[]> {
-  return readAll();
+/** Complète la lead `id` ; sans id (ou id inconnu), en crée une nouvelle. */
+export async function upsertLead(id: string | undefined, patch: Partial<Lead>): Promise<Saved> {
+  const row = toRow(patch);
+  if (id) {
+    const { data, error } = await db().from("leads").update(row).eq("id", id).select("id, stage").maybeSingle();
+    if (error) throw error;
+    if (data) return data as Saved;
+  }
+  const { data, error } = await db().from("leads").insert(row).select("id, stage").single();
+  if (error) throw error;
+  return data as Saved;
 }

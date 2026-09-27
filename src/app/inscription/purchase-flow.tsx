@@ -111,8 +111,9 @@ export function PurchaseFlow() {
     true,
   ][step];
 
-  // Étapes serveur : ce que la lead devient quand on quitte l'étape `step`.
-  const STAGE_AFTER = ["identity", "structure", "needs", "offer", "checkout", "paid"] as const;
+  // Étapes serveur : ce que la lead devient quand on quitte l'étape `step`. Le paiement
+  // simulé la laisse à « checkout » : seul un paiement confirmé par Stripe la passera à « paid ».
+  const STAGE_AFTER = ["identity", "structure", "needs", "offer", "checkout", "checkout"] as const;
 
   async function next() {
     setError(null);
