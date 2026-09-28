@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
+import type { Contract } from "@/lib/contracts/contract";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
 import type { UserData } from "@/lib/userdata/store";
 
@@ -64,4 +65,30 @@ export async function customerRoster(workspaceId: string): Promise<RosterArtist[
     if (!latest.has(artist_id)) latest.set(artist_id, statement as RosterStatement);
   }
   return (artists ?? []).map((a) => ({ id: a.id, name: a.name, statement: latest.get(a.id) ?? null }));
+}
+
+export type CustomerContracts = { artists: { id: string; name: string }[]; contracts: Contract[] };
+
+const CONTRACT_COLUMNS =
+  "id, updated_at, artist_id, kind, counterparty, signed_on, starts_on, ends_on, notice_days, auto_renew, royalty_rate, advance_eur, recouped_eur, recouped_at, territory, exclusive, notes";
+const toNumber = (v: unknown) => (v === null || v === undefined ? null : Number(v));
+
+/** Les contrats que la personne a le droit de voir dans l'espace (RLS), et les artistes à qui les rattacher. */
+export async function customerContracts(workspaceId: string): Promise<CustomerContracts> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: rows, error: cErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db.from("contracts").select(CONTRACT_COLUMNS).eq("workspace_id", workspaceId).order("created_at"),
+  ]);
+  if (aErr) throw aErr;
+  if (cErr) throw cErr;
+  // numeric Postgres → nombre JS (PostgREST peut les rendre en texte).
+  const contracts = (rows ?? []).map((r) => ({
+    ...r,
+    notice_days: toNumber(r.notice_days),
+    royalty_rate: toNumber(r.royalty_rate),
+    advance_eur: toNumber(r.advance_eur),
+    recouped_eur: toNumber(r.recouped_eur),
+  })) as Contract[];
+  return { artists: artists ?? [], contracts };
 }

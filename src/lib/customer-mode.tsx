@@ -12,6 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
+import type { CustomerContracts } from "@/lib/accounts/customer";
 import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
@@ -27,6 +28,7 @@ export type CustomerInfo = {
 
 const Ctx = createContext<CustomerInfo | null>(null);
 const RosterCtx = createContext<RosterArtist[] | null>(null);
+const ContractsCtx = createContext<CustomerContracts | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -38,17 +40,24 @@ export function useCustomerRoster(): RosterArtist[] | null {
   return useContext(RosterCtx);
 }
 
+/** Les contrats visibles (RLS) et les artistes — chargés sur /contracts seulement. */
+export function useCustomerContracts(): CustomerContracts | null {
+  return useContext(ContractsCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
   info,
   data,
   roster = null,
+  contracts = null,
   children,
 }: {
   info: CustomerInfo;
   data: UserData | null;
   roster?: RosterArtist[] | null;
+  contracts?: CustomerContracts | null;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -59,7 +68,9 @@ export function CustomerMode({
   return (
     <Ctx.Provider value={info}>
       <RosterCtx.Provider value={roster}>
-        <CustomerRoleProvider>{children}</CustomerRoleProvider>
+        <ContractsCtx.Provider value={contracts}>
+          <CustomerRoleProvider>{children}</CustomerRoleProvider>
+        </ContractsCtx.Provider>
       </RosterCtx.Provider>
     </Ctx.Provider>
   );

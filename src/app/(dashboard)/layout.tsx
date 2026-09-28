@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
-import { customerRoster, customerView } from "@/lib/accounts/customer";
+import { customerContracts, customerRoster, customerView } from "@/lib/accounts/customer";
 import { CustomerMode } from "@/lib/customer-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
-import { CUSTOMER_HOME, isCustomerPath, isStructurePath } from "@/lib/nav";
+import { CUSTOMER_HOME, isCustomerPath, isStructurePath, needsStatement } from "@/lib/nav";
 
 /**
  * Deux mondes derrière le même dashboard :
@@ -21,12 +21,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (view.kind === "customer") {
     const path = (await headers()).get("x-d1-path") ?? CUSTOMER_HOME;
     if (!isCustomerPath(path, view.info.role)) redirect(view.data ? CUSTOMER_HOME : "/import");
-    // La vue structure ne dépend pas du relevé de l'artiste ouvert ; les autres pages, si.
-    const structure = isStructurePath(path);
-    if (!view.data && path !== "/import" && !structure) redirect("/import");
-    const roster = structure ? await customerRoster(view.info.workspaceId) : null;
+    // La vue structure et les contrats ne dépendent pas du relevé de l'artiste ouvert ; les autres pages, si.
+    if (!view.data && needsStatement(path)) redirect("/import");
+    const roster = isStructurePath(path) ? await customerRoster(view.info.workspaceId) : null;
+    const contracts = path === "/contracts" || path.startsWith("/contracts/") ? await customerContracts(view.info.workspaceId) : null;
     return (
-      <CustomerMode info={view.info} data={view.data} roster={roster}>
+      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );

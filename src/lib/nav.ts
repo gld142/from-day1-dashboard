@@ -72,7 +72,10 @@ export type ModuleOverrides = Record<string, boolean>;
  * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
  * relevé mars–avril, et « mise à jour quotidienne ».
  */
-export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/import"]);
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/import"]);
+
+/** Pages clientes qui ne lisent PAS le relevé de l'artiste ouvert : accessibles sans import. */
+export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts"]);
 
 /**
  * Pages clientes de la VUE STRUCTURE : propriétaire et équipe seulement. Un
@@ -91,6 +94,8 @@ export const CUSTOMER_FIGURES_ITEMS: NavItem[] = [
   { href: "/streams", labelKey: "items.streamsMonthly", icon: AudioWaveform },
   { href: "/audit", labelKey: "items.audit", icon: ShieldCheck },
 ];
+/** Ce que le client saisit lui-même (contrats le 28/09 ; splits et droits à suivre). */
+export const CUSTOMER_BUSINESS_ITEMS: NavItem[] = [{ href: "/contracts", labelKey: "items.contracts", icon: Handshake }];
 
 const under = (path: string, modules: ReadonlySet<string>) =>
   [...modules].some((m) => path === m || path.startsWith(`${m}/`));
@@ -103,6 +108,11 @@ export function isCustomerPath(path: string, role: CustomerInfo["role"]): boolea
 /** Page de la vue structure : elle ne dépend pas de l'artiste ouvert (ni de son relevé). */
 export function isStructurePath(path: string): boolean {
   return under(path, CUSTOMER_STRUCTURE_MODULES);
+}
+
+/** La page a-t-elle besoin du relevé de l'artiste ouvert ? (sinon : pas de renvoi vers /import) */
+export function needsStatement(path: string): boolean {
+  return !(path === "/import" || isStructurePath(path) || under(path, STATEMENT_FREE_MODULES));
 }
 
 /** Seule page jamais masquable : c'est là que l'on réactive les autres. */

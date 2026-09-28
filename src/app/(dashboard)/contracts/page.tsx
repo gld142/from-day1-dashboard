@@ -12,6 +12,8 @@
  * pour un seul contrat — les mêmes chiffres que le héros, et le même tracé. Il
  * n'en reste que les trois étapes, repliées : on ne les lit qu'une fois.
  */
+import { CustomerContracts } from "@/components/modules/customer/customer-contracts";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ARTISTS, CONTRACTS, getArtist } from "@/lib/demo/api";
@@ -37,7 +39,12 @@ const SEVERITY_ORDER: Record<"danger" | "warning" | "info", number> = {
   info: 2,
 };
 
+/** Mode client : les contrats saisis dans l'espace ; sinon la démo, intacte. */
 export default function ContractsPage() {
+  return useCustomer() ? <CustomerContracts /> : <DemoContractsPage />;
+}
+
+function DemoContractsPage() {
   const t = useTranslations("contracts");
   const tc = useTranslations("common");
   const locale = useLocale();

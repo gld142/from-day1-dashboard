@@ -18,7 +18,7 @@ import {
   type NavItem,
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
-import { CUSTOMER_FIGURES_ITEMS, CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM } from "@/lib/nav";
+import { CUSTOMER_BUSINESS_ITEMS, CUSTOMER_FIGURES_ITEMS, CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM } from "@/lib/nav";
 import { useRole } from "@/lib/role";
 import {
   hydrateModules,
@@ -50,6 +50,7 @@ export function useModules() {
     return [
       { labelKey: "sections.overview", items: overview },
       { labelKey: "sections.figures", items: CUSTOMER_FIGURES_ITEMS },
+      { labelKey: "sections.rights", items: CUSTOMER_BUSINESS_ITEMS },
       { labelKey: "sections.account", items: account },
     ];
   }, [persona, overrides, customer]);
