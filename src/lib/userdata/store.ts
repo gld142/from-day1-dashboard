@@ -33,6 +33,12 @@ export type UserData = {
 
 /* Cache module — hydraté côté client, lu de façon synchrone par api.ts. */
 let cache: UserData | null = null;
+/**
+ * Mode client (compte payant) : le relevé de l'artiste vient de la base, pas du
+ * localStorage de démo. Prioritaire, jamais persisté, effacé en quittant le mode.
+ * `undefined` = pas en mode client.
+ */
+let customer: UserData | null | undefined;
 let hydrated = false;
 const listeners = new Set<() => void>();
 
@@ -58,7 +64,25 @@ export function hydrateUserData(): UserData | null {
   return cache;
 }
 
+/** Pose les données du client SANS prévenir les abonnés : appelé pendant le rendu
+ *  du mode client, avant que les pages ne lisent la façade. */
+export function setCustomerDataSilently(data: UserData | null) {
+  customer = data;
+}
+
+/** Nouveau relevé importé par le client : on prévient tout le dashboard. */
+export function setCustomerData(data: UserData | null) {
+  customer = data;
+  notify();
+}
+
+export function clearCustomerData() {
+  customer = undefined;
+  notify();
+}
+
 export function getUserData(): UserData | null {
+  if (customer !== undefined) return customer;
   if (!hydrated && typeof window !== "undefined") hydrateUserData();
   return cache;
 }

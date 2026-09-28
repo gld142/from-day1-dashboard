@@ -1,6 +1,7 @@
 {
   "title": "Import my data",
   "subtitle": "Drop your distributor statement: estimates become your real figures.",
+  "privacyCustomer": "Your statement is saved to your Day 1 Pro workspace (hosted in Europe), visible to your team only. The raw file is not kept.",
   "privacy": "100% local: your file never leaves your browser. No data is sent to any server.",
   "dropzone": {
     "title": "Drop your CSV statement here",
@@ -9,6 +10,7 @@
     "parsing": "Reading your file…"
   },
   "errors": {
+    "SAVE_FAILED": "The statement could not be saved to your workspace. Please try again in a moment.",
     "EMPTY_FILE": "This file looks empty.",
     "UNKNOWN_FORMAT": "Unrecognized format — we need at least an earnings or quantity column.",
     "NO_DATA_ROWS": "No usable rows found in this file.",
@@ -65,6 +67,7 @@
   },
   "impact": {
     "title": "What it changes",
+    "subtitleCustomer": "Your pages stop estimating",
     "subtitle": "Four pages stop estimating",
     "revenue": "Revenue",
     "revenueValue": "the €/stream rate stops being a default",

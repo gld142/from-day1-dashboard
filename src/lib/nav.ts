@@ -63,6 +63,25 @@ export type NavItem = {
 /** Visibilité choisie par l'utilisateur, par href ; absent = valeur par défaut. */
 export type ModuleOverrides = Record<string, boolean>;
 
+/**
+ * Pages ouvertes aux clients (mode client) : seulement celles vérifiées JUSTES
+ * sur un relevé distributeur mensuel. Les autres (Pulse, Streams, Revenus,
+ * Audience…) raisonnent en « hier / 7 j / 30 j » à partir d'aujourd'hui, ou
+ * montrent encore de la démo : masquées ET inaccessibles jusqu'à leur passe
+ * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
+ * relevé mars–avril, et « mise à jour quotidienne ».
+ */
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/import"]);
+
+/** Accueil du mode client : le relevé mensuel, sans « hier » inventé (le Pulse est quotidien). */
+export const CUSTOMER_HOME = "/mon-releve";
+export const CUSTOMER_HOME_ITEM: NavItem = { href: CUSTOMER_HOME, labelKey: "items.statement", icon: FileText };
+
+/** La page (ou sous-page) `path` est-elle ouverte aux clients ? */
+export function isCustomerPath(path: string): boolean {
+  return [...CUSTOMER_MODULES].some((m) => path === m || path.startsWith(`${m}/`));
+}
+
 /** Seule page jamais masquable : c'est là que l'on réactive les autres. */
 export const LOCKED_MODULES: ReadonlySet<string> = new Set(["/settings"]);
 

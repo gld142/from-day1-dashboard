@@ -38,12 +38,16 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
     );
   }
 
-  const [{ data: ws }, { data: artists }, { data: team }, { data: invites }] = await Promise.all([
+  const [{ data: ws }, { data: artists }, { data: team }, { data: invites }, { data: imports }] = await Promise.all([
     db.from("workspaces").select("id, name, subscription_status, artist_quantity, current_period_end").eq("id", me.workspace_id).single(),
     db.from("artists").select("id, name").eq("workspace_id", me.workspace_id).order("created_at"),
     db.from("workspace_members").select("user_id, email, role, artist_id").eq("workspace_id", me.workspace_id).order("created_at"),
     db.from("invitations").select("id, email, role, expires_at").eq("workspace_id", me.workspace_id).is("accepted_at", null).order("created_at", { ascending: false }),
+    db.from("artist_imports").select("artist_id, created_at").eq("workspace_id", me.workspace_id).order("created_at", { ascending: false }),
   ]);
+  // Dernier relevé importé, par artiste (la liste est triée du plus récent au plus ancien).
+  const lastImport = new Map<string, string>();
+  for (const i of imports ?? []) if (!lastImport.has(i.artist_id)) lastImport.set(i.artist_id, i.created_at);
   if (!ws) redirect("/connexion");
   const owner = me.role === "owner";
   const artistList = artists ?? [];
@@ -79,9 +83,25 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
         {artistList.length ? (
           <ul className="grid gap-2">
             {artistList.map((a) => (
-              <li key={a.id} className="flex items-center justify-between rounded-lg border px-3 py-2 text-sm">
-                {a.name}
-                <span className="text-xs text-muted-foreground">Dashboard : import du premier relevé à venir</span>
+              <li key={a.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm">
+                <span className="min-w-0">
+                  {a.name}
+                  <span className="block text-xs text-muted-foreground">
+                    {lastImport.has(a.id)
+                      ? `Relevé importé le ${new Date(lastImport.get(a.id)!).toLocaleDateString("fr-FR")}`
+                      : "Aucun relevé importé"}
+                  </span>
+                </span>
+                <span className="flex gap-2">
+                  <a href={`/espace/ouvrir/${a.id}?vers=import`} className="rounded-md border px-2.5 py-1 text-xs hover:bg-muted">
+                    Importer un relevé
+                  </a>
+                  {lastImport.has(a.id) && (
+                    <a href={`/espace/ouvrir/${a.id}`} className="rounded-md bg-primary px-2.5 py-1 text-xs text-primary-foreground hover:bg-primary/80">
+                      Ouvrir le dashboard
+                    </a>
+                  )}
+                </span>
               </li>
             ))}
           </ul>

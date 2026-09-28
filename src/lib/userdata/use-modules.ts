@@ -17,6 +17,8 @@ import {
   type ModuleOverrides,
   type NavItem,
 } from "@/lib/nav";
+import { useCustomer } from "@/lib/customer-mode";
+import { CUSTOMER_HOME_ITEM, CUSTOMER_MODULES } from "@/lib/nav";
 import { useRole } from "@/lib/role";
 import {
   hydrateModules,
@@ -36,7 +38,16 @@ export function useModules() {
   const snap = useSyncExternalStore(subscribeModules, modulesSnapshot, () => SERVER_SNAPSHOT);
   const overrides = useMemo(() => JSON.parse(snap) as ModuleOverrides, [snap]);
 
-  const sections = useMemo(() => navForPersona(persona, overrides), [persona, overrides]);
+  const customer = useCustomer();
+  const sections = useMemo(() => {
+    const nav = navForPersona(persona, overrides);
+    if (!customer) return nav;
+    // Mode client : seulement les pages branchées sur le relevé du client.
+    const open = nav
+      .map((s) => ({ ...s, items: s.items.filter((i) => CUSTOMER_MODULES.has(i.href)) }))
+      .filter((s) => s.items.length > 0);
+    return [{ labelKey: "sections.daily", items: [CUSTOMER_HOME_ITEM] }, ...open.filter((s) => s.labelKey !== "sections.daily")];
+  }, [persona, overrides, customer]);
   const catalog = useMemo(() => navCatalogForPersona(persona), [persona]);
   const isVisible = useCallback(
     (item: NavItem) => isModuleVisible(item, persona, overrides),

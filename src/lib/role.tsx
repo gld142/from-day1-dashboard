@@ -45,6 +45,28 @@ type RoleContextValue = {
 
 const RoleContext = createContext<RoleContextValue | null>(null);
 
+const noop = () => {};
+
+/**
+ * Mode client : l'identité est fixée — persona artiste, sur SON artiste (le relevé
+ * importé, exposé sous USER_ARTIST_ID). Pas de bascule label, pas d'artistes de démo.
+ */
+export function CustomerRoleProvider({ children }: { children: React.ReactNode }) {
+  const value = useMemo<RoleContextValue>(
+    () => ({
+      persona: "artist",
+      artistId: USER_ARTIST_ID,
+      focusedArtistId: USER_ARTIST_ID,
+      setPersona: noop,
+      setFocusedArtistId: noop,
+      isLabel: false,
+      hasUserData: true,
+    }),
+    [],
+  );
+  return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;
+}
+
 const STORAGE_KEY = "day1-role";
 
 type RoleState = { persona: Persona; focusedArtistId: string | null };

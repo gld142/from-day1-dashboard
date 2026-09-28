@@ -16,6 +16,8 @@ import {
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
 import { ARTISTS, LABEL, getArtist } from "@/lib/demo/api";
+import Link from "next/link";
+import { useCustomer } from "@/lib/customer-mode";
 import { DEMO_ARTIST_ID, useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -55,6 +57,7 @@ export function Topbar() {
     isLabel,
   } = useRole();
   const [, startTransition] = useTransition();
+  const customer = useCustomer();
   /* « Suis-je côté client ? » — next-themes ne connaît le thème qu'après
      hydratation. `useSyncExternalStore` le dit sans setState dans un effet,
      qui forcerait un second rendu en cascade. Même solution que /settings. */
@@ -66,84 +69,97 @@ export function Topbar() {
   return (
     <header className="hairline-b sticky top-0 z-30 flex h-14 items-center gap-2 bg-background/80 px-4 backdrop-blur-md">
       <MobileNav />
-      {/* Sélecteur d'identité : qui suis-je / qui je regarde */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          {/* Seul élément compressible de la topbar : sur mobile, le nom
-              (« Day 1 Dashboard Pro ») se tronque au lieu de faire déborder la page. */}
-          <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2">
-            {persona === "artist" ? (
+      {customer ? (
+        // Mode client : identité fixée — son artiste, son espace.
+        <div className="flex min-w-0 shrink items-center gap-2 px-2">
+          <ArtistAvatar artist={artist} size="sm" />
+          <span className="truncate text-sm font-medium">{customer.artistName}</span>
+          <span className="hidden truncate text-xs text-muted-foreground sm:inline">· {customer.workspaceName}</span>
+        </div>
+      ) : (
+        // Sélecteur d'identité : qui suis-je / qui je regarde
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            {/* Seul élément compressible de la topbar : sur mobile, le nom
+                (« Day 1 Dashboard Pro ») se tronque au lieu de faire déborder la page. */}
+            <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2">
+              {persona === "artist" ? (
+                <>
+                  <ArtistAvatar artist={artist} size="sm" />
+                  <span className="truncate text-sm font-medium">{artist.name}</span>
+                </>
+              ) : (
+                <>
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand/15 text-brand">
+                    <Building2 className="size-3.5" aria-hidden />
+                  </span>
+                  <span className="truncate text-sm font-medium">
+                    {focused ? focused.name : LABEL.name}
+                  </span>
+                </>
+              )}
+              <ChevronsUpDown className="size-3.5 text-muted-foreground" aria-hidden />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-64">
+            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+              {t("roles.artist")} / {t("roles.label")}
+            </DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => setPersona("artist")} className="gap-2">
+              <MicVocal className="size-4" aria-hidden />
+              <span className="flex-1">{t("roles.switchTo", { role: t("roles.artist") })}</span>
+              {persona === "artist" && <Check className="size-4 text-brand" aria-hidden />}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setPersona("label")} className="gap-2">
+              <Building2 className="size-4" aria-hidden />
+              <span className="flex-1">{t("roles.switchTo", { role: t("roles.label") })}</span>
+              {persona === "label" && <Check className="size-4 text-brand" aria-hidden />}
+            </DropdownMenuItem>
+            {isLabel && (
               <>
-                <ArtistAvatar artist={artist} size="sm" />
-                <span className="truncate text-sm font-medium">{artist.name}</span>
-              </>
-            ) : (
-              <>
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand/15 text-brand">
-                  <Building2 className="size-3.5" aria-hidden />
-                </span>
-                <span className="truncate text-sm font-medium">
-                  {focused ? focused.name : LABEL.name}
-                </span>
-              </>
-            )}
-            <ChevronsUpDown className="size-3.5 text-muted-foreground" aria-hidden />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64">
-          <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
-            {t("roles.artist")} / {t("roles.label")}
-          </DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => setPersona("artist")} className="gap-2">
-            <MicVocal className="size-4" aria-hidden />
-            <span className="flex-1">{t("roles.switchTo", { role: t("roles.artist") })}</span>
-            {persona === "artist" && <Check className="size-4 text-brand" aria-hidden />}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setPersona("label")} className="gap-2">
-            <Building2 className="size-4" aria-hidden />
-            <span className="flex-1">{t("roles.switchTo", { role: t("roles.label") })}</span>
-            {persona === "label" && <Check className="size-4 text-brand" aria-hidden />}
-          </DropdownMenuItem>
-          {isLabel && (
-            <>
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                {LABEL.name}
-              </DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => setFocusedArtistId(null)}
-                className="gap-2"
-              >
-                <span className="flex size-5 items-center justify-center rounded bg-brand/15 text-brand">
-                  <Building2 className="size-3" aria-hidden />
-                </span>
-                <span className="flex-1 text-sm">{LABEL.name}</span>
-                {!focusedArtistId && <Check className="size-4 text-brand" aria-hidden />}
-              </DropdownMenuItem>
-              {ARTISTS.map((a) => (
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {LABEL.name}
+                </DropdownMenuLabel>
                 <DropdownMenuItem
-                  key={a.id}
-                  onClick={() => setFocusedArtistId(a.id)}
+                  onClick={() => setFocusedArtistId(null)}
                   className="gap-2"
                 >
-                  <ArtistAvatar artist={a} size="sm" />
-                  <span className="flex-1 text-sm">{a.name}</span>
-                  {focusedArtistId === a.id && (
-                    <Check className="size-4 text-brand" aria-hidden />
-                  )}
+                  <span className="flex size-5 items-center justify-center rounded bg-brand/15 text-brand">
+                    <Building2 className="size-3" aria-hidden />
+                  </span>
+                  <span className="flex-1 text-sm">{LABEL.name}</span>
+                  {!focusedArtistId && <Check className="size-4 text-brand" aria-hidden />}
                 </DropdownMenuItem>
-              ))}
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+                {ARTISTS.map((a) => (
+                  <DropdownMenuItem
+                    key={a.id}
+                    onClick={() => setFocusedArtistId(a.id)}
+                    className="gap-2"
+                  >
+                    <ArtistAvatar artist={a} size="sm" />
+                    <span className="flex-1 text-sm">{a.name}</span>
+                    {focusedArtistId === a.id && (
+                      <Check className="size-4 text-brand" aria-hidden />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
 
-      <Badge
-        variant="outline"
-        className="hidden rounded-full border-warning/50 text-[10px] uppercase tracking-wider text-warning sm:inline-flex"
-      >
-        {t("app.demo")}
-      </Badge>
+      {customer ? (
+        <Link href="/espace" className="text-xs text-muted-foreground hover:text-foreground">Mon espace</Link>
+      ) : (
+        <Badge
+          variant="outline"
+          className="hidden rounded-full border-warning/50 text-[10px] uppercase tracking-wider text-warning sm:inline-flex"
+        >
+          {t("app.demo")}
+        </Badge>
+      )}
 
       <div className="ml-auto flex items-center gap-2">
         <CommandPalette />

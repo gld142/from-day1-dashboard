@@ -27,8 +27,10 @@ import {
   clearUserData,
   getUserData,
   saveUserData,
+  setCustomerData,
   subscribeUserData,
 } from "@/lib/userdata/store";
+import { useCustomer } from "@/lib/customer-mode";
 import { useSyncExternalStore } from "react";
 import { fmtCompact, fmtDate, fmtEur, fmtMonth, fmtInt } from "@/lib/format";
 import { useRole } from "@/lib/role";
@@ -46,6 +48,10 @@ export default function ImportPage() {
   const locale = useLocale();
   const router = useRouter();
   const { setPersona } = useRole();
+  // Mode client : le relevé part dans l'espace du client, pour l'artiste ouvert.
+  const customer = useCustomer();
+  const [fileName, setFileName] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const userData = useSyncExternalStore(
     subscribeUserData,
@@ -63,6 +69,7 @@ export default function ImportPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const readFile = useCallback((file: File) => {
+    setFileName(file.name);
     setParsing(true);
     setError(null);
     const reader = new FileReader();
@@ -97,11 +104,29 @@ export default function ImportPage() {
     [parsed],
   );
 
-  function activate() {
-    if (!parsed || !artistName.trim()) return;
-    saveUserData(
-      buildUserData(parsed, { artistName: artistName.trim(), eurRate }),
-    );
+  async function activate() {
+    const name = customer ? customer.artistName : artistName.trim();
+    if (!parsed || !name) return;
+    const data = buildUserData(parsed, { artistName: name, eurRate });
+    if (customer) {
+      setSaving(true);
+      setError(null);
+      const res = await fetch("/api/imports", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ data, fileName }),
+      }).catch(() => null);
+      setSaving(false);
+      if (!res?.ok) {
+        setError("SAVE_FAILED");
+        return;
+      }
+      setCustomerData(data);
+      setParsed(null);
+      setJustActivated(true);
+      return;
+    }
+    saveUserData(data);
     setPersona("artist");
     setJustActivated(true);
   }
@@ -152,7 +177,7 @@ export default function ImportPage() {
           </div>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            <Button onClick={() => router.push("/pulse")} className="gap-1.5">
+            <Button onClick={() => router.push(customer ? "/mon-releve" : "/pulse")} className="gap-1.5">
               {t("actions.goToPulse")}
               <ArrowRight className="size-3.5" aria-hidden />
             </Button>
@@ -167,24 +192,29 @@ export default function ImportPage() {
               <UploadCloud className="size-3.5" aria-hidden />
               {t("active.reimport")}
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => saveUserData({ ...userData, active: false })}
-              className="gap-1.5"
-            >
-              <RotateCcw className="size-3.5" aria-hidden />
-              {t("active.deactivate")}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                if (window.confirm(t("active.deleteConfirm"))) clearUserData();
-              }}
-              className="gap-1.5 text-destructive hover:text-destructive"
-            >
-              <Trash2 className="size-3.5" aria-hidden />
-              {t("active.delete")}
-            </Button>
+            {/* Désactiver / supprimer n'agissent que sur les données du navigateur (démo). */}
+            {!customer && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => saveUserData({ ...userData, active: false })}
+                  className="gap-1.5"
+                >
+                  <RotateCcw className="size-3.5" aria-hidden />
+                  {t("active.deactivate")}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    if (window.confirm(t("active.deleteConfirm"))) clearUserData();
+                  }}
+                  className="gap-1.5 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="size-3.5" aria-hidden />
+                  {t("active.delete")}
+                </Button>
+              </>
+            )}
           </div>
           <input
             ref={inputRef}
@@ -209,7 +239,8 @@ export default function ImportPage() {
 
       <p className="rise-in mb-4 flex items-center gap-2 rounded-lg border border-success/30 bg-success/5 px-3 py-2 text-[12px] text-muted-foreground">
         <Lock className="size-3.5 shrink-0 text-success" aria-hidden />
-        {t("privacy")}
+        {/* Vrai dans chaque mode : local en démo, enregistré dans l'espace en mode client. */}
+        {customer ? t("privacyCustomer") : t("privacy")}
       </p>
 
       {/* Données inactives mais présentes */}
@@ -287,11 +318,12 @@ export default function ImportPage() {
 
           {/* Ce que l'import rend exact — la raison de le faire. */}
           <Sheet family="money" className="mt-3">
-            <SheetHeading action={t("impact.subtitle")}>
+            <SheetHeading action={customer ? t("impact.subtitleCustomer") : t("impact.subtitle")}>
               {t("impact.title")}
             </SheetHeading>
             <div className="mt-1">
-              {(["revenue", "audit", "rights", "streams"] as const).map((k) => (
+              {/* En mode client, seulement les pages qui lui sont ouvertes. */}
+              {(customer ? (["revenue", "streams"] as const) : (["revenue", "audit", "rights", "streams"] as const)).map((k) => (
                 <div
                   key={k}
                   className="border-border/50 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-t py-2 text-[12.5px] first:border-t-0"
@@ -411,16 +443,18 @@ export default function ImportPage() {
 
           {/* Config */}
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
-                {t("config.artistName")}
-              </label>
-              <Input
-                value={artistName}
-                onChange={(e) => setArtistName(e.target.value)}
-                placeholder={t("config.artistNamePlaceholder")}
-              />
-            </div>
+            {!customer && (
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+                  {t("config.artistName")}
+                </label>
+                <Input
+                  value={artistName}
+                  onChange={(e) => setArtistName(e.target.value)}
+                  placeholder={t("config.artistNamePlaceholder")}
+                />
+              </div>
+            )}
             {parsed.currency !== "EUR" && (
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
@@ -445,7 +479,7 @@ export default function ImportPage() {
           <div className="mt-6 flex flex-wrap gap-2">
             <Button
               onClick={activate}
-              disabled={!artistName.trim()}
+              disabled={saving || (!customer && !artistName.trim())}
               className="gap-1.5"
             >
               <Sparkles className="size-4" aria-hidden />
