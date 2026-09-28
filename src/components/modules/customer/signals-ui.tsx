@@ -7,7 +7,7 @@
  */
 import { ArrowDown, ArrowUp, Minus, Sparkles } from "lucide-react";
 import { Sheet, SheetHeading, type SheetFamily } from "@/components/dashboard/sheet";
-import { sourceFreshness, type SourceRun } from "@/lib/collect/freshness";
+import { partialNote, sourceFreshness, type SourceRun } from "@/lib/collect/freshness";
 import type { Movement } from "@/lib/market/charts";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ export function SourceLine({ source, runs, locale, className }: { source: string
     <p className={cn("text-muted-foreground text-xs", className)}>
       {SOURCE_LABEL[source] ?? source} ·{" "}
       {f.lastSuccess ? <>mis à jour automatiquement le {parisDateTime(f.lastSuccess.started_at, locale)}</> : <>pas encore mis à jour</>}
-      {f.lastSuccess?.status === "partial" && f.lastSuccess.detail ? <> (incomplet : {f.lastSuccess.detail})</> : null}
+      {f.lastSuccess?.status === "partial" ? <> ({partialNote(source, f.lastSuccess.detail)})</> : null}
       {f.failing ? <span className="text-destructive"> · dernier essai en échec le {parisDateTime(f.failing.started_at, locale)}</span> : null}
       {f.stale && f.lastSuccess && !f.failing ? <span className="text-destructive"> · en retard</span> : null}
     </p>

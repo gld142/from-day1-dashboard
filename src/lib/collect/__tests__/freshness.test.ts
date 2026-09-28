@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sourceFreshness, type SourceRun } from "../freshness";
+import { partialNote, sourceFreshness, type SourceRun } from "../freshness";
 
 const run = (id: string, started_at: string, status: SourceRun["status"], source = "apple_music"): SourceRun => ({ id, source, status, started_at, finished_at: started_at, rows: 1, detail: null });
 const NOW = new Date("2026-09-29T10:00:00Z");
@@ -19,5 +19,14 @@ describe("fraîcheur d'une source", () => {
   });
   it("jamais relevée", () => {
     expect(sourceFreshness([], "apple_music", NOW)).toEqual({ lastSuccess: null, failing: null, stale: true });
+  });
+});
+
+describe("passage partiel dit au client", () => {
+  it("les pays manquants en clair, sans adresse ni message technique", () => {
+    const detail = "ch : https://rss.marketingtools.apple.com/api/v2/ch/music/most-played/100/songs.json : échec après 4 essais (délai dépassé (15000 ms)) ; ma : HTTP 502";
+    expect(partialNote("apple_music", detail)).toBe("incomplet, classement manquant : Suisse, Maroc");
+    expect(partialNote("apple_music", "ch : HTTP 504")).toBe("incomplet, classement manquant : Suisse");
+    expect(partialNote("tiktok_oembed", "2 vidéos non vérifiées (HTTP 503)")).toBe("incomplet");
   });
 });
