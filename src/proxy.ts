@@ -3,8 +3,11 @@ import { createServerClient } from "@supabase/ssr";
 import { demoEnabled } from "@/lib/demo-mode";
 import { GATE_COOKIE, GATE_PATH, isValidToken } from "@/lib/gate";
 
-/** Parcours d'achat et API qui le servent : publics, pour des visiteurs pas encore clients. */
-const PUBLIC = /^\/(acces|inscription|api\/leads|api\/checkout|api\/stripe)(\/|$)/;
+/**
+ * Parcours d'achat et API qui le servent : publics, pour des visiteurs pas encore clients.
+ * /api/cron : la collecte de la nuit, protégée par CRON_SECRET dans la route elle-même.
+ */
+const PUBLIC = /^\/(acces|inscription|api\/leads|api\/checkout|api\/stripe|api\/cron)(\/|$)/;
 /** Espace client : protégé par la connexion Supabase (vérifiée dans chaque page), pas par la porte. */
 const ACCOUNT = /^\/(espace|connexion|auth|invitation|api\/imports)(\/|$)/;
 /** Pages qui n'existent que pour la démo : la porte à mot de passe et l'écran d'accueil co-brandé. */
