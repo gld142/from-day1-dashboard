@@ -29,7 +29,10 @@ export function CustomerIndex() {
         streamsByMonth[m] = Object.values(byDsp ?? {}).reduce<number>((t, v) => t + (v ?? 0), 0);
       }
       const mine = <T extends { artistId: string }>(xs: T[] | undefined) => (xs ?? []).filter((x) => x.artistId === a.id);
-      const index = computeDay1Index({ streamsByMonth, rights: mine(finances?.rights), shows: mine(finances?.shows), sync: mine(finances?.sync) }, today);
+      const index = computeDay1Index(
+        { streamsByMonth, revenueByMonth: a.statement?.revenueByMonth ?? {}, rights: mine(finances?.rights), shows: mine(finances?.shows), sync: mine(finances?.sync) },
+        today,
+      );
       return { id: a.id, name: a.name, index };
     });
   }, [roster, finances]);
