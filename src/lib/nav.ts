@@ -72,10 +72,10 @@ export type ModuleOverrides = Record<string, boolean>;
  * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
  * relevé mars–avril, et « mise à jour quotidienne ».
  */
-export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/import"]);
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/import"]);
 
 /** Pages clientes qui ne lisent PAS le relevé de l'artiste ouvert : accessibles sans import. */
-export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts", "/splits", "/rights", "/finances"]);
+export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts", "/splits", "/rights", "/finances", "/catalog"]);
 
 /**
  * Pages clientes de la VUE STRUCTURE : propriétaire et équipe seulement. Un
@@ -88,6 +88,7 @@ export const CUSTOMER_STRUCTURE_MODULES: ReadonlySet<string> = new Set(["/roster
 export const CUSTOMER_HOME = "/mon-releve";
 export const CUSTOMER_HOME_ITEM: NavItem = { href: CUSTOMER_HOME, labelKey: "items.statement", icon: FileText };
 export const CUSTOMER_ROSTER_ITEM: NavItem = { href: "/roster", labelKey: "items.roster", icon: UsersRound };
+export const CUSTOMER_CATALOG_ITEM: NavItem = { href: "/catalog", labelKey: "items.catalog", icon: LibraryBig };
 /** Revenus, Streams et Audit rendus réels le 28/09 sur les relevés mensuels (pas « live »). */
 export const CUSTOMER_FIGURES_ITEMS: NavItem[] = [
   { href: "/revenue", labelKey: "items.revenue", icon: BadgeEuro },

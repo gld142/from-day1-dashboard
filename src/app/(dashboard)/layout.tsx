@@ -26,7 +26,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     const roster = isStructurePath(path) ? await customerRoster(view.info.workspaceId) : null;
     const on = (m: string) => path === m || path.startsWith(`${m}/`);
     const contracts = on("/contracts") ? await customerContracts(view.info.workspaceId) : null;
-    const splits = on("/splits") ? await customerSplits(view.info.workspaceId) : null;
+    const splits = on("/splits") || on("/catalog") ? await customerSplits(view.info.workspaceId) : null;
     const rights = on("/rights") ? await customerRights(view.info.workspaceId) : null;
     const finances = on("/finances") ? await customerFinances(view.info.workspaceId) : null;
     return (

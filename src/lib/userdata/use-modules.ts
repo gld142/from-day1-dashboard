@@ -18,7 +18,7 @@ import {
   type NavItem,
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
-import { CUSTOMER_BUSINESS_ITEMS, CUSTOMER_FIGURES_ITEMS, CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM } from "@/lib/nav";
+import { CUSTOMER_BUSINESS_ITEMS, CUSTOMER_CATALOG_ITEM, CUSTOMER_FIGURES_ITEMS, CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM } from "@/lib/nav";
 import { useRole } from "@/lib/role";
 import {
   hydrateModules,
@@ -45,7 +45,7 @@ export function useModules() {
     // Mode client : un menu à part, seulement les pages branchées sur les relevés
     // (pas de « rituel quotidien » ni de « live » : les relevés sont mensuels). Le
     // roster (vue structure) pour le propriétaire et l'équipe, pas pour l'artiste invité.
-    const overview = customer.role === "artist" ? [CUSTOMER_HOME_ITEM] : [CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM];
+    const overview = customer.role === "artist" ? [CUSTOMER_HOME_ITEM, CUSTOMER_CATALOG_ITEM] : [CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM, CUSTOMER_CATALOG_ITEM];
     const account = nav.flatMap((s) => s.items).filter((i) => i.href === "/import");
     return [
       { labelKey: "sections.overview", items: overview },
