@@ -33,7 +33,7 @@ export async function priceId(key: PriceKey): Promise<string> {
   if (hit) return hit;
   const def = PRICES[key];
   const found = await stripe().prices.list({ lookup_keys: [def.lookup], active: true, limit: 1 });
-  const price =
+  let price =
     found.data[0] ??
     (await stripe().prices.create({
       currency: "eur",
@@ -41,7 +41,16 @@ export async function priceId(key: PriceKey): Promise<string> {
       recurring: { interval: "month" },
       lookup_key: def.lookup,
       product_data: { name: def.name },
+      tax_behavior: "exclusive",
     }));
+  // Prix HT : la TVA éventuelle s'ajoute au montant. Un prix créé avant ce choix
+  // (« unspecified ») se règle ici — Stripe ne l'accepte qu'une fois, puis c'est figé.
+  if (price.tax_behavior !== "exclusive") {
+    if (price.tax_behavior === "inclusive") {
+      throw new Error(`Le prix Stripe ${def.lookup} est TTC (inclusive) : il doit être HT (exclusive).`);
+    }
+    price = await stripe().prices.update(price.id, { tax_behavior: "exclusive" });
+  }
   cache.set(key, price.id);
   return price.id;
 }

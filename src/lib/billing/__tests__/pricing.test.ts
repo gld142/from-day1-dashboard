@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { quoteFor } from "../pricing";
+import { eurHT, quoteFor } from "../pricing";
 
 const during = new Date("2026-10-01T12:00:00+02:00");
 const after = new Date("2027-02-01T00:00:01+01:00");
@@ -22,5 +22,12 @@ describe("quoteFor", () => {
   });
   it("0 ou négatif compte comme 1 artiste", () => {
     expect(quoteFor(0, during)).toMatchObject({ artists: 1, monthly: 99 });
+  });
+});
+
+describe("eurHT", () => {
+  it("affiche les montants de la grille hors taxes", () => {
+    expect(eurHT(99)).toBe("99\u00a0€\u00a0HT");
+    expect(eurHT(39)).toBe("39\u00a0€\u00a0HT");
   });
 });

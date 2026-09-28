@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { quoteFor } from "@/lib/billing/pricing";
+import { quoteFor, eurHT as eur } from "@/lib/billing/pricing";
 import { userDb } from "@/lib/supabase/server";
 import { signOut } from "./actions";
 import { AddArtistForm, ClearPurchaseDraft, InviteForm } from "./forms";
@@ -14,7 +14,6 @@ const ROLE_LABEL: Record<string, string> = { owner: "Propriétaire", member: "É
 const STATUS_LABEL: Record<string, string> = {
   active: "Actif", trialing: "Essai", past_due: "Paiement en retard", canceled: "Résilié", incomplete: "En attente de paiement", unpaid: "Impayé",
 };
-const eur = (n: number) => `${n.toLocaleString("fr-FR")} €`;
 
 /** Tout est lu avec la session de la personne : la RLS ne lui montre que ce qui la regarde. */
 export default async function EspacePage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {

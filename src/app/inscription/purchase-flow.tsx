@@ -13,7 +13,7 @@ import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { quoteFor, EXTRA_ARTIST_EUR, BASE_PUBLIC_EUR, QUOTE_ABOVE } from "@/lib/billing/pricing";
+import { quoteFor, eurHT as eur, EXTRA_ARTIST_EUR, BASE_PUBLIC_EUR, QUOTE_ABOVE } from "@/lib/billing/pricing";
 import { isEmail, type Lead } from "@/lib/onboarding/lead";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +52,6 @@ const NEED_OPTIONS: { id: NonNullable<Lead["needs"]>[number]; label: string; hin
 ];
 
 const STEP_TITLES = ["Profil", "Toi", "Structure", "Besoins", "Offre", "Paiement"] as const;
-const eur = (n: number) => `${n.toLocaleString("fr-FR")} €`;
 
 type Draft = Partial<Lead> & { id?: string };
 const STORAGE = "d1-purchase-draft";
@@ -265,6 +264,7 @@ export function PurchaseFlow() {
                 )}
                 <div className="my-1 border-t" />
                 <Line strong label="Par mois" value={eur(quote.monthly)} />
+                <p className="text-xs text-muted-foreground">Prix hors taxes. Si la TVA s&apos;applique, elle s&apos;ajoute au paiement.</p>
                 {quote.launch && (
                   <p className="rounded-lg bg-muted/60 px-3 py-2 text-xs text-muted-foreground">
                     Tarif de lancement jusqu&apos;au 31 janvier 2027. Ensuite, l&apos;espace passe à {eur(BASE_PUBLIC_EUR)} par mois.

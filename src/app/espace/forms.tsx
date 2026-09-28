@@ -5,6 +5,7 @@ import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { eurHT, EXTRA_ARTIST_EUR } from "@/lib/billing/pricing";
 import { addArtist, createInvitation, type FormState } from "./actions";
 
 const IDLE: FormState = { status: "idle" };
@@ -19,12 +20,12 @@ export function AddArtistForm({ workspaceId, full }: { workspaceId: string; full
       <div className="flex flex-col gap-2 sm:flex-row">
         <Input name="name" placeholder="Nom de l'artiste" aria-label="Nom de l'artiste" required maxLength={120} />
         <Button type="submit" size="lg" disabled={pending}>
-          {needsConfirm ? "Ajouter (+39 € / mois)" : "Ajouter"}
+          {needsConfirm ? `Ajouter (+${eurHT(EXTRA_ARTIST_EUR)} / mois)` : "Ajouter"}
         </Button>
       </div>
       {needsConfirm && (
         <p className="text-xs text-muted-foreground">
-          Tous les artistes payés sont utilisés : celui-ci ajoute 39 € par mois à ton abonnement (au prorata ce mois-ci).
+          Tous les artistes payés sont utilisés : celui-ci ajoute {eurHT(EXTRA_ARTIST_EUR)} par mois à ton abonnement (au prorata ce mois-ci).
         </p>
       )}
       {state.status === "error" && <p className="text-sm text-destructive" role="alert">{state.message}</p>}
