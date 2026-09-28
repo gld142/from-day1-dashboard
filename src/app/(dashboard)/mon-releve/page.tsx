@@ -1,5 +1,7 @@
 "use client";
 
+import { conversionNote } from "@/components/modules/customer/shared";
+
 /**
  * Mon relevé — l'accueil du mode client. Tout vient du relevé distributeur
  * importé (mensuel) : pas de « hier » ni de « mois en cours » inventés, la
@@ -65,7 +67,7 @@ export default function MonRelevePage() {
       </section>
       <p className="-mt-3 flex items-center gap-2 text-xs text-muted-foreground">
         <ProvenanceBadge provenance="declared" /> Chiffres tels que déclarés par ton distributeur
-        {data.sourceCurrency !== "EUR" && data.sourceCurrency !== "unknown" ? `, convertis en euros (1 ${data.sourceCurrency} = ${data.eurRate} €)` : ""}.
+        {conversionNote(data)}.
       </p>
 
       <Card title="Mois par mois">

@@ -7,6 +7,7 @@ import { timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { adminDb } from "@/lib/supabase/admin";
 import { appleMusicCollector, type ChartEntry } from "./apple-music";
+import { ecbFxCollector, type FxRow } from "./ecb-fx";
 import { runCollectors, type Collector, type Journal } from "./run";
 import { supabaseTikTokStore, tiktokRefreshCollector } from "./tiktok-refresh";
 
@@ -42,8 +43,18 @@ export async function saveChart(db: SupabaseClient, country: string, chartDate: 
   if (staleError) throw new Error(`Supabase : ${staleError.message}`);
 }
 
+export async function saveFx(db: SupabaseClient, rows: FxRow[]) {
+  const fetched_at = new Date().toISOString();
+  const { error } = await db.from("fx_monthly").upsert(rows.map((r) => ({ ...r, fetched_at })), { onConflict: "currency,month" });
+  if (error) throw new Error(`Supabase : ${error.message}`);
+}
+
 export function allCollectors(db: SupabaseClient): Collector[] {
-  return [appleMusicCollector({ save: (country, date, rows) => saveChart(db, country, date, rows) }), tiktokRefreshCollector(supabaseTikTokStore(db))];
+  return [
+    appleMusicCollector({ save: (country, date, rows) => saveChart(db, country, date, rows) }),
+    tiktokRefreshCollector(supabaseTikTokStore(db)),
+    ecbFxCollector({ save: (rows) => saveFx(db, rows) }),
+  ];
 }
 
 export async function collectNow() {

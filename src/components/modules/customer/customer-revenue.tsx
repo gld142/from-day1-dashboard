@@ -20,7 +20,9 @@ import { useCustomer } from "@/lib/customer-mode";
 import { downloadCsv, round2 } from "@/lib/export";
 import { countryRows, monthSeries, platformRows, revenueSummary, trackRows, type MonthPoint } from "@/lib/userdata/statement-insights";
 import { getUserData, subscribeUserData } from "@/lib/userdata/store";
-import { DSP_LABEL, Dot, MonthBars, PlatformLegend, SimpleTable, platformColor, statementLine, useFormats } from "./shared";
+import { paymentLag, platformPay, revenueStability, seasonality } from "@/lib/kpi/statement";
+import { KpiList } from "./kpi-ui";
+import { DSP_LABEL, Dot, MonthBars, PlatformLegend, SimpleTable, conversionNote, platformColor, statementLine, useFormats } from "./shared";
 
 /** En dessous, un taux « pour 1 000 streams » ne veut rien dire (quelques lignes). */
 const MIN_STREAMS_FOR_RATE = 1_000;
@@ -37,6 +39,10 @@ export function CustomerRevenue() {
       platforms: platformRows(data),
       tracks: trackRows(data, 10),
       countries: countryRows(data, 10),
+      pay: new Map((platformPay(data) ?? []).map((p) => [p.dsp, p])),
+      stability: revenueStability(data),
+      lag: paymentLag(data),
+      season: seasonality(data),
     };
   }, [data]);
 
@@ -49,7 +55,10 @@ export function CustomerRevenue() {
     );
   }
 
-  const { points, summary: s, platforms, tracks, countries } = view;
+  const { points, summary: s, platforms, tracks, countries, pay, stability, lag, season } = view;
+  const seasonSorted = season ? Object.entries(season).sort((a, b) => b[1] - a[1]) : [];
+  const calMonth = (k: string) => new Intl.DateTimeFormat(f.locale, { month: "long", timeZone: "UTC" }).format(new Date(`2026-${k}-01T00:00:00Z`));
+  const hasDetail = data.trackMonthStreams !== undefined;
   const hasBreakdown = platforms.some((p) => p.revenue !== null);
   const missing = points.filter((p) => p.missing);
   const rated = platforms.filter((p) => p.per1000 !== null && p.streams >= MIN_STREAMS_FOR_RATE).sort((a, b) => (b.per1000 ?? 0) - (a.per1000 ?? 0));
@@ -95,7 +104,7 @@ export function CustomerRevenue() {
         </Sheet>
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
           <ProvenanceBadge provenance="declared" /> Chiffres tels que déclarés par ton distributeur
-          {data.sourceCurrency !== "EUR" ? `, convertis en euros (1 ${data.sourceCurrency} = ${data.eurRate} €)` : ""}.
+          {conversionNote(data)}.
         </p>
 
         <Sheet family="money">
@@ -125,20 +134,72 @@ export function CustomerRevenue() {
                 </p>
               )}
               <SimpleTable
-                head={["Plateforme", "Revenus", "Part", "Streams", "Pour 1 000 streams"]}
-                rows={platforms.map((p) => ({
-                  key: p.dsp,
-                  cells: [
-                    <span key="n" className="flex items-center gap-2"><Dot color={platformColor(p.dsp)} />{DSP_LABEL[p.dsp] ?? p.dsp}</span>,
-                    p.revenue === null ? "—" : f.eur(p.revenue),
-                    p.revenueShare === null ? "—" : f.pct(p.revenueShare),
-                    f.compact(p.streams),
-                    p.per1000 === null || p.streams < MIN_STREAMS_FOR_RATE ? "—" : f.eurCents(p.per1000),
-                  ],
-                }))}
+                head={["Plateforme", "Revenus", "Part", "Streams", "Pour 1 000 streams", "Évolution du taux", "Paie vs pèse"]}
+                rows={platforms.map((p) => {
+                  const k = pay.get(p.dsp);
+                  return {
+                    key: p.dsp,
+                    cells: [
+                      <span key="n" className="flex items-center gap-2"><Dot color={platformColor(p.dsp)} />{DSP_LABEL[p.dsp] ?? p.dsp}</span>,
+                      p.revenue === null ? "—" : f.eur(p.revenue),
+                      p.revenueShare === null ? "—" : f.pct(p.revenueShare),
+                      f.compact(p.streams),
+                      p.per1000 === null || p.streams < MIN_STREAMS_FOR_RATE ? "—" : f.eurCents(p.per1000),
+                      k?.trend == null || p.streams < MIN_STREAMS_FOR_RATE ? "—" : f.pct(k.trend, true),
+                      k ? `${k.gap >= 0 ? "+" : "−"}${Math.abs(Math.round(k.gap * 1000) / 10).toLocaleString(f.locale)} pt` : "—",
+                    ],
+                  };
+                })}
               />
+              <p className="sheet-ink mt-2 text-[11px]">
+                Évolution du taux : taux des 3 derniers mois contre les 3 premiers (6 mois d&apos;activité minimum). Paie vs pèse : part des revenus moins part des écoutes ; positif, la plateforme paie plus que ce qu&apos;elle pèse.
+              </p>
             </>
           )}
+        </Sheet>
+
+        <Sheet family="money">
+          <SheetHeading action="calculé sur ton relevé">À surveiller</SheetHeading>
+          <KpiList
+            rows={[
+              {
+                key: "annual",
+                label: "Revenu annualisé",
+                value: stability ? f.eur(stability.annualized) : null,
+                formula: "moyenne des 3 derniers mois × 12",
+                missing: "Il faut au moins 2 mois de relevé.",
+              },
+              {
+                key: "cv",
+                label: "Variabilité d'un mois à l'autre",
+                value: stability ? f.pct(stability.cv) : null,
+                formula: "écart-type des revenus mensuels ÷ leur moyenne (plus c'est bas, plus c'est régulier)",
+                missing: "Il faut au moins 2 mois de relevé.",
+              },
+              {
+                key: "drop",
+                label: "Pire baisse d'un mois",
+                value: stability?.worstDrop ? `${f.pct(stability.worstDrop.change, true)} (${f.month(stability.worstDrop.month)})` : null,
+                formula: "revenus du mois ÷ revenus du mois précédent − 1",
+                missing: stability ? "Aucune baisse d'un mois sur l'autre dans ce relevé." : "Il faut au moins 2 mois de relevé.",
+              },
+              {
+                key: "lag",
+                label: "Délai de paiement",
+                value: lag ? `${lag.median} mois` : null,
+                formula: "médiane, pondérée par les montants, entre le mois d'écoute et le mois du relevé",
+                missing: hasDetail ? "Ton distributeur ne donne pas la date du relevé dans ce fichier." : "Réimporte ton relevé : le détail est gardé depuis le 29/09.",
+              },
+              {
+                key: "season",
+                label: "Saisonnalité",
+                value: seasonSorted.length ? `${calMonth(seasonSorted[0][0])} ×${seasonSorted[0][1].toFixed(2).replace(".", ",")} · ${calMonth(seasonSorted[seasonSorted.length - 1][0])} ×${seasonSorted[seasonSorted.length - 1][1].toFixed(2).replace(".", ",")}` : null,
+                formula: "meilleur et pire mois de l'année : moyenne de ce mois ÷ moyenne de tous les mois",
+                missing: `Il faut 24 mois de relevé (tu en as ${s.months}).`,
+              },
+              ...(data.withheldEur ? [{ key: "withheld", label: "Retenues à la source", value: f.eur(data.withheldEur), formula: "retenues déclarées par ton distributeur sur la période (ex. droits d'auteur retenus)" }] : []),
+            ]}
+          />
         </Sheet>
 
         <div className="grid gap-3 xl:grid-cols-2">

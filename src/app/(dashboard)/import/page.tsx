@@ -42,8 +42,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/dashboard/page-header";
 
-/** Taux indicatifs, modifiables à l'import (la personne met celui de son relevé). */
-const DEFAULT_RATES: Record<StatementCurrency, number> = { USD: 0.92, GBP: 1.17, EUR: 1 };
+/**
+ * Conversion d'un relevé en dollars ou en livres : au taux de référence BCE du mois de
+ * chaque vente (relevé chaque nuit, /api/fx). Plus de taux fixe deviné : mesuré le 29/09,
+ * l'ancien défaut (0,92 € pour 1 $) surévaluait de ~6,7 % un relevé d'août 2026.
+ * Sans taux BCE (hors connexion), la personne saisit celui de son distributeur.
+ */
+type FxState = { mode: "loading" } | { mode: "manual" } | { mode: "ecb"; used: Record<string, number>; fallback: string[]; avg: number };
 const CURRENCIES: readonly StatementCurrency[] = ["EUR", "USD", "GBP"];
 
 export default function ImportPage() {
@@ -67,11 +72,36 @@ export default function ImportPage() {
   const [parsing, setParsing] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [artistName, setArtistName] = useState("");
-  const [eurRate, setEurRate] = useState<number>(1);
+  const [eurRate, setEurRate] = useState<number>(Number.NaN);
+  const [fileText, setFileText] = useState<string | null>(null);
+  const [fx, setFx] = useState<FxState | null>(null);
   // Devise du relevé : lue dans le fichier, sinon À CHOISIR (null) — jamais devinée.
   const [currency, setCurrency] = useState<StatementCurrency | null>(null);
   const [justActivated, setJustActivated] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  /** Devise connue → taux BCE du mois de chaque vente si disponibles, sinon saisie manuelle. */
+  const applyCurrency = useCallback(async (c: StatementCurrency | null, text: string) => {
+    setCurrency(c);
+    if (!c || c === "EUR") {
+      setFx(null);
+      setEurRate(1);
+      setParsed(parseStatement(text));
+      return;
+    }
+    setFx({ mode: "loading" });
+    const res = await fetch(`/api/fx?currency=${c}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    const rates = res?.eurPerUnit as Record<string, number> | undefined;
+    if (rates && Object.keys(rates).length) {
+      const p = parseStatement(text, { eurPerUnit: rates });
+      setParsed(p);
+      setFx({ mode: "ecb", used: p.fx?.used ?? {}, fallback: p.fx?.fallback ?? [], avg: p.fx?.sourceTotal ? p.totalRevenue / p.fx.sourceTotal : Number.NaN });
+    } else {
+      setParsed(parseStatement(text));
+      setFx({ mode: "manual" });
+      setEurRate(Number.NaN);
+    }
+  }, []);
 
   const readFile = useCallback((file: File) => {
     setFileName(file.name);
@@ -80,11 +110,15 @@ export default function ImportPage() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const result = parseStatement(String(reader.result ?? ""));
+        const text = String(reader.result ?? "");
+        const result = parseStatement(text);
+        setFileText(text);
         setParsed(result);
         const known = result.currency === "unknown" ? null : result.currency;
         setCurrency(known);
-        setEurRate(known ? DEFAULT_RATES[known] : 1);
+        setFx(null);
+        setEurRate(Number.NaN);
+        if (known) void applyCurrency(known, text);
         if (result.artistNames.length > 0) setArtistName(result.artistNames[0]);
       } catch (e) {
         const code = e instanceof Error ? e.message : "generic";
@@ -99,7 +133,7 @@ export default function ImportPage() {
       setParsing(false);
     };
     reader.readAsText(file);
-  }, []);
+  }, [applyCurrency]);
 
   const topTracks = useMemo(
     () =>
@@ -111,10 +145,14 @@ export default function ImportPage() {
     [parsed],
   );
 
+  // Montants de l'aperçu : déjà en euros si convertis au taux BCE, sinon × le taux saisi.
+  const factor = currency === "EUR" || fx?.mode === "ecb" ? 1 : Number.isFinite(eurRate) ? eurRate : 0;
+  const rateReady = currency !== null && (currency === "EUR" || fx?.mode === "ecb" || (Number.isFinite(eurRate) && eurRate > 0));
+
   async function activate() {
     const name = customer ? customer.artistName : artistName.trim();
-    if (!parsed || !name || !currency) return;
-    const data = buildUserData(parsed, { artistName: name, eurRate, currency });
+    if (!parsed || !name || !rateReady) return;
+    const data = buildUserData(parsed, { artistName: name, eurRate: fx?.mode === "ecb" ? 1 : eurRate, currency: currency! });
     if (customer) {
       setSaving(true);
       setError(null);
@@ -417,7 +455,7 @@ export default function ImportPage() {
               <p className="num mt-0.5 text-sm font-semibold">
                 {currency ? (
                   <NumberFlow
-                    value={Math.round(parsed.totalRevenue * (currency === "EUR" ? 1 : eurRate))}
+                    value={Math.round(parsed.totalRevenue * factor)}
                     format={{
                       style: "currency",
                       currency: "EUR",
@@ -491,8 +529,8 @@ export default function ImportPage() {
                   value={currency ?? ""}
                   onChange={(e) => {
                     const c = (e.target.value || null) as StatementCurrency | null;
-                    setCurrency(c);
-                    setEurRate(c ? DEFAULT_RATES[c] : 1);
+                    if (fileText) void applyCurrency(c, fileText);
+                    else setCurrency(c);
                   }}
                   className="h-9 w-full rounded-md border bg-transparent px-3 text-sm"
                 >
@@ -506,7 +544,37 @@ export default function ImportPage() {
                 <p className="mt-1 text-[10px] text-muted-foreground">{t("config.currencyUnknownHint")}</p>
               </div>
             )}
-            {currency && currency !== "EUR" && (
+            {currency && currency !== "EUR" && fx?.mode === "loading" && (
+              <p className="text-muted-foreground self-end text-xs">Récupération des taux de la BCE…</p>
+            )}
+            {currency && currency !== "EUR" && fx?.mode === "ecb" && (
+              <div className="text-xs sm:col-span-2">
+                <p className="font-medium">
+                  Converti au taux de référence de la BCE du mois de chaque vente (moyenne mensuelle) : en moyenne 1 {currency} ={" "}
+                  {Number.isFinite(fx.avg) ? fx.avg.toLocaleString(locale, { maximumFractionDigits: 4 }) : "—"} €.
+                </p>
+                {fx.fallback.length > 0 && (
+                  <p className="text-muted-foreground mt-1">
+                    Pas encore de taux publié pour {fx.fallback.map((m) => fmtMonth(locale, m)).join(", ")} : dernier taux connu appliqué.
+                  </p>
+                )}
+                <p className="text-muted-foreground mt-1">
+                  Source : Banque centrale européenne (taux publiés gratuitement sur ecb.europa.eu), inversés par Day 1 en euros pour 1 {currency}.{" "}
+                  <button
+                    type="button"
+                    className="underline"
+                    onClick={() => {
+                      if (fileText) setParsed(parseStatement(fileText));
+                      setFx({ mode: "manual" });
+                      setEurRate(Number.NaN);
+                    }}
+                  >
+                    Utiliser le taux de mon distributeur
+                  </button>
+                </p>
+              </div>
+            )}
+            {currency && currency !== "EUR" && fx?.mode === "manual" && (
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
                   {t("config.eurRate")} —{" "}
@@ -514,14 +582,16 @@ export default function ImportPage() {
                 </label>
                 <Input
                   type="number"
-                  step="0.01"
+                  step="0.0001"
                   min="0.1"
                   max="3"
-                  value={eurRate}
-                  onChange={(e) => setEurRate(Number(e.target.value) || DEFAULT_RATES[currency])}
+                  required
+                  placeholder="taux indiqué par ton distributeur"
+                  value={Number.isFinite(eurRate) ? eurRate : ""}
+                  onChange={(e) => setEurRate(e.target.value === "" ? Number.NaN : Number(e.target.value))}
                 />
                 <p className="num mt-1 text-[10px] text-muted-foreground">
-                  {t("config.eurRateHint", { currency, rate: eurRate })}
+                  {Number.isFinite(eurRate) ? t("config.eurRateHint", { currency, rate: eurRate }) : "Saisis le taux appliqué par ton distributeur : Day 1 ne le devine pas."}
                 </p>
               </div>
             )}
@@ -530,7 +600,7 @@ export default function ImportPage() {
           <div className="mt-6 flex flex-wrap gap-2">
             <Button
               onClick={activate}
-              disabled={saving || !currency || (!customer && !artistName.trim())}
+              disabled={saving || !rateReady || (!customer && !artistName.trim())}
               className="gap-1.5"
             >
               <Sparkles className="size-4" aria-hidden />

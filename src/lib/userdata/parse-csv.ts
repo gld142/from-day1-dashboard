@@ -38,6 +38,13 @@ export type ParsedStatement = {
   /** Retenues à la source (DistroKid « Songwriter Royalties Withheld »), devise source */
   withheld: number;
   artistRevenue: Record<string, number>;
+  /**
+   * Conversion au taux BCE du mois de vente (si `eurPerUnit` est passé) : tous les
+   * montants ci-dessus sont alors DÉJÀ en euros. `used` = taux appliqué par mois ;
+   * `fallback` = mois sans taux publié (dernier taux connu appliqué) ; `sourceTotal`
+   * = total dans la devise du fichier.
+   */
+  fx?: { used: Record<string, number>; fallback: string[]; sourceTotal: number };
   totalStreams: number;
   totalRevenue: number;
   months: string[]; // triés
@@ -195,7 +202,28 @@ function detectFormat(headers: string[]): {
 
 /* ─────────── Parse principal ─────────── */
 
-export function parseStatement(text: string): ParsedStatement {
+export type ParseOptions = {
+  /** Euros pour 1 unité de la devise du fichier, par mois « AAAA-MM » (taux BCE mensuels). */
+  eurPerUnit?: Record<string, number>;
+};
+
+export function parseStatement(text: string, opts: ParseOptions = {}): ParsedStatement {
+  const fxTable = opts.eurPerUnit && Object.keys(opts.eurPerUnit).length ? opts.eurPerUnit : null;
+  const fxMonths = fxTable ? Object.keys(fxTable).sort() : [];
+  const fxUsed: Record<string, number> = {};
+  const fxFallback = new Set<string>();
+  let sourceTotal = 0;
+  /** Taux du mois de vente ; sinon le dernier publié avant (ou le premier, à défaut). */
+  const rateFor = (month: string | null): number => {
+    if (!fxTable) return 1;
+    if (month && fxTable[month]) return (fxUsed[month] = fxTable[month]);
+    const key = month ? (fxMonths.filter((m) => m <= month).pop() ?? fxMonths[0]) : fxMonths[fxMonths.length - 1];
+    if (month) {
+      fxFallback.add(month);
+      fxUsed[month] = fxTable[key];
+    }
+    return fxTable[key];
+  };
   const warnings: string[] = [];
   // Retire un éventuel BOM et normalise les fins de ligne.
   const clean = text.replace(/^﻿/, "").replace(/\r\n?/g, "\n");
@@ -251,7 +279,10 @@ export function parseStatement(text: string): ParsedStatement {
     const mk = month ?? "unknown";
 
     const qty = cols.quantity >= 0 ? Math.round(parseNumber(row[cols.quantity])) : 0;
-    const earn = cols.earnings >= 0 ? parseNumber(row[cols.earnings]) : 0;
+    const rawEarn = cols.earnings >= 0 ? parseNumber(row[cols.earnings]) : 0;
+    sourceTotal += rawEarn;
+    const rate = rawEarn !== 0 || cols.withheld >= 0 ? rateFor(month) : 1;
+    const earn = rawEarn * rate;
     const store = cols.store >= 0 ? (row[cols.store] ?? "") : "";
     const dsp = storeToDsp(store);
 
@@ -292,7 +323,7 @@ export function parseStatement(text: string): ParsedStatement {
       const report = normalizeMonth(row[reportCol] ?? "");
       if (report) saleReportRevenue[`${month}>${report}`] = (saleReportRevenue[`${month}>${report}`] ?? 0) + earn;
     }
-    if (cols.withheld >= 0) withheld += parseNumber(row[cols.withheld] ?? "");
+    if (cols.withheld >= 0) withheld += parseNumber(row[cols.withheld] ?? "") * rate;
     if (cols.artist >= 0 && row[cols.artist]) {
       artists.add(row[cols.artist]);
       if (earn !== 0) artistRevenue[row[cols.artist]] = (artistRevenue[row[cols.artist]] ?? 0) + earn;
@@ -325,6 +356,7 @@ export function parseStatement(text: string): ParsedStatement {
     saleReportRevenue: Object.fromEntries(Object.entries(saleReportRevenue).map(([k, v]) => [k, Math.round(v * 100) / 100])),
     withheld: Math.round(withheld * 100) / 100,
     artistRevenue,
+    ...(fxTable ? { fx: { used: fxUsed, fallback: [...fxFallback].sort(), sourceTotal: Math.round(sourceTotal * 100) / 100 } } : {}),
     totalStreams,
     totalRevenue: Math.round(totalRevenue * 100) / 100,
     months,

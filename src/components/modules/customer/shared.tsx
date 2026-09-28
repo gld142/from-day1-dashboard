@@ -46,6 +46,18 @@ export function useFormats() {
   };
 }
 
+/**
+ * Mention de conversion d'un relevé en devise : au taux BCE du mois de chaque vente
+ * (moyenne pondérée affichée, source citée comme l'exige la BCE), ou au taux unique saisi.
+ */
+export function conversionNote(d: UserData): string {
+  if (d.sourceCurrency === "EUR") return "";
+  const rate = d.eurRate.toLocaleString("fr-FR", { maximumFractionDigits: 4 });
+  return d.fx
+    ? `, convertis en euros au taux de référence BCE du mois de chaque vente (en moyenne 1 ${d.sourceCurrency} = ${rate} € ; source : BCE, taux inversés par Day 1)`
+    : `, convertis en euros au taux saisi à l'import (1 ${d.sourceCurrency} = ${rate} €)`;
+}
+
 /** « Relevé TuneCore · sept. 25 → août 26 · importé le 28/09/2026 » */
 export function statementLine(d: UserData, month: (m: string) => string, locale: string): string {
   const sorted = [...d.months].sort();

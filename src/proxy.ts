@@ -9,7 +9,7 @@ import { GATE_COOKIE, GATE_PATH, isValidToken } from "@/lib/gate";
  */
 const PUBLIC = /^\/(acces|inscription|api\/leads|api\/checkout|api\/stripe|api\/cron)(\/|$)/;
 /** Espace client : protégé par la connexion Supabase (vérifiée dans chaque page), pas par la porte. */
-const ACCOUNT = /^\/(espace|connexion|auth|invitation|api\/imports)(\/|$)/;
+const ACCOUNT = /^\/(espace|connexion|auth|invitation|api\/imports|api\/fx)(\/|$)/;
 /** Pages qui n'existent que pour la démo : la porte à mot de passe et l'écran d'accueil co-brandé. */
 const DEMO_ONLY = /^\/(acces|welcome)(\/|$)/;
 

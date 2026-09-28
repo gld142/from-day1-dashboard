@@ -47,6 +47,8 @@ export type UserData = {
   saleReportRevenue?: Record<string, number>;
   withheldEur?: number;
   artistRevenue?: Record<string, number>;
+  /** Converti au taux BCE du mois de vente (euros pour 1 unité, par mois) ; absent = taux unique `eurRate`. */
+  fx?: { source: "ecb"; eurPerUnit: Record<string, number> };
   totalStreams: number;
   totalRevenueEur: number;
   active: boolean;
@@ -151,7 +153,10 @@ export function buildUserData(
 ): UserData {
   const currency = parsed.currency === "unknown" ? opts.currency : parsed.currency;
   if (!currency) throw new Error("CURRENCY_REQUIRED");
-  const rate = currency === "EUR" ? 1 : opts.eurRate;
+  // Relevé déjà converti ligne par ligne au taux BCE du mois de vente : plus de conversion
+  // ici ; le taux affiché est la moyenne pondérée réellement appliquée.
+  const converted = currency !== "EUR" && parsed.fx && parsed.fx.sourceTotal !== 0;
+  const rate = currency === "EUR" || converted ? 1 : opts.eurRate;
   const eur = (v: number) => Math.round(v * rate * 100) / 100;
   const revenueByMonth: Record<string, number> = {};
   for (const [m, v] of Object.entries(parsed.revenueByMonth)) {
@@ -177,8 +182,9 @@ export function buildUserData(
     artistName: opts.artistName,
     importedAt: new Date().toISOString().slice(0, 10),
     format: parsed.format,
-    eurRate: rate,
+    eurRate: converted ? Math.round((parsed.totalRevenue / parsed.fx!.sourceTotal) * 1e6) / 1e6 : rate,
     sourceCurrency: currency,
+    ...(converted ? { fx: { source: "ecb" as const, eurPerUnit: parsed.fx!.used } } : {}),
     months: parsed.months,
     streamsByMonth: parsed.streamsByMonth,
     revenueByMonth,

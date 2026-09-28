@@ -56,3 +56,38 @@ describe("détail enregistré (29/09/2026)", () => {
     expect(big.trackMonthStreams?.T0).toBeUndefined();
   });
 });
+
+describe("conversion au taux BCE du mois de chaque vente (29/09/2026)", () => {
+  // Relevé en dollars : mars payé 71,04 $, avril 56,70 $. Taux (euros pour 1 $) : mars 0,9, avril 0,8.
+  const rates = { "2026-03": 0.9, "2026-04": 0.8 };
+  const p = parseStatement(CSV, { eurPerUnit: rates });
+
+  it("chaque ligne est convertie au taux de SON mois de vente", () => {
+    expect(p.revenueByMonth["2026-03"]).toBeCloseTo((45.69 + 25.35) * 0.9, 2);
+    expect(p.revenueByMonth["2026-04"]).toBeCloseTo(56.7 * 0.8, 2);
+    expect(p.trackRevenue["Premier Titre"]).toBeCloseTo(45.69 * 0.9 + 56.7 * 0.8, 2);
+    expect(p.fx).toEqual({ used: { "2026-03": 0.9, "2026-04": 0.8 }, fallback: [], sourceTotal: 127.74 });
+  });
+
+  it("l'enregistrement garde les euros tels quels, le taux moyen pondéré et le détail des taux", () => {
+    const d = buildUserData(p, { artistName: "Mon Projet", eurRate: 0.5, currency: "USD" });
+    expect(d.revenueByMonth["2026-03"]).toBeCloseTo(63.94, 2);
+    expect(d.revenueByMonth["2026-04"]).toBeCloseTo(45.36, 2);
+    expect(d.eurRate).toBeCloseTo((71.04 * 0.9 + 56.7 * 0.8) / 127.74, 4); // pas le 0,5 passé en option
+    expect(d.fx).toEqual({ source: "ecb", eurPerUnit: rates });
+    const v = validateUserData(JSON.parse(JSON.stringify(d)));
+    expect(v?.fx).toEqual(d.fx);
+  });
+
+  it("mois pas encore publié par la BCE → dernier taux connu, et c'est signalé", () => {
+    const q = parseStatement(CSV, { eurPerUnit: { "2026-03": 0.9 } });
+    expect(q.revenueByMonth["2026-04"]).toBeCloseTo(56.7 * 0.9, 2);
+    expect(q.fx?.fallback).toEqual(["2026-04"]);
+  });
+
+  it("validation : taux absurdes refusés", () => {
+    const d = buildUserData(p, { artistName: "Mon Projet", eurRate: 1, currency: "USD" });
+    expect(validateUserData({ ...d, fx: { source: "ecb", eurPerUnit: { "2026-03": -1 } } })).toBeNull();
+    expect(validateUserData({ ...d, fx: { source: "autre", eurPerUnit: {} } })).toBeNull();
+  });
+});

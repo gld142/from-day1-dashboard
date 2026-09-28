@@ -74,7 +74,7 @@ function nestedMap(v: unknown, maxOuter: number, outerKey: (k: string) => boolea
 }
 
 /** Détail gardé depuis le 29/09/2026 : chaque champ absent = relevé plus ancien, pas une erreur. */
-type Detail = Pick<UserData, "trackMonthStreams" | "trackMonthRevenue" | "countryMonthStreams" | "countryMonthRevenue" | "trackIsrc" | "saleReportRevenue" | "withheldEur" | "artistRevenue">;
+type Detail = Pick<UserData, "trackMonthStreams" | "trackMonthRevenue" | "countryMonthStreams" | "countryMonthRevenue" | "trackIsrc" | "saleReportRevenue" | "withheldEur" | "artistRevenue" | "fx">;
 function detail(d: Record<string, unknown>): Detail | null {
   const out: Detail = {};
   const title = (k: string) => k.length <= 300;
@@ -106,6 +106,12 @@ function detail(d: Record<string, unknown>): Detail | null {
   if (d.withheldEur !== undefined) {
     if (!signedNum(d.withheldEur)) return null;
     out.withheldEur = d.withheldEur as number;
+  }
+  if (d.fx !== undefined) {
+    const fx = d.fx as { source?: unknown; eurPerUnit?: unknown } | null;
+    const rates = fx && fx.source === "ecb" ? numberMap(fx.eurPerUnit, 360, (k) => MONTH.test(k), (n) => num(n) && (n as number) > 0.01 && (n as number) < 10) : null;
+    if (!rates || d.sourceCurrency === "EUR") return null;
+    out.fx = { source: "ecb", eurPerUnit: rates };
   }
   if (d.artistRevenue !== undefined) {
     const clean = numberMap(d.artistRevenue, 500, (k) => k.length <= 200, signedNum);
