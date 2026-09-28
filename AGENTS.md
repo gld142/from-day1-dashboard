@@ -94,7 +94,9 @@ de démo ou de simulé pour le client ») : tout visiteur non connecté va sur
 rien. `DEMO_MODE=on` (src/lib/demo-mode.ts) la rallume pour travailler dessus en
 local ; les pages gardent leur branche démo derrière `useCustomer()`.
 Vérifié le 28/09 : anonyme, ancien cookie de démo → /connexion ; client connecté
-→ ses pages (jamais /pulse, /valuation…) ; DEMO_MODE=on → porte /acces de retour.
+→ ses pages (jamais /valuation, /copilot… ; /pulse et les pages « Marché & signaux »
+s'ouvrent depuis le 29/09 dans leur version réelle, voir plus bas) ; DEMO_MODE=on →
+porte /acces de retour.
 
 ## Marché & signaux (29/09/2026) — collecte de la nuit et sources réelles
 
