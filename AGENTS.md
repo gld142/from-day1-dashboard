@@ -95,3 +95,29 @@ rien. `DEMO_MODE=on` (src/lib/demo-mode.ts) la rallume pour travailler dessus en
 local ; les pages gardent leur branche démo derrière `useCustomer()`.
 Vérifié le 28/09 : anonyme, ancien cookie de démo → /connexion ; client connecté
 → ses pages (jamais /pulse, /valuation…) ; DEMO_MODE=on → porte /acces de retour.
+
+## Marché & signaux (29/09/2026) — collecte de la nuit et sources réelles
+
+Pulse, Marché, Audience, Algo, A&R, Discovery et Day 1 Index sont ouverts aux clients
+avec des données RÉELLES uniquement (aucun composant `customer-*` n'importe `@/lib/demo`).
+
+- Collecte : Vercel Cron 04:00 UTC → `GET /api/cron/collect` (en-tête
+  `Authorization: Bearer $CRON_SECRET`, sinon 401) → collecteurs `src/lib/collect/*` →
+  journal `collection_runs`. En ligne : mettre `CRON_SECRET` dans le projet Vercel.
+  Local : `bash scripts/setup-cron-secret.sh` puis `bash scripts/collect-now.sh`.
+- Apple Music : flux officiel `rss.marketingtools.apple.com`, 10 pays, 100 titres.
+  Mesuré instable (502/504 ~1 appel sur 3) → `fetchWithRetry`. Texte normalisé NFC
+  (« Fille à Papa » arrive décomposé). La date du classement = jour du passage à Paris.
+- TikTok : JAMAIS de robot qui lit les pages (CGU TikTok EEE art. 4.5). Les vidéos sont
+  COLLÉES par l'équipe ; Day 1 lit la fiche oEmbed officielle (pas de vues : saisies).
+  La miniature est une URL signée qui expire (~2 j) : relue chaque nuit, jamais figée.
+- TikTok for Artists : chiffres recopiés, réservés à l'espace du client (CGU §5.c) —
+  ne jamais les mutualiser (Day 1 Index, A&R, comparaisons entre clients).
+- « Titres » ≠ « places » : un titre classé dans 3 pays = 1 titre, 3 places (mesuré :
+  122 places pour 26 titres).
+- JSX : SWC retire l'espace après `</b>` quand le texte qui suit va jusqu'au retour à
+  la ligne (mesuré au DOM le 29/09) → écrire `</b>{" "}texte`.
+
+Vérifier :
+
+    npx vitest run src/lib/collect src/lib/tiktok src/lib/market src/lib/index src/lib/__tests__/nav-customer.test.ts
