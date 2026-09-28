@@ -14,6 +14,8 @@ import { deleteSync, saveSync } from "@/app/(dashboard)/sync/actions";
 import { useCustomer, useCustomerRegisters } from "@/lib/customer-mode";
 import { SYNC_MEDIA, SYNC_MEDIA_LABEL, SYNC_STATUS, SYNC_STATUS_LABEL, feeOf, summarizeSync, type SyncLicense } from "@/lib/registers/sync";
 import { ArtistSelect, DeleteRow, F, RegisterForm, TextIn, frNum, selectCls } from "./register-ui";
+import { syncStats } from "@/lib/kpi/business";
+import { KpiList } from "./kpi-ui";
 import { useFormats } from "./shared";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -27,6 +29,7 @@ export function CustomerSync() {
   const now = today();
   const list = useMemo(() => data?.rows ?? [], [data]);
   const s = useMemo(() => summarizeSync(list, now), [list, now]);
+  const k = useMemo(() => syncStats(list), [list]);
   const artistName = useMemo(() => new Map((data?.artists ?? []).map((a) => [a.id, a.name])), [data]);
   const date = (d: string | null) => (d ? new Date(`${d}T00:00:00Z`).toLocaleDateString(f.locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : "");
   const order: Record<SyncLicense["status"], number> = { negotiating: 0, proposed: 1, signed: 2, paid: 3, lost: 4 };
@@ -95,6 +98,24 @@ export function CustomerSync() {
             ]}
           />
         </Sheet>
+        {list.length > 0 && (
+          <Sheet family="money">
+            <SheetHeading action="calculé sur tes licences">Ce que disent tes licences</SheetHeading>
+            <KpiList
+              rows={[
+                { key: "win", label: "Taux de réussite", value: k.winRate === null ? null : f.pct(k.winRate), formula: "licences signées ou payées ÷ licences conclues (perdues comprises)", missing: "Aucune licence conclue (signée, payée ou perdue) pour l'instant." },
+                { key: "delay", label: "Délai de paiement", value: k.avgDaysToPay === null ? null : `${k.avgDaysToPay} jours`, formula: "moyenne entre la date de signature et la date d'encaissement", missing: "Il faut une licence payée avec ses dates de signature et d'encaissement." },
+                {
+                  key: "media",
+                  label: "Montant moyen par média",
+                  value: Object.keys(k.avgFeeByMedia).length ? Object.entries(k.avgFeeByMedia).map(([m, v]) => `${SYNC_MEDIA_LABEL[m as keyof typeof SYNC_MEDIA_LABEL] ?? m} ${f.eur(v)}`).join(" · ") : null,
+                  formula: "master + édition, licences signées ou payées",
+                  missing: "Aucun montant saisi sur une licence signée ou payée.",
+                },
+              ]}
+            />
+          </Sheet>
+        )}
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
           <ProvenanceBadge provenance="declared" /> Tel que saisi dans ton espace. Seules les licences payées entrent dans le résultat, au mois d&apos;encaissement.
         </p>

@@ -12,9 +12,11 @@ import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sh
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Button } from "@/components/ui/button";
 import { deleteShow, saveShow } from "@/app/(dashboard)/tour/actions";
-import { useCustomer, useCustomerRegisters } from "@/lib/customer-mode";
+import { useCustomer, useCustomerFinances, useCustomerRegisters } from "@/lib/customer-mode";
 import { summarizeShows, type Show } from "@/lib/registers/shows";
 import { ArtistSelect, DeleteRow, F, RegisterForm, TextIn, frNum } from "./register-ui";
+import { showEconomics } from "@/lib/kpi/business";
+import { KpiList } from "./kpi-ui";
 import { useFormats } from "./shared";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -28,6 +30,8 @@ export function CustomerTour() {
   const now = today();
   const shows = useMemo(() => data?.rows ?? [], [data]);
   const s = useMemo(() => summarizeShows(shows, now), [shows, now]);
+  const finances = useCustomerFinances();
+  const eco = useMemo(() => showEconomics(shows, finances?.expenses ?? [], now), [shows, finances, now]);
   const artistName = useMemo(() => new Map((data?.artists ?? []).map((a) => [a.id, a.name])), [data]);
   const date = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString(f.locale, { weekday: "short", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
   const place = (x: Show) => [x.venue, x.city, x.country].filter(Boolean).join(" · ");
@@ -106,6 +110,19 @@ export function CustomerTour() {
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
           <ProvenanceBadge provenance="declared" /> Tel que saisi dans ton espace. Seuls les cachets entrent dans le résultat (/finances), au mois du concert.
         </p>
+
+        {shows.length > 0 && (
+          <Sheet family="audience">
+            <SheetHeading action="calculé sur tes concerts">Économie des concerts</SheetHeading>
+            <KpiList
+              rows={[
+                { key: "ticket", label: "Recette par billet", value: eco.perTicket === null ? null : f.eur(eco.perTicket), formula: "billetterie brute ÷ billets vendus, sur les dates où les deux sont saisis", missing: "Saisis la billetterie brute et les billets vendus d'au moins une date." },
+                { key: "share", label: "Cachet dans la billetterie", value: eco.feeToGross === null ? null : f.pct(eco.feeToGross), formula: "cachets ÷ billetterie brute, sur les dates où les deux sont saisis", missing: "Saisis le cachet et la billetterie brute d'au moins une date." },
+                { key: "margin", label: "Marge de tournée (12 mois)", value: f.eur(eco.tourMargin12), formula: "cachets des 12 derniers mois − dépenses « tournée » saisies dans Dépenses & P&L" },
+              ]}
+            />
+          </Sheet>
+        )}
 
         {s.upcoming.length > 0 && (
           <Sheet family="audience">

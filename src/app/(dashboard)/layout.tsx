@@ -38,11 +38,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     if (!view.data && needsStatement(path)) redirect("/import");
     const on = (m: string) => path === m || path.startsWith(`${m}/`);
     // Le Day 1 Index compare les artistes du roster : leurs relevés et leurs revenus saisis.
-    const roster = isStructurePath(path) || on("/day1-index") ? await customerRoster(view.info.workspaceId) : null;
+    // Les contrats croisent aussi les relevés (recoupement calculé, revenus exposés à une fin de contrat).
+    const roster = isStructurePath(path) || on("/day1-index") || on("/contracts") ? await customerRoster(view.info.workspaceId) : null;
     const contracts = on("/contracts") ? await customerContracts(view.info.workspaceId) : null;
     const splits = on("/splits") || on("/catalog") ? await customerSplits(view.info.workspaceId) : null;
     const rights = on("/rights") ? await customerRights(view.info.workspaceId) : null;
-    const finances = on("/finances") || on("/day1-index") ? await customerFinances(view.info.workspaceId) : null;
+    // Dépenses aussi sur /tour : la marge de tournée retranche les frais « tournée ».
+    const finances = on("/finances") || on("/day1-index") || on("/tour") ? await customerFinances(view.info.workspaceId) : null;
     // Marché & signaux : seulement ce que la page lit.
     const signalsNeeds = on("/pulse")
       ? { charts: true, tiktok: true }

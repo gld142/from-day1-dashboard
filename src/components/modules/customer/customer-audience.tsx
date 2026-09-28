@@ -19,6 +19,7 @@ import { useCustomer, useCustomerSignals } from "@/lib/customer-mode";
 import { TIKTOK_PERIODS, statDelta, statPairs, type StatKey, type TikTokStat } from "@/lib/tiktok/forms";
 import type { TikTokVideo } from "@/lib/tiktok/video";
 import { countryRows } from "@/lib/userdata/statement-insights";
+import { geography } from "@/lib/kpi/statement";
 import { getUserData, subscribeUserData } from "@/lib/userdata/store";
 import { DeleteRow, F, RegisterForm, TextIn, selectCls } from "./register-ui";
 import { Needs, SourceLine, longDate } from "./signals-ui";
@@ -40,6 +41,8 @@ export function CustomerAudience() {
   const stats = useMemo(() => (signals?.stats ?? []).filter((s) => s.artist_id === artistId), [signals?.stats, artistId]);
   const pairs = useMemo(() => statPairs(stats), [stats]);
   const countries = useMemo(() => (data ? countryRows(data, 10) : []), [data]);
+  const geo = useMemo(() => (data ? geography(data) : null), [data]);
+  const rateOf = useMemo(() => new Map((geo?.rates ?? []).map((r) => [r.country, r])), [geo]);
   const totalStreams = data?.totalStreams ?? 0;
   const [now] = useState(() => Date.now()); // une fois au montage : miniatures expirées ou non
 
@@ -57,10 +60,30 @@ export function CustomerAudience() {
         <Sheet family="audience">
           <SheetHeading action={data ? statementLine(data, f.month, f.locale) : undefined}>Où on t&apos;écoute</SheetHeading>
           {countries.length ? (
-            <SimpleTable
-              head={["Pays", "Streams", "Part"]}
-              rows={countries.map((c) => ({ key: c.key, cells: [f.country(c.key), f.int(c.streams), totalStreams ? f.pct(c.streams / totalStreams) : "—"] }))}
-            />
+            <>
+              <SimpleTable
+                head={["Pays", "Streams", "Part", "Pour 1 000 streams", "Évolution du taux"]}
+                rows={countries.map((c) => {
+                  const r = rateOf.get(c.key);
+                  return {
+                    key: c.key,
+                    cells: [
+                      f.country(c.key),
+                      f.int(c.streams),
+                      totalStreams ? f.pct(c.streams / totalStreams) : "—",
+                      r?.per1000 != null && c.streams >= 1000 ? f.eurCents(r.per1000) : "—",
+                      r?.trend != null ? f.pct(r.trend, true) : "—",
+                    ],
+                  };
+                })}
+              />
+              {geo && (
+                <p className="sheet-ink mt-2 text-[11px]">
+                  {f.pct(geo.outsideTopShare)} de tes écoutes hors de {f.country(geo.top)} · équivalent de {geo.equivalent.toLocaleString(f.locale, { maximumFractionDigits: 1 })}{" "}pays (1 ÷ Herfindahl des parts d&apos;écoute). Évolution du taux : dernier mois contre premier mois du détail par pays
+                  {data?.countryMonthStreams === undefined ? " (réimporte ton relevé pour la voir)" : ""}.
+                </p>
+              )}
+            </>
           ) : (
             <p className="text-sm">
               {data ? "Ton relevé ne détaille pas les pays." : "Aucun relevé importé pour cet artiste."}{" "}

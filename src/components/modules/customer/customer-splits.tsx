@@ -18,7 +18,8 @@ import { Input } from "@/components/ui/input";
 import { deleteSplit, saveSplit, type SplitFormState } from "@/app/(dashboard)/splits/actions";
 import { useCustomer, useCustomerSplits } from "@/lib/customer-mode";
 import { SPLIT_ROLES, normTitle, splitPayouts, type Split, type SplitRole } from "@/lib/splits/split";
-import { useFormats } from "./shared";
+import { payoutsByPerson, splitCoverage } from "@/lib/kpi/business";
+import { SimpleTable, useFormats } from "./shared";
 
 const IDLE: SplitFormState = { status: "idle" };
 type Draft = { title: string; artistId: string } | Split | "new" | null;
@@ -45,6 +46,32 @@ export function CustomerSplits() {
   );
   const agreed = splits.filter((s) => s.status === "agreed").length;
   const shared = splits.reduce((sum, s) => sum + (splitPayouts(s, titles[s.artist_id]?.revenue ?? {}).revenue ?? 0), 0);
+  // Par personne, sur tout le catalogue : chaque artiste avec ses propres relevés, puis fusion par nom.
+  const people = useMemo(() => {
+    const merged = new Map<string, { name: string; agreed: number; draft: number; titles: number }>();
+    for (const artistId of new Set(splits.map((s) => s.artist_id))) {
+      for (const p of payoutsByPerson(splits.filter((s) => s.artist_id === artistId), titles[artistId]?.revenue ?? {})) {
+        const k = p.name.toLowerCase();
+        const m = merged.get(k) ?? { name: p.name, agreed: 0, draft: 0, titles: 0 };
+        merged.set(k, { name: m.name, agreed: Math.round((m.agreed + p.agreed) * 100) / 100, draft: Math.round((m.draft + p.draft) * 100) / 100, titles: m.titles + p.titles });
+      }
+    }
+    return [...merged.values()].sort((a, b) => b.agreed + b.draft - (a.agreed + a.draft));
+  }, [splits, titles]);
+  const coverage = useMemo(() => {
+    let agreedRev = 0;
+    let draftRev = 0;
+    let total = 0;
+    for (const [artistId, t] of Object.entries(titles)) {
+      const c = splitCoverage(splits.filter((s) => s.artist_id === artistId), t.revenue);
+      const sum = Object.values(t.revenue).reduce((x, v) => x + Math.max(0, v), 0);
+      if (!c || !sum) continue;
+      agreedRev += c.agreed * sum;
+      draftRev += c.draft * sum;
+      total += sum;
+    }
+    return total ? { agreed: agreedRev / total, draft: draftRev / total, none: 1 - (agreedRev + draftRev) / total } : null;
+  }, [splits, titles]);
   const period = (artistId: string) => {
     const p = titles[artistId]?.period;
     return p ? `${f.month(p.from)} → ${f.month(p.to)}` : null;
@@ -84,10 +111,26 @@ export function CustomerSplits() {
               { key: "shared", value: f.eur(shared), label: "Revenus master répartis", note: "sur les relevés importés" },
             ]}
           />
+          {coverage && (
+            <p className="sheet-ink mt-3 text-[13px]">
+              Revenus des relevés couverts par un split validé : <b>{f.pct(coverage.agreed)}</b> · en brouillon : {f.pct(coverage.draft)} · sans split : {f.pct(coverage.none)}.
+            </p>
+          )}
         </Sheet>
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
           <ProvenanceBadge provenance="declared" /> Parts telles que saisies ici ; montants = revenus master du relevé × part. Les droits d&apos;auteur (SACEM) ne sont pas dans ce relevé.
         </p>
+
+        {people.length > 0 && (
+          <Sheet family="catalog">
+            <SheetHeading action="revenus master du relevé × part">Ce que touche chaque personne</SheetHeading>
+            <SimpleTable
+              head={["Personne", "Splits validés", "En brouillon", "Titres"]}
+              rows={people.map((p) => ({ key: p.name, cells: [p.name, f.eur(p.agreed), p.draft ? f.eur(p.draft) : "—", String(p.titles)] }))}
+            />
+            <p className="sheet-ink mt-2 text-[11px]">Somme, titre par titre, des revenus master du dernier relevé de chaque artiste multipliés par la part master de la personne. Un titre absent du relevé ne compte pas.</p>
+          </Sheet>
+        )}
 
         {uncovered.length > 0 && (
           <Sheet family="catalog">

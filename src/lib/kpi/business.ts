@@ -108,7 +108,7 @@ export function showEconomics(shows: Show[], expenses: { category: string; spent
   const tour12 = expenses.filter((e) => e.category === "tour" && e.spent_on > since && e.spent_on <= today).reduce((t, e) => t + e.amount_eur, 0);
   return {
     perTicket: withTickets.length ? round2(gross(withTickets) / withTickets.reduce((t, s) => t + (s.tickets_sold ?? 0), 0)) : null,
-    feeToGross: withFee.length ? round2(withFee.reduce((t, s) => t + (s.fee_eur ?? 0), 0) / gross(withFee)) : null,
+    feeToGross: withFee.length ? withFee.reduce((t, s) => t + (s.fee_eur ?? 0), 0) / gross(withFee) : null,
     tourMargin12: round2(fees12 - tour12),
   };
 }

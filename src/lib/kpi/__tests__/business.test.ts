@@ -77,7 +77,7 @@ describe("concerts", () => {
       TODAY,
     );
     expect(e.perTicket).toBe(20); // 16 000 € / 800 billets
-    expect(e.feeToGross).toBe(0.25); // 4 000 / 16 000
+    expect(e.feeToGross).toBe(0.25); // 4 000 / 16 000 (ratio brut, pas arrondi : l'affichage s'en charge)
     expect(e.tourMargin12).toBe(2800); // 4 000 de cachets − 1 200 de frais de tournée
   });
 });

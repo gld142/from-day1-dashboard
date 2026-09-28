@@ -15,7 +15,8 @@ import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { deleteContract, saveContract, type ContractFormState } from "@/app/(dashboard)/contracts/actions";
-import { useCustomer, useCustomerContracts } from "@/lib/customer-mode";
+import { useCustomer, useCustomerContracts, useCustomerRoster } from "@/lib/customer-mode";
+import { contractEndRisk, recoupment } from "@/lib/kpi/business";
 import { CONTRACT_KINDS, KIND_LABEL, contractTimeline, type Contract, type ContractAlert } from "@/lib/contracts/contract";
 import { useFormats } from "./shared";
 
@@ -42,6 +43,14 @@ export function CustomerContracts() {
     .flatMap(({ c, t }) => t.alerts.map((a) => ({ a, c })))
     .sort((x, y) => x.a.daysLeft - y.a.daysLeft);
   const live = rows.filter((r) => r.t.status !== "ended");
+  // Relevé de chaque artiste (revenus par mois) : recoupement calculé et revenus exposés.
+  const roster = useCustomerRoster();
+  const revenueOf = useMemo(() => new Map((roster ?? []).map((a) => [a.id, a.statement?.revenueByMonth ?? null])), [roster]);
+  const risk = useMemo(() => {
+    const from = `${Number(now.slice(0, 4)) - 1}${now.slice(4, 7)}`;
+    const rev12 = Object.fromEntries((roster ?? []).map((a) => [a.id, Object.entries(a.statement?.revenueByMonth ?? {}).filter(([m]) => m > from).reduce((t, [, v]) => t + v, 0)]));
+    return contractEndRisk(data?.contracts ?? [], rev12, now);
+  }, [roster, data, now]);
   const recoup = live.reduce((s, r) => s + (r.t.recoupRemaining ?? 0), 0);
   const hasAdvance = live.some((r) => r.t.recoupRemaining !== null);
   const date = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString(f.locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
@@ -102,6 +111,12 @@ export function CustomerContracts() {
               { key: "open", value: String(live.filter((r) => !r.c.ends_on).length), label: "Sans date de fin" },
             ]}
           />
+          {risk.artists.length > 0 && risk.share !== null && (
+            <p className="sheet-ink mt-3 text-[13px]">
+              <b>{f.pct(risk.share)}</b>{" "}des revenus des 12 derniers mois (relevés importés) viennent d&apos;artistes dont un contrat d&apos;artiste, de licence ou de distribution finit dans les 180 jours sans tacite reconduction.
+            </p>
+          )}
+
         </Sheet>
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
           <ProvenanceBadge provenance="declared" /> Tel que saisi dans ton espace — Day 1 ne lit pas le contrat. Préavis signalés 120 jours avant, fins 6 mois avant.
@@ -144,6 +159,19 @@ export function CustomerContracts() {
                 <div className="h-1.5 rounded-full bg-primary" style={{ width: `${Math.min(100, ((c.recouped_eur ?? 0) / c.advance_eur) * 100)}%` }} />
               </div>
             )}
+            {(() => {
+              const rev = revenueOf.get(c.artist_id);
+              const r = rev ? recoupment(c, rev) : null;
+              if (!r) return null;
+              return (
+                <p className="sheet-ink mt-3 text-[12px]">
+                  Calculé sur le relevé importé : {f.eur(r.recouped)} recoupés {r.since ? `depuis ${f.month(r.since)}` : "sur tout le relevé"} ({f.eur(r.revenue)} × {c.royalty_rate?.toLocaleString(f.locale)} %)
+                  {r.remaining > 0 ? `, reste ${f.eur(r.remaining)}` : " : avance entièrement recoupée"}
+                  {r.remaining > 0 && r.monthsLeft !== null ? ` ; au rythme des 3 derniers mois (${f.eur(r.monthly ?? 0)}/mois), environ ${r.monthsLeft} mois` : ""}
+                  {r.gapWithDeclared !== null && r.gapWithDeclared !== 0 ? `. Écart avec le montant saisi : ${r.gapWithDeclared > 0 ? "+" : "−"}${f.eur(Math.abs(r.gapWithDeclared))}` : ""}. Les autres sources de revenus du contrat ne sont pas dans ce calcul.
+                </p>
+              );
+            })()}
             {c.notes && <p className="text-muted-foreground mt-3 text-sm whitespace-pre-line">{c.notes}</p>}
           </Sheet>
         ))}
