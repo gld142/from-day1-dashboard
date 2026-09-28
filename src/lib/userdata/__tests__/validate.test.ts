@@ -10,17 +10,42 @@ const TUNECORE_CSV = `Sales Period;Store Name;Artist;Release Type;Song Title;Uni
 2026-01;Spotify;Autre Artiste;Single;Titre A;12000;36,50
 2026-02;Spotify;Autre Artiste;Single;Titre B;9800;29,10`;
 
-const build = (csv: string) => buildUserData(parseStatement(csv), { artistName: "Mon Projet", eurRate: 0.92 });
+const build = (csv: string, currency?: "EUR" | "USD" | "GBP") =>
+  buildUserData(parseStatement(csv), { artistName: "Mon Projet", eurRate: 0.92, currency });
+
+describe("buildUserData — la devise n'est jamais devinée", () => {
+  it("relevé sans devise (TuneCore) et rien de choisi : refusé", () => {
+    expect(() => build(TUNECORE_CSV)).toThrow("CURRENCY_REQUIRED");
+  });
+  it("devise choisie EUR : taux 1, montants inchangés", () => {
+    const data = build(TUNECORE_CSV, "EUR");
+    expect(data).toMatchObject({ sourceCurrency: "EUR", eurRate: 1 });
+    expect(data.revenueByMonth).toEqual({ "2026-01": 36.5, "2026-02": 29.1 });
+  });
+  it("devise choisie USD : le taux saisi s'applique", () => {
+    const data = build(TUNECORE_CSV, "USD");
+    expect(data).toMatchObject({ sourceCurrency: "USD", eurRate: 0.92 });
+    expect(data.revenueByMonth["2026-01"]).toBeCloseTo(36.5 * 0.92, 2);
+  });
+  it("devise lue dans le fichier : prime sur un choix", () => {
+    expect(build(DISTROKID_CSV, "EUR")).toMatchObject({ sourceCurrency: "USD", eurRate: 0.92 });
+  });
+});
 
 describe("validateUserData", () => {
   it("accepte tel quel un relevé construit par l'import (DistroKid)", () => {
     const data = build(DISTROKID_CSV);
     expect(validateUserData(JSON.parse(JSON.stringify(data)))).toEqual(data);
   });
-  it("accepte un relevé TuneCore (devise non indiquée dans le fichier)", () => {
-    const data = build(TUNECORE_CSV);
-    expect(data.sourceCurrency).toBe("unknown");
+  it("accepte un relevé TuneCore dont la devise a été choisie", () => {
+    const data = build(TUNECORE_CSV, "EUR");
     expect(validateUserData(JSON.parse(JSON.stringify(data)))).toEqual(data);
+  });
+  it("refuse une devise inconnue, et un relevé en euros converti", () => {
+    const ok = build(TUNECORE_CSV, "EUR");
+    expect(validateUserData({ ...ok, sourceCurrency: "unknown" })).toBeNull();
+    expect(validateUserData({ ...ok, eurRate: 0.92 })).toBeNull();
+    expect(validateUserData({ ...build(TUNECORE_CSV, "USD"), eurRate: 0 })).toBeNull();
   });
   it("refuse une forme trafiquée", () => {
     const ok = build(DISTROKID_CSV);

@@ -24,6 +24,7 @@ import {
 import { parseStatement, type ParsedStatement } from "@/lib/userdata/parse-csv";
 import {
   buildUserData,
+  type StatementCurrency,
   clearUserData,
   getUserData,
   saveUserData,
@@ -41,7 +42,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/dashboard/page-header";
 
-const DEFAULT_RATES: Record<string, number> = { USD: 0.92, GBP: 1.17, EUR: 1 };
+/** Taux indicatifs, modifiables à l'import (la personne met celui de son relevé). */
+const DEFAULT_RATES: Record<StatementCurrency, number> = { USD: 0.92, GBP: 1.17, EUR: 1 };
+const CURRENCIES: readonly StatementCurrency[] = ["EUR", "USD", "GBP"];
 
 export default function ImportPage() {
   const t = useTranslations("importer");
@@ -64,7 +67,9 @@ export default function ImportPage() {
   const [parsing, setParsing] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [artistName, setArtistName] = useState("");
-  const [eurRate, setEurRate] = useState<number>(0.92);
+  const [eurRate, setEurRate] = useState<number>(1);
+  // Devise du relevé : lue dans le fichier, sinon À CHOISIR (null) — jamais devinée.
+  const [currency, setCurrency] = useState<StatementCurrency | null>(null);
   const [justActivated, setJustActivated] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -77,7 +82,9 @@ export default function ImportPage() {
       try {
         const result = parseStatement(String(reader.result ?? ""));
         setParsed(result);
-        setEurRate(DEFAULT_RATES[result.currency] ?? 0.92);
+        const known = result.currency === "unknown" ? null : result.currency;
+        setCurrency(known);
+        setEurRate(known ? DEFAULT_RATES[known] : 1);
         if (result.artistNames.length > 0) setArtistName(result.artistNames[0]);
       } catch (e) {
         const code = e instanceof Error ? e.message : "generic";
@@ -106,8 +113,8 @@ export default function ImportPage() {
 
   async function activate() {
     const name = customer ? customer.artistName : artistName.trim();
-    if (!parsed || !name) return;
-    const data = buildUserData(parsed, { artistName: name, eurRate });
+    if (!parsed || !name || !currency) return;
+    const data = buildUserData(parsed, { artistName: name, eurRate, currency });
     if (customer) {
       setSaving(true);
       setError(null);
@@ -393,16 +400,20 @@ export default function ImportPage() {
                 {t("preview.totalRevenue")}
               </p>
               <p className="num mt-0.5 text-sm font-semibold">
-                <NumberFlow
-                  value={Math.round(parsed.totalRevenue * (parsed.currency === "EUR" ? 1 : eurRate))}
-                  format={{
-                    style: "currency",
-                    currency: "EUR",
-                    notation: "compact",
-                    maximumFractionDigits: 1,
-                  }}
-                  locales={locale}
-                />
+                {currency ? (
+                  <NumberFlow
+                    value={Math.round(parsed.totalRevenue * (currency === "EUR" ? 1 : eurRate))}
+                    format={{
+                      style: "currency",
+                      currency: "EUR",
+                      notation: "compact",
+                      maximumFractionDigits: 1,
+                    }}
+                    locales={locale}
+                  />
+                ) : (
+                  <span className="font-normal text-muted-foreground">{t("config.currencyPending")}</span>
+                )}
               </p>
             </div>
           </div>
@@ -455,11 +466,36 @@ export default function ImportPage() {
                 />
               </div>
             )}
-            {parsed.currency !== "EUR" && (
+            {parsed.currency === "unknown" && (
+              <div>
+                <label htmlFor="statement-currency" className="mb-1.5 block text-xs font-medium text-muted-foreground">
+                  {t("config.currencyChoose")}
+                </label>
+                <select
+                  id="statement-currency"
+                  value={currency ?? ""}
+                  onChange={(e) => {
+                    const c = (e.target.value || null) as StatementCurrency | null;
+                    setCurrency(c);
+                    setEurRate(c ? DEFAULT_RATES[c] : 1);
+                  }}
+                  className="h-9 w-full rounded-md border bg-transparent px-3 text-sm"
+                >
+                  <option value="">{t("config.currencyPlaceholder")}</option>
+                  {CURRENCIES.map((c) => (
+                    <option key={c} value={c}>
+                      {t(`config.currencyNames.${c}`)}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-[10px] text-muted-foreground">{t("config.currencyUnknownHint")}</p>
+              </div>
+            )}
+            {currency && currency !== "EUR" && (
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
                   {t("config.eurRate")} —{" "}
-                  {t("config.currency", { currency: parsed.currency })}
+                  {t("config.currency", { currency })}
                 </label>
                 <Input
                   type="number"
@@ -467,10 +503,10 @@ export default function ImportPage() {
                   min="0.1"
                   max="3"
                   value={eurRate}
-                  onChange={(e) => setEurRate(Number(e.target.value) || 0.92)}
+                  onChange={(e) => setEurRate(Number(e.target.value) || DEFAULT_RATES[currency])}
                 />
                 <p className="num mt-1 text-[10px] text-muted-foreground">
-                  {t("config.eurRateHint", { currency: parsed.currency, rate: eurRate })}
+                  {t("config.eurRateHint", { currency, rate: eurRate })}
                 </p>
               </div>
             )}
@@ -479,7 +515,7 @@ export default function ImportPage() {
           <div className="mt-6 flex flex-wrap gap-2">
             <Button
               onClick={activate}
-              disabled={saving || (!customer && !artistName.trim())}
+              disabled={saving || !currency || (!customer && !artistName.trim())}
               className="gap-1.5"
             >
               <Sparkles className="size-4" aria-hidden />

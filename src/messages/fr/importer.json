@@ -38,7 +38,16 @@
     "artistNamePlaceholder": "Ex : Sky Lune",
     "currency": "Devise du relevé : {currency}",
     "eurRate": "Taux de conversion vers l'euro",
-    "eurRateHint": "1 {currency} = {rate} €"
+    "eurRateHint": "1 {currency} = {rate} €",
+    "currencyChoose": "Devise du relevé",
+    "currencyPlaceholder": "Choisir…",
+    "currencyUnknownHint": "Ton relevé n'indique pas sa devise : choisis-la, on ne la devine pas.",
+    "currencyPending": "devise à choisir",
+    "currencyNames": {
+      "EUR": "Euro (€)",
+      "USD": "Dollar US ($)",
+      "GBP": "Livre sterling (£)"
+    }
   },
   "actions": {
     "activate": "Activer mes données",

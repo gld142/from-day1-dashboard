@@ -112,11 +112,22 @@ export function clearUserData() {
   notify();
 }
 
+/** Devise d'un relevé une fois connue : lue dans le fichier, ou choisie par la personne. */
+export type StatementCurrency = Exclude<ParsedStatement["currency"], "unknown">;
+
+/**
+ * La devise n'est JAMAIS devinée : celle du fichier si elle y figure, sinon
+ * celle que la personne a choisie (`opts.currency`), sinon refus. Mesuré le
+ * 28/09 : un relevé TuneCore en euros passait au taux « dollar » par défaut,
+ * −8 % sur tous les revenus, sans rien dire.
+ */
 export function buildUserData(
   parsed: ParsedStatement,
-  opts: { artistName: string; eurRate: number },
+  opts: { artistName: string; eurRate: number; currency?: StatementCurrency },
 ): UserData {
-  const rate = parsed.currency === "EUR" ? 1 : opts.eurRate;
+  const currency = parsed.currency === "unknown" ? opts.currency : parsed.currency;
+  if (!currency) throw new Error("CURRENCY_REQUIRED");
+  const rate = currency === "EUR" ? 1 : opts.eurRate;
   const revenueByMonth: Record<string, number> = {};
   for (const [m, v] of Object.entries(parsed.revenueByMonth)) {
     if (m !== "unknown") revenueByMonth[m] = Math.round(v * rate * 100) / 100;
@@ -127,7 +138,7 @@ export function buildUserData(
     importedAt: new Date().toISOString().slice(0, 10),
     format: parsed.format,
     eurRate: rate,
-    sourceCurrency: parsed.currency,
+    sourceCurrency: currency,
     months: parsed.months,
     streamsByMonth: parsed.streamsByMonth,
     revenueByMonth,

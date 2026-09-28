@@ -29,7 +29,10 @@ export function validateUserData(input: unknown): UserData | null {
   const d = input as Record<string, unknown>;
   if (d.version !== 1 || !shortText(d.artistName) || !shortText(d.importedAt, 40)) return null;
   if (!["distrokid", "tunecore", "believe", "generic"].includes(String(d.format))) return null;
-  if (!num(d.eurRate) || !["EUR", "USD", "GBP", "unknown"].includes(String(d.sourceCurrency))) return null;
+  // Devise connue obligatoire (jamais « unknown » : on ne convertit pas au hasard),
+  // et un relevé en euros n'est pas converti.
+  if (!num(d.eurRate) || !["EUR", "USD", "GBP"].includes(String(d.sourceCurrency))) return null;
+  if (d.sourceCurrency === "EUR" ? d.eurRate !== 1 : !((d.eurRate as number) > 0)) return null;
   if (!Array.isArray(d.months) || d.months.length > 360 || !d.months.every((m) => typeof m === "string" && MONTH.test(m))) return null;
 
   const rawStreams = d.streamsByMonth;
