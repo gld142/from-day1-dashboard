@@ -47,6 +47,9 @@ export type UserData = {
   saleReportRevenue?: Record<string, number>;
   withheldEur?: number;
   artistRevenue?: Record<string, number>;
+  /** Streams Spotify par titre sur les 12 derniers mois du relevé (seuil de 1 000 de Spotify) */
+  trackSpotify12?: Record<string, number>;
+  spotifyWindow?: { from: string; to: string; months: number };
   /** Converti au taux BCE du mois de vente (euros pour 1 unité, par mois) ; absent = taux unique `eurRate`. */
   fx?: { source: "ecb"; eurPerUnit: Record<string, number> };
   totalStreams: number;
@@ -200,6 +203,8 @@ export function buildUserData(
     trackIsrc: parsed.trackIsrc,
     saleReportRevenue: toEur(parsed.saleReportRevenue),
     withheldEur: eur(parsed.withheld),
+    trackSpotify12: parsed.trackSpotify12,
+    ...(parsed.spotifyWindow ? { spotifyWindow: parsed.spotifyWindow } : {}),
     artistRevenue: toEur(parsed.artistRevenue),
     totalStreams: parsed.totalStreams,
     totalRevenueEur: Math.round(parsed.totalRevenue * rate),

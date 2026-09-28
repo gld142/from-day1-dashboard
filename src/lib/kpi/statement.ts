@@ -205,3 +205,22 @@ export function halfLives(d: UserData) {
     stillAbove: titles.length - halved.length,
   };
 }
+
+/**
+ * Seuil Spotify : depuis avril 2024, un titre sous 1 000 streams sur 12 mois glissants
+ * n'est plus rémunéré par Spotify (support.spotify.com, « track monetization eligibility » ;
+ * un minimum d'auditeurs, non publié, s'y ajoute). Calculé sur les 12 derniers mois du
+ * relevé : si le relevé couvre moins de 12 mois, c'est dit (`fullYear` = false).
+ */
+export function spotifyThreshold(d: UserData) {
+  if (!d.trackSpotify12 || !Object.keys(d.trackSpotify12).length) return null;
+  const all = Object.entries(d.trackSpotify12);
+  const below = all.filter(([, n]) => n < 1000).map(([title, streams]) => ({ title, streams, revenue: d.trackRevenue?.[title] ?? null })).sort((a, b) => b.streams - a.streams);
+  return {
+    titles: all.length,
+    below,
+    belowRevenue: below.reduce((t, x) => t + (x.revenue ?? 0), 0),
+    window: d.spotifyWindow ?? null,
+    fullYear: (d.spotifyWindow?.months ?? 0) >= 12,
+  };
+}

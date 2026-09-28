@@ -74,7 +74,7 @@ function nestedMap(v: unknown, maxOuter: number, outerKey: (k: string) => boolea
 }
 
 /** Détail gardé depuis le 29/09/2026 : chaque champ absent = relevé plus ancien, pas une erreur. */
-type Detail = Pick<UserData, "trackMonthStreams" | "trackMonthRevenue" | "countryMonthStreams" | "countryMonthRevenue" | "trackIsrc" | "saleReportRevenue" | "withheldEur" | "artistRevenue" | "fx">;
+type Detail = Pick<UserData, "trackMonthStreams" | "trackMonthRevenue" | "countryMonthStreams" | "countryMonthRevenue" | "trackIsrc" | "saleReportRevenue" | "withheldEur" | "artistRevenue" | "fx" | "trackSpotify12" | "spotifyWindow">;
 function detail(d: Record<string, unknown>): Detail | null {
   const out: Detail = {};
   const title = (k: string) => k.length <= 300;
@@ -106,6 +106,16 @@ function detail(d: Record<string, unknown>): Detail | null {
   if (d.withheldEur !== undefined) {
     if (!signedNum(d.withheldEur)) return null;
     out.withheldEur = d.withheldEur as number;
+  }
+  if (d.trackSpotify12 !== undefined) {
+    const clean = numberMap(d.trackSpotify12, 5000, title);
+    if (!clean) return null;
+    out.trackSpotify12 = clean;
+  }
+  if (d.spotifyWindow !== undefined) {
+    const w = d.spotifyWindow as { from?: unknown; to?: unknown; months?: unknown } | null;
+    if (!w || typeof w.from !== "string" || typeof w.to !== "string" || !MONTH.test(w.from) || !MONTH.test(w.to) || !Number.isInteger(w.months) || (w.months as number) < 1 || (w.months as number) > 12) return null;
+    out.spotifyWindow = { from: w.from, to: w.to, months: w.months as number };
   }
   if (d.fx !== undefined) {
     const fx = d.fx as { source?: unknown; eurPerUnit?: unknown } | null;

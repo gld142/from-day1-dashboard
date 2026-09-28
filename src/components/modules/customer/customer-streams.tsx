@@ -17,6 +17,8 @@ import { useCustomer } from "@/lib/customer-mode";
 import { downloadCsv } from "@/lib/export";
 import { countryRows, monthSeries, platformMixShift, platformRows, streamsSummary, trackRows, type MonthPoint } from "@/lib/userdata/statement-insights";
 import { getUserData, subscribeUserData } from "@/lib/userdata/store";
+import { catalogHealth, halfLives, spotifyThreshold } from "@/lib/kpi/statement";
+import { KpiList } from "./kpi-ui";
 import { DSP_LABEL, Dot, MonthBars, PlatformLegend, SimpleTable, platformColor, statementLine, useFormats } from "./shared";
 
 export function CustomerStreams() {
@@ -32,6 +34,9 @@ export function CustomerStreams() {
       shift: platformMixShift(data),
       tracks: trackRows(data, 10).sort((a, b) => b.streams - a.streams),
       countries: countryRows(data, 10).sort((a, b) => b.streams - a.streams),
+      health: catalogHealth(data),
+      life: halfLives(data),
+      spotify: spotifyThreshold(data),
     };
   }, [data]);
 
@@ -154,6 +159,67 @@ export function CustomerStreams() {
             )}
           </Sheet>
         </div>
+
+        <Sheet family="catalog">
+          <SheetHeading action="calculé sur ton relevé">Santé du catalogue</SheetHeading>
+          <KpiList
+            rows={[
+              {
+                key: "top1",
+                label: "Dépendance au premier titre",
+                value: view.health ? f.pct(view.health.top1Share) : null,
+                formula: `part ${view.health?.basis === "revenue" ? "des revenus" : "des streams"} du titre n° 1 ; les 3 premiers : ${view.health ? f.pct(view.health.top3Share) : "—"}`,
+                missing: "Pas de titres dans ce relevé.",
+              },
+              {
+                key: "eq",
+                label: "Titres qui comptent vraiment",
+                value: view.health ? `${view.health.titlesFor80} pour 80 %` : null,
+                formula: `nombre de titres qui font 80 % ${view.health?.basis === "revenue" ? "des revenus" : "des streams"} ; « équivalent » (1 ÷ Herfindahl) : ${view.health ? view.health.equivalentTitles.toLocaleString(f.locale, { maximumFractionDigits: 1 }) : "—"} titre(s)`,
+                missing: "Pas de titres dans ce relevé.",
+              },
+              {
+                key: "tail",
+                label: "Longue traîne",
+                value: view.health ? f.pct(view.health.outsideTop10Share) : null,
+                formula: `part hors des 10 premiers titres ; ${view.health?.smallTitles ?? 0} titre(s) sous 1 000 streams sur la période`,
+                missing: "Pas de titres dans ce relevé.",
+              },
+              {
+                key: "half",
+                label: "Demi-vie d'un titre",
+                value: view.life.median !== null ? `${view.life.median} mois` : null,
+                formula: `médiane du temps entre le pic d'un titre et le premier mois sous la moitié de ce pic (${view.life.titles.length - view.life.stillAbove} titre(s) mesuré(s) ; ${view.life.stillAbove} encore au-dessus de la moitié)`,
+                missing:
+                  data.trackMonthStreams === undefined
+                    ? "Réimporte ton relevé : le détail mois par mois des titres est gardé depuis le 29/09."
+                    : view.life.titles.length
+                      ? `Aucun titre n'est encore passé sous la moitié de son pic (${view.life.stillAbove} suivi(s)).`
+                      : "Il faut au moins 3 mois de recul après le pic d'un titre.",
+              },
+              {
+                key: "spotify",
+                label: "Sous le seuil Spotify",
+                value: view.spotify ? `${view.spotify.below.length} titre(s) sur ${view.spotify.titles}` : null,
+                formula: view.spotify
+                  ? `moins de 1 000 streams Spotify sur ${view.spotify.fullYear ? "les 12 derniers mois" : `les ${view.spotify.window?.months ?? 0} derniers mois seulement (la règle porte sur 12)`} du relevé : Spotify ne rémunère plus ces titres depuis avril 2024${view.spotify.below.length ? ` — ${view.spotify.below.slice(0, 5).map((t) => `« ${t.title} » (${f.int(t.streams)})`).join(", ")}${view.spotify.below.length > 5 ? "…" : ""}` : ""}`
+                  : "",
+                missing: data.trackMonthStreams === undefined ? "Réimporte ton relevé : le détail Spotify par titre est gardé depuis le 29/09." : "Pas de streams Spotify dans ce relevé.",
+              },
+            ]}
+          />
+          {view.life.titles.length > 0 && (
+            <div className="mt-4">
+              <SimpleTable
+                head={["Titre", "Pic", "Streams au pic", "Demi-vie"]}
+                rows={view.life.titles.slice(0, 8).map((t) => ({
+                  key: t.title,
+                  cells: [<span key="t" className="block max-w-[16rem] truncate">{t.title}</span>, f.month(t.peakMonth), f.compact(t.peak), t.halfLife === null ? "pas encore" : `${t.halfLife} mois`],
+                }))}
+              />
+            </div>
+          )}
+        </Sheet>
       </div>
     </div>
   );

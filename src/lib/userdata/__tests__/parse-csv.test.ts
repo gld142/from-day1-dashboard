@@ -153,3 +153,21 @@ describe("parseStatement — détail gardé à l'import (29/09/2026)", () => {
     expect(parseStatement(csv).withheld).toBeCloseTo(2, 2);
   });
 });
+
+describe("seuil Spotify : streams Spotify par titre sur les 12 derniers mois du relevé", () => {
+  it("fenêtre = 12 derniers mois du relevé ; seules les lignes Spotify comptent", () => {
+    const p = parseStatement(DISTROKID_CSV);
+    // Premier Titre : Spotify 15 230 (mars) + 18 900 (avril) ; Apple et YouTube exclus
+    expect(p.trackSpotify12).toEqual({ "Premier Titre": 15230 + 18900, "Deuxième Titre": 8450 });
+    expect(p.spotifyWindow).toEqual({ from: "2026-03", to: "2026-04", months: 2 });
+  });
+  it("un relevé de 14 mois : les 2 plus anciens sortent de la fenêtre", () => {
+    const rows = Array.from({ length: 14 }, (_, i) => {
+      const m = new Date(Date.UTC(2025, i, 1)).toISOString().slice(0, 7);
+      return `2026-12-15,${m},Spotify,X,T,,,${100},100,Song,FR,0,1.00`;
+    });
+    const p = parseStatement([DISTROKID_CSV.split("\n")[0], ...rows].join("\n"));
+    expect(p.trackSpotify12).toEqual({ T: 1200 });
+    expect(p.spotifyWindow).toEqual({ from: "2025-03", to: "2026-02", months: 12 });
+  });
+});

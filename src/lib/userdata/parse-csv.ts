@@ -39,6 +39,12 @@ export type ParsedStatement = {
   withheld: number;
   artistRevenue: Record<string, number>;
   /**
+   * Streams SPOTIFY par titre sur les 12 derniers mois du relevé : Spotify ne rémunère
+   * plus un titre sous 1 000 streams sur 12 mois glissants (règle d'avril 2024).
+   */
+  trackSpotify12: Record<string, number>;
+  spotifyWindow: { from: string; to: string; months: number } | null;
+  /**
    * Conversion au taux BCE du mois de vente (si `eurPerUnit` est passé) : tous les
    * montants ci-dessus sont alors DÉJÀ en euros. `used` = taux appliqué par mois ;
    * `fallback` = mois sans taux publié (dernier taux connu appliqué) ; `sourceTotal`
@@ -256,6 +262,7 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
   const saleReportRevenue: Record<string, number> = {};
   const artistRevenue: Record<string, number> = {};
   let withheld = 0;
+  const spotifyByTitleMonth: Record<string, Record<string, number>> = {};
   // Le mois du relevé ne dit quelque chose que s'il vient d'une autre colonne que le mois de vente.
   const reportCol = cols.report >= 0 && cols.report !== cols.month ? cols.report : -1;
   const add = (o: Record<string, Record<string, number>>, k: string, m: string, v: number) => {
@@ -302,6 +309,7 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
       trackStreams[title] = (trackStreams[title] ?? 0) + qty;
       if (earn !== 0) trackRevenue[title] = (trackRevenue[title] ?? 0) + earn;
       if (month) {
+        if (qty > 0 && dsp === "spotify") add(spotifyByTitleMonth, title, month, qty);
         if (qty > 0) add(trackMonthStreams, title, month, qty);
         if (earn !== 0) add(trackMonthRevenue, title, month, earn);
       }
@@ -337,6 +345,12 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
     .sort();
 
   if (months.length === 0) throw new Error("NO_DATA_ROWS");
+  const window = months.slice(-12);
+  const trackSpotify12: Record<string, number> = {};
+  for (const [title, byMonth] of Object.entries(spotifyByTitleMonth)) {
+    const n = window.reduce((t, m) => t + (byMonth[m] ?? 0), 0);
+    if (n > 0 || Object.keys(byMonth).length) trackSpotify12[title] = n;
+  }
 
   return {
     format,
@@ -356,6 +370,8 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
     saleReportRevenue: Object.fromEntries(Object.entries(saleReportRevenue).map(([k, v]) => [k, Math.round(v * 100) / 100])),
     withheld: Math.round(withheld * 100) / 100,
     artistRevenue,
+    trackSpotify12,
+    spotifyWindow: window.length ? { from: window[0], to: window[window.length - 1], months: window.length } : null,
     ...(fxTable ? { fx: { used: fxUsed, fallback: [...fxFallback].sort(), sourceTotal: Math.round(sourceTotal * 100) / 100 } } : {}),
     totalStreams,
     totalRevenue: Math.round(totalRevenue * 100) / 100,

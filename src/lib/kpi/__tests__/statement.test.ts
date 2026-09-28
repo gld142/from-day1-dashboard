@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { UserData } from "@/lib/userdata/store";
-import { catalogHealth, concentration, geography, halfLives, paymentLag, platformPay, revenueStability, seasonality, titlesToReach } from "../statement";
+import { catalogHealth, concentration, geography, halfLives, paymentLag, platformPay, revenueStability, seasonality, spotifyThreshold, titlesToReach } from "../statement";
 
 const base = (over: Partial<UserData> = {}): UserData => ({
   version: 1, artistName: "A", importedAt: "2026-09-29", format: "distrokid", eurRate: 1, sourceCurrency: "EUR",
@@ -132,5 +132,16 @@ describe("demi-vie des titres", () => {
     expect(h.titles.find((t) => t.title === "Court")).toBeUndefined();
     expect(h.median).toBe(2);
     expect(h.stillAbove).toBe(1);
+  });
+});
+
+describe("seuil Spotify (1 000 streams sur 12 mois)", () => {
+  it("titres sous le seuil, leurs revenus sur la période, fenêtre dite", () => {
+    const s = spotifyThreshold(base({ trackSpotify12: { A: 50000, B: 999, C: 0, D: 1000 }, trackRevenue: { A: 100, B: 2, C: 0.5, D: 3 }, spotifyWindow: { from: "2025-10", to: "2026-09", months: 12 } }))!;
+    expect(s.below.map((t) => t.title)).toEqual(["B", "C"]);
+    expect(s.belowRevenue).toBeCloseTo(2.5);
+    expect(s.titles).toBe(4);
+    expect(s.fullYear).toBe(true);
+    expect(spotifyThreshold(base())).toBeNull();
   });
 });
