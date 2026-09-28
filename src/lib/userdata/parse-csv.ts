@@ -4,6 +4,7 @@
  */
 
 import type { DSP } from "@/lib/demo/types";
+import { ISO3_TO_ISO2 } from "./iso3";
 
 export type ParsedStatement = {
   format: "distrokid" | "tunecore" | "believe" | "generic";
@@ -120,22 +121,62 @@ export function storeToDsp(store: string): DSP {
   return "other";
 }
 
-/** "2025-03", "Mar 2025", "03/2025", "2025-03-15" → "2025-03" */
+/**
+ * Pays d'une ligne → code ISO à 2 lettres : 2 lettres (UK = GB), 3 lettres (Symphonic :
+ * FRA, SEN…), ou nom en anglais / français (« Spain », « Allemagne »). Mesuré le 29/09 :
+ * garder les 2 premières lettres faisait de SEN la Suède et d'« Allemagne » l'Albanie.
+ */
+const ISO2 = new Set(Object.values(ISO3_TO_ISO2));
+const normName = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().replace(/[^a-z]/g, "");
+let byName: Map<string, string> | null = null;
+function countryByName(name: string): string | null {
+  if (!byName) {
+    byName = new Map();
+    for (const lang of ["en", "fr"]) {
+      const dn = new Intl.DisplayNames([lang], { type: "region" });
+      for (const c of ISO2) {
+        const n = dn.of(c);
+        if (n && n !== c) byName.set(normName(n), c);
+      }
+    }
+  }
+  return byName.get(normName(name)) ?? null;
+}
+export function toIso2(raw: string): string | null {
+  const t = raw.trim();
+  const u = t.toUpperCase();
+  if (u === "UK") return "GB";
+  if (/^[A-Z]{2}$/.test(u)) return ISO2.has(u) ? u : null;
+  if (/^[A-Z]{3}$/.test(u)) return ISO3_TO_ISO2[u] ?? null;
+  return t.length > 3 ? countryByName(t) : null;
+}
+
+const MONTH_NAMES: Record<string, string> = {
+  jan: "01", feb: "02", fev: "02", fév: "02", mar: "03", apr: "04", avr: "04",
+  may: "05", mai: "05", jun: "06", jui: "06", jul: "07", aug: "08", aou: "08",
+  aoû: "08", sep: "09", oct: "10", nov: "11", dec: "12", déc: "12",
+};
+const mm = (n: number) => (n >= 1 && n <= 12 ? String(n).padStart(2, "0") : null);
+
+/** "2025-03", "Mar 2025", "03/2025", "2025-03-15", "30/06/2025", "June 30, 2025" → "2025-03"… */
 function normalizeMonth(raw: string): string | null {
   const s = raw.trim();
   let m = s.match(/^(\d{4})-(\d{2})/);
-  if (m) return `${m[1]}-${m[2]}`;
+  if (m) return mm(Number(m[2])) ? `${m[1]}-${m[2]}` : null;
   m = s.match(/^(\d{1,2})\/(\d{4})$/);
-  if (m) return `${m[2]}-${m[1].padStart(2, "0")}`;
-  m = s.match(/^(\d{1,2})\/\d{1,2}\/(\d{4})$/);
-  if (m) return `${m[2]}-${m[1].padStart(2, "0")}`;
-  const MONTHS: Record<string, string> = {
-    jan: "01", feb: "02", fev: "02", fév: "02", mar: "03", apr: "04", avr: "04",
-    may: "05", mai: "05", jun: "06", jui: "06", jul: "07", aug: "08", aou: "08",
-    aoû: "08", sep: "09", oct: "10", nov: "11", dec: "12", déc: "12",
-  };
+  if (m) return mm(Number(m[1])) ? `${m[2]}-${mm(Number(m[1]))}` : null;
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) {
+    // Mois/jour (US) par défaut ; si le premier nombre dépasse 12, c'est jour/mois (FR).
+    const month = Number(m[1]) > 12 ? mm(Number(m[2])) : mm(Number(m[1]));
+    return month ? `${m[3]}-${month}` : null;
+  }
+  m = s.toLowerCase().match(/^([a-zéû]{3})[a-zéû]*\.?\s+\d{1,2},?\s+(\d{4})$/);
+  if (m && MONTH_NAMES[m[1]]) return `${m[2]}-${MONTH_NAMES[m[1]]}`;
+  m = s.toLowerCase().match(/^\d{1,2}\s+([a-zéû]{3})[a-zéû]*\.?\s+(\d{4})$/);
+  if (m && MONTH_NAMES[m[1]]) return `${m[2]}-${MONTH_NAMES[m[1]]}`;
   m = s.toLowerCase().match(/^([a-zéû]{3})[a-zéû]*[ .-]*(\d{4})$/);
-  if (m && MONTHS[m[1]]) return `${m[2]}-${MONTHS[m[1]]}`;
+  if (m && MONTH_NAMES[m[1]]) return `${m[2]}-${MONTH_NAMES[m[1]]}`;
   return null;
 }
 
@@ -178,14 +219,14 @@ function detectFormat(headers: string[]): {
     // « Sale Month » (DistroKid) comme « Sales Month » : le mois de VENTE. Le mois du
     // relevé n'est qu'un dernier recours (mesuré le 29/09 : « Sales Month » tombait sur
     // « Reporting Month », revenus datés deux mois trop tard).
-    month: findCol(h, [/sales? month/, /sales? period/, /période|periode/, /^month$/, /reporting/, /^date$/]),
+    month: findCol(h, [/activity period/, /sales? month/, /sales? period/, /période|periode/, /^month$/, /reporting/, /^date$/]),
     report: findCol(h, [/reporting (date|month|period)/, /^reporting/, /statement (date|month|period)/, /date (de|du) (rapport|relevé)/, /accounting (period|date)/]),
     isrc: findCol(h, [/^isrc$/, /isrc/]),
     withheld: findCol(h, [/withheld/, /retenue/]),
-    store: findCol(h, [/^store$/, /store name/, /platform|plateforme/, /^dsp$/, /retailer/]),
-    artist: findCol(h, [/^artist/, /artiste/]),
-    title: findCol(h, [/song title/, /^title$/, /^song/, /titre/, /track/]),
-    quantity: findCol(h, [/^quantity$/, /units sold/, /^units$/, /streams?$/, /quantité|quantite/, /nb.*(stream|écoute)/]),
+    store: findCol(h, [/^store$/, /store name/, /platform|plateforme/, /^dsp$/, /service provider/, /retailer/]),
+    artist: findCol(h, [/^artist/, /track artist/, /release artist/, /artiste/]),
+    title: findCol(h, [/song title/, /track title/, /^title$/, /^song/, /titre/, /track/]),
+    quantity: findCol(h, [/^quantity$/, /units sold/, /^units$/, /^count$/, /streams?$/, /quantité|quantite/, /nb.*(stream|écoute)/]),
     earnings: findCol(h, [/earnings/, /total earned/, /royalt/, /revenu/, /net income/, /amount/, /montant/]),
     country: findCol(h, [/country/, /pays/, /territory|territoire/]),
   };
@@ -293,7 +334,9 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
     const store = cols.store >= 0 ? (row[cols.store] ?? "") : "";
     const dsp = storeToDsp(store);
 
-    if (qty > 0) {
+    // Quantités NETTES : une annulation (« Void », quantité négative) retire ses streams ;
+    // un compteur resté négatif ou nul est retiré en fin de lecture (voir `positive`).
+    if (qty !== 0) {
       const bucket = (streamsByMonth[mk] ??= {});
       bucket[dsp] = (bucket[dsp] ?? 0) + qty;
       totalStreams += qty;
@@ -309,20 +352,20 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
       trackStreams[title] = (trackStreams[title] ?? 0) + qty;
       if (earn !== 0) trackRevenue[title] = (trackRevenue[title] ?? 0) + earn;
       if (month) {
-        if (qty > 0 && dsp === "spotify") add(spotifyByTitleMonth, title, month, qty);
-        if (qty > 0) add(trackMonthStreams, title, month, qty);
+        if (qty !== 0 && dsp === "spotify") add(spotifyByTitleMonth, title, month, qty);
+        if (qty !== 0) add(trackMonthStreams, title, month, qty);
         if (earn !== 0) add(trackMonthRevenue, title, month, earn);
       }
       const isrc = cols.isrc >= 0 ? (row[cols.isrc] ?? "").replace(/[-\s]/g, "").toUpperCase() : "";
       if (ISRC.test(isrc) && !trackIsrc[title]) trackIsrc[title] = isrc;
     }
     if (cols.country >= 0 && row[cols.country]) {
-      const cc = row[cols.country].trim().toUpperCase().slice(0, 2);
-      if (/^[A-Z]{2}$/.test(cc)) {
+      const cc = toIso2(row[cols.country]);
+      if (cc) {
         countryStreams[cc] = (countryStreams[cc] ?? 0) + qty;
         if (earn !== 0) countryRevenue[cc] = (countryRevenue[cc] ?? 0) + earn;
         if (month) {
-          if (qty > 0) add(countryMonthStreams, cc, month, qty);
+          if (qty !== 0) add(countryMonthStreams, cc, month, qty);
           if (earn !== 0) add(countryMonthRevenue, cc, month, earn);
         }
       }
@@ -339,6 +382,17 @@ export function parseStatement(text: string, opts: ParseOptions = {}): ParsedSta
   }
 
   if (skipped > 0) warnings.push(`SKIPPED_ROWS:${skipped}`);
+  // Compteurs de streams : jamais négatifs (mesuré le 29/09 : une annulation isolée laissait
+  // −100 streams à un pays, et la validation serveur refusait alors tout le relevé).
+  const positive = (o: Record<string, number>) => {
+    for (const k of Object.keys(o)) if (!(o[k] > 0)) delete o[k];
+    return o;
+  };
+  for (const b of Object.values(streamsByMonth)) positive(b as Record<string, number>);
+  for (const o of [trackMonthStreams, countryMonthStreams, spotifyByTitleMonth]) for (const inner of Object.values(o)) positive(inner);
+  positive(trackStreams);
+  positive(countryStreams);
+  totalStreams = Object.values(streamsByMonth).reduce((t, b) => t + Object.values(b).reduce((x, v) => x + (v ?? 0), 0), 0);
   const months = Object.keys(revenueByMonth)
     .concat(Object.keys(streamsByMonth))
     .filter((m, i, a) => m !== "unknown" && a.indexOf(m) === i)

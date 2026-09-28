@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseStatement, storeToDsp } from "../parse-csv";
+import { buildUserData } from "../store";
+import { validateUserData } from "../validate";
 
 const DISTROKID_CSV = `Reporting Date,Sale Month,Store,Artist,Title,ISRC,UPC,Quantity,Team Percentage,Song/Album,Country of Sale,Songwriter Royalties Withheld,Earnings (USD)
 2026-05-15,2026-03,Spotify,Mon Projet,Premier Titre,FR1234567890,123456789012,15230,100,Song,FR,0,45.69
@@ -169,5 +171,54 @@ describe("seuil Spotify : streams Spotify par titre sur les 12 derniers mois du 
     const p = parseStatement([DISTROKID_CSV.split("\n")[0], ...rows].join("\n"));
     expect(p.trackSpotify12).toEqual({ T: 1200 });
     expect(p.spotifyWindow).toEqual({ from: "2025-03", to: "2026-02", months: 12 });
+  });
+});
+
+describe("relevé au format Symphonic (colonnes de leur documentation, lue le 29/09/2026)", () => {
+  const SYMPHONIC = `Reporting Period,Label,Release Name,Release Version,Release Artists,UPC Code,Catalogue,Track Title,Mix Version,ISRC Code,Track Artist,Digital Service Provider,Activity Period,Territory,Delivery,Content Type,Sale or Void,Count,Royalty ($US)
+2025-08-31,Mon Label,Album,,Artiste A,123,,Titre 1,,FRABC2500001,Artiste A,Spotify,2025-06-30,SEN,Streaming,Single,Sale,1000,3.00
+2025-08-31,Mon Label,Album,,Artiste A,123,,Titre 1,,FRABC2500001,Artiste A,Apple Music,2025-06-30,AUT,Streaming,Single,Sale,500,2.50
+2025-08-31,Mon Label,Album,,Artiste A,123,,Titre 1,,FRABC2500001,Artiste A,Spotify,2025-07-31,FRA,Streaming,Single,Void,-100,-0.30`;
+  const p = parseStatement(SYMPHONIC);
+  it("mois d'ÉCOUTE (Activity Period), pas le mois du relevé", () => {
+    expect(p.months).toEqual(["2025-06", "2025-07"]);
+    expect(p.saleReportRevenue["2025-06>2025-08"]).toBeCloseTo(5.5);
+  });
+  it("pays en 3 lettres convertis (SEN = Sénégal, pas la Suède ; AUT = Autriche)", () => {
+    expect(Object.keys(p.countryStreams).sort()).toEqual(["AT", "SN"]);
+  });
+  it("plateforme, quantité (Count), montant en dollars, artiste, retour (Void) déduit", () => {
+    expect(p.currency).toBe("USD");
+    expect(p.streamsByMonth["2025-06"]).toEqual({ spotify: 1000, apple: 500 });
+    expect(p.revenueByMonth["2025-07"]).toBeCloseTo(-0.3);
+    expect(p.artistRevenue["Artiste A"]).toBeCloseTo(5.2);
+    expect(p.trackIsrc["Titre 1"]).toBe("FRABC2500001");
+  });
+  it("pays en toutes lettres (anglais ou français) et dates jour/mois", () => {
+    const csv = `Date,Store,Title,Quantity,Earnings (EUR),Country
+30/06/2025,Spotify,T,100,1.00,Spain
+15/07/2025,Deezer,T,100,1.00,Allemagne
+07/31/2025,Deezer,T,100,1.00,FR`;
+    const q = parseStatement(csv);
+    expect(Object.keys(q.countryStreams).sort()).toEqual(["DE", "ES", "FR"]);
+    expect(q.months).toEqual(["2025-06", "2025-07"]);
+  });
+});
+
+describe("annulations (quantités négatives)", () => {
+  it("le total des streams = somme des compteurs après annulation ; le relevé reste valide", () => {
+    const csv = `Sale Month,Store,Title,Quantity,Earnings (EUR),Country
+2026-01,Spotify,T,1000,4.00,FR
+2026-01,Spotify,T,-200,-0.80,FR
+2026-02,Deezer,T,-50,-0.20,BE`;
+    const p = parseStatement(csv);
+    expect(p.streamsByMonth).toEqual({ "2026-01": { spotify: 800 }, "2026-02": {} });
+    expect(p.totalStreams).toBe(800);
+    expect(p.countryStreams).toEqual({ FR: 800 });
+    expect(p.revenueByMonth["2026-02"]).toBeCloseTo(-0.2);
+    const d = buildUserData(p, { artistName: "A", eurRate: 1 });
+    expect(validateUserData(JSON.parse(JSON.stringify(d)))).not.toBeNull();
+    // Témoin de l'ancien défaut : un compteur négatif fait refuser tout le relevé.
+    expect(validateUserData({ ...d, countryStreams: { ...d.countryStreams, BE: -50 } })).toBeNull();
   });
 });

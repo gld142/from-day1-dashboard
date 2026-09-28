@@ -158,10 +158,12 @@ export function validateUserData(input: unknown): UserData | null {
     if (!MONTH.test(m) || !clean) return null;
     streamsByMonth[m] = clean;
   }
-  const revenueByMonth = numberMap(d.revenueByMonth, 360, (k) => MONTH.test(k));
+  // Revenu d'un mois : peut être négatif (correction, annulation déduite par le distributeur).
+  // Mesuré le 29/09 : un mois ne contenant qu'une annulation faisait refuser tout le relevé.
+  const revenueByMonth = numberMap(d.revenueByMonth, 360, (k) => MONTH.test(k), signedNum);
   const trackStreams = numberMap(d.trackStreams, 5000, (k) => k.length <= 300);
   const countryStreams = numberMap(d.countryStreams, 300, (k) => /^[A-Z]{2}$/.test(k));
-  if (!revenueByMonth || !trackStreams || !countryStreams || !num(d.totalStreams) || !num(d.totalRevenueEur)) return null;
+  if (!revenueByMonth || !trackStreams || !countryStreams || !num(d.totalStreams) || !signedNum(d.totalRevenueEur)) return null;
   const breakdowns = revenueBreakdowns(d);
   if (!breakdowns) return null;
   const extra = detail(d);

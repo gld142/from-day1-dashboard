@@ -22,6 +22,7 @@ import { countryRows, monthSeries, platformRows, revenueSummary, trackRows, type
 import { getUserData, subscribeUserData } from "@/lib/userdata/store";
 import { paymentLag, platformPay, revenueStability, seasonality } from "@/lib/kpi/statement";
 import { KpiList } from "./kpi-ui";
+import { FRANCE_2025_PER_1000, SNEP_2025 } from "@/lib/kpi/benchmarks";
 import { DSP_LABEL, Dot, MonthBars, PlatformLegend, SimpleTable, conversionNote, platformColor, statementLine, useFormats } from "./shared";
 
 /** En dessous, un taux « pour 1 000 streams » ne veut rien dire (quelques lignes). */
@@ -196,6 +197,13 @@ export function CustomerRevenue() {
                 value: seasonSorted.length ? `${calMonth(seasonSorted[0][0])} ×${seasonSorted[0][1].toFixed(2).replace(".", ",")} · ${calMonth(seasonSorted[seasonSorted.length - 1][0])} ×${seasonSorted[seasonSorted.length - 1][1].toFixed(2).replace(".", ",")}` : null,
                 formula: "meilleur et pire mois de l'année : moyenne de ce mois ÷ moyenne de tous les mois",
                 missing: `Il faut 24 mois de relevé (tu en as ${s.months}).`,
+              },
+              {
+                key: "market",
+                label: "Repère : marché français",
+                value: s.per1000 === null ? null : `${f.eurCents(s.per1000)} contre ≈ ${f.eurCents(FRANCE_2025_PER_1000.audio)}`,
+                formula: `ton revenu pour 1 000 streams contre la moyenne audio du marché français en 2025 (≈ ${f.eurCents(FRANCE_2025_PER_1000.premium)} en abonnement, ≈ ${f.eurCents(FRANCE_2025_PER_1000.free)} en gratuit ; ${SNEP_2025.source}). Indicatif : ton relevé couvre aussi d'autres pays, et ton distributeur ou ton label prend sa part.`,
+                missing: "Pas de streams dans ce relevé.",
               },
               ...(data.withheldEur ? [{ key: "withheld", label: "Retenues à la source", value: f.eur(data.withheldEur), formula: "retenues déclarées par ton distributeur sur la période (ex. droits d'auteur retenus)" }] : []),
             ]}
