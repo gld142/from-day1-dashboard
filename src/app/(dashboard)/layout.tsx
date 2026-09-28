@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
-import { customerContracts, customerRoster, customerSplits, customerView } from "@/lib/accounts/customer";
+import { customerContracts, customerRights, customerRoster, customerSplits, customerView } from "@/lib/accounts/customer";
 import { CustomerMode } from "@/lib/customer-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
 import { CUSTOMER_HOME, isCustomerPath, isStructurePath, needsStatement } from "@/lib/nav";
@@ -27,8 +27,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
     const on = (m: string) => path === m || path.startsWith(`${m}/`);
     const contracts = on("/contracts") ? await customerContracts(view.info.workspaceId) : null;
     const splits = on("/splits") ? await customerSplits(view.info.workspaceId) : null;
+    const rights = on("/rights") ? await customerRights(view.info.workspaceId) : null;
     return (
-      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits}>
+      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );

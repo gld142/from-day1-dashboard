@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
 import type { Contract } from "@/lib/contracts/contract";
+import type { RightsPayment } from "@/lib/rights/payment";
 import { normTitle, type Split } from "@/lib/splits/split";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
 import type { UserData } from "@/lib/userdata/store";
@@ -140,4 +141,23 @@ export async function customerSplits(workspaceId: string): Promise<CustomerSplit
     };
   }
   return { artists: artists ?? [], splits: (rows ?? []) as Split[], titles };
+}
+
+export type CustomerRights = { artists: { id: string; name: string }[]; payments: RightsPayment[] };
+
+/** Les versements de droits visibles (RLS), et les artistes à qui les rattacher. */
+export async function customerRights(workspaceId: string): Promise<CustomerRights> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: rows, error: pErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db
+      .from("rights_payments")
+      .select("id, updated_at, artist_id, organism, paid_on, amount_eur, period_label, notes")
+      .eq("workspace_id", workspaceId)
+      .order("paid_on", { ascending: false }),
+  ]);
+  if (aErr) throw aErr;
+  if (pErr) throw pErr;
+  const payments = (rows ?? []).map((r) => ({ ...r, amount_eur: Number(r.amount_eur) })) as RightsPayment[];
+  return { artists: artists ?? [], payments };
 }

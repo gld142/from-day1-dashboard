@@ -4,7 +4,7 @@ import { isCustomerPath, isStructurePath, needsStatement } from "../nav";
 describe("isCustomerPath — pages ouvertes aux clients", () => {
   it("relevé, revenus, streams et import : ouverts à tous les rôles", () => {
     for (const role of ["owner", "member", "artist"] as const) {
-      for (const path of ["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/import"]) expect(isCustomerPath(path, role)).toBe(true);
+      for (const path of ["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/import"]) expect(isCustomerPath(path, role)).toBe(true);
     }
   });
 
@@ -15,7 +15,7 @@ describe("isCustomerPath — pages ouvertes aux clients", () => {
   });
 
   it("les pages encore en démo restent fermées, même au propriétaire", () => {
-    for (const path of ["/pulse", "/audience", "/valuation", "/finances", "/rights", "/rosterx"]) {
+    for (const path of ["/pulse", "/audience", "/valuation", "/finances", "/copilot", "/rosterx"]) {
       expect(isCustomerPath(path, "owner")).toBe(false);
     }
   });
@@ -31,6 +31,6 @@ describe("isCustomerPath — pages ouvertes aux clients", () => {
 describe("needsStatement — renvoi vers /import quand l'artiste n'a pas de relevé", () => {
   it("pages qui lisent le relevé : oui ; import, roster, contrats : non", () => {
     for (const path of ["/mon-releve", "/revenue", "/streams", "/audit"]) expect(needsStatement(path)).toBe(true);
-    for (const path of ["/import", "/roster", "/contracts", "/splits"]) expect(needsStatement(path)).toBe(false);
+    for (const path of ["/import", "/roster", "/contracts", "/splits", "/rights"]) expect(needsStatement(path)).toBe(false);
   });
 });

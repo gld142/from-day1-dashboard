@@ -12,7 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
-import type { CustomerContracts, CustomerSplits } from "@/lib/accounts/customer";
+import type { CustomerContracts, CustomerRights, CustomerSplits } from "@/lib/accounts/customer";
 import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
@@ -30,6 +30,7 @@ const Ctx = createContext<CustomerInfo | null>(null);
 const RosterCtx = createContext<RosterArtist[] | null>(null);
 const ContractsCtx = createContext<CustomerContracts | null>(null);
 const SplitsCtx = createContext<CustomerSplits | null>(null);
+const RightsCtx = createContext<CustomerRights | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -51,6 +52,11 @@ export function useCustomerSplits(): CustomerSplits | null {
   return useContext(SplitsCtx);
 }
 
+/** Les versements de droits visibles (RLS) et les artistes — chargés sur /rights seulement. */
+export function useCustomerRights(): CustomerRights | null {
+  return useContext(RightsCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
@@ -59,6 +65,7 @@ export function CustomerMode({
   roster = null,
   contracts = null,
   splits = null,
+  rights = null,
   children,
 }: {
   info: CustomerInfo;
@@ -66,6 +73,7 @@ export function CustomerMode({
   roster?: RosterArtist[] | null;
   contracts?: CustomerContracts | null;
   splits?: CustomerSplits | null;
+  rights?: CustomerRights | null;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -78,7 +86,9 @@ export function CustomerMode({
       <RosterCtx.Provider value={roster}>
         <ContractsCtx.Provider value={contracts}>
           <SplitsCtx.Provider value={splits}>
-            <CustomerRoleProvider>{children}</CustomerRoleProvider>
+            <RightsCtx.Provider value={rights}>
+              <CustomerRoleProvider>{children}</CustomerRoleProvider>
+            </RightsCtx.Provider>
           </SplitsCtx.Provider>
         </ContractsCtx.Provider>
       </RosterCtx.Provider>

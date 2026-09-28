@@ -17,6 +17,8 @@
  * simulé pour la démo (« simulé ») tant qu'aucun vrai relevé de répartition
  * n'est importé ; les écarts comparent l'un à l'autre.
  */
+import { CustomerRights } from "@/components/modules/customer/customer-rights";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -82,7 +84,12 @@ const TOOLTIP_STYLE = {
   fontSize: 12,
 } as const;
 
+/** Mode client : le registre des versements de droits ; sinon la démo, intacte (invariants AGENTS.md). */
 export default function RightsPage() {
+  return useCustomer() ? <CustomerRights /> : <DemoRightsPage />;
+}
+
+function DemoRightsPage() {
   const t = useTranslations("rights");
   const tc = useTranslations("common");
   const locale = useLocale();
