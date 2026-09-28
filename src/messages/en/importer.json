@@ -88,6 +88,15 @@
     "rights": "French rights",
     "rightsValue": "what you received stops being a simulated statement",
     "streams": "Streams",
-    "streamsValue": "per-platform volumes get recalibrated"
-  }
+    "streamsValue": "per-platform volumes get recalibrated",
+    "subtitleCustomerFeeds": "What this statement feeds",
+    "statement": "My statement",
+    "statementValue": "your numbers month by month",
+    "revenueCustomerValue": "by platform, by track, by country",
+    "streamsCustomerValue": "by platform, month by month",
+    "auditCustomerValue": "payments to check",
+    "catalog": "Catalogue and splits",
+    "catalogValue": "what each track earns, and for whom"
+  },
+  "subtitleCustomer": "Drop your distributor statement: it feeds your pages."
 }

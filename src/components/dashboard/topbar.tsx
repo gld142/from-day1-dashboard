@@ -198,7 +198,9 @@ export function Topbar() {
           })}
         </div>
 
-        {/* Langue */}
+        {/* Langue — pas pour un client : ses pages ne sont qu'en français pour
+            l'instant ; changer de langue ne traduirait que le menu. */}
+        {!customer && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -224,6 +226,7 @@ export function Topbar() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+        )}
       </div>
     </header>
   );

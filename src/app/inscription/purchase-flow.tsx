@@ -45,10 +45,10 @@ const NEED_OPTIONS: { id: NonNullable<Lead["needs"]>[number]; label: string; hin
   { id: "streams", label: "Streams", hint: "Toutes plateformes, mois par mois" },
   { id: "revenue", label: "Revenus", hint: "Ce que ça rapporte vraiment" },
   { id: "rights", label: "Droits", hint: "SACEM, ADAMI, SPEDIDAM" },
-  { id: "audit", label: "Audit royalties", hint: "Les écarts à réclamer" },
-  { id: "splits", label: "Splits", hint: "Qui touche quoi, signé" },
+  { id: "audit", label: "Audit royalties", hint: "Les écarts à vérifier" },
+  { id: "splits", label: "Splits", hint: "Qui touche quoi, en euros" },
   { id: "roster", label: "Roster", hint: "Tous les artistes côte à côte" },
-  { id: "contracts", label: "Contrats", hint: "Échéances et clauses" },
+  { id: "contracts", label: "Contrats", hint: "Échéances, préavis, avances" },
 ];
 
 const STEP_TITLES = ["Profil", "Toi", "Structure", "Besoins", "Offre", "Paiement"] as const;

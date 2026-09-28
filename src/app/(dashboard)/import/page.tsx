@@ -145,7 +145,7 @@ export default function ImportPage() {
   if (userData?.active && !parsed) {
     return (
       <div className="mx-auto max-w-2xl">
-        <PageHeader title={t("title")} subtitle={t("subtitle")} />
+        <PageHeader title={t("title")} subtitle={customer ? t("subtitleCustomer") : t("subtitle")} />
 
         <section
           className={cn(
@@ -242,7 +242,7 @@ export default function ImportPage() {
   /* ─────────── État : upload / aperçu ─────────── */
   return (
     <div className="mx-auto max-w-2xl">
-      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+      <PageHeader title={t("title")} subtitle={customer ? t("subtitleCustomer") : t("subtitle")} />
 
       <p className="rise-in mb-4 flex items-center gap-2 rounded-lg border border-success/30 bg-success/5 px-3 py-2 text-[12px] text-muted-foreground">
         <Lock className="size-3.5 shrink-0 text-success" aria-hidden />
@@ -325,18 +325,33 @@ export default function ImportPage() {
 
           {/* Ce que l'import rend exact — la raison de le faire. */}
           <Sheet family="money" className="mt-3">
-            <SheetHeading action={customer ? t("impact.subtitleCustomer") : t("impact.subtitle")}>
-              {t("impact.title")}
+            <SheetHeading action={customer ? undefined : t("impact.subtitle")}>
+              {customer ? t("impact.subtitleCustomerFeeds") : t("impact.title")}
             </SheetHeading>
             <div className="mt-1">
-              {/* En mode client, seulement les pages qui lui sont ouvertes. */}
-              {(customer ? (["revenue", "streams"] as const) : (["revenue", "audit", "rights", "streams"] as const)).map((k) => (
+              {/* Client : ce que le relevé alimente VRAIMENT (rien n'est « estimé » chez lui).
+                  Démo : ce que l'import fait passer d'estimé à réel. */}
+              {(customer
+                ? ([
+                    ["statement", "statementValue"],
+                    ["revenue", "revenueCustomerValue"],
+                    ["streams", "streamsCustomerValue"],
+                    ["audit", "auditCustomerValue"],
+                    ["catalog", "catalogValue"],
+                  ] as const)
+                : ([
+                    ["revenue", "revenueValue"],
+                    ["audit", "auditValue"],
+                    ["rights", "rightsValue"],
+                    ["streams", "streamsValue"],
+                  ] as const)
+              ).map(([k, v]) => (
                 <div
                   key={k}
                   className="border-border/50 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-t py-2 text-[12.5px] first:border-t-0"
                 >
                   <b className="font-semibold">{t(`impact.${k}`)}</b>
-                  <span className="sheet-ink">{t(`impact.${k}Value`)}</span>
+                  <span className="sheet-ink">{t(`impact.${v}`)}</span>
                 </div>
               ))}
             </div>

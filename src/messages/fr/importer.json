@@ -88,6 +88,15 @@
     "rights": "Droits FR",
     "rightsValue": "le reçu cesse d'être un relevé simulé",
     "streams": "Streams",
-    "streamsValue": "les volumes par plateforme se recalent"
-  }
+    "streamsValue": "les volumes par plateforme se recalent",
+    "subtitleCustomerFeeds": "Ce que ce relevé alimente",
+    "statement": "Mon relevé",
+    "statementValue": "tes chiffres mois par mois",
+    "revenueCustomerValue": "par plateforme, par titre, par pays",
+    "streamsCustomerValue": "par plateforme, mois par mois",
+    "auditCustomerValue": "les paiements à vérifier",
+    "catalog": "Catalogue et splits",
+    "catalogValue": "ce que rapporte chaque titre, et à qui"
+  },
+  "subtitleCustomer": "Dépose le relevé de ton distributeur : il alimente tes pages."
 }
