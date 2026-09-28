@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerMarket } from "@/components/modules/customer/customer-market";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /market — Marché : parts du Top 200 Spotify France par groupe, artiste et
  * genre (relevé Kworb quotidien + labels ℗ / © lus sur Spotify), et lecture du
@@ -38,7 +41,7 @@ import { fmtPoints, fmtShare } from "@/components/modules/data/market-shared";
 const DIMS: MarketDimension[] = ["group", "artist", "genre"];
 const METRICS: MarketMetric[] = ["streams", "streams7d"];
 
-export default function MarketPage() {
+function MarketPage() {
   const locale = useLocale();
   const t = useTranslations("market");
   const tc = useTranslations("common");
@@ -347,4 +350,9 @@ export default function MarketPage() {
       </div>
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerMarket /> : <MarketPage />;
 }

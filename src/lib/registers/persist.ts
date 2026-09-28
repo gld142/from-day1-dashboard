@@ -1,5 +1,5 @@
 /**
- * Écriture des registres saisis (concerts, placements, sync), côté serveur :
+ * Écriture des registres saisis (concerts, placements, sync, saisies TikTok), côté serveur :
  * clé secrète APRÈS vérification propriétaire/équipe de l'espace de l'artiste.
  * Hors d'un fichier "use server" : ces fonctions ne sont appelées que par les
  * actions de chaque page, jamais directement depuis le navigateur.
@@ -11,7 +11,7 @@ import { userDb } from "@/lib/supabase/server";
 import { UUID } from "./common";
 
 export type RegisterFormState = { status: "idle" | "ok" | "error"; message?: string };
-type Table = "shows" | "placements" | "sync_licenses";
+type Table = "shows" | "placements" | "sync_licenses" | "tiktok_videos" | "tiktok_stats";
 const DENIED = "Seuls le propriétaire et l'équipe de l'espace peuvent modifier ces données.";
 
 export async function saveRow(

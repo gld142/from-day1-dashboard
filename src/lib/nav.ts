@@ -72,17 +72,25 @@ export type ModuleOverrides = Record<string, boolean>;
  * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
  * relevé mars–avril, et « mise à jour quotidienne ».
  */
-export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/calculator", "/tour", "/placements", "/sync", "/import"]);
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set([
+  "/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/calculator", "/tour", "/placements", "/sync", "/import",
+  // Marché & signaux, réels depuis le 29/09 : classements Apple Music relevés chaque nuit,
+  // TikTok collé / saisi, Day 1 Index calculé ; Algo et Discovery disent ce qui leur manque.
+  "/pulse", "/market", "/audience", "/algo-position", "/discovery", "/day1-index",
+]);
 
 /** Pages clientes qui ne lisent PAS le relevé de l'artiste ouvert : accessibles sans import. */
-export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts", "/splits", "/rights", "/finances", "/catalog", "/tour", "/placements", "/sync"]);
+export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set([
+  "/contracts", "/splits", "/rights", "/finances", "/catalog", "/tour", "/placements", "/sync",
+  "/pulse", "/market", "/audience", "/algo-position", "/discovery", "/day1-index",
+]);
 
 /**
  * Pages clientes de la VUE STRUCTURE : propriétaire et équipe seulement. Un
  * artiste invité ne voit que son relevé (la RLS ne lui donne de toute façon
  * que le sien). Roster rendu réel le 28/09 : relevés importés, fenêtre commune.
  */
-export const CUSTOMER_STRUCTURE_MODULES: ReadonlySet<string> = new Set(["/roster"]);
+export const CUSTOMER_STRUCTURE_MODULES: ReadonlySet<string> = new Set(["/roster", "/ar-watch"]);
 
 /** Accueil du mode client : le relevé mensuel, sans « hier » inventé (le Pulse est quotidien). */
 export const CUSTOMER_HOME = "/mon-releve";
@@ -97,6 +105,17 @@ export const CUSTOMER_FIGURES_ITEMS: NavItem[] = [
   { href: "/finances", labelKey: "items.finances", icon: ReceiptEuro },
   { href: "/calculator", labelKey: "items.calculatorReal", icon: Calculator },
 ];
+/** Marché & signaux (29/09) : sources publiques relevées chaque nuit + saisies TikTok. */
+export const CUSTOMER_SIGNALS_ITEMS: NavItem[] = [
+  { href: "/pulse", labelKey: "items.pulse", icon: Activity },
+  { href: "/market", labelKey: "items.market", icon: PieChart },
+  { href: "/audience", labelKey: "items.audience", icon: Globe2 },
+  { href: "/algo-position", labelKey: "items.algoposition", icon: Crosshair },
+  { href: "/discovery", labelKey: "items.discovery", icon: FlaskConical },
+  { href: "/day1-index", labelKey: "items.day1index", icon: Fingerprint },
+];
+/** A&R : vue structure (propriétaire et équipe). */
+export const CUSTOMER_AR_ITEM: NavItem = { href: "/ar-watch", labelKey: "items.arwatch", icon: Binoculars };
 /** Ce que le client saisit lui-même (contrats le 28/09 ; splits et droits à suivre). */
 export const CUSTOMER_BUSINESS_ITEMS: NavItem[] = [
   { href: "/contracts", labelKey: "items.contracts", icon: Handshake },

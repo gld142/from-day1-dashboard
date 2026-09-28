@@ -10,6 +10,10 @@ import type { RightsPayment } from "@/lib/rights/payment";
 import { normTitle, type Split } from "@/lib/splits/split";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
 import type { UserData } from "@/lib/userdata/store";
+import type { SourceRun } from "@/lib/collect/freshness";
+import type { ChartRow } from "@/lib/market/charts";
+import type { TikTokStat } from "@/lib/tiktok/forms";
+import type { TikTokVideo } from "@/lib/tiktok/video";
 
 /** Artiste ouvert dans le dashboard (choisi dans /espace). */
 export const ARTIST_COOKIE = "d1_artist";
@@ -239,3 +243,114 @@ async function customerRegister<T>(table: "shows" | "placements" | "sync_license
 export const customerShows = (ws: string) => customerRegister<Show>("shows", ws, "show_date");
 export const customerPlacements = (ws: string) => customerRegister<Placement>("placements", ws, "created_at");
 export const customerSync = (ws: string) => customerRegister<SyncLicense>("sync_licenses", ws, "created_at");
+
+/**
+ * Marché & signaux (Pulse, Marché, Audience, A&R) : classements publics relevés
+ * chaque nuit, journal de la collecte, vidéos TikTok collées et chiffres TikTok
+ * for Artists saisis (RLS : l'artiste invité ne voit que les siens), liste A&R
+ * (structure seulement). Chaque morceau n'est chargé que si la page le lit.
+ */
+export type ChartSnapshot = { latestDate: string | null; previousDate: string | null; latest: ChartRow[]; previous: ChartRow[] };
+export type WatchItem = { id: string; artist_name: string; notes: string | null; created_at: string };
+export type CustomerSignals = {
+  artists: { id: string; name: string }[];
+  runs: SourceRun[];
+  charts: ChartSnapshot | null;
+  videos: TikTokVideo[] | null;
+  stats: TikTokStat[] | null;
+  watchlist: WatchItem[] | null;
+};
+
+const CHART_COLUMNS = "country, chart_date, position, item_id, title, artist_name, artist_ext_id, url, genres, release_date";
+const PAGE = 1000; // plafond de lignes par requête côté Supabase
+
+async function chartRows(db: Awaited<ReturnType<typeof userDb>>, chartDate: string): Promise<ChartRow[]> {
+  const rows: ChartRow[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await db
+      .from("chart_entries")
+      .select(CHART_COLUMNS)
+      .eq("source", "apple_music")
+      .eq("chart", "most-played-songs")
+      .eq("chart_date", chartDate)
+      .order("country")
+      .order("position")
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    rows.push(...((data ?? []) as ChartRow[]));
+    if (!data || data.length < PAGE) return rows;
+  }
+}
+
+export async function customerSignals(workspaceId: string, needs: { charts?: boolean; tiktok?: boolean; watchlist?: boolean }): Promise<CustomerSignals> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: runs, error: rErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db.from("collection_runs").select("id, source, status, started_at, finished_at, rows, detail").order("id", { ascending: false }).limit(40),
+  ]);
+  if (aErr) throw aErr;
+  if (rErr) throw rErr;
+
+  let charts: ChartSnapshot | null = null;
+  if (needs.charts) {
+    const base = () => db.from("chart_entries").select("chart_date").eq("source", "apple_music").eq("chart", "most-played-songs").order("chart_date", { ascending: false }).limit(1);
+    const { data: last, error } = await base();
+    if (error) throw error;
+    const latestDate = (last?.[0]?.chart_date as string | undefined) ?? null;
+    let previousDate: string | null = null;
+    if (latestDate) {
+      const { data: prev, error: pErr } = await base().lt("chart_date", latestDate);
+      if (pErr) throw pErr;
+      previousDate = (prev?.[0]?.chart_date as string | undefined) ?? null;
+    }
+    const [latest, previous] = await Promise.all([latestDate ? chartRows(db, latestDate) : [], previousDate ? chartRows(db, previousDate) : []]);
+    charts = { latestDate, previousDate, latest, previous };
+  }
+
+  let videos: TikTokVideo[] | null = null;
+  let stats: TikTokStat[] | null = null;
+  if (needs.tiktok) {
+    const [{ data: v, error: vErr }, { data: s, error: sErr }] = await Promise.all([
+      db
+        .from("tiktok_videos")
+        .select("id, created_at, artist_id, video_id, video_url, author_name, author_handle, title, sound_title, sound_url, thumbnail_url, thumbnail_expires_at, status, checked_at, views, views_on, notes")
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false }),
+      db
+        .from("tiktok_stats")
+        .select("id, updated_at, artist_id, as_of, scope, track_title, period_days, followers, likes, video_views, profile_views, track_videos, track_views, notes")
+        .eq("workspace_id", workspaceId)
+        .order("as_of", { ascending: false }),
+    ]);
+    if (vErr) throw vErr;
+    if (sErr) throw sErr;
+    const num = (x: unknown) => (x === null || x === undefined ? null : Number(x));
+    videos = (v ?? []).map((r) => ({ ...r, views: num(r.views) })) as TikTokVideo[];
+    stats = (s ?? []).map((r) => ({
+      ...r,
+      period_days: num(r.period_days),
+      followers: num(r.followers),
+      likes: num(r.likes),
+      video_views: num(r.video_views),
+      profile_views: num(r.profile_views),
+      track_videos: num(r.track_videos),
+      track_views: num(r.track_views),
+    })) as TikTokStat[];
+  }
+
+  let watchlist: WatchItem[] | null = null;
+  if (needs.watchlist) {
+    const { data, error } = await db.from("ar_watchlist").select("id, artist_name, notes, created_at").eq("workspace_id", workspaceId).order("created_at", { ascending: false });
+    if (error) throw error;
+    watchlist = (data ?? []) as WatchItem[];
+  }
+
+  return {
+    artists: artists ?? [],
+    runs: (runs ?? []).map((r) => ({ ...r, id: String(r.id) })) as SourceRun[],
+    charts,
+    videos,
+    stats,
+    watchlist,
+  };
+}

@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerAr } from "@/components/modules/customer/customer-ar";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /ar-watch — qui monte, et à quelle vitesse. Refondue le 23/09.
  * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
@@ -47,7 +50,7 @@ const SORTERS: Record<SortKey, (a: EmergingArtist, b: EmergingArtist) => number>
   index: (a, b) => b.day1Index - a.day1Index,
 };
 
-export default function ArWatchPage() {
+function ArWatchPage() {
   const t = useTranslations("arwatch");
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -279,4 +282,9 @@ export default function ArWatchPage() {
       <ScoringDialog artist={scoring} onClose={() => setScoring(null)} />
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerAr /> : <ArWatchPage />;
 }

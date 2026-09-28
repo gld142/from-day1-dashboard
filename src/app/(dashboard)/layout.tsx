@@ -10,6 +10,7 @@ import {
   customerRights,
   customerRoster,
   customerShows,
+  customerSignals,
   customerSplits,
   customerSync,
   customerView,
@@ -35,12 +36,26 @@ export default async function DashboardLayout({ children }: { children: React.Re
     if (!isCustomerPath(path, view.info.role)) redirect(view.data ? CUSTOMER_HOME : "/import");
     // La vue structure et les contrats ne dépendent pas du relevé de l'artiste ouvert ; les autres pages, si.
     if (!view.data && needsStatement(path)) redirect("/import");
-    const roster = isStructurePath(path) ? await customerRoster(view.info.workspaceId) : null;
     const on = (m: string) => path === m || path.startsWith(`${m}/`);
+    // Le Day 1 Index compare les artistes du roster : leurs relevés et leurs revenus saisis.
+    const roster = isStructurePath(path) || on("/day1-index") ? await customerRoster(view.info.workspaceId) : null;
     const contracts = on("/contracts") ? await customerContracts(view.info.workspaceId) : null;
     const splits = on("/splits") || on("/catalog") ? await customerSplits(view.info.workspaceId) : null;
     const rights = on("/rights") ? await customerRights(view.info.workspaceId) : null;
-    const finances = on("/finances") ? await customerFinances(view.info.workspaceId) : null;
+    const finances = on("/finances") || on("/day1-index") ? await customerFinances(view.info.workspaceId) : null;
+    // Marché & signaux : seulement ce que la page lit.
+    const signalsNeeds = on("/pulse")
+      ? { charts: true, tiktok: true }
+      : on("/market")
+        ? { charts: true }
+        : on("/audience")
+          ? { tiktok: true }
+          : on("/ar-watch")
+            ? { charts: true, watchlist: true }
+            : on("/algo-position") || on("/discovery") || on("/day1-index")
+              ? {}
+              : null;
+    const signals = signalsNeeds ? await customerSignals(view.info.workspaceId, signalsNeeds) : null;
     const ws = view.info.workspaceId;
     const registers = {
       ...(on("/tour") ? { shows: await customerShows(ws) } : {}),
@@ -48,7 +63,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       ...(on("/sync") ? { sync: await customerSync(ws) } : {}),
     };
     return (
-      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights} finances={finances} registers={registers}>
+      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights} finances={finances} registers={registers} signals={signals}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );

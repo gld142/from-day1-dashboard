@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerAudience } from "@/components/modules/customer/customer-audience";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /audience — qui écoute, où, et comment ils découvrent. Refondue le 23/09.
  * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
@@ -42,7 +45,7 @@ import { DiscoveryDonut } from "@/components/modules/data/discovery-donut";
 import { TopCities } from "@/components/modules/data/top-cities";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 
-export default function AudiencePage() {
+function AudiencePage() {
   const t = useTranslations("audience");
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -219,4 +222,9 @@ export default function AudiencePage() {
       </div>
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerAudience /> : <AudiencePage />;
 }

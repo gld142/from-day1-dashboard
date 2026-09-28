@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerIndex } from "@/components/modules/customer/customer-index";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /day1-index — un score, et les cinq choses qui le font bouger.
  * Refondue le 23/09. Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
@@ -84,7 +87,7 @@ function subScoresFor(artistId: string): SubScores {
   };
 }
 
-export default function Day1IndexPage() {
+function Day1IndexPage() {
   const t = useTranslations("day1index");
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -350,4 +353,9 @@ export default function Day1IndexPage() {
       </div>
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerIndex /> : <Day1IndexPage />;
 }

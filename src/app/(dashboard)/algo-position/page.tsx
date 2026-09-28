@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerAlgo } from "@/components/modules/customer/customer-algo";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /algo-position — "X-RAY" : où l'artiste se situe dans l'algorithme Spotify.
  * Part algorithmique, décomposition par surface de reco, évolution 90 j,
@@ -75,7 +78,7 @@ function latestRelease(artistId: string) {
   )[0];
 }
 
-export default function AlgoPositionPage() {
+function AlgoPositionPage() {
   const t = useTranslations("algoposition");
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -534,4 +537,9 @@ export default function AlgoPositionPage() {
       )}
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerAlgo /> : <AlgoPositionPage />;
 }

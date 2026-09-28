@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerPulse } from "@/components/modules/customer/customer-pulse";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /pulse — le rituel quotidien, refondu le 22/09.
  * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
@@ -136,7 +139,7 @@ function pendingRights(statements: ReturnType<typeof rightsStatements>): number 
     .reduce((s, r) => s + Math.max(0, r.expected - r.received), 0);
 }
 
-export default function PulsePage() {
+function PulsePage() {
   const t = useTranslations("pulse");
   const locale = useLocale();
   const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId } = useRole();
@@ -1399,4 +1402,9 @@ export default function PulsePage() {
       )}
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerPulse /> : <PulsePage />;
 }

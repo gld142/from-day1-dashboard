@@ -12,7 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
-import type { CustomerContracts, CustomerFinances, CustomerRegister, CustomerRights, CustomerSplits } from "@/lib/accounts/customer";
+import type { CustomerContracts, CustomerFinances, CustomerRegister, CustomerRights, CustomerSignals, CustomerSplits } from "@/lib/accounts/customer";
 import type { Placement } from "@/lib/registers/placements";
 import type { Show } from "@/lib/registers/shows";
 import type { SyncLicense } from "@/lib/registers/sync";
@@ -42,6 +42,7 @@ export type CustomerRegisters = {
   sync?: CustomerRegister<SyncLicense>;
 };
 const RegistersCtx = createContext<CustomerRegisters>({});
+const SignalsCtx = createContext<CustomerSignals | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -77,6 +78,11 @@ export function useCustomerRegisters(): CustomerRegisters {
   return useContext(RegistersCtx);
 }
 
+/** Marché & signaux : classements relevés la nuit, journal de collecte, TikTok, liste A&R — chargés sur ces pages seulement. */
+export function useCustomerSignals(): CustomerSignals | null {
+  return useContext(SignalsCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
@@ -88,6 +94,7 @@ export function CustomerMode({
   rights = null,
   finances = null,
   registers = {},
+  signals = null,
   children,
 }: {
   info: CustomerInfo;
@@ -98,6 +105,7 @@ export function CustomerMode({
   rights?: CustomerRights | null;
   finances?: CustomerFinances | null;
   registers?: CustomerRegisters;
+  signals?: CustomerSignals | null;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -113,7 +121,9 @@ export function CustomerMode({
             <RightsCtx.Provider value={rights}>
               <FinancesCtx.Provider value={finances}>
                 <RegistersCtx.Provider value={registers}>
-                  <CustomerRoleProvider>{children}</CustomerRoleProvider>
+                  <SignalsCtx.Provider value={signals}>
+                    <CustomerRoleProvider>{children}</CustomerRoleProvider>
+                  </SignalsCtx.Provider>
                 </RegistersCtx.Provider>
               </FinancesCtx.Provider>
             </RightsCtx.Provider>

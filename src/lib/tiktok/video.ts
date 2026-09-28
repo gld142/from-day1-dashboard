@@ -9,6 +9,26 @@
 import { FetchError, fetchWithRetry, type RetryOptions } from "@/lib/collect/fetch";
 
 export type TikTokRef = { handle: string; videoId: string; url: string };
+/** Une vidéo collée, telle que lue en base (tiktok_videos). */
+export type TikTokVideo = {
+  id: string;
+  created_at: string;
+  artist_id: string;
+  video_id: string;
+  video_url: string;
+  author_name: string | null;
+  author_handle: string | null;
+  title: string | null;
+  sound_title: string | null;
+  sound_url: string | null;
+  thumbnail_url: string | null;
+  thumbnail_expires_at: string | null;
+  status: "ok" | "gone";
+  checked_at: string;
+  views: number | null;
+  views_on: string | null;
+  notes: string | null;
+};
 export type OembedInfo = {
   author_name: string | null;
   author_handle: string | null;

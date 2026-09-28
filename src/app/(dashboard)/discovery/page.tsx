@@ -1,5 +1,8 @@
 "use client";
 
+import { CustomerDiscovery } from "@/components/modules/customer/customer-discovery";
+import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
+
 /**
  * /discovery — le potentiel des inédits avant la sortie. Refondue le 23/09.
  * Spec : docs/superpowers/specs/2026-09-22-pulse-refonte-design.md
@@ -80,7 +83,7 @@ function DemoMeta({ demo, bpmLabel }: { demo: DemoTrack; bpmLabel: string }) {
   );
 }
 
-export default function DiscoveryPage() {
+function DiscoveryPage() {
   const t = useTranslations("discovery");
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -424,4 +427,9 @@ export default function DiscoveryPage() {
       </div>
     </div>
   );
+}
+
+/** Mode client : données réelles seulement (29/09) ; sinon la démo, intacte. */
+export default function Page() {
+  return useCustomerMode() ? <CustomerDiscovery /> : <DiscoveryPage />;
 }
