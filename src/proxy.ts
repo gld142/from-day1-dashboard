@@ -1,24 +1,31 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { demoEnabled } from "@/lib/demo-mode";
 import { GATE_COOKIE, GATE_PATH, isValidToken } from "@/lib/gate";
 
 /** Parcours d'achat et API qui le servent : publics, pour des visiteurs pas encore clients. */
 const PUBLIC = /^\/(acces|inscription|api\/leads|api\/checkout|api\/stripe)(\/|$)/;
 /** Espace client : protégé par la connexion Supabase (vérifiée dans chaque page), pas par la porte. */
 const ACCOUNT = /^\/(espace|connexion|auth|invitation|api\/imports)(\/|$)/;
+/** Pages qui n'existent que pour la démo : la porte à mot de passe et l'écran d'accueil co-brandé. */
+const DEMO_ONLY = /^\/(acces|welcome)(\/|$)/;
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  // Démo éteinte (défaut du produit) : ses pages n'existent pas, et on ne s'y
+  // fait jamais renvoyer — la connexion client à la place.
+  if (!demoEnabled() && DEMO_ONLY.test(pathname)) return NextResponse.redirect(new URL("/connexion", request.url));
   if (PUBLIC.test(pathname)) return NextResponse.next();
   if (ACCOUNT.test(pathname)) return (await withSession(request)).response;
 
   // Dashboard : la démo derrière le mot de passe, OU un client connecté (le layout
   // choisit le mode et vérifie l'abonnement). Le chemin lui est transmis.
-  if (await isValidToken(request.cookies.get(GATE_COOKIE)?.value)) {
+  if (demoEnabled() && (await isValidToken(request.cookies.get(GATE_COOKIE)?.value))) {
     return (await withSession(request, pathname)).response;
   }
   const { response, signedIn } = await withSession(request, pathname);
   if (signedIn) return response;
+  if (!demoEnabled()) return NextResponse.redirect(new URL("/connexion", request.url));
   const url = new URL(GATE_PATH, request.url);
   url.searchParams.set("next", pathname + request.nextUrl.search);
   return NextResponse.redirect(url);

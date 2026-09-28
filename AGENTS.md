@@ -88,6 +88,10 @@ Décidé avec Gaël le 28/09/2026 : la démo sert aux présentations et ne bouge
 - Une adresse `*.vercel.app` ajoutée à la main tombe derrière la connexion Vercel
   (protection du compte) : essayé le 28/09, inutilisable pour une présentation.
 
-Dans le produit, le mode démo (mot de passe → données de démo) reste en place :
-chaque module rendu réel lit les données du client en mode client, et garde les
-données de démo sinon.
+Dans le produit, la démo est ÉTEINTE par défaut (décidé le 28/09 : « plus rien
+de démo ou de simulé pour le client ») : tout visiteur non connecté va sur
+/connexion, /acces et /welcome n'existent plus, le cookie de la porte n'ouvre
+rien. `DEMO_MODE=on` (src/lib/demo-mode.ts) la rallume pour travailler dessus en
+local ; les pages gardent leur branche démo derrière `useCustomer()`.
+Vérifié le 28/09 : anonyme, ancien cookie de démo → /connexion ; client connecté
+→ ses pages (jamais /pulse, /valuation…) ; DEMO_MODE=on → porte /acces de retour.

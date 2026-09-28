@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { demoEnabled } from "@/lib/demo-mode";
 import { CobrandScreen } from "@/components/modules/welcome/cobrand-screen";
 import { resolveSource } from "@/components/modules/welcome/sources";
 import { ARTISTS, auditFindings } from "@/lib/demo/api";
@@ -18,6 +20,8 @@ export default async function WelcomePage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  // Écran de la démo (chiffres fictifs) : inexistant quand la démo est éteinte.
+  if (!demoEnabled()) redirect("/connexion");
   const source = resolveSource((await searchParams).source);
 
   /* Le « premier insight » cite l'écart d'audit réel du roster — écarts DSP

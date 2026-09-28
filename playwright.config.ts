@@ -43,6 +43,9 @@ export default defineConfig({
     // NEXT_DIST_DIR : distDir dédié (.next-e2e) — Next 16 verrouille le
     // distDir par instance de `next dev`, ce qui empêcherait le serveur de
     // test de démarrer si un dev server tourne déjà sur .next (port 3000).
-    env: { PORT: String(PORT), NEXT_DIST_DIR: ".next-e2e" },
+    // Les specs e2e testent la DÉMO : elle est éteinte par défaut dans le produit
+    // (src/lib/demo-mode.ts). NB : elles ne passent pas encore la porte à mot de
+    // passe ajoutée le 25/09 (cookie d1_gate) — à brancher.
+    env: { PORT: String(PORT), NEXT_DIST_DIR: ".next-e2e", DEMO_MODE: "on" },
   },
 });

@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
 import { customerContracts, customerFinances, customerRights, customerRoster, customerSplits, customerView } from "@/lib/accounts/customer";
 import { CustomerMode } from "@/lib/customer-mode";
+import { demoEnabled } from "@/lib/demo-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
 import { CUSTOMER_HOME, isCustomerPath, isStructurePath, needsStatement } from "@/lib/nav";
 
@@ -12,7 +13,8 @@ import { CUSTOMER_HOME, isCustomerPath, isStructurePath, needsStatement } from "
  * Deux mondes derrière le même dashboard :
  *  - un client connecté → mode client, SES chiffres, pages branchées seulement
  *    (le roster, vue structure, pour le propriétaire et l'équipe) ;
- *  - sinon, la démo derrière le mot de passe (inchangée).
+ *  - sinon, la démo derrière le mot de passe — SEULEMENT si DEMO_MODE=on
+ *    (éteinte par défaut dans le produit : sinon, la connexion client).
  */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const view = await customerView();
@@ -36,6 +38,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     );
   }
 
+  if (!demoEnabled()) redirect("/connexion");
   if (!(await isValidToken((await cookies()).get(GATE_COOKIE)?.value))) redirect("/acces");
   return <Shell>{children}</Shell>;
 }
