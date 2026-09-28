@@ -10,6 +10,7 @@ import { appleMusicCollector, type ChartEntry } from "./apple-music";
 import { ecbFxCollector, type FxRow } from "./ecb-fx";
 import { runCollectors, type Collector, type Journal } from "./run";
 import { supabaseTikTokStore, tiktokRefreshCollector } from "./tiktok-refresh";
+import { supabaseWikiStore, wikipediaCollector } from "./wikipedia-collect";
 
 export function supabaseJournal(db: SupabaseClient): Journal {
   return {
@@ -54,6 +55,7 @@ export function allCollectors(db: SupabaseClient): Collector[] {
     appleMusicCollector({ save: (country, date, rows) => saveChart(db, country, date, rows) }),
     tiktokRefreshCollector(supabaseTikTokStore(db)),
     ecbFxCollector({ save: (rows) => saveFx(db, rows) }),
+    wikipediaCollector(supabaseWikiStore(db)),
   ];
 }
 

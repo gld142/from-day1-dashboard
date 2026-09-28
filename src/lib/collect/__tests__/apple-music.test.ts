@@ -77,6 +77,20 @@ describe("collecteur Apple Music", () => {
     expect(Object.keys(saved).sort()).toEqual(["be", "ca", "ch", "ci", "de", "fr", "gb", "sn", "us"]);
   });
 
+  it("un pays qui échoue puis répond à la seconde chance → passage complet", async () => {
+    let chTries = 0;
+    const collector = appleMusicCollector({
+      fetchJson: async (country) => {
+        if (country === "ch" && chTries++ === 0) throw new Error("délai dépassé");
+        return feedFor(country);
+      },
+      save: async () => {},
+      now: () => new Date("2026-09-29T04:00:00Z"),
+    });
+    expect(await collector.run()).toEqual({ rows: 30 });
+    expect(chTries).toBe(2);
+  });
+
   it("tous les pays en panne → erreur (pas un « ok » à 0 ligne)", async () => {
     const collector = appleMusicCollector({
       fetchJson: async () => {

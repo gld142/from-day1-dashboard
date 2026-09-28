@@ -94,13 +94,26 @@ export function appleMusicCollector(deps: {
     run: async () => {
       const chartDate = parisDate((deps.now ?? (() => new Date()))());
       // Les pays en parallèle : un pays lent ne fait pas attendre les autres.
-      const results = await Promise.allSettled(
+      const results: PromiseSettledResult<number>[] = await Promise.allSettled(
         APPLE_COUNTRIES.map(async (country) => {
           const rows = parseAppleChart(await fetchJson(country), country, chartDate);
           await deps.save(country, chartDate, rows);
           return rows.length;
         }),
       );
+      // Seconde chance, une fois les autres pays finis : mesuré le 28/09, la Suisse a expiré
+      // 4 fois de suite pendant que les 9 autres pays répondaient.
+      for (let i = 0; i < results.length; i++) {
+        if (results[i].status !== "rejected") continue;
+        const country = APPLE_COUNTRIES[i];
+        try {
+          const rows = parseAppleChart(await fetchJson(country), country, chartDate);
+          await deps.save(country, chartDate, rows);
+          results[i] = { status: "fulfilled", value: rows.length };
+        } catch (e) {
+          results[i] = { status: "rejected", reason: e };
+        }
+      }
       const failed = results.flatMap((r, i) => (r.status === "rejected" ? [`${APPLE_COUNTRIES[i]} : ${r.reason instanceof Error ? r.reason.message : String(r.reason)}`] : []));
       const rows = results.reduce((n, r) => n + (r.status === "fulfilled" ? r.value : 0), 0);
       if (failed.length === APPLE_COUNTRIES.length) throw new Error(`Apple Music : aucun pays relevé — ${failed.join(" ; ")}`);
