@@ -72,7 +72,7 @@ export type ModuleOverrides = Record<string, boolean>;
  * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
  * relevé mars–avril, et « mise à jour quotidienne ».
  */
-export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/import"]);
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/import"]);
 
 /**
  * Pages clientes de la VUE STRUCTURE : propriétaire et équipe seulement. Un
@@ -85,10 +85,11 @@ export const CUSTOMER_STRUCTURE_MODULES: ReadonlySet<string> = new Set(["/roster
 export const CUSTOMER_HOME = "/mon-releve";
 export const CUSTOMER_HOME_ITEM: NavItem = { href: CUSTOMER_HOME, labelKey: "items.statement", icon: FileText };
 export const CUSTOMER_ROSTER_ITEM: NavItem = { href: "/roster", labelKey: "items.roster", icon: UsersRound };
-/** Revenus et Streams rendus réels le 28/09 sur les relevés mensuels (pas « live »). */
+/** Revenus, Streams et Audit rendus réels le 28/09 sur les relevés mensuels (pas « live »). */
 export const CUSTOMER_FIGURES_ITEMS: NavItem[] = [
   { href: "/revenue", labelKey: "items.revenue", icon: BadgeEuro },
   { href: "/streams", labelKey: "items.streamsMonthly", icon: AudioWaveform },
+  { href: "/audit", labelKey: "items.audit", icon: ShieldCheck },
 ];
 
 const under = (path: string, modules: ReadonlySet<string>) =>

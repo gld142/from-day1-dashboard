@@ -4,7 +4,7 @@ import { isCustomerPath, isStructurePath } from "../nav";
 describe("isCustomerPath — pages ouvertes aux clients", () => {
   it("relevé, revenus, streams et import : ouverts à tous les rôles", () => {
     for (const role of ["owner", "member", "artist"] as const) {
-      for (const path of ["/mon-releve", "/revenue", "/streams", "/import"]) expect(isCustomerPath(path, role)).toBe(true);
+      for (const path of ["/mon-releve", "/revenue", "/streams", "/audit", "/import"]) expect(isCustomerPath(path, role)).toBe(true);
     }
   });
 

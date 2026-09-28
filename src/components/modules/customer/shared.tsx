@@ -32,6 +32,10 @@ export function useFormats() {
       new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1, signDisplay: sign ? "exceptZero" : "auto" }).format(share),
     compact: (n: number) => fmtCompact(locale, n),
     month: (m: string) => fmtMonth(locale, m),
+    /** « avril 2026 » — pour un texte adressé à quelqu'un (message au distributeur). */
+    monthLong: (m: string) =>
+      new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${m}-01T00:00:00Z`)),
+    int: (n: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(n),
     country: (code: string) => {
       try {
         return new Intl.DisplayNames([locale], { type: "region" }).of(code) ?? code;

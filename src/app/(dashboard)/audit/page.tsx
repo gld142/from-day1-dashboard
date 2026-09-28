@@ -13,6 +13,8 @@
  * Le chiffre reste rouge, parce qu'il appelle une action ; il n'est plus
  * présenté comme de l'argent acquis.
  */
+import { CustomerAudit } from "@/components/modules/customer/customer-audit";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ShieldCheck } from "lucide-react";
@@ -29,7 +31,12 @@ import { useRole } from "@/lib/role";
 
 type Group = { artist: Artist; findings: AuditFinding[]; gap: number };
 
+/** Mode client : l'audit du relevé importé ; sinon la démo, intacte. */
 export default function AuditPage() {
+  return useCustomer() ? <CustomerAudit /> : <DemoAuditPage />;
+}
+
+function DemoAuditPage() {
   const t = useTranslations("audit");
   const tc = useTranslations("common");
   const locale = useLocale();
