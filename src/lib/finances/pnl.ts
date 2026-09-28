@@ -1,7 +1,8 @@
 /**
  * Résultat d'un client, mois par mois, sur 12 mois : ce qui rentre (revenus
- * des relevés distributeur + droits saisis) moins ce qui sort (dépenses
- * saisies). Pour la structure entière, ou pour un artiste.
+ * des relevés distributeur + droits + cachets de concerts + licences sync
+ * encaissées) moins ce qui sort (dépenses saisies). Pour la structure entière,
+ * ou pour un artiste.
  *
  * À dire sur la page : les revenus distributeur sont rangés au mois de VENTE
  * (tel que le relevé les déclare), les droits au mois de VERSEMENT, les
@@ -63,27 +64,35 @@ export type PnlInput = {
   today: string;
   statements: { artistId: string; revenueByMonth: Record<string, number> }[];
   rights: { artistId: string; paid_on: string; amount_eur: number }[];
+  /** Cachets des concerts passés (au mois du concert). */
+  shows?: { artistId: string; show_date: string; fee_eur: number }[];
+  /** Licences sync encaissées (au mois d'encaissement). */
+  sync?: { artistId: string; paid_on: string; amount_eur: number }[];
   expenses: Expense[];
   /** "all" : toute la structure (frais généraux compris) ; sinon l'id d'un artiste. */
   scope: "all" | string;
 };
 
-export function pnl({ today, statements, rights, expenses, scope }: PnlInput) {
+export function pnl({ today, statements, rights, shows = [], sync = [], expenses, scope }: PnlInput) {
   const months = monthsEnding(today.slice(0, 7), 12);
   const inScope = (artistId: string | null) => (scope === "all" ? true : artistId === scope);
   const st = statements.filter((s) => inScope(s.artistId));
   const rg = rights.filter((r) => inScope(r.artistId));
   const ex = expenses.filter((e) => inScope(e.artist_id));
+  const sh = shows.filter((x) => inScope(x.artistId) && x.show_date <= today);
+  const sy = sync.filter((x) => inScope(x.artistId));
 
   const rows = months.map((month) => {
     const statementsRev = round2(st.reduce((s, x) => s + (x.revenueByMonth[month] ?? 0), 0));
     const rightsRev = round2(rg.filter((r) => r.paid_on.slice(0, 7) === month).reduce((s, r) => s + r.amount_eur, 0));
     const spent = round2(ex.filter((e) => e.spent_on.slice(0, 7) === month).reduce((s, e) => s + e.amount_eur, 0));
-    const revenue = round2(statementsRev + rightsRev);
-    return { month, statements: statementsRev, rights: rightsRev, revenue, expenses: spent, net: round2(revenue - spent) };
+    const concerts = round2(sh.filter((x) => x.show_date.slice(0, 7) === month).reduce((s, x) => s + x.fee_eur, 0));
+    const syncRev = round2(sy.filter((x) => x.paid_on.slice(0, 7) === month).reduce((s, x) => s + x.amount_eur, 0));
+    const revenue = round2(statementsRev + rightsRev + concerts + syncRev);
+    return { month, statements: statementsRev, rights: rightsRev, concerts, sync: syncRev, revenue, expenses: spent, net: round2(revenue - spent) };
   });
 
-  const sum = (k: "statements" | "rights" | "revenue" | "expenses" | "net") => round2(rows.reduce((s, r) => s + r[k], 0));
+  const sum = (k: "statements" | "rights" | "concerts" | "sync" | "revenue" | "expenses" | "net") => round2(rows.reduce((s, r) => s + r[k], 0));
   const revenue = sum("revenue");
   const net = sum("net");
 
@@ -95,7 +104,16 @@ export function pnl({ today, statements, rights, expenses, scope }: PnlInput) {
   return {
     months,
     rows,
-    totals: { statements: sum("statements"), rights: sum("rights"), revenue, expenses: sum("expenses"), net, margin: revenue > 0 ? net / revenue : null },
+    totals: {
+      statements: sum("statements"),
+      rights: sum("rights"),
+      concerts: sum("concerts"),
+      sync: sum("sync"),
+      revenue,
+      expenses: sum("expenses"),
+      net,
+      margin: revenue > 0 ? net / revenue : null,
+    },
     byCategory: [...cat.entries()].map(([category, amount]) => ({ category, amount })).sort((a, b) => b.amount - a.amount),
     /** Dernier mois couvert par les relevés du périmètre : après, les revenus distributeur manquent encore. */
     statementsUntil: lastStatement,

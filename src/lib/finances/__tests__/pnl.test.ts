@@ -46,9 +46,9 @@ describe("pnl", () => {
 
   it("structure : relevés + droits − dépenses (frais généraux compris), mois par mois", () => {
     const p = pnl({ ...input, scope: "all" });
-    expect(p.rows.find((r) => r.month === "2026-07")).toEqual({ month: "2026-07", statements: 170, rights: 30, revenue: 200, expenses: 200, net: 0 });
+    expect(p.rows.find((r) => r.month === "2026-07")).toEqual({ month: "2026-07", statements: 170, rights: 30, concerts: 0, sync: 0, revenue: 200, expenses: 200, net: 0 });
     expect(p.rows.find((r) => r.month === "2026-09")).toMatchObject({ revenue: 0, expenses: 40, net: -40 });
-    expect(p.totals).toEqual({ statements: 270, rights: 30, revenue: 300, expenses: 320, net: -20, margin: expect.closeTo(-20 / 300) });
+    expect(p.totals).toEqual({ statements: 270, rights: 30, concerts: 0, sync: 0, revenue: 300, expenses: 320, net: -20, margin: expect.closeTo(-20 / 300) });
     expect(p.byCategory).toEqual([
       { category: "studio", amount: 200 },
       { category: "clip", amount: 80 },
@@ -68,5 +68,24 @@ describe("pnl", () => {
 
   it("sans revenus : marge inconnue (null), pas une division par zéro", () => {
     expect(pnl({ today: TODAY, statements: [], rights: [], expenses: [exp(A1, "2026-07-10", 10)], scope: "all" }).totals.margin).toBeNull();
+  });
+});
+
+describe("pnl — concerts et sync", () => {
+  it("cachets des concerts PASSÉS au mois du concert, licences sync au mois d'encaissement", () => {
+    const p = pnl({
+      today: TODAY,
+      statements: [],
+      rights: [],
+      shows: [
+        { artistId: A1, show_date: "2026-05-10", fee_eur: 3500 },
+        { artistId: A1, show_date: "2026-09-30", fee_eur: 9999 }, // ce mois-ci mais à venir : pas encore un revenu
+      ],
+      sync: [{ artistId: A2, paid_on: "2026-08-01", amount_eur: 2000 }],
+      expenses: [],
+      scope: "all",
+    });
+    expect(p.rows.find((r) => r.month === "2026-05")).toMatchObject({ concerts: 3500, revenue: 3500 });
+    expect(p.totals).toMatchObject({ concerts: 3500, sync: 2000, revenue: 5500 });
   });
 });

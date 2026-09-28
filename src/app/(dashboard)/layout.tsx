@@ -3,7 +3,17 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
-import { customerContracts, customerFinances, customerRights, customerRoster, customerSplits, customerView } from "@/lib/accounts/customer";
+import {
+  customerContracts,
+  customerFinances,
+  customerPlacements,
+  customerRights,
+  customerRoster,
+  customerShows,
+  customerSplits,
+  customerSync,
+  customerView,
+} from "@/lib/accounts/customer";
 import { CustomerMode } from "@/lib/customer-mode";
 import { demoEnabled } from "@/lib/demo-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
@@ -31,8 +41,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
     const splits = on("/splits") || on("/catalog") ? await customerSplits(view.info.workspaceId) : null;
     const rights = on("/rights") ? await customerRights(view.info.workspaceId) : null;
     const finances = on("/finances") ? await customerFinances(view.info.workspaceId) : null;
+    const ws = view.info.workspaceId;
+    const registers = {
+      ...(on("/tour") ? { shows: await customerShows(ws) } : {}),
+      ...(on("/placements") ? { placements: await customerPlacements(ws) } : {}),
+      ...(on("/sync") ? { sync: await customerSync(ws) } : {}),
+    };
     return (
-      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights} finances={finances}>
+      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights} finances={finances} registers={registers}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );

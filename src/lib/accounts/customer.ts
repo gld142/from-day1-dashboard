@@ -3,6 +3,9 @@ import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
 import type { Contract } from "@/lib/contracts/contract";
 import type { Expense } from "@/lib/finances/pnl";
+import type { Placement } from "@/lib/registers/placements";
+import type { Show } from "@/lib/registers/shows";
+import type { SyncLicense } from "@/lib/registers/sync";
 import type { RightsPayment } from "@/lib/rights/payment";
 import { normTitle, type Split } from "@/lib/splits/split";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
@@ -168,21 +171,29 @@ export type CustomerFinances = {
   expenses: Expense[];
   rights: { artistId: string; paid_on: string; amount_eur: number }[];
   statements: { artistId: string; revenueByMonth: Record<string, number> }[];
+  shows: { artistId: string; show_date: string; fee_eur: number }[];
+  sync: { artistId: string; paid_on: string; amount_eur: number }[];
 };
 
 /** Dépenses, droits et revenus des derniers relevés visibles (RLS) — pour le résultat mois par mois. */
 export async function customerFinances(workspaceId: string): Promise<CustomerFinances> {
   const db = await userDb();
-  const [{ data: artists, error: aErr }, { data: ex, error: eErr }, { data: rg, error: rErr }, { data: imports, error: iErr }] = await Promise.all([
+  const [
+    { data: artists, error: aErr },
+    { data: ex, error: eErr },
+    { data: rg, error: rErr },
+    { data: imports, error: iErr },
+    { data: sh, error: shErr },
+    { data: sy, error: syErr },
+  ] = await Promise.all([
     db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
     db.from("expenses").select("id, updated_at, artist_id, category, spent_on, amount_eur, label, notes").eq("workspace_id", workspaceId).order("spent_on", { ascending: false }),
     db.from("rights_payments").select("artist_id, paid_on, amount_eur").eq("workspace_id", workspaceId),
     db.from("artist_imports").select("artist_id, revenueByMonth:data->revenueByMonth").eq("workspace_id", workspaceId).order("created_at", { ascending: false }),
+    db.from("shows").select("artist_id, show_date, fee_eur").eq("workspace_id", workspaceId).not("fee_eur", "is", null),
+    db.from("sync_licenses").select("artist_id, paid_on, fee_master_eur, fee_publishing_eur").eq("workspace_id", workspaceId).eq("status", "paid"),
   ]);
-  if (aErr) throw aErr;
-  if (eErr) throw eErr;
-  if (rErr) throw rErr;
-  if (iErr) throw iErr;
+  for (const err of [aErr, eErr, rErr, iErr, shErr, syErr]) if (err) throw err;
   const seen = new Set<string>();
   const statements: CustomerFinances["statements"] = [];
   for (const imp of imports ?? []) {
@@ -195,5 +206,36 @@ export async function customerFinances(workspaceId: string): Promise<CustomerFin
     expenses: (ex ?? []).map((e) => ({ ...e, amount_eur: Number(e.amount_eur) })) as Expense[],
     rights: (rg ?? []).map((r) => ({ artistId: r.artist_id, paid_on: r.paid_on, amount_eur: Number(r.amount_eur) })),
     statements,
+    shows: (sh ?? []).map((x) => ({ artistId: x.artist_id, show_date: x.show_date, fee_eur: Number(x.fee_eur) })),
+    sync: (sy ?? [])
+      .filter((x) => x.paid_on)
+      .map((x) => ({ artistId: x.artist_id, paid_on: x.paid_on as string, amount_eur: Number(x.fee_master_eur ?? 0) + Number(x.fee_publishing_eur ?? 0) })),
   };
 }
+
+/** Registres saisis (concerts, placements, sync) : les lignes visibles (RLS) et les artistes. */
+export type CustomerRegister<T> = { artists: { id: string; name: string }[]; rows: T[] };
+const NUMERIC: Record<string, string[]> = {
+  shows: ["gross_eur", "fee_eur"],
+  placements: ["writer_share", "producer_points"],
+  sync_licenses: ["fee_master_eur", "fee_publishing_eur"],
+};
+async function customerRegister<T>(table: "shows" | "placements" | "sync_licenses", workspaceId: string, order: string): Promise<CustomerRegister<T>> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: rows, error: rErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db.from(table).select("*").eq("workspace_id", workspaceId).order(order, { ascending: false }),
+  ]);
+  if (aErr) throw aErr;
+  if (rErr) throw rErr;
+  // numeric Postgres → nombre JS ; colonnes techniques retirées.
+  const clean = (rows ?? []).map((r: Record<string, unknown>) => {
+    const { workspace_id: _w, created_by: _c, created_at: _ca, ...rest } = r;
+    for (const k of NUMERIC[table]) if (rest[k] !== null && rest[k] !== undefined) rest[k] = Number(rest[k]);
+    return rest;
+  });
+  return { artists: artists ?? [], rows: clean as T[] };
+}
+export const customerShows = (ws: string) => customerRegister<Show>("shows", ws, "show_date");
+export const customerPlacements = (ws: string) => customerRegister<Placement>("placements", ws, "created_at");
+export const customerSync = (ws: string) => customerRegister<SyncLicense>("sync_licenses", ws, "created_at");

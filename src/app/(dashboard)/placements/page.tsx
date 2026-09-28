@@ -13,6 +13,8 @@
  *   · les œuvres non déclarées, et l'argent qu'elles ne vont pas chercher ;
  *   · le partage entre droits d'édition et points de production.
  */
+import { CustomerPlacements } from "@/components/modules/customer/customer-placements";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -26,7 +28,12 @@ import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Badge } from "@/components/ui/badge";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 
+/** Mode client : le registre saisi dans l'espace ; sinon la démo, intacte. */
 export default function PlacementsPage() {
+  return useCustomer() ? <CustomerPlacements /> : <DemoPlacementsPage />;
+}
+
+function DemoPlacementsPage() {
   const t = useTranslations("placements");
   const tc = useTranslations("common");
   const locale = useLocale();

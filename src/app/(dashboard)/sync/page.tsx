@@ -5,6 +5,8 @@
  * Briefs fictifs déterministes + matching seedé contre le catalogue réel.
  */
 
+import { CustomerSync } from "@/components/modules/customer/customer-sync";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -108,7 +110,12 @@ function fmtTrackDuration(sec: number): string {
 
 const CATALOG_LIMIT = 12;
 
+/** Mode client : le registre saisi dans l'espace ; sinon la démo, intacte. */
 export default function SyncPage() {
+  return useCustomer() ? <CustomerSync /> : <DemoSyncPage />;
+}
+
+function DemoSyncPage() {
   const t = useTranslations("sync");
   const tc = useTranslations("common");
   const locale = useLocale();

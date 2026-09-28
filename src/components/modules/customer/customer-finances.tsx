@@ -34,7 +34,7 @@ export function CustomerFinances() {
 
   const now = today();
   const view = useMemo(
-    () => (data ? pnl({ today: now, statements: data.statements, rights: data.rights, expenses: data.expenses, scope }) : null),
+    () => (data ? pnl({ today: now, statements: data.statements, rights: data.rights, shows: data.shows, sync: data.sync, expenses: data.expenses, scope }) : null),
     [data, now, scope],
   );
   const artistName = useMemo(() => new Map((data?.artists ?? []).map((a) => [a.id, a.name])), [data]);
@@ -83,8 +83,8 @@ export function CustomerFinances() {
             points={[
               { key: "st", value: f.eur(t.statements), label: "Revenus des relevés", note: "distributeur" },
               { key: "rg", value: f.eur(t.rights), label: "Droits", note: "versements saisis" },
+              { key: "cs", value: f.eur(t.concerts + t.sync), label: "Concerts et sync", note: "cachets, licences encaissées" },
               { key: "ex", value: f.eur(t.expenses), label: "Dépenses", note: "saisies" },
-              { key: "m", value: t.margin === null ? "—" : f.pct(t.margin), label: "Marge" },
             ]}
           />
         </Sheet>
@@ -93,7 +93,7 @@ export function CustomerFinances() {
           {view.statementsUntil
             ? `Revenus distributeur connus jusqu'à ${f.month(view.statementsUntil)} : les mois suivants attendent le prochain relevé.`
             : "Aucun relevé importé sur ce périmètre."}{" "}
-          Relevés au mois de vente, droits au mois de versement, dépenses au mois de paiement : ce n&apos;est pas une comptabilité.
+          Relevés au mois de vente, droits et sync au mois d&apos;encaissement, cachets au mois du concert, dépenses au mois de paiement : ce n&apos;est pas une comptabilité.
         </p>
 
         <Sheet family="money">

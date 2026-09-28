@@ -72,10 +72,10 @@ export type ModuleOverrides = Record<string, boolean>;
  * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
  * relevé mars–avril, et « mise à jour quotidienne ».
  */
-export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/calculator", "/import"]);
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/calculator", "/tour", "/placements", "/sync", "/import"]);
 
 /** Pages clientes qui ne lisent PAS le relevé de l'artiste ouvert : accessibles sans import. */
-export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts", "/splits", "/rights", "/finances", "/catalog"]);
+export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts", "/splits", "/rights", "/finances", "/catalog", "/tour", "/placements", "/sync"]);
 
 /**
  * Pages clientes de la VUE STRUCTURE : propriétaire et équipe seulement. Un
@@ -102,6 +102,9 @@ export const CUSTOMER_BUSINESS_ITEMS: NavItem[] = [
   { href: "/contracts", labelKey: "items.contracts", icon: Handshake },
   { href: "/splits", labelKey: "items.splits", icon: SplitSquareHorizontal },
   { href: "/rights", labelKey: "items.rights", icon: Landmark },
+  { href: "/placements", labelKey: "items.placements", icon: Music4 },
+  { href: "/sync", labelKey: "items.syncReal", icon: Clapperboard },
+  { href: "/tour", labelKey: "items.tour", icon: MapPin },
 ];
 
 const under = (path: string, modules: ReadonlySet<string>) =>

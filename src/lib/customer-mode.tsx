@@ -12,7 +12,10 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
-import type { CustomerContracts, CustomerFinances, CustomerRights, CustomerSplits } from "@/lib/accounts/customer";
+import type { CustomerContracts, CustomerFinances, CustomerRegister, CustomerRights, CustomerSplits } from "@/lib/accounts/customer";
+import type { Placement } from "@/lib/registers/placements";
+import type { Show } from "@/lib/registers/shows";
+import type { SyncLicense } from "@/lib/registers/sync";
 import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
@@ -32,6 +35,13 @@ const ContractsCtx = createContext<CustomerContracts | null>(null);
 const SplitsCtx = createContext<CustomerSplits | null>(null);
 const RightsCtx = createContext<CustomerRights | null>(null);
 const FinancesCtx = createContext<CustomerFinances | null>(null);
+/** Registres saisis (concerts, placements, sync) — chargés chacun sur sa page seulement. */
+export type CustomerRegisters = {
+  shows?: CustomerRegister<Show>;
+  placements?: CustomerRegister<Placement>;
+  sync?: CustomerRegister<SyncLicense>;
+};
+const RegistersCtx = createContext<CustomerRegisters>({});
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -63,6 +73,10 @@ export function useCustomerFinances(): CustomerFinances | null {
   return useContext(FinancesCtx);
 }
 
+export function useCustomerRegisters(): CustomerRegisters {
+  return useContext(RegistersCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
@@ -73,6 +87,7 @@ export function CustomerMode({
   splits = null,
   rights = null,
   finances = null,
+  registers = {},
   children,
 }: {
   info: CustomerInfo;
@@ -82,6 +97,7 @@ export function CustomerMode({
   splits?: CustomerSplits | null;
   rights?: CustomerRights | null;
   finances?: CustomerFinances | null;
+  registers?: CustomerRegisters;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -96,7 +112,9 @@ export function CustomerMode({
           <SplitsCtx.Provider value={splits}>
             <RightsCtx.Provider value={rights}>
               <FinancesCtx.Provider value={finances}>
-                <CustomerRoleProvider>{children}</CustomerRoleProvider>
+                <RegistersCtx.Provider value={registers}>
+                  <CustomerRoleProvider>{children}</CustomerRoleProvider>
+                </RegistersCtx.Provider>
               </FinancesCtx.Provider>
             </RightsCtx.Provider>
           </SplitsCtx.Provider>
