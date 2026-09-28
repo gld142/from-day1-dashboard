@@ -21,6 +21,8 @@ export type Lead = {
   email?: string;
   phone?: string;
   company?: string;
+  /** 14 chiffres, clé de contrôle vérifiée (facultatif : une société étrangère n'en a pas). */
+  siret?: string;
   teamSize?: (typeof TEAM_SIZES)[number];
   artistCount?: number;
   roles?: (typeof ROLES)[number][];
@@ -37,6 +39,27 @@ const text = (v: unknown, max = 160) => (typeof v === "string" && v.trim() ? v.t
 
 export const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
+/**
+ * SIRET valide : 14 chiffres dont la clé de contrôle (algorithme de Luhn) est
+ * juste — sauf La Poste (SIREN 356000000), dont la somme des chiffres est un
+ * multiple de 5. Espaces tolérés.
+ */
+export function isSiret(v: string): boolean {
+  const s = v.replace(/\s/g, "");
+  if (!/^\d{14}$/.test(s)) return false;
+  if (s.startsWith("356000000")) return [...s].reduce((t, c) => t + Number(c), 0) % 5 === 0;
+  let total = 0;
+  for (let i = 0; i < 14; i++) {
+    let d = Number(s[13 - i]);
+    if (i % 2 === 1) {
+      d *= 2;
+      if (d > 9) d -= 9;
+    }
+    total += d;
+  }
+  return total % 10 === 0;
+}
+
 /** Ne garde que les champs connus, bornés, du bon type — jamais l'objet brut du client. */
 export function sanitize(input: Record<string, unknown>): Partial<Lead> {
   const email = text(input.email, 200)?.toLowerCase();
@@ -49,6 +72,7 @@ export function sanitize(input: Record<string, unknown>): Partial<Lead> {
     email: email && isEmail(email) ? email : undefined,
     phone: text(input.phone, 40),
     company: text(input.company, 120),
+    siret: typeof input.siret === "string" && isSiret(input.siret) ? input.siret.replace(/\s/g, "") : undefined,
     teamSize: oneOf(TEAM_SIZES, input.teamSize),
     artistCount: Number.isFinite(n) && n >= 1 ? Math.min(500, Math.floor(n)) : undefined,
     roles: manyOf(ROLES, input.roles),

@@ -6,7 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { eurHT, EXTRA_ARTIST_EUR } from "@/lib/billing/pricing";
-import { addArtist, createInvitation, type FormState } from "./actions";
+import {
+  addArtist,
+  createInvitation,
+  deleteWorkspace,
+  leaveWorkspace,
+  removeArtist,
+  removeMember,
+  renameArtist,
+  revokeInvitation,
+  type FormState,
+} from "./actions";
 
 const IDLE: FormState = { status: "idle" };
 
@@ -106,4 +116,130 @@ export function ClearPurchaseDraft() {
     } catch {}
   }, []);
   return null;
+}
+
+/* ─────────── Gestion : artistes, équipe, espace ─────────── */
+
+/** Renommer (en place) ou retirer (en retapant son nom) un artiste — propriétaire seulement. */
+export function ArtistActions({ artistId, name, freesPaidSlot }: { artistId: string; name: string; freesPaidSlot: boolean }) {
+  const [mode, setMode] = useState<"idle" | "rename" | "remove">("idle");
+  const [renameState, renameAction, renaming] = useActionState(renameArtist, IDLE);
+  const [removeState, removeAction, removing] = useActionState(removeArtist, IDLE);
+  useEffect(() => {
+    if (renameState.status === "ok") setMode("idle"); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [renameState]);
+
+  if (mode === "rename")
+    return (
+      <form action={renameAction} className="mt-2 flex w-full flex-wrap gap-2">
+        <input type="hidden" name="artistId" value={artistId} />
+        <Input name="name" defaultValue={name} required maxLength={120} aria-label="Nouveau nom" className="max-w-xs" />
+        <Button type="submit" size="sm" disabled={renaming}>Renommer</Button>
+        <Button type="button" size="sm" variant="ghost" onClick={() => setMode("idle")}>Annuler</Button>
+        {renameState.status === "error" && <p className="w-full text-xs text-destructive" role="alert">{renameState.message}</p>}
+      </form>
+    );
+  if (mode === "remove")
+    return (
+      <form action={removeAction} className="mt-2 grid w-full gap-2 rounded-lg border border-destructive/40 p-3">
+        <input type="hidden" name="artistId" value={artistId} />
+        <p className="text-xs">
+          Retirer <strong>{name}</strong>{" "}efface aussi ses relevés, contrats, splits, droits et dépenses, et l&apos;accès de son
+          artiste invité. {freesPaidSlot ? "Ton abonnement baisse d'une place (39 € HT / mois, au prorata)." : ""} Pour confirmer, retape son nom :
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Input name="confirm" autoComplete="off" aria-label={`Retape ${name}`} placeholder={name} className="max-w-xs" />
+          <Button type="submit" size="sm" variant="destructive" disabled={removing}>Retirer définitivement</Button>
+          <Button type="button" size="sm" variant="ghost" onClick={() => setMode("idle")}>Annuler</Button>
+        </div>
+        {removeState.status === "error" && <p className="text-xs text-destructive" role="alert">{removeState.message}</p>}
+      </form>
+    );
+  return (
+    <span className="flex gap-1">
+      <Button type="button" size="sm" variant="ghost" onClick={() => setMode("rename")}>Renommer</Button>
+      <Button type="button" size="sm" variant="ghost" onClick={() => setMode("remove")}>Retirer</Button>
+    </span>
+  );
+}
+
+function ConfirmButton({
+  action,
+  fields,
+  label,
+  confirm,
+}: {
+  action: (state: FormState, form: FormData) => Promise<FormState>;
+  fields: Record<string, string>;
+  label: string;
+  confirm: string;
+}) {
+  const [state, run, pending] = useActionState(action, IDLE);
+  return (
+    <form
+      action={run}
+      onSubmit={(e) => {
+        if (!window.confirm(confirm)) e.preventDefault();
+      }}
+    >
+      {Object.entries(fields).map(([k, v]) => (
+        <input key={k} type="hidden" name={k} value={v} />
+      ))}
+      <Button type="submit" size="sm" variant="ghost" disabled={pending}>{label}</Button>
+      {state.status === "error" && <p className="text-xs text-destructive" role="alert">{state.message}</p>}
+    </form>
+  );
+}
+
+export function RemoveMemberButton({ workspaceId, userId, email }: { workspaceId: string; userId: string; email: string }) {
+  return <ConfirmButton action={removeMember} fields={{ workspaceId, userId }} label="Retirer" confirm={`Retirer ${email} de l'espace ? Son accès est coupé tout de suite.`} />;
+}
+
+export function RevokeInvitationButton({ workspaceId, invitationId, email }: { workspaceId: string; invitationId: string; email: string }) {
+  return <ConfirmButton action={revokeInvitation} fields={{ workspaceId, invitationId }} label="Annuler" confirm={`Annuler l'invitation de ${email} ? Le lien ne marchera plus.`} />;
+}
+
+/** Propriétaire : supprimer l'espace et tout ce qu'il contient. Autres : quitter l'espace. */
+export function DangerZone({ workspaceId, workspaceName, owner }: { workspaceId: string; workspaceName: string; owner: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [delState, delAction, deleting] = useActionState(deleteWorkspace, IDLE);
+  const [leaveState, leaveAction, leaving] = useActionState(leaveWorkspace, IDLE);
+  if (!owner)
+    return (
+      <form
+        action={leaveAction}
+        onSubmit={(e) => {
+          if (!window.confirm("Quitter cet espace ? Tu perds l'accès à ses données.")) e.preventDefault();
+        }}
+      >
+        <input type="hidden" name="workspaceId" value={workspaceId} />
+        <p className="mb-3 text-xs text-muted-foreground">Ton compte est supprimé si tu n&apos;es membre d&apos;aucun autre espace.</p>
+        <Button type="submit" size="sm" variant="outline" disabled={leaving}>Quitter l&apos;espace</Button>
+        {leaveState.status === "error" && <p className="mt-2 text-xs text-destructive" role="alert">{leaveState.message}</p>}
+      </form>
+    );
+  if (!open)
+    return (
+      <div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Arrête l&apos;abonnement tout de suite et efface toutes les données de l&apos;espace. Tes factures restent disponibles chez Stripe.
+        </p>
+        <Button type="button" size="sm" variant="outline" onClick={() => setOpen(true)}>Supprimer l&apos;espace et mon compte</Button>
+      </div>
+    );
+  return (
+    <form action={delAction} className="grid gap-2 rounded-lg border border-destructive/40 p-3">
+      <input type="hidden" name="workspaceId" value={workspaceId} />
+      <p className="text-xs">
+        Tout sera effacé : artistes, relevés, contrats, splits, droits, dépenses, équipe. L&apos;abonnement s&apos;arrête sans
+        nouvelle échéance. C&apos;est définitif. Pour confirmer, retape <strong>{workspaceName}</strong> :
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <Input name="confirm" autoComplete="off" aria-label={`Retape ${workspaceName}`} placeholder={workspaceName} className="max-w-xs" />
+        <Button type="submit" size="sm" variant="destructive" disabled={deleting}>Supprimer définitivement</Button>
+        <Button type="button" size="sm" variant="ghost" onClick={() => setOpen(false)}>Annuler</Button>
+      </div>
+      {delState.status === "error" && <p className="text-xs text-destructive" role="alert">{delState.message}</p>}
+    </form>
+  );
 }

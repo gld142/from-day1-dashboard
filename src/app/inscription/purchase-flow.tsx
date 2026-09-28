@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { quoteFor, eurHT as eur, EXTRA_ARTIST_EUR, BASE_PUBLIC_EUR, QUOTE_ABOVE } from "@/lib/billing/pricing";
-import { isEmail, type Lead } from "@/lib/onboarding/lead";
+import { isSiret, isEmail, type Lead } from "@/lib/onboarding/lead";
 import { cn } from "@/lib/utils";
 
 const PROFILE_OPTIONS: { id: NonNullable<Lead["profile"]>; label: string; hint: string }[] = [
@@ -109,7 +109,7 @@ export function PurchaseFlow() {
   const valid = [
     !!draft.profile,
     !!draft.firstName && !!draft.lastName && !!draft.email && isEmail(draft.email) && !!draft.consent,
-    (isArtist || !!draft.company) && !!draft.teamSize && (draft.artistCount ?? 0) >= 1,
+    (isArtist || !!draft.company) && !!draft.teamSize && (draft.artistCount ?? 0) >= 1 && (!draft.siret?.trim() || isSiret(draft.siret)),
     (draft.needs?.length ?? 0) > 0,
     true,
     true,
@@ -215,6 +215,15 @@ export function PurchaseFlow() {
               {!isArtist && (
                 <Field id="company" label="Nom de la structure" value={draft.company} onChange={(v) => set("company", v)} autoComplete="organization" />
               )}
+              <div>
+                <Field id="siret" label="SIRET (facultatif, entreprise française)" value={draft.siret} onChange={(v) => set("siret", v)}
+                  invalid={!!draft.siret?.trim() && !isSiret(draft.siret)} />
+                <p className={cn("mt-1 text-xs", draft.siret?.trim() && !isSiret(draft.siret) ? "text-destructive" : "text-muted-foreground")}>
+                  {draft.siret?.trim() && !isSiret(draft.siret)
+                    ? "Ce SIRET n'est pas valide : vérifie les 14 chiffres."
+                    : "Il figurera sur tes factures. La raison sociale et l'adresse sont demandées au paiement."}
+                </p>
+              </div>
               <div>
                 <Label className="mb-2 block">Taille de l&apos;équipe</Label>
                 <div className="flex flex-wrap gap-2">

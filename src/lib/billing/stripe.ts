@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { appUrl } from "@/lib/app-url";
 import { quoteFor, BASE_LAUNCH_EUR, BASE_PUBLIC_EUR, EXTRA_ARTIST_EUR } from "./pricing";
 
 /**
@@ -76,4 +77,41 @@ export function paidArtists(sub: Stripe.Subscription): number {
 export function periodEnd(sub: Stripe.Subscription): string | null {
   const seconds = sub.items.data[0]?.current_period_end;
   return seconds ? new Date(seconds * 1000).toISOString() : null;
+}
+
+const PORTAL_TAG = "day1_pro";
+let portalConfig: string | undefined;
+
+/**
+ * Configuration du portail client Stripe (carte, factures, résiliation), créée
+ * au premier usage comme les prix — rien à régler à la main dans Stripe.
+ * Résiliation EN FIN DE PÉRIODE : l'accès reste ouvert jusqu'à l'échéance
+ * payée. Pas de changement de formule ici : le nombre d'artistes se gère dans
+ * /espace (ajout / retrait).
+ */
+export async function portalConfigurationId(): Promise<string> {
+  if (portalConfig) return portalConfig;
+  const list = await stripe().billingPortal.configurations.list({ active: true, limit: 100 });
+  const found = list.data.find((c) => c.metadata?.app === PORTAL_TAG);
+  const config =
+    found ??
+    (await stripe().billingPortal.configurations.create({
+      name: "Day 1 Pro",
+      metadata: { app: PORTAL_TAG },
+      default_return_url: appUrl("/espace/abonnement/retour"),
+      features: {
+        invoice_history: { enabled: true },
+        payment_method_update: { enabled: true },
+        // Pas l'email : il doit rester celui de la connexion à Day 1 Pro.
+        customer_update: { enabled: true, allowed_updates: ["name", "address", "tax_id"] },
+        subscription_cancel: {
+          enabled: true,
+          mode: "at_period_end",
+          proration_behavior: "none",
+          cancellation_reason: { enabled: true, options: ["too_expensive", "missing_features", "unused", "switched_service", "other"] },
+        },
+      },
+    }));
+  portalConfig = config.id;
+  return config.id;
 }

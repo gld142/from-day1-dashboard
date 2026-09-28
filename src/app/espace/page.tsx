@@ -5,8 +5,8 @@ import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { quoteFor, eurHT as eur } from "@/lib/billing/pricing";
 import { userDb } from "@/lib/supabase/server";
-import { signOut } from "./actions";
-import { AddArtistForm, ClearPurchaseDraft, InviteForm } from "./forms";
+import { openBillingPortal, signOut } from "./actions";
+import { AddArtistForm, ArtistActions, ClearPurchaseDraft, DangerZone, InviteForm, RemoveMemberButton, RevokeInvitationButton } from "./forms";
 
 export const metadata: Metadata = { title: "Day 1 Pro — Mon espace", robots: { index: false } };
 
@@ -20,7 +20,9 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
   const db = await userDb();
   const { data: auth } = await db.auth.getUser();
   if (!auth.user) redirect("/connexion");
-  const welcome = !!(await searchParams).bienvenue;
+  const params = await searchParams;
+  const welcome = !!params.bienvenue;
+  const portalDown = params.portail === "indisponible";
 
   const { data: memberships } = await db
     .from("workspace_members")
@@ -38,7 +40,7 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
   }
 
   const [{ data: ws }, { data: artists }, { data: team }, { data: invites }, { data: imports }] = await Promise.all([
-    db.from("workspaces").select("id, name, subscription_status, artist_quantity, current_period_end").eq("id", me.workspace_id).single(),
+    db.from("workspaces").select("id, name, subscription_status, artist_quantity, current_period_end, cancel_at, company_name, siret").eq("id", me.workspace_id).single(),
     db.from("artists").select("id, name").eq("workspace_id", me.workspace_id).order("created_at"),
     db.from("workspace_members").select("user_id, email, role, artist_id").eq("workspace_id", me.workspace_id).order("created_at"),
     db.from("invitations").select("id, email, role, expires_at").eq("workspace_id", me.workspace_id).is("accepted_at", null).order("created_at", { ascending: false }),
@@ -73,8 +75,21 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
             <Row label="Statut" value={STATUS_LABEL[ws.subscription_status] ?? ws.subscription_status} />
             <Row label="Artistes inclus" value={`${artistList.length} utilisé${artistList.length > 1 ? "s" : ""} sur ${ws.artist_quantity}`} />
             {quote.kind === "price" && <Row label="Par mois" value={eur(quote.monthly)} />}
-            {ws.current_period_end && <Row label="Prochaine échéance" value={new Date(ws.current_period_end).toLocaleDateString("fr-FR")} />}
+            {ws.current_period_end && !ws.cancel_at && <Row label="Prochaine échéance" value={new Date(ws.current_period_end).toLocaleDateString("fr-FR")} />}
+            {ws.company_name && <Row label="Facturé à" value={ws.company_name} />}
+            {ws.siret && <Row label="SIRET" value={ws.siret} />}
           </dl>
+          {ws.cancel_at && (
+            <p className="mt-3 rounded-lg bg-muted/60 px-3 py-2 text-sm">
+              Résiliation programmée : ton accès reste ouvert jusqu&apos;au {new Date(ws.cancel_at).toLocaleDateString("fr-FR")}, puis
+              l&apos;abonnement s&apos;arrête. Tu peux la retirer depuis le portail tant que cette date n&apos;est pas passée.
+            </p>
+          )}
+          <form action={openBillingPortal} className="mt-4">
+            <input type="hidden" name="workspaceId" value={ws.id} />
+            <Button type="submit" size="sm" variant="outline">Carte, factures, résiliation</Button>
+          </form>
+          {portalDown && <p className="mt-2 text-xs text-destructive" role="alert">Le portail de facturation n&apos;a pas pu s&apos;ouvrir. Réessaie dans un instant.</p>}
         </Card>
       )}
 
@@ -91,7 +106,8 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
                       : "Aucun relevé importé"}
                   </span>
                 </span>
-                <span className="flex gap-2">
+                <span className="flex flex-wrap items-center gap-2">
+                  {owner && <ArtistActions artistId={a.id} name={a.name} freesPaidSlot={ws.artist_quantity > 1} />}
                   <a href={`/espace/ouvrir/${a.id}?vers=import`} className="rounded-md border px-2.5 py-1 text-xs hover:bg-muted">
                     Importer un relevé
                   </a>
@@ -120,15 +136,19 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
             {(team ?? []).map((m) => (
               <li key={m.user_id} className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2">
                 <span className="min-w-0 truncate">{m.email}</span>
-                <span className="shrink-0 text-xs text-muted-foreground">
+                <span className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
                   {ROLE_LABEL[m.role]}{m.role === "artist" && artistName(m.artist_id) ? ` · ${artistName(m.artist_id)}` : ""}
+                  {owner && m.role !== "owner" && <RemoveMemberButton workspaceId={ws.id} userId={m.user_id} email={m.email} />}
                 </span>
               </li>
             ))}
             {owner && (invites ?? []).map((i) => (
               <li key={i.id} className="flex items-center justify-between gap-3 rounded-lg border border-dashed px-3 py-2 text-muted-foreground">
                 <span className="min-w-0 truncate">{i.email}</span>
-                <span className="shrink-0 text-xs">invité·e, jusqu&apos;au {new Date(i.expires_at).toLocaleDateString("fr-FR")}</span>
+                <span className="flex shrink-0 items-center gap-2 text-xs">
+                  invité·e, jusqu&apos;au {new Date(i.expires_at).toLocaleDateString("fr-FR")}
+                  <RevokeInvitationButton workspaceId={ws.id} invitationId={i.id} email={i.email} />
+                </span>
               </li>
             ))}
           </ul>
@@ -140,6 +160,10 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
           )}
         </Card>
       )}
+
+      <Card title={owner ? "Supprimer l'espace" : "Quitter l'espace"}>
+        <DangerZone workspaceId={ws.id} workspaceName={ws.name} owner={owner} />
+      </Card>
     </Shell>
   );
 }

@@ -10,13 +10,15 @@ const NOTES: Record<string, string> = {
   invitation: "Invitation acceptée. Connecte-toi pour rejoindre l'espace.",
   invalide: "Ce lien n'est plus valable (déjà utilisé ou expiré). Demande-en un nouveau.",
   expire: "Ce lien de connexion a expiré. Demande-en un nouveau.",
+  supprime: "Ton espace et ses données ont été supprimés, et l'abonnement arrêté. Tes factures restent disponibles chez Stripe.",
+  quitte: "Tu as quitté l'espace.",
 };
 
 export default async function ConnexionPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const { data } = await (await userDb()).auth.getUser();
   if (data.user) redirect("/espace");
   const q = await searchParams;
-  const note = q.paye ? NOTES.paye : q.invitation === "ok" ? NOTES.invitation : q.invitation ? NOTES.invalide : q.lien ? NOTES.expire : null;
+  const note = q.paye ? NOTES.paye : q.invitation === "ok" ? NOTES.invitation : q.invitation ? NOTES.invalide : q.lien ? NOTES.expire : q.compte === "supprime" ? NOTES.supprime : q.compte === "quitte" ? NOTES.quitte : null;
   return (
     <div className="mx-auto w-full max-w-md px-4 py-16">
       <p className="text-xs font-medium tracking-[0.18em] text-muted-foreground uppercase">Day 1 Pro</p>

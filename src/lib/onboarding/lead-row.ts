@@ -9,6 +9,7 @@ const COLUMNS = {
   email: "email",
   phone: "phone",
   company: "company",
+  siret: "siret",
   teamSize: "team_size",
   artistCount: "artist_count",
   roles: "roles",
