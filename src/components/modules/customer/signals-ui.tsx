@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 export const SOURCE_LABEL: Record<string, string> = {
   apple_music: "Classements Apple Music",
   tiktok_oembed: "Fiches des vidéos TikTok",
+  wikipedia: "Vues Wikipédia",
+  ecb_fx: "Taux de change BCE",
 };
 
 export const parisDateTime = (iso: string, locale: string) =>

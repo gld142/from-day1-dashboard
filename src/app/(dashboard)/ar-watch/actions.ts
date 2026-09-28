@@ -1,5 +1,6 @@
 "use server";
 
+import { saveWikiLink } from "@/lib/attention/persist";
 import { revalidatePath } from "next/cache";
 import { editableWorkspaceById } from "@/lib/accounts/editor";
 import { UUID, fail, guard, text } from "@/lib/registers/common";
@@ -38,4 +39,10 @@ export async function removeWatch(_: RegisterFormState, form: FormData): Promise
   if (error || !data?.length) return { status: "error", message: error ? "La suppression a échoué." : "Introuvable dans cet espace." };
   revalidatePath(PATH);
   return { status: "ok" };
+}
+
+/** Lien Wikipédia d'un artiste suivi, corrigé par l'équipe (ou « aucune page »). */
+export async function setWatchWiki(_: RegisterFormState, form: FormData): Promise<RegisterFormState> {
+  const raw = formValues(form);
+  return saveWikiLink({ watch_id: raw.watch_id, url: raw.url, none: raw.none }, PATH);
 }

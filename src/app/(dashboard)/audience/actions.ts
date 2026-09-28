@@ -1,5 +1,6 @@
 "use server";
 
+import { saveWikiLink } from "@/lib/attention/persist";
 import { revalidatePath } from "next/cache";
 import { editableWorkspace } from "@/lib/accounts/editor";
 import { parisDate } from "@/lib/collect/dates";
@@ -64,4 +65,10 @@ export async function saveTikTokStats(_: RegisterFormState, form: FormData): Pro
 
 export async function deleteTikTokStats(_: RegisterFormState, form: FormData): Promise<RegisterFormState> {
   return deleteRow("tiktok_stats", String(form.get("id") ?? ""), PATH);
+}
+
+/** Lien Wikipédia de l'artiste corrigé par l'équipe (ou « aucune page »). */
+export async function setArtistWiki(_: RegisterFormState, form: FormData): Promise<RegisterFormState> {
+  const raw = formValues(form);
+  return saveWikiLink({ artist_id: raw.artist_id, url: raw.url, none: raw.none }, PATH);
 }

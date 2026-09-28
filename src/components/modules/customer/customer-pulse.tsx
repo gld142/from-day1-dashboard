@@ -18,6 +18,8 @@ import { chartMovements, rosterInCharts } from "@/lib/market/charts";
 import { statDelta, statPairs } from "@/lib/tiktok/forms";
 import { getUserData, subscribeUserData } from "@/lib/userdata/store";
 import { SourceLine, longDate } from "./signals-ui";
+import { setArtistWiki } from "@/app/(dashboard)/audience/actions";
+import { WikiAttention } from "./attention-ui";
 import { FORMAT_LABEL, useFormats } from "./shared";
 
 const sumDsp = (o: Record<string, number | undefined> | undefined) => Object.values(o ?? {}).reduce<number>((t, v) => t + (v ?? 0), 0);
@@ -132,6 +134,15 @@ export function CustomerPulse() {
           )}
         </Sheet>
 
+        <WikiAttention
+          name={customer?.artistName ?? "cet artiste"}
+          link={signals?.wiki?.links.find((l) => l.artist_id === artistId)}
+          wiki={signals?.wiki}
+          canEdit={false}
+          hidden={{ artist_id: artistId }}
+          action={setArtistWiki}
+        />
+
         <Sheet family="money">
           <SheetHeading action={<Link href="/mon-releve" className="underline">mon relevé →</Link>}>Dernier relevé distributeur</SheetHeading>
           {statement ? (
@@ -177,6 +188,10 @@ export function CustomerPulse() {
             </li>
             <li>
               <b>TikTok for Artists</b> — {lastStat ? `dernier relevé saisi le ${longDate(lastStat, f.locale)}` : <span className="text-muted-foreground">rien de saisi</span>}
+            </li>
+            <li>
+              <b>Wikipédia (vues de la page)</b> — automatique, chaque nuit
+              <SourceLine source="wikipedia" runs={runs} locale={f.locale} />
             </li>
             <li className="text-muted-foreground">
               <b className="text-foreground">Spotify for Artists</b> — à brancher (export CSV) · <b className="text-foreground">YouTube</b>{" "}— à brancher (connexion de la chaîne)

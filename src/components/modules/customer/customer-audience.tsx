@@ -14,7 +14,8 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Button } from "@/components/ui/button";
-import { addTikTokVideo, deleteTikTokStats, deleteTikTokVideo, saveTikTokStats, updateTikTokViews } from "@/app/(dashboard)/audience/actions";
+import { addTikTokVideo, deleteTikTokStats, deleteTikTokVideo, saveTikTokStats, setArtistWiki, updateTikTokViews } from "@/app/(dashboard)/audience/actions";
+import { WikiAttention } from "./attention-ui";
 import { useCustomer, useCustomerSignals } from "@/lib/customer-mode";
 import { TIKTOK_PERIODS, statDelta, statPairs, type StatKey, type TikTokStat } from "@/lib/tiktok/forms";
 import type { TikTokVideo } from "@/lib/tiktok/video";
@@ -96,6 +97,15 @@ export function CustomerAudience() {
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
           <ProvenanceBadge provenance="measured" /> Streams par pays du relevé de ton distributeur (mensuel).
         </p>
+
+        <WikiAttention
+          name={customer?.artistName ?? "cet artiste"}
+          link={signals?.wiki?.links.find((l) => l.artist_id === artistId)}
+          wiki={signals?.wiki}
+          canEdit={canEdit}
+          hidden={{ artist_id: artistId }}
+          action={setArtistWiki}
+        />
 
         {/* Qui pousse ton son sur TikTok — liens collés */}
         <Sheet family="trends">

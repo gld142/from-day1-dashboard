@@ -47,13 +47,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     const finances = on("/finances") || on("/day1-index") || on("/tour") ? await customerFinances(view.info.workspaceId) : null;
     // Marché & signaux : seulement ce que la page lit.
     const signalsNeeds = on("/pulse")
-      ? { charts: true, tiktok: true }
+      ? { charts: true, tiktok: true, wiki: true }
       : on("/market")
         ? { charts: true }
         : on("/audience")
-          ? { tiktok: true }
+          ? { tiktok: true, wiki: true }
           : on("/ar-watch")
-            ? { charts: true, watchlist: true }
+            ? { charts: true, watchlist: true, wiki: true }
             : on("/algo-position") || on("/discovery") || on("/day1-index")
               ? {}
               : null;

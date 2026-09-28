@@ -12,7 +12,10 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Button } from "@/components/ui/button";
-import { addWatch, removeWatch } from "@/app/(dashboard)/ar-watch/actions";
+import { addWatch, removeWatch, setWatchWiki } from "@/app/(dashboard)/ar-watch/actions";
+import { attention } from "@/lib/attention/wikipedia";
+import { parisDate } from "@/lib/collect/dates";
+import { WikiLinkEditor, ratioPct, seriesOf, wikiUrl } from "./attention-ui";
 import { APPLE_COUNTRY_LABEL, type AppleCountry } from "@/lib/collect/apple-music";
 import { useCustomer, useCustomerSignals } from "@/lib/customer-mode";
 import { normArtist, risers, rosterInCharts, type Riser } from "@/lib/market/charts";
@@ -121,6 +124,27 @@ export function CustomerAr() {
                           : "absent des classements suivis aujourd'hui"}
                         {w.notes ? ` · ${w.notes}` : ""}
                       </span>
+                      {(() => {
+                        const link = signals?.wiki?.links.find((l) => l.watch_id === w.id);
+                        const a = attention(seriesOf(signals?.wiki, link), parisDate(new Date()));
+                        return (
+                          <span className="text-muted-foreground block text-xs">
+                            Wikipédia :{" "}
+                            {!link ? (
+                              "page recherchée à la prochaine collecte"
+                            ) : link.method === "none" ? (
+                              "pas de page"
+                            ) : a && a.last30 > 0 ? (
+                              <a href={wikiUrl(link)} target="_blank" rel="noreferrer" className="underline">
+                                {f.int(a.last30)} vues sur 30 jours{a.change !== null ? ` (${ratioPct(a.change, f.locale)})` : ""}
+                              </a>
+                            ) : (
+                              "vues à la prochaine collecte"
+                            )}
+                            {canEdit && <WikiLinkEditor action={setWatchWiki} hidden={{ watch_id: w.id }} hasArticle={Boolean(link?.article)} className="ml-2" />}
+                          </span>
+                        );
+                      })()}
                     </span>
                     {canEdit && <WatchRemove id={w.id} workspaceId={customer?.workspaceId ?? ""} name={w.artist_name} />}
                   </li>

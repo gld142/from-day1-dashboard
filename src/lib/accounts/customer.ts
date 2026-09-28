@@ -252,6 +252,9 @@ export const customerSync = (ws: string) => customerRegister<SyncLicense>("sync_
  */
 export type ChartSnapshot = { latestDate: string | null; previousDate: string | null; latest: ChartRow[]; previous: ChartRow[] };
 export type WatchItem = { id: string; artist_name: string; notes: string | null; created_at: string };
+export type WikiLink = { artist_id: string | null; watch_id: string | null; qid: string | null; project: string | null; article: string | null; method: "auto" | "manual" | "none"; checked_at: string };
+/** Liens vers Wikipédia de l'espace, et vues par jour de chaque article (clé « projet|article »), 120 derniers jours. */
+export type CustomerWiki = { links: WikiLink[]; views: Record<string, { day: string; views: number }[]> };
 export type CustomerSignals = {
   artists: { id: string; name: string }[];
   runs: SourceRun[];
@@ -259,6 +262,7 @@ export type CustomerSignals = {
   videos: TikTokVideo[] | null;
   stats: TikTokStat[] | null;
   watchlist: WatchItem[] | null;
+  wiki: CustomerWiki | null;
 };
 
 const CHART_COLUMNS = "country, chart_date, position, item_id, title, artist_name, artist_ext_id, url, genres, release_date";
@@ -282,7 +286,7 @@ async function chartRows(db: Awaited<ReturnType<typeof userDb>>, chartDate: stri
   }
 }
 
-export async function customerSignals(workspaceId: string, needs: { charts?: boolean; tiktok?: boolean; watchlist?: boolean }): Promise<CustomerSignals> {
+export async function customerSignals(workspaceId: string, needs: { charts?: boolean; tiktok?: boolean; watchlist?: boolean; wiki?: boolean }): Promise<CustomerSignals> {
   const db = await userDb();
   const [{ data: artists, error: aErr }, { data: runs, error: rErr }] = await Promise.all([
     db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
@@ -345,7 +349,23 @@ export async function customerSignals(workspaceId: string, needs: { charts?: boo
     watchlist = (data ?? []) as WatchItem[];
   }
 
+  let wiki: CustomerWiki | null = null;
+  if (needs.wiki) {
+    const { data: links, error: lErr } = await db.from("wiki_links").select("artist_id, watch_id, qid, project, article, method, checked_at").eq("workspace_id", workspaceId);
+    if (lErr) throw lErr;
+    const articles = [...new Set((links ?? []).filter((l) => l.article).map((l) => l.article as string))];
+    const views: CustomerWiki["views"] = {};
+    if (articles.length) {
+      const since = new Date(Date.now() - 121 * 86_400_000).toISOString().slice(0, 10);
+      const { data: pv, error: pErr } = await db.from("wiki_pageviews").select("project, article, day, views").in("article", articles).gte("day", since).order("day").limit(20_000);
+      if (pErr) throw pErr;
+      for (const r of pv ?? []) (views[`${r.project}|${r.article}`] ??= []).push({ day: r.day as string, views: Number(r.views) });
+    }
+    wiki = { links: (links ?? []) as WikiLink[], views };
+  }
+
   return {
+    wiki,
     artists: artists ?? [],
     runs: (runs ?? []).map((r) => ({ ...r, id: String(r.id) })) as SourceRun[],
     charts,
