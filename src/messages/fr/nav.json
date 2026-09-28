@@ -7,7 +7,9 @@
     "intelligence": "Intelligence",
     "growth": "Croissance",
     "account": "Compte",
-    "pitch": "Stratégie & pitch"
+    "pitch": "Stratégie & pitch",
+    "overview": "Vue d'ensemble",
+    "figures": "Mes chiffres"
   },
   "items": {
     "statement": "Mon relevé",
@@ -40,6 +42,7 @@
     "comparatif": "vs Concurrents",
     "onboardings": "Onboardings partenaires",
     "importer": "Importer mes données",
-    "placements": "Œuvres & placements"
+    "placements": "Œuvres & placements",
+    "streamsMonthly": "Streams"
   }
 }

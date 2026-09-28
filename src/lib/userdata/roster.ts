@@ -66,7 +66,7 @@ export function addMonths(month: string, k: number): string {
 }
 
 /** Les `n` mois qui finissent à `end` inclus, du plus ancien au plus récent. */
-function monthsEnding(end: string, n: number): string[] {
+export function monthsEnding(end: string, n: number): string[] {
   return Array.from({ length: n }, (_, i) => addMonths(end, i - n + 1));
 }
 
@@ -75,14 +75,21 @@ const streamsOf = (s: RosterStatement, m: string) =>
 const revenueOf = (s: RosterStatement, m: string) => s.revenueByMonth[m] ?? 0;
 const sumOver = (months: string[], f: (m: string) => number) => months.reduce((sum, m) => sum + f(m), 0);
 
-function trendOf(s: RosterStatement, first: string, last: string): number | null {
+/**
+ * Les 3 derniers mois (jusqu'à `last`) contre les 3 d'avant, sur une série
+ * mensuelle (revenus ou streams). `null` sans 6 mois d'historique depuis
+ * `first`, ou sans base : on ne devine pas une tendance.
+ */
+export function threeMonthTrend(byMonth: Record<string, number>, first: string, last: string): number | null {
   const recent = monthsEnding(last, 3);
   const before = monthsEnding(addMonths(last, -3), 3);
-  if (before[0] < first) return null; // pas 6 mois d'historique : on ne devine pas
-  const base = sumOver(before, (m) => revenueOf(s, m));
+  if (before[0] < first) return null;
+  const base = sumOver(before, (m) => byMonth[m] ?? 0);
   if (base <= 0) return null;
-  return sumOver(recent, (m) => revenueOf(s, m)) / base - 1;
+  return sumOver(recent, (m) => byMonth[m] ?? 0) / base - 1;
 }
+
+const trendOf = (s: RosterStatement, first: string, last: string) => threeMonthTrend(s.revenueByMonth, first, last);
 
 export function summarizeRoster(artists: RosterArtist[]): RosterSummary {
   const spans = artists.map((a) => {

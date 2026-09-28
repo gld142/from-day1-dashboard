@@ -5,6 +5,8 @@
  * le voile" : chaque euro, d'où qu'il vienne, lisible et comparé.
  */
 
+import { CustomerRevenue } from "@/components/modules/customer/customer-revenue";
+import { useCustomer } from "@/lib/customer-mode";
 import { useCallback, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -93,7 +95,12 @@ const TOOLTIP_STYLE = {
   fontSize: 12,
 } as const;
 
+/** Mode client : la page sur les relevés importés ; sinon la démo, intacte. */
 export default function RevenuePage() {
+  return useCustomer() ? <CustomerRevenue /> : <DemoRevenuePage />;
+}
+
+function DemoRevenuePage() {
   const t = useTranslations("revenue");
   const tc = useTranslations("common");
   const tDsp = useTranslations("streams.dsp.names");

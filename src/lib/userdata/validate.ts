@@ -4,16 +4,56 @@ import type { UserData } from "./store";
 const DSPS: ReadonlySet<string> = new Set(DSP_LIST);
 const MONTH = /^\d{4}-\d{2}$/;
 const num = (v: unknown) => typeof v === "number" && Number.isFinite(v) && v >= 0 && v < 1e12;
+/** Montant signé : un découpage de revenus peut être négatif (remboursement, régularisation). */
+const signedNum = (v: unknown) => typeof v === "number" && Number.isFinite(v) && Math.abs(v) < 1e12;
 const shortText = (v: unknown, max = 200) => typeof v === "string" && v.length <= max;
 
-function numberMap(v: unknown, maxKeys: number, key: (k: string) => boolean): Record<string, number> | null {
+function numberMap(
+  v: unknown,
+  maxKeys: number,
+  key: (k: string) => boolean,
+  value: (n: unknown) => boolean = num,
+): Record<string, number> | null {
   if (!v || typeof v !== "object" || Array.isArray(v)) return null;
   const entries = Object.entries(v as Record<string, unknown>);
   if (entries.length > maxKeys) return null;
   const out: Record<string, number> = {};
   for (const [k, n] of entries) {
-    if (!key(k) || !num(n)) return null;
+    if (!key(k) || !value(n)) return null;
     out[k] = n as number;
+  }
+  return out;
+}
+
+/**
+ * Découpages de revenus (ajoutés le 28/09/2026) : ABSENTS des relevés enregistrés
+ * avant — `undefined` alors, pas une erreur. Présents : même rigueur qu'ailleurs.
+ */
+type Breakdowns = Pick<UserData, "revenueByMonthDsp" | "trackRevenue" | "countryRevenue">;
+function revenueBreakdowns(d: Record<string, unknown>): Breakdowns | null {
+  const out: Breakdowns = {};
+  if (d.revenueByMonthDsp !== undefined) {
+    const raw = d.revenueByMonthDsp;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+    const entries = Object.entries(raw as Record<string, unknown>);
+    if (entries.length > 360) return null;
+    const byMonth: NonNullable<UserData["revenueByMonthDsp"]> = {};
+    for (const [m, perDsp] of entries) {
+      const clean = numberMap(perDsp, DSPS.size, (k) => DSPS.has(k), signedNum);
+      if (!MONTH.test(m) || !clean) return null;
+      byMonth[m] = clean;
+    }
+    out.revenueByMonthDsp = byMonth;
+  }
+  if (d.trackRevenue !== undefined) {
+    const clean = numberMap(d.trackRevenue, 5000, (k) => k.length <= 300, signedNum);
+    if (!clean) return null;
+    out.trackRevenue = clean;
+  }
+  if (d.countryRevenue !== undefined) {
+    const clean = numberMap(d.countryRevenue, 300, (k) => /^[A-Z]{2}$/.test(k), signedNum);
+    if (!clean) return null;
+    out.countryRevenue = clean;
   }
   return out;
 }
@@ -49,6 +89,8 @@ export function validateUserData(input: unknown): UserData | null {
   const trackStreams = numberMap(d.trackStreams, 5000, (k) => k.length <= 300);
   const countryStreams = numberMap(d.countryStreams, 300, (k) => /^[A-Z]{2}$/.test(k));
   if (!revenueByMonth || !trackStreams || !countryStreams || !num(d.totalStreams) || !num(d.totalRevenueEur)) return null;
+  const breakdowns = revenueBreakdowns(d);
+  if (!breakdowns) return null;
 
   return {
     version: 1,
@@ -65,5 +107,6 @@ export function validateUserData(input: unknown): UserData | null {
     totalStreams: d.totalStreams as number,
     totalRevenueEur: d.totalRevenueEur as number,
     active: true,
+    ...breakdowns,
   };
 }

@@ -5,6 +5,8 @@
  * Persona artiste : ses données. Persona label : roster agrégé + comparateur,
  * ou zoom sur l'artiste focus.
  */
+import { CustomerStreams } from "@/components/modules/customer/customer-streams";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -52,7 +54,12 @@ const PERIODS = ["7d", "30d", "90d", "12m"] as const;
 type Period = (typeof PERIODS)[number];
 const DAYS: Record<Period, number> = { "7d": 7, "30d": 30, "90d": 90, "12m": 365 };
 
+/** Mode client : la page sur les relevés importés ; sinon la démo, intacte. */
 export default function StreamsPage() {
+  return useCustomer() ? <CustomerStreams /> : <DemoStreamsPage />;
+}
+
+function DemoStreamsPage() {
   const locale = useLocale();
   const t = useTranslations("streams");
   const tc = useTranslations("common");

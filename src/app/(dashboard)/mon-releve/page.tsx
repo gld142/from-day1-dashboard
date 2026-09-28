@@ -50,7 +50,11 @@ export default function MonRelevePage() {
         title={customer?.artistName ?? data.artistName}
         subtitle={`Relevé ${FORMAT_LABEL[data.format] ?? data.format} · ${fmtMonth(locale, first)} → ${fmtMonth(locale, last)} · importé le ${new Date(data.importedAt).toLocaleDateString(locale)}`}
       >
-        <Link href="/import" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Importer un nouveau relevé</Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/revenue" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Revenus en détail</Link>
+          <Link href="/streams" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Streams en détail</Link>
+          <Link href="/import" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Importer un nouveau relevé</Link>
+        </div>
       </PageHeader>
 
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4">

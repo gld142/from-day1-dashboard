@@ -26,6 +26,13 @@ export type UserData = {
   revenueByMonth: Record<string, number>;
   trackStreams: Record<string, number>;
   countryStreams: Record<string, number>; // ISO2
+  /**
+   * Découpages de revenus en EUR (ajoutés le 28/09/2026) — ABSENTS des relevés
+   * importés avant : les pages disent alors « réimporte pour voir le détail ».
+   */
+  revenueByMonthDsp?: Record<string, Partial<Record<DSP, number>>>;
+  trackRevenue?: Record<string, number>;
+  countryRevenue?: Record<string, number>; // ISO2
   totalStreams: number;
   totalRevenueEur: number;
   active: boolean;
@@ -128,10 +135,17 @@ export function buildUserData(
   const currency = parsed.currency === "unknown" ? opts.currency : parsed.currency;
   if (!currency) throw new Error("CURRENCY_REQUIRED");
   const rate = currency === "EUR" ? 1 : opts.eurRate;
+  const eur = (v: number) => Math.round(v * rate * 100) / 100;
   const revenueByMonth: Record<string, number> = {};
   for (const [m, v] of Object.entries(parsed.revenueByMonth)) {
-    if (m !== "unknown") revenueByMonth[m] = Math.round(v * rate * 100) / 100;
+    if (m !== "unknown") revenueByMonth[m] = eur(v);
   }
+  const revenueByMonthDsp: NonNullable<UserData["revenueByMonthDsp"]> = {};
+  for (const [m, perDsp] of Object.entries(parsed.revenueByMonthDsp)) {
+    if (m === "unknown") continue;
+    revenueByMonthDsp[m] = Object.fromEntries(Object.entries(perDsp).map(([dsp, v]) => [dsp, eur(v ?? 0)]));
+  }
+  const toEur = (o: Record<string, number>) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, eur(v)]));
   return {
     version: 1,
     artistName: opts.artistName,
@@ -144,6 +158,9 @@ export function buildUserData(
     revenueByMonth,
     trackStreams: parsed.trackStreams,
     countryStreams: parsed.countryStreams,
+    revenueByMonthDsp,
+    trackRevenue: toEur(parsed.trackRevenue),
+    countryRevenue: toEur(parsed.countryRevenue),
     totalStreams: parsed.totalStreams,
     totalRevenueEur: Math.round(parsed.totalRevenue * rate),
     active: true,

@@ -12,10 +12,16 @@ export type ParsedStatement = {
   streamsByMonth: Record<string, Partial<Record<DSP, number>>>;
   /** mois → revenu (devise source) */
   revenueByMonth: Record<string, number>;
+  /** mois → { DSP → revenu } (devise source) : ce que chaque plateforme paie vraiment */
+  revenueByMonthDsp: Record<string, Partial<Record<DSP, number>>>;
   /** titre → streams cumulés */
   trackStreams: Record<string, number>;
+  /** titre → revenu cumulé (devise source) */
+  trackRevenue: Record<string, number>;
   /** ISO2 pays → streams cumulés */
   countryStreams: Record<string, number>;
+  /** ISO2 pays → revenu cumulé (devise source) */
+  countryRevenue: Record<string, number>;
   totalStreams: number;
   totalRevenue: number;
   months: string[]; // triés
@@ -180,8 +186,11 @@ export function parseStatement(text: string): ParsedStatement {
 
   const streamsByMonth: ParsedStatement["streamsByMonth"] = {};
   const revenueByMonth: ParsedStatement["revenueByMonth"] = {};
+  const revenueByMonthDsp: ParsedStatement["revenueByMonthDsp"] = {};
   const trackStreams: Record<string, number> = {};
+  const trackRevenue: Record<string, number> = {};
   const countryStreams: Record<string, number> = {};
+  const countryRevenue: Record<string, number> = {};
   const artists = new Set<string>();
   let totalStreams = 0;
   let totalRevenue = 0;
@@ -211,15 +220,19 @@ export function parseStatement(text: string): ParsedStatement {
     }
     if (earn !== 0) {
       revenueByMonth[mk] = (revenueByMonth[mk] ?? 0) + earn;
+      const byDsp = (revenueByMonthDsp[mk] ??= {});
+      byDsp[dsp] = (byDsp[dsp] ?? 0) + earn;
       totalRevenue += earn;
     }
     if (cols.title >= 0 && row[cols.title]) {
       trackStreams[row[cols.title]] = (trackStreams[row[cols.title]] ?? 0) + qty;
+      if (earn !== 0) trackRevenue[row[cols.title]] = (trackRevenue[row[cols.title]] ?? 0) + earn;
     }
     if (cols.country >= 0 && row[cols.country]) {
       const cc = row[cols.country].trim().toUpperCase().slice(0, 2);
       if (/^[A-Z]{2}$/.test(cc)) {
         countryStreams[cc] = (countryStreams[cc] ?? 0) + qty;
+        if (earn !== 0) countryRevenue[cc] = (countryRevenue[cc] ?? 0) + earn;
       }
     }
     if (cols.artist >= 0 && row[cols.artist]) artists.add(row[cols.artist]);
@@ -238,8 +251,11 @@ export function parseStatement(text: string): ParsedStatement {
     currency,
     streamsByMonth,
     revenueByMonth,
+    revenueByMonthDsp,
     trackStreams,
+    trackRevenue,
     countryStreams,
+    countryRevenue,
     totalStreams,
     totalRevenue: Math.round(totalRevenue * 100) / 100,
     months,

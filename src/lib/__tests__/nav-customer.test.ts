@@ -2,10 +2,9 @@ import { describe, expect, it } from "vitest";
 import { isCustomerPath, isStructurePath } from "../nav";
 
 describe("isCustomerPath — pages ouvertes aux clients", () => {
-  it("relevé et import : ouverts à tous les rôles", () => {
+  it("relevé, revenus, streams et import : ouverts à tous les rôles", () => {
     for (const role of ["owner", "member", "artist"] as const) {
-      expect(isCustomerPath("/mon-releve", role)).toBe(true);
-      expect(isCustomerPath("/import", role)).toBe(true);
+      for (const path of ["/mon-releve", "/revenue", "/streams", "/import"]) expect(isCustomerPath(path, role)).toBe(true);
     }
   });
 
@@ -16,7 +15,7 @@ describe("isCustomerPath — pages ouvertes aux clients", () => {
   });
 
   it("les pages encore en démo restent fermées, même au propriétaire", () => {
-    for (const path of ["/pulse", "/streams", "/revenue", "/valuation", "/contracts", "/rosterx"]) {
+    for (const path of ["/pulse", "/audience", "/valuation", "/contracts", "/rights", "/rosterx"]) {
       expect(isCustomerPath(path, "owner")).toBe(false);
     }
   });

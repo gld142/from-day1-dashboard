@@ -69,7 +69,7 @@
   "success": {
     "title": "C'est fait — bienvenue chez toi.",
     "description": "Ton Pulse, tes revenus, ta valorisation : tout est calculé sur tes vrais chiffres.",
-    "descriptionCustomer": "Le relevé est enregistré dans ton espace : il alimente Mon relevé et le Roster de la structure."
+    "descriptionCustomer": "Le relevé est enregistré dans ton espace : il alimente Mon relevé, Revenus, Streams et le Roster de la structure."
   },
   "howto": {
     "title": "Où trouver ton relevé ?",

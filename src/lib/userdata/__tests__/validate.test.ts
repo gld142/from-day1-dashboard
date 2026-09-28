@@ -47,6 +47,22 @@ describe("validateUserData", () => {
     expect(validateUserData({ ...ok, eurRate: 0.92 })).toBeNull();
     expect(validateUserData({ ...build(TUNECORE_CSV, "USD"), eurRate: 0 })).toBeNull();
   });
+  it("garde les revenus par plateforme, titre et pays, convertis en euros", () => {
+    const data = build(DISTROKID_CSV);
+    expect(data.revenueByMonthDsp?.["2026-03"]?.spotify).toBeCloseTo(45.69 * 0.92, 2);
+    expect(data.trackRevenue?.["Premier Titre"]).toBeCloseTo(45.69 * 0.92, 2);
+    expect(data.countryRevenue?.FR).toBeCloseTo((45.69 + 7.14) * 0.92, 2);
+    expect(validateUserData(JSON.parse(JSON.stringify(data)))).toEqual(data);
+  });
+  it("accepte un relevé enregistré avant ces découpages (champs absents)", () => {
+    const { revenueByMonthDsp: _a, trackRevenue: _b, countryRevenue: _c, ...old } = build(DISTROKID_CSV);
+    expect(validateUserData(JSON.parse(JSON.stringify(old)))).toEqual(old);
+  });
+  it("accepte un remboursement (revenu négatif) dans un découpage", () => {
+    const ok = build(DISTROKID_CSV);
+    const refund = { ...ok, trackRevenue: { ...ok.trackRevenue, "Titre remboursé": -3.2 } };
+    expect(validateUserData(refund)?.trackRevenue?.["Titre remboursé"]).toBe(-3.2);
+  });
   it("refuse une forme trafiquée", () => {
     const ok = build(DISTROKID_CSV);
     expect(validateUserData({ ...ok, version: 2 })).toBeNull();
@@ -54,6 +70,9 @@ describe("validateUserData", () => {
     expect(validateUserData({ ...ok, months: ["pas-un-mois"] })).toBeNull();
     expect(validateUserData({ ...ok, streamsByMonth: { "2026-03": { napster: 10 } } })).toBeNull();
     expect(validateUserData({ ...ok, trackStreams: Object.fromEntries(Array.from({ length: 5001 }, (_, i) => [`t${i}`, 1])) })).toBeNull();
+    expect(validateUserData({ ...ok, revenueByMonthDsp: { "2026-03": { napster: 10 } } })).toBeNull();
+    expect(validateUserData({ ...ok, countryRevenue: { France: 10 } })).toBeNull();
+    expect(validateUserData({ ...ok, trackRevenue: { a: Number.NaN } })).toBeNull();
     expect(validateUserData("n'importe quoi")).toBeNull();
   });
 });

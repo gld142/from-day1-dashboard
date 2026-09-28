@@ -69,7 +69,7 @@
   "success": {
     "title": "Done — welcome home.",
     "description": "Your Pulse, your revenue, your valuation: everything is computed from your real numbers.",
-    "descriptionCustomer": "The statement is saved in your workspace: it feeds My statement and the organisation's Roster."
+    "descriptionCustomer": "The statement is saved in your workspace: it feeds My statement, Revenue, Streams and the organisation's Roster."
   },
   "howto": {
     "title": "Where to find your statement?",

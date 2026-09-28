@@ -43,6 +43,27 @@ describe("parseStatement — DistroKid", () => {
   it("liste les mois triés", () => {
     expect(p.months).toEqual(["2026-03", "2026-04"]);
   });
+
+  it("garde les revenus par plateforme, mois par mois", () => {
+    expect(p.revenueByMonthDsp["2026-03"]?.spotify).toBeCloseTo(45.69 + 25.35, 2);
+    expect(p.revenueByMonthDsp["2026-03"]?.apple).toBeCloseTo(18.72, 2);
+    expect(p.revenueByMonthDsp["2026-04"]?.youtube).toBeCloseTo(4.48, 2);
+  });
+
+  it("garde les revenus par titre et par pays", () => {
+    expect(p.trackRevenue["Premier Titre"]).toBeCloseTo(45.69 + 18.72 + 56.7 + 4.48, 2);
+    expect(p.trackRevenue["Deuxième Titre"]).toBeCloseTo(25.35 + 7.14, 2);
+    expect(p.countryRevenue["FR"]).toBeCloseTo(45.69 + 18.72 + 56.7 + 7.14, 2);
+    expect(p.countryRevenue["US"]).toBeCloseTo(4.48, 2);
+  });
+
+  it("les découpages de revenus retombent sur le total", () => {
+    const sum = (o: Record<string, number>) => Object.values(o).reduce((a, b) => a + b, 0);
+    const byDsp = Object.values(p.revenueByMonthDsp).reduce((a, m) => a + sum(m as Record<string, number>), 0);
+    expect(byDsp).toBeCloseTo(p.totalRevenue, 2);
+    expect(sum(p.trackRevenue)).toBeCloseTo(p.totalRevenue, 2);
+    expect(sum(p.countryRevenue)).toBeCloseTo(p.totalRevenue, 2);
+  });
 });
 
 describe("parseStatement — TuneCore (point-virgule, virgule décimale)", () => {

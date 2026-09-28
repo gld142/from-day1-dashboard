@@ -42,7 +42,7 @@ const ROLE_OPTIONS: { id: NonNullable<Lead["roles"]>[number]; label: string }[] 
   { id: "other", label: "Autre" },
 ];
 const NEED_OPTIONS: { id: NonNullable<Lead["needs"]>[number]; label: string; hint: string }[] = [
-  { id: "streams", label: "Streams", hint: "Toutes plateformes, chaque matin" },
+  { id: "streams", label: "Streams", hint: "Toutes plateformes, mois par mois" },
   { id: "revenue", label: "Revenus", hint: "Ce que ça rapporte vraiment" },
   { id: "rights", label: "Droits", hint: "SACEM, ADAMI, SPEDIDAM" },
   { id: "audit", label: "Audit royalties", hint: "Les écarts à réclamer" },
