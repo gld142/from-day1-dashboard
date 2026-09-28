@@ -2,9 +2,9 @@
 
 import { createHash, randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { syncSubscription } from "@/lib/accounts/provision";
+import { appUrl } from "@/lib/app-url";
 import { inviteEmail } from "@/lib/email/templates";
 import { sendEmail } from "@/lib/email/send";
 import { priceId, stripe } from "@/lib/billing/stripe";
@@ -95,8 +95,7 @@ export async function createInvitation(_: FormState, form: FormData): Promise<Fo
     return { status: "error", message: "L'invitation n'a pas pu être créée." };
   }
   revalidatePath("/espace");
-  const origin = (await headers()).get("origin") ?? "";
-  const link = `${origin}/invitation/${token}`;
+  const link = appUrl(`/invitation/${token}`);
   // L'email part tout seul ; le lien reste affiché pour l'envoyer aussi à la main si besoin.
   const { data: ws } = await db.from("workspaces").select("name").eq("id", workspaceId).single();
   let emailed = true;

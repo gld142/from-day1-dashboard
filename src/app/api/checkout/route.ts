@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { CHECKOUT_COOKIE, lineItemsFor, stripe } from "@/lib/billing/stripe";
+import { appUrl } from "@/lib/app-url";
 import { adminDb } from "@/lib/supabase/admin";
 
 /**
@@ -17,7 +18,6 @@ export async function POST(request: NextRequest) {
     const plan = await lineItemsFor(lead.artist_count ?? 1);
     if (!plan) return NextResponse.json({ error: "devis" }, { status: 400 });
 
-    const origin = request.nextUrl.origin;
     const session = await stripe().checkout.sessions.create({
       mode: "subscription",
       line_items: plan.items,
@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
       metadata: { lead_id: lead.id },
       subscription_data: { metadata: { lead_id: lead.id } },
       locale: "fr",
-      success_url: `${origin}/inscription/succes?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/inscription?paiement=annule`,
+      success_url: `${appUrl("/inscription/succes")}?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: appUrl("/inscription?paiement=annule"),
     });
     await adminDb().from("leads").update({ stage: "checkout" }).eq("id", lead.id);
 

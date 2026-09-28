@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { appUrl } from "@/lib/app-url";
 import { loginEmail } from "@/lib/email/templates";
 import { sendEmail } from "@/lib/email/send";
 import { isEmail } from "@/lib/onboarding/lead";
@@ -31,8 +31,7 @@ export async function sendLoginLink(_: LoginState, form: FormData): Promise<Logi
     if (member) {
       const link = await db.auth.admin.generateLink({ type: "magiclink", email });
       if (link.error) throw link.error;
-      const origin = (await headers()).get("origin") ?? "";
-      const url = `${origin}/auth/callback?token_hash=${encodeURIComponent(link.data.properties.hashed_token)}&type=email`;
+      const url = appUrl(`/auth/callback?token_hash=${encodeURIComponent(link.data.properties.hashed_token)}&type=email`);
       await sendEmail(loginEmail(email, url));
     }
   } catch (err) {
