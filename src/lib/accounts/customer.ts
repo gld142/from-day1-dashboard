@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
 import type { Contract } from "@/lib/contracts/contract";
+import { normTitle, type Split } from "@/lib/splits/split";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
 import type { UserData } from "@/lib/userdata/store";
 
@@ -91,4 +92,52 @@ export async function customerContracts(workspaceId: string): Promise<CustomerCo
     recouped_eur: toNumber(r.recouped_eur),
   })) as Contract[];
   return { artists: artists ?? [], contracts };
+}
+
+/** Titres du dernier relevé d'un artiste : revenus et streams par titre (indexés par normTitle). */
+export type ArtistTitles = {
+  titles: string[];
+  revenue: Record<string, number>;
+  streams: Record<string, number>;
+  /** false : relevé importé avant le détail des revenus par titre. */
+  hasRevenue: boolean;
+  period: { from: string; to: string } | null;
+};
+export type CustomerSplits = { artists: { id: string; name: string }[]; splits: Split[]; titles: Record<string, ArtistTitles> };
+
+/** Les splits visibles (RLS), les artistes, et les titres de leur dernier relevé pour calculer qui touche quoi. */
+export async function customerSplits(workspaceId: string): Promise<CustomerSplits> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: rows, error: sErr }, { data: imports, error: iErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db.from("splits").select("id, updated_at, artist_id, title, isrc, status, notes, shares").eq("workspace_id", workspaceId).order("created_at"),
+    db
+      .from("artist_imports")
+      .select("artist_id, trackRevenue:data->trackRevenue, trackStreams:data->trackStreams, months:data->months")
+      .eq("workspace_id", workspaceId)
+      .order("created_at", { ascending: false }),
+  ]);
+  if (aErr) throw aErr;
+  if (sErr) throw sErr;
+  if (iErr) throw iErr;
+  const titles: Record<string, ArtistTitles> = {};
+  for (const imp of imports ?? []) {
+    if (titles[imp.artist_id]) continue; // le plus récent seulement
+    const streams = (imp.trackStreams ?? {}) as Record<string, number>;
+    const revenue = imp.trackRevenue as Record<string, number> | null;
+    const months = ((imp.months ?? []) as string[]).slice().sort();
+    const byNorm = (o: Record<string, number>) => {
+      const out: Record<string, number> = {};
+      for (const [t, v] of Object.entries(o)) out[normTitle(t)] = Math.round(((out[normTitle(t)] ?? 0) + v) * 100) / 100;
+      return out;
+    };
+    titles[imp.artist_id] = {
+      titles: Object.keys(streams).sort((a, b) => (streams[b] ?? 0) - (streams[a] ?? 0)),
+      revenue: revenue ? byNorm(revenue) : {},
+      streams: byNorm(streams),
+      hasRevenue: Boolean(revenue),
+      period: months.length ? { from: months[0], to: months[months.length - 1] } : null,
+    };
+  }
+  return { artists: artists ?? [], splits: (rows ?? []) as Split[], titles };
 }

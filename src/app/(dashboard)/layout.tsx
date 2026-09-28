@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
-import { customerContracts, customerRoster, customerView } from "@/lib/accounts/customer";
+import { customerContracts, customerRoster, customerSplits, customerView } from "@/lib/accounts/customer";
 import { CustomerMode } from "@/lib/customer-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
 import { CUSTOMER_HOME, isCustomerPath, isStructurePath, needsStatement } from "@/lib/nav";
@@ -24,9 +24,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
     // La vue structure et les contrats ne dépendent pas du relevé de l'artiste ouvert ; les autres pages, si.
     if (!view.data && needsStatement(path)) redirect("/import");
     const roster = isStructurePath(path) ? await customerRoster(view.info.workspaceId) : null;
-    const contracts = path === "/contracts" || path.startsWith("/contracts/") ? await customerContracts(view.info.workspaceId) : null;
+    const on = (m: string) => path === m || path.startsWith(`${m}/`);
+    const contracts = on("/contracts") ? await customerContracts(view.info.workspaceId) : null;
+    const splits = on("/splits") ? await customerSplits(view.info.workspaceId) : null;
     return (
-      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts}>
+      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );

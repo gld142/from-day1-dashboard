@@ -6,7 +6,7 @@
  * l'équipe de l'espace de cet artiste. L'artiste invité lit, n'écrit pas.
  */
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { editableWorkspace } from "@/lib/accounts/editor";
 import { parseContract } from "@/lib/contracts/contract";
 import { adminDb } from "@/lib/supabase/admin";
 import { userDb } from "@/lib/supabase/server";
@@ -15,23 +15,6 @@ export type ContractFormState = { status: "idle" | "ok" | "error"; message?: str
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const DENIED = "Seuls le propriétaire et l'équipe de l'espace peuvent modifier les contrats.";
-
-/** L'espace de cet artiste, si la personne connectée peut y modifier les contrats. */
-async function editableWorkspace(artistId: string) {
-  const db = await userDb();
-  const { data } = await db.auth.getUser();
-  if (!data.user) redirect("/connexion");
-  // Lu avec SA session : un artiste qu'elle ne voit pas n'existe pas pour elle.
-  const { data: artist } = await db.from("artists").select("workspace_id").eq("id", artistId).maybeSingle();
-  if (!artist) return null;
-  const { data: me } = await db
-    .from("workspace_members")
-    .select("role")
-    .eq("workspace_id", artist.workspace_id)
-    .eq("user_id", data.user.id)
-    .maybeSingle();
-  return me && (me.role === "owner" || me.role === "member") ? { userId: data.user.id, workspaceId: artist.workspace_id as string } : null;
-}
 
 export async function saveContract(_: ContractFormState, form: FormData): Promise<ContractFormState> {
   const raw = Object.fromEntries([...form.entries()].map(([k, v]) => [k, typeof v === "string" ? v : ""]));
@@ -42,13 +25,14 @@ export async function saveContract(_: ContractFormState, form: FormData): Promis
 
   const db = adminDb();
   const id = raw.id && UUID.test(raw.id) ? raw.id : null;
-  const { error } = id
-    ? // .eq(workspace_id) : on ne modifie qu'un contrat de CET espace.
-      await db.from("contracts").update({ ...parsed.value, updated_at: new Date().toISOString() }).eq("id", id).eq("workspace_id", ctx.workspaceId)
-    : await db.from("contracts").insert({ ...parsed.value, workspace_id: ctx.workspaceId, created_by: ctx.userId });
-  if (error) {
-    console.error("[contracts/save]", error);
-    return { status: "error", message: "Le contrat n'a pas pu être enregistré." };
+  // .select("id") : une modification qui ne touche AUCUNE ligne (élément d'un
+  // autre espace, ou supprimé entre-temps) est une erreur, pas un « enregistré ».
+  const { data: written, error } = id
+    ? await db.from("contracts").update({ ...parsed.value, updated_at: new Date().toISOString() }).eq("id", id).eq("workspace_id", ctx.workspaceId).select("id")
+    : await db.from("contracts").insert({ ...parsed.value, workspace_id: ctx.workspaceId, created_by: ctx.userId }).select("id");
+  if (error || !written?.length) {
+    if (error) console.error("[contracts/save]", error);
+    return { status: "error", message: error ? "Le contrat n'a pas pu être enregistré." : "Le contrat est introuvable dans cet espace." };
   }
   revalidatePath("/contracts");
   return { status: "ok" };

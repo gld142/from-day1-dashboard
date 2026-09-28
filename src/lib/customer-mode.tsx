@@ -12,7 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
-import type { CustomerContracts } from "@/lib/accounts/customer";
+import type { CustomerContracts, CustomerSplits } from "@/lib/accounts/customer";
 import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
@@ -29,6 +29,7 @@ export type CustomerInfo = {
 const Ctx = createContext<CustomerInfo | null>(null);
 const RosterCtx = createContext<RosterArtist[] | null>(null);
 const ContractsCtx = createContext<CustomerContracts | null>(null);
+const SplitsCtx = createContext<CustomerSplits | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -45,6 +46,11 @@ export function useCustomerContracts(): CustomerContracts | null {
   return useContext(ContractsCtx);
 }
 
+/** Les splits visibles (RLS), les artistes et les titres de leurs relevés — chargés sur /splits seulement. */
+export function useCustomerSplits(): CustomerSplits | null {
+  return useContext(SplitsCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
@@ -52,12 +58,14 @@ export function CustomerMode({
   data,
   roster = null,
   contracts = null,
+  splits = null,
   children,
 }: {
   info: CustomerInfo;
   data: UserData | null;
   roster?: RosterArtist[] | null;
   contracts?: CustomerContracts | null;
+  splits?: CustomerSplits | null;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -69,7 +77,9 @@ export function CustomerMode({
     <Ctx.Provider value={info}>
       <RosterCtx.Provider value={roster}>
         <ContractsCtx.Provider value={contracts}>
-          <CustomerRoleProvider>{children}</CustomerRoleProvider>
+          <SplitsCtx.Provider value={splits}>
+            <CustomerRoleProvider>{children}</CustomerRoleProvider>
+          </SplitsCtx.Provider>
         </ContractsCtx.Provider>
       </RosterCtx.Provider>
     </Ctx.Provider>

@@ -12,6 +12,8 @@
  * Persona artiste : ses titres, et il peut signer ceux qui ne le sont pas
  * (signature locale à l'appareil). Persona label : groupé par artiste.
  */
+import { CustomerSplits } from "@/components/modules/customer/customer-splits";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ARTISTS, PROJECTS, SPLITS, TRACKS, getArtist } from "@/lib/demo/api";
@@ -94,7 +96,12 @@ function itemsFor(artistId: string): SplitItem[] {
     );
 }
 
+/** Mode client : les splits saisis dans l'espace ; sinon la démo, intacte. */
 export default function SplitsPage() {
+  return useCustomer() ? <CustomerSplits /> : <DemoSplitsPage />;
+}
+
+function DemoSplitsPage() {
   const t = useTranslations("splits");
   const tc = useTranslations("common");
   const locale = useLocale();
