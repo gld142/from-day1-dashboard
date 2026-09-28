@@ -74,3 +74,20 @@ streams » (/revenue), le panneau « Brief du jour » (barre du haut) et la
 « Répartition projetée par source » (/calculator). Les trois avaient la même
 signature : composant supprimé, clés de traduction restées orphelines. Ne pas laisser l'entrée launch.json derrière
 soi : le chemin `/tmp` n'est pas portable.
+
+## La démo de présentation est FIGÉE — ne jamais déployer le produit par-dessus
+
+Décidé avec Gaël le 28/09/2026 : la démo sert aux présentations et ne bouge plus.
+- En ligne : https://deploy-one-tawny-59.vercel.app (mot de passe), projet Vercel
+  `_deploy`, déploiement `dpl_9aWB8EN71TCNnVeAnd64XpnJhhWL` du 25/09/2026 17h42.
+- Code : branche `demo` et étiquette `demo-2026-09-25` (commit c276112) sur GitHub.
+- Le dossier `from-day1-dashboard` est lié à ce projet Vercel : un `vercel --prod`
+  lancé depuis là REMPLACE la démo. Ne le faire que pour la démo elle-même.
+- Le vrai produit (cette branche `achat` et la suite) se déploie dans un AUTRE
+  projet Vercel, à créer au moment de la mise en ligne.
+- Une adresse `*.vercel.app` ajoutée à la main tombe derrière la connexion Vercel
+  (protection du compte) : essayé le 28/09, inutilisable pour une présentation.
+
+Dans le produit, le mode démo (mot de passe → données de démo) reste en place :
+chaque module rendu réel lit les données du client en mode client, et garde les
+données de démo sinon.
