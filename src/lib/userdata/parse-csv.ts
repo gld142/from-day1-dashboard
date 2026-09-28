@@ -22,6 +22,22 @@ export type ParsedStatement = {
   countryStreams: Record<string, number>;
   /** ISO2 pays → revenu cumulé (devise source) */
   countryRevenue: Record<string, number>;
+  /**
+   * Détail gardé depuis le 29/09/2026 (avant : jeté à l'import) — titre × mois et
+   * pays × mois (demi-vie d'un titre, taux par pays dans le temps), ISRC par titre
+   * (rapprochement exact avec les splits), mois de vente → mois du relevé (délai de
+   * paiement), retenues, revenus par artiste crédité (relevés de label).
+   */
+  trackMonthStreams: Record<string, Record<string, number>>;
+  trackMonthRevenue: Record<string, Record<string, number>>;
+  countryMonthStreams: Record<string, Record<string, number>>;
+  countryMonthRevenue: Record<string, Record<string, number>>;
+  trackIsrc: Record<string, string>;
+  /** « AAAA-MM>AAAA-MM » (mois de vente > mois du relevé) → revenu (devise source) */
+  saleReportRevenue: Record<string, number>;
+  /** Retenues à la source (DistroKid « Songwriter Royalties Withheld »), devise source */
+  withheld: number;
+  artistRevenue: Record<string, number>;
   totalStreams: number;
   totalRevenue: number;
   months: string[]; // triés
@@ -74,6 +90,9 @@ function parseLine(line: string, delim: string): string[] {
 
 /* ─────────── Normalisations ─────────── */
 
+/** ISRC : 2 lettres (pays), 3 caractères (déclarant), 2 chiffres (année), 5 chiffres. */
+export const ISRC = /^[A-Z]{2}[A-Z0-9]{3}\d{7}$/;
+
 const STORE_TO_DSP: Array<[RegExp, DSP]> = [
   [/spotify/i, "spotify"],
   [/apple|itunes/i, "apple"],
@@ -117,6 +136,9 @@ function parseNumber(raw: string): number {
 
 type ColumnMap = {
   month: number;
+  report: number;
+  isrc: number;
+  withheld: number;
   store: number;
   artist: number;
   title: number;
@@ -140,7 +162,13 @@ function detectFormat(headers: string[]): {
 } {
   const h = headers.map((x) => x.toLowerCase());
   const cols: ColumnMap = {
-    month: findCol(h, [/sale month/, /sales period/, /période|periode/, /^month$/, /reporting/, /^date$/]),
+    // « Sale Month » (DistroKid) comme « Sales Month » : le mois de VENTE. Le mois du
+    // relevé n'est qu'un dernier recours (mesuré le 29/09 : « Sales Month » tombait sur
+    // « Reporting Month », revenus datés deux mois trop tard).
+    month: findCol(h, [/sales? month/, /sales? period/, /période|periode/, /^month$/, /reporting/, /^date$/]),
+    report: findCol(h, [/reporting (date|month|period)/, /^reporting/, /statement (date|month|period)/, /date (de|du) (rapport|relevé)/, /accounting (period|date)/]),
+    isrc: findCol(h, [/^isrc$/, /isrc/]),
+    withheld: findCol(h, [/withheld/, /retenue/]),
     store: findCol(h, [/^store$/, /store name/, /platform|plateforme/, /^dsp$/, /retailer/]),
     artist: findCol(h, [/^artist/, /artiste/]),
     title: findCol(h, [/song title/, /^title$/, /^song/, /titre/, /track/]),
@@ -192,6 +220,20 @@ export function parseStatement(text: string): ParsedStatement {
   const countryStreams: Record<string, number> = {};
   const countryRevenue: Record<string, number> = {};
   const artists = new Set<string>();
+  const trackMonthStreams: ParsedStatement["trackMonthStreams"] = {};
+  const trackMonthRevenue: ParsedStatement["trackMonthRevenue"] = {};
+  const countryMonthStreams: ParsedStatement["countryMonthStreams"] = {};
+  const countryMonthRevenue: ParsedStatement["countryMonthRevenue"] = {};
+  const trackIsrc: Record<string, string> = {};
+  const saleReportRevenue: Record<string, number> = {};
+  const artistRevenue: Record<string, number> = {};
+  let withheld = 0;
+  // Le mois du relevé ne dit quelque chose que s'il vient d'une autre colonne que le mois de vente.
+  const reportCol = cols.report >= 0 && cols.report !== cols.month ? cols.report : -1;
+  const add = (o: Record<string, Record<string, number>>, k: string, m: string, v: number) => {
+    const inner = (o[k] ??= {});
+    inner[m] = (inner[m] ?? 0) + v;
+  };
   let totalStreams = 0;
   let totalRevenue = 0;
   let skipped = 0;
@@ -225,17 +267,36 @@ export function parseStatement(text: string): ParsedStatement {
       totalRevenue += earn;
     }
     if (cols.title >= 0 && row[cols.title]) {
-      trackStreams[row[cols.title]] = (trackStreams[row[cols.title]] ?? 0) + qty;
-      if (earn !== 0) trackRevenue[row[cols.title]] = (trackRevenue[row[cols.title]] ?? 0) + earn;
+      const title = row[cols.title];
+      trackStreams[title] = (trackStreams[title] ?? 0) + qty;
+      if (earn !== 0) trackRevenue[title] = (trackRevenue[title] ?? 0) + earn;
+      if (month) {
+        if (qty > 0) add(trackMonthStreams, title, month, qty);
+        if (earn !== 0) add(trackMonthRevenue, title, month, earn);
+      }
+      const isrc = cols.isrc >= 0 ? (row[cols.isrc] ?? "").replace(/[-\s]/g, "").toUpperCase() : "";
+      if (ISRC.test(isrc) && !trackIsrc[title]) trackIsrc[title] = isrc;
     }
     if (cols.country >= 0 && row[cols.country]) {
       const cc = row[cols.country].trim().toUpperCase().slice(0, 2);
       if (/^[A-Z]{2}$/.test(cc)) {
         countryStreams[cc] = (countryStreams[cc] ?? 0) + qty;
         if (earn !== 0) countryRevenue[cc] = (countryRevenue[cc] ?? 0) + earn;
+        if (month) {
+          if (qty > 0) add(countryMonthStreams, cc, month, qty);
+          if (earn !== 0) add(countryMonthRevenue, cc, month, earn);
+        }
       }
     }
-    if (cols.artist >= 0 && row[cols.artist]) artists.add(row[cols.artist]);
+    if (reportCol >= 0 && month && earn !== 0) {
+      const report = normalizeMonth(row[reportCol] ?? "");
+      if (report) saleReportRevenue[`${month}>${report}`] = (saleReportRevenue[`${month}>${report}`] ?? 0) + earn;
+    }
+    if (cols.withheld >= 0) withheld += parseNumber(row[cols.withheld] ?? "");
+    if (cols.artist >= 0 && row[cols.artist]) {
+      artists.add(row[cols.artist]);
+      if (earn !== 0) artistRevenue[row[cols.artist]] = (artistRevenue[row[cols.artist]] ?? 0) + earn;
+    }
   }
 
   if (skipped > 0) warnings.push(`SKIPPED_ROWS:${skipped}`);
@@ -256,6 +317,14 @@ export function parseStatement(text: string): ParsedStatement {
     trackRevenue,
     countryStreams,
     countryRevenue,
+    trackMonthStreams,
+    trackMonthRevenue,
+    countryMonthStreams,
+    countryMonthRevenue,
+    trackIsrc,
+    saleReportRevenue: Object.fromEntries(Object.entries(saleReportRevenue).map(([k, v]) => [k, Math.round(v * 100) / 100])),
+    withheld: Math.round(withheld * 100) / 100,
+    artistRevenue,
     totalStreams,
     totalRevenue: Math.round(totalRevenue * 100) / 100,
     months,

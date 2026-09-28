@@ -33,10 +33,27 @@ export type UserData = {
   revenueByMonthDsp?: Record<string, Partial<Record<DSP, number>>>;
   trackRevenue?: Record<string, number>;
   countryRevenue?: Record<string, number>; // ISO2
+  /**
+   * Détail gardé depuis le 29/09/2026 — ABSENT des relevés importés avant (les
+   * pages disent alors « réimporte pour voir »). Revenus en EUR au taux de l'import.
+   * titre × mois : seulement les DETAIL_TITLES titres qui rapportent le plus.
+   */
+  trackMonthStreams?: Record<string, Record<string, number>>;
+  trackMonthRevenue?: Record<string, Record<string, number>>;
+  countryMonthStreams?: Record<string, Record<string, number>>; // ISO2 → mois → streams
+  countryMonthRevenue?: Record<string, Record<string, number>>;
+  trackIsrc?: Record<string, string>;
+  /** « AAAA-MM>AAAA-MM » (vente > relevé) → EUR : délai de paiement */
+  saleReportRevenue?: Record<string, number>;
+  withheldEur?: number;
+  artistRevenue?: Record<string, number>;
   totalStreams: number;
   totalRevenueEur: number;
   active: boolean;
 };
+
+/** Titres gardés mois par mois (les autres restent dans les totaux par titre) : borne la taille en base. */
+export const DETAIL_TITLES = 300;
 
 /* Cache module — hydraté côté client, lu de façon synchrone par api.ts. */
 let cache: UserData | null = null;
@@ -146,6 +163,15 @@ export function buildUserData(
     revenueByMonthDsp[m] = Object.fromEntries(Object.entries(perDsp).map(([dsp, v]) => [dsp, eur(v ?? 0)]));
   }
   const toEur = (o: Record<string, number>) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, eur(v)]));
+  const nestedEur = (o: Record<string, Record<string, number>>) => Object.fromEntries(Object.entries(o).map(([k, inner]) => [k, toEur(inner)]));
+  // Détail titre × mois : les titres qui rapportent le plus (puis les plus écoutés).
+  const weight = (t: string) => Math.abs(parsed.trackRevenue[t] ?? 0) * 1e9 + (parsed.trackStreams[t] ?? 0);
+  const keep = new Set(
+    [...new Set([...Object.keys(parsed.trackMonthStreams), ...Object.keys(parsed.trackMonthRevenue)])]
+      .sort((a, b) => weight(b) - weight(a))
+      .slice(0, DETAIL_TITLES),
+  );
+  const only = <T,>(o: Record<string, T>) => Object.fromEntries(Object.entries(o).filter(([t]) => keep.has(t)));
   return {
     version: 1,
     artistName: opts.artistName,
@@ -161,6 +187,14 @@ export function buildUserData(
     revenueByMonthDsp,
     trackRevenue: toEur(parsed.trackRevenue),
     countryRevenue: toEur(parsed.countryRevenue),
+    trackMonthStreams: only(parsed.trackMonthStreams),
+    trackMonthRevenue: nestedEur(only(parsed.trackMonthRevenue)),
+    countryMonthStreams: parsed.countryMonthStreams,
+    countryMonthRevenue: nestedEur(parsed.countryMonthRevenue),
+    trackIsrc: parsed.trackIsrc,
+    saleReportRevenue: toEur(parsed.saleReportRevenue),
+    withheldEur: eur(parsed.withheld),
+    artistRevenue: toEur(parsed.artistRevenue),
     totalStreams: parsed.totalStreams,
     totalRevenueEur: Math.round(parsed.totalRevenue * rate),
     active: true,

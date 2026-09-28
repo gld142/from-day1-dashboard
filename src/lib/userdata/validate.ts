@@ -1,5 +1,6 @@
 import { DSPS as DSP_LIST } from "@/lib/demo/types";
-import type { UserData } from "./store";
+import { ISRC } from "./parse-csv";
+import { DETAIL_TITLES, type UserData } from "./store";
 
 const DSPS: ReadonlySet<string> = new Set(DSP_LIST);
 const MONTH = /^\d{4}-\d{2}$/;
@@ -58,6 +59,62 @@ function revenueBreakdowns(d: Record<string, unknown>): Breakdowns | null {
   return out;
 }
 
+/** Carte à deux niveaux (titre ou pays → mois → nombre), bornée. */
+function nestedMap(v: unknown, maxOuter: number, outerKey: (k: string) => boolean, value: (n: unknown) => boolean): Record<string, Record<string, number>> | null {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
+  const entries = Object.entries(v as Record<string, unknown>);
+  if (entries.length > maxOuter) return null;
+  const out: Record<string, Record<string, number>> = {};
+  for (const [k, inner] of entries) {
+    const clean = numberMap(inner, 360, (m) => MONTH.test(m), value);
+    if (!outerKey(k) || !clean) return null;
+    out[k] = clean;
+  }
+  return out;
+}
+
+/** Détail gardé depuis le 29/09/2026 : chaque champ absent = relevé plus ancien, pas une erreur. */
+type Detail = Pick<UserData, "trackMonthStreams" | "trackMonthRevenue" | "countryMonthStreams" | "countryMonthRevenue" | "trackIsrc" | "saleReportRevenue" | "withheldEur" | "artistRevenue">;
+function detail(d: Record<string, unknown>): Detail | null {
+  const out: Detail = {};
+  const title = (k: string) => k.length <= 300;
+  const iso2 = (k: string) => /^[A-Z]{2}$/.test(k);
+  const nested = [
+    ["trackMonthStreams", DETAIL_TITLES, title, num],
+    ["trackMonthRevenue", DETAIL_TITLES, title, signedNum],
+    ["countryMonthStreams", 300, iso2, num],
+    ["countryMonthRevenue", 300, iso2, signedNum],
+  ] as const;
+  for (const [key, max, k, v] of nested) {
+    if (d[key] === undefined) continue;
+    const clean = nestedMap(d[key], max, k, v);
+    if (!clean) return null;
+    out[key] = clean;
+  }
+  if (d.trackIsrc !== undefined) {
+    const raw = d.trackIsrc;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+    const entries = Object.entries(raw as Record<string, unknown>);
+    if (entries.length > 5000 || !entries.every(([t, i]) => title(t) && typeof i === "string" && ISRC.test(i))) return null;
+    out.trackIsrc = Object.fromEntries(entries) as Record<string, string>;
+  }
+  if (d.saleReportRevenue !== undefined) {
+    const clean = numberMap(d.saleReportRevenue, 2000, (k) => /^\d{4}-\d{2}>\d{4}-\d{2}$/.test(k), signedNum);
+    if (!clean) return null;
+    out.saleReportRevenue = clean;
+  }
+  if (d.withheldEur !== undefined) {
+    if (!signedNum(d.withheldEur)) return null;
+    out.withheldEur = d.withheldEur as number;
+  }
+  if (d.artistRevenue !== undefined) {
+    const clean = numberMap(d.artistRevenue, 500, (k) => k.length <= 200, signedNum);
+    if (!clean) return null;
+    out.artistRevenue = clean;
+  }
+  return out;
+}
+
 /**
  * Vérifie un relevé envoyé par le navigateur avant de l'enregistrer : bonne forme,
  * nombres finis et positifs, tailles bornées. Renvoie une copie propre, ou null.
@@ -91,6 +148,8 @@ export function validateUserData(input: unknown): UserData | null {
   if (!revenueByMonth || !trackStreams || !countryStreams || !num(d.totalStreams) || !num(d.totalRevenueEur)) return null;
   const breakdowns = revenueBreakdowns(d);
   if (!breakdowns) return null;
+  const extra = detail(d);
+  if (!extra) return null;
 
   return {
     version: 1,
@@ -108,5 +167,6 @@ export function validateUserData(input: unknown): UserData | null {
     totalRevenueEur: d.totalRevenueEur as number,
     active: true,
     ...breakdowns,
+    ...extra,
   };
 }

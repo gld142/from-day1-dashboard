@@ -102,3 +102,54 @@ describe("storeToDsp", () => {
     expect(storeToDsp("Boutique Inconnue")).toBe("other");
   });
 });
+
+describe("parseStatement — détail gardé à l'import (29/09/2026)", () => {
+  const p = parseStatement(DISTROKID_CSV);
+
+  it("titre × mois : streams et revenus", () => {
+    expect(p.trackMonthStreams["Premier Titre"]).toEqual({ "2026-03": 15230 + 3120, "2026-04": 18900 + 5600 });
+    expect(p.trackMonthRevenue["Deuxième Titre"]["2026-03"]).toBeCloseTo(25.35, 2);
+    expect(p.trackMonthRevenue["Deuxième Titre"]["2026-04"]).toBeCloseTo(7.14, 2);
+  });
+
+  it("pays × mois : streams et revenus", () => {
+    expect(p.countryMonthStreams.FR).toEqual({ "2026-03": 15230 + 3120, "2026-04": 18900 + 2100 });
+    expect(p.countryMonthRevenue.US["2026-04"]).toBeCloseTo(4.48, 2);
+  });
+
+  it("ISRC de chaque titre (sans tirets, en majuscules)", () => {
+    expect(p.trackIsrc).toEqual({ "Premier Titre": "FR1234567890", "Deuxième Titre": "FR1234567891" });
+  });
+
+  it("mois de vente → mois du relevé : de quoi mesurer le délai de paiement", () => {
+    expect(p.saleReportRevenue["2026-03>2026-05"]).toBeCloseTo(45.69 + 18.72 + 25.35, 2);
+    expect(p.saleReportRevenue["2026-04>2026-05"]).toBeCloseTo(56.7 + 7.14 + 4.48, 2);
+  });
+
+  it("retenues et revenus par artiste crédité", () => {
+    expect(p.withheld).toBe(0);
+    expect(p.artistRevenue["Mon Projet"]).toBeCloseTo(p.totalRevenue, 2);
+  });
+
+  it("TuneCore : ni date de relevé ni ISRC → rien d'inventé", () => {
+    const t = parseStatement(TUNECORE_CSV);
+    expect(t.saleReportRevenue).toEqual({});
+    expect(t.trackIsrc).toEqual({});
+    expect(t.trackMonthStreams["Titre A"]).toEqual({ "2026-01": 14400 });
+  });
+
+  it("en-tête « Sales Month » : le mois de VENTE, pas celui du relevé", () => {
+    const csv = `Sales Month;Reporting Month;Platform;Artist;Title;ISRC;Nb of Streams;Net Income;Country
+2026-02;2026-04;Spotify;X;T1;FR-ABC-26-00001;1000;3,10;FR
+2026-03;2026-05;Deezer;X;T1;FR-ABC-26-00001;500;2,00;FR`;
+    const b = parseStatement(csv);
+    expect(b.months).toEqual(["2026-02", "2026-03"]);
+    expect(b.saleReportRevenue).toEqual({ "2026-02>2026-04": 3.1, "2026-03>2026-05": 2 });
+    expect(b.trackIsrc).toEqual({ T1: "FRABC2600001" });
+  });
+
+  it("retenues DistroKid additionnées", () => {
+    const csv = DISTROKID_CSV.replace("FR,0,45.69", "FR,1.25,45.69").replace("FR,0,56.70", "FR,0.75,56.70");
+    expect(parseStatement(csv).withheld).toBeCloseTo(2, 2);
+  });
+});
