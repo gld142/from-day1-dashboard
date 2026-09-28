@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ChevronDown, Sunrise } from "lucide-react";
+import { useCustomer } from "@/lib/customer-mode";
 import { useModules } from "@/lib/userdata/use-modules";
 import { useNavCollapse } from "@/lib/nav-collapse";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,7 @@ export function Sidebar() {
   const t = useTranslations("nav");
   const tc = useTranslations("common");
   const { sections } = useModules();
+  const customer = useCustomer();
   // Plier une section est un choix, pas un défaut : au premier lancement tout
   // est déplié, et ce que l'utilisateur replie lui reste replié.
   const { collapsed, toggle } = useNavCollapse();
@@ -128,12 +130,16 @@ export function Sidebar() {
         </nav>
       </ScrollArea>
 
-      <div className="hairline-t px-4 py-3 text-[10px] text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="size-1.5 animate-pulse rounded-full bg-success" aria-hidden />
-          {tc("states.upToDate")}
-        </span>
-      </div>
+      {/* « À jour » décrit la démo, rafraîchie chaque jour ; un client lit des
+          relevés mensuels qui peuvent dater : on ne l'affirme pas pour lui. */}
+      {!customer && (
+        <div className="hairline-t px-4 py-3 text-[10px] text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="size-1.5 animate-pulse rounded-full bg-success" aria-hidden />
+            {tc("states.upToDate")}
+          </span>
+        </div>
+      )}
     </aside>
   );
 }

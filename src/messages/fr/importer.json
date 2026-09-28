@@ -53,11 +53,14 @@
     "reimport": "Importer un nouveau relevé",
     "deactivate": "Repasser en mode démo",
     "delete": "Supprimer mes données",
-    "deleteConfirm": "Tes données importées seront effacées de ce navigateur. Continuer ?"
+    "deleteConfirm": "Tes données importées seront effacées de ce navigateur. Continuer ?",
+    "descriptionCustomer": "Mon relevé affiche les chiffres de « {name} » — importés le {date} depuis {format}.",
+    "modulesCustomer": "Les autres pages du dashboard s'ouvrent au fur et à mesure qu'elles sont branchées sur les relevés."
   },
   "success": {
     "title": "C'est fait — bienvenue chez toi.",
-    "description": "Ton Pulse, tes revenus, ta valorisation : tout est calculé sur tes vrais chiffres."
+    "description": "Ton Pulse, tes revenus, ta valorisation : tout est calculé sur tes vrais chiffres.",
+    "descriptionCustomer": "Le relevé est enregistré dans ton espace : il alimente Mon relevé et le Roster de la structure."
   },
   "howto": {
     "title": "Où trouver ton relevé ?",

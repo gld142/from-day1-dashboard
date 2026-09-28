@@ -43,6 +43,7 @@ import {
   Users,
   UsersRound,
 } from "lucide-react";
+import type { CustomerInfo } from "@/lib/customer-mode";
 import type { Persona } from "@/lib/role";
 
 export type NavItem = {
@@ -73,13 +74,29 @@ export type ModuleOverrides = Record<string, boolean>;
  */
 export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/import"]);
 
+/**
+ * Pages clientes de la VUE STRUCTURE : propriétaire et équipe seulement. Un
+ * artiste invité ne voit que son relevé (la RLS ne lui donne de toute façon
+ * que le sien). Roster rendu réel le 28/09 : relevés importés, fenêtre commune.
+ */
+export const CUSTOMER_STRUCTURE_MODULES: ReadonlySet<string> = new Set(["/roster"]);
+
 /** Accueil du mode client : le relevé mensuel, sans « hier » inventé (le Pulse est quotidien). */
 export const CUSTOMER_HOME = "/mon-releve";
 export const CUSTOMER_HOME_ITEM: NavItem = { href: CUSTOMER_HOME, labelKey: "items.statement", icon: FileText };
+export const CUSTOMER_ROSTER_ITEM: NavItem = { href: "/roster", labelKey: "items.roster", icon: UsersRound };
 
-/** La page (ou sous-page) `path` est-elle ouverte aux clients ? */
-export function isCustomerPath(path: string): boolean {
-  return [...CUSTOMER_MODULES].some((m) => path === m || path.startsWith(`${m}/`));
+const under = (path: string, modules: ReadonlySet<string>) =>
+  [...modules].some((m) => path === m || path.startsWith(`${m}/`));
+
+/** La page (ou sous-page) `path` est-elle ouverte à ce client ? */
+export function isCustomerPath(path: string, role: CustomerInfo["role"]): boolean {
+  return under(path, CUSTOMER_MODULES) || (role !== "artist" && isStructurePath(path));
+}
+
+/** Page de la vue structure : elle ne dépend pas de l'artiste ouvert (ni de son relevé). */
+export function isStructurePath(path: string): boolean {
+  return under(path, CUSTOMER_STRUCTURE_MODULES);
 }
 
 /** Seule page jamais masquable : c'est là que l'on réactive les autres. */

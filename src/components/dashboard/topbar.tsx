@@ -166,8 +166,10 @@ export function Topbar() {
         {/* Le brief du jour se lit depuis N'IMPORTE QUELLE page. Retiré le
             23/09 au motif qu'il doublait Pulse, il ne le double que si l'on
             est déjà sur Pulse : depuis /contracts ou /rights, c'est le seul
-            accès à l'essentiel du jour. */}
-        <DailyBrief />
+            accès à l'essentiel du jour. Pas en mode client : il raisonne en
+            « hier / ce mois-ci » et renvoie vers des pages fermées — mesuré le
+            28/09 sur un relevé mensuel : « Streams hier 0 », date de la démo. */}
+        {!customer && <DailyBrief />}
         {/* Ambiance : nuit / aube / jour */}
         <div
           className="flex items-center rounded-full border p-0.5"

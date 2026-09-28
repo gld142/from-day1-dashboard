@@ -3,14 +3,15 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
-import { customerView } from "@/lib/accounts/customer";
+import { customerRoster, customerView } from "@/lib/accounts/customer";
 import { CustomerMode } from "@/lib/customer-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
-import { CUSTOMER_HOME, isCustomerPath } from "@/lib/nav";
+import { CUSTOMER_HOME, isCustomerPath, isStructurePath } from "@/lib/nav";
 
 /**
  * Deux mondes derrière le même dashboard :
- *  - un client connecté → mode client, SES chiffres, pages branchées seulement ;
+ *  - un client connecté → mode client, SES chiffres, pages branchées seulement
+ *    (le roster, vue structure, pour le propriétaire et l'équipe) ;
  *  - sinon, la démo derrière le mot de passe (inchangée).
  */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -19,10 +20,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (view.kind === "customer") {
     const path = (await headers()).get("x-d1-path") ?? CUSTOMER_HOME;
-    if (!view.data && path !== "/import") redirect("/import");
-    if (!isCustomerPath(path)) redirect(view.data ? CUSTOMER_HOME : "/import");
+    if (!isCustomerPath(path, view.info.role)) redirect(view.data ? CUSTOMER_HOME : "/import");
+    // La vue structure ne dépend pas du relevé de l'artiste ouvert ; les autres pages, si.
+    const structure = isStructurePath(path);
+    if (!view.data && path !== "/import" && !structure) redirect("/import");
+    const roster = structure ? await customerRoster(view.info.workspaceId) : null;
     return (
-      <CustomerMode info={view.info} data={view.data}>
+      <CustomerMode info={view.info} data={view.data} roster={roster}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );

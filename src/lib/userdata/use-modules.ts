@@ -18,7 +18,7 @@ import {
   type NavItem,
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
-import { CUSTOMER_HOME_ITEM, CUSTOMER_MODULES } from "@/lib/nav";
+import { CUSTOMER_HOME_ITEM, CUSTOMER_MODULES, CUSTOMER_ROSTER_ITEM } from "@/lib/nav";
 import { useRole } from "@/lib/role";
 import {
   hydrateModules,
@@ -42,11 +42,13 @@ export function useModules() {
   const sections = useMemo(() => {
     const nav = navForPersona(persona, overrides);
     if (!customer) return nav;
-    // Mode client : seulement les pages branchées sur le relevé du client.
+    // Mode client : seulement les pages branchées sur le relevé du client ; le
+    // roster (vue structure) pour le propriétaire et l'équipe, pas pour l'artiste invité.
     const open = nav
       .map((s) => ({ ...s, items: s.items.filter((i) => CUSTOMER_MODULES.has(i.href)) }))
       .filter((s) => s.items.length > 0);
-    return [{ labelKey: "sections.daily", items: [CUSTOMER_HOME_ITEM] }, ...open.filter((s) => s.labelKey !== "sections.daily")];
+    const daily = customer.role === "artist" ? [CUSTOMER_HOME_ITEM] : [CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM];
+    return [{ labelKey: "sections.daily", items: daily }, ...open.filter((s) => s.labelKey !== "sections.daily")];
   }, [persona, overrides, customer]);
   const catalog = useMemo(() => navCatalogForPersona(persona), [persona]);
   const isVisible = useCallback(

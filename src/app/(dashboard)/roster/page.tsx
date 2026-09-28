@@ -11,6 +11,9 @@
  * Les totaux restent, en points affiliés, à leur juste rang.
  *
  * Réservé à la vue structure.
+ *
+ * Mode client (compte payant) : CustomerRoster, sur les relevés importés de
+ * l'espace — la démo ci-dessous reste telle quelle derrière le mot de passe.
  */
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -22,14 +25,20 @@ import { RosterMatrix } from "@/components/modules/structure/roster-matrix";
 import { RosterPnlBars } from "@/components/modules/structure/roster-pnl-bars";
 import { RosterTable } from "@/components/modules/structure/roster-table";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
+import { CustomerRoster } from "@/components/modules/structure/customer-roster";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur } from "@/lib/format";
+import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
 
 export default function RosterPage() {
+  return useCustomer() ? <CustomerRoster /> : <DemoRoster />;
+}
+
+function DemoRoster() {
   const t = useTranslations("roster");
   const tc = useTranslations("common");
   const locale = useLocale();

@@ -12,6 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
+import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
 export type CustomerInfo = {
@@ -25,15 +26,31 @@ export type CustomerInfo = {
 };
 
 const Ctx = createContext<CustomerInfo | null>(null);
+const RosterCtx = createContext<RosterArtist[] | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
   return useContext(Ctx);
 }
 
+/** Les artistes de l'espace et leur dernier relevé — chargés sur les pages de la vue structure seulement. */
+export function useCustomerRoster(): RosterArtist[] | null {
+  return useContext(RosterCtx);
+}
+
 const subscribeNever = () => () => {};
 
-export function CustomerMode({ info, data, children }: { info: CustomerInfo; data: UserData | null; children: React.ReactNode }) {
+export function CustomerMode({
+  info,
+  data,
+  roster = null,
+  children,
+}: {
+  info: CustomerInfo;
+  data: UserData | null;
+  roster?: RosterArtist[] | null;
+  children: React.ReactNode;
+}) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
   useEffect(() => () => clearCustomerData(), []);
   if (!mounted) return <div className="p-8 text-sm text-muted-foreground">Chargement de ton dashboard…</div>;
@@ -41,7 +58,9 @@ export function CustomerMode({ info, data, children }: { info: CustomerInfo; dat
   setCustomerDataSilently(data ? { ...data, artistName: info.artistName, active: true } : null);
   return (
     <Ctx.Provider value={info}>
-      <CustomerRoleProvider>{children}</CustomerRoleProvider>
+      <RosterCtx.Provider value={roster}>
+        <CustomerRoleProvider>{children}</CustomerRoleProvider>
+      </RosterCtx.Provider>
     </Ctx.Provider>
   );
 }

@@ -53,11 +53,14 @@
     "reimport": "Import a new statement",
     "deactivate": "Switch back to demo mode",
     "delete": "Delete my data",
-    "deleteConfirm": "Your imported data will be erased from this browser. Continue?"
+    "deleteConfirm": "Your imported data will be erased from this browser. Continue?",
+    "descriptionCustomer": "My statement shows the figures for “{name}” — imported on {date} from {format}.",
+    "modulesCustomer": "The other dashboard pages open as they get connected to statements."
   },
   "success": {
     "title": "Done — welcome home.",
-    "description": "Your Pulse, your revenue, your valuation: everything is computed from your real numbers."
+    "description": "Your Pulse, your revenue, your valuation: everything is computed from your real numbers.",
+    "descriptionCustomer": "The statement is saved in your workspace: it feeds My statement and the organisation's Roster."
   },
   "howto": {
     "title": "Where to find your statement?",

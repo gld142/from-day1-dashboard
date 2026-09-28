@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
+import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
 import type { UserData } from "@/lib/userdata/store";
 
 /** Artiste ouvert dans le dashboard (choisi dans /espace). */
@@ -39,4 +40,28 @@ export async function customerView(): Promise<CustomerView> {
     info: { userId: auth.user.id, workspaceId: artist.workspace_id, email: auth.user.email ?? "", workspaceName: ws.name, role: me.role, artistId: artist.id, artistName: artist.name },
     data: (imp?.data as UserData | undefined) ?? null,
   };
+}
+
+/**
+ * Le roster de l'espace : ses artistes et, pour chacun, son DERNIER relevé —
+ * seulement les champs que le roster lit (pas les titres ni les pays). Lu avec
+ * la session de la personne : la RLS ne rend que ce qu'elle a le droit de voir.
+ */
+export async function customerRoster(workspaceId: string): Promise<RosterArtist[]> {
+  const db = await userDb();
+  const [{ data: artists, error: artistsError }, { data: imports, error: importsError }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db
+      .from("artist_imports")
+      .select("artist_id, months:data->months, revenueByMonth:data->revenueByMonth, streamsByMonth:data->streamsByMonth, importedAt:data->>importedAt, format:data->>format")
+      .eq("workspace_id", workspaceId)
+      .order("created_at", { ascending: false }),
+  ]);
+  if (artistsError) throw artistsError;
+  if (importsError) throw importsError;
+  const latest = new Map<string, RosterStatement>();
+  for (const { artist_id, ...statement } of imports ?? []) {
+    if (!latest.has(artist_id)) latest.set(artist_id, statement as RosterStatement);
+  }
+  return (artists ?? []).map((a) => ({ id: a.id, name: a.name, statement: latest.get(a.id) ?? null }));
 }

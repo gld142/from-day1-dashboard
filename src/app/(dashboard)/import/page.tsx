@@ -156,8 +156,8 @@ export default function ImportPage() {
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 {justActivated
-                  ? t("success.description")
-                  : t("active.description", {
+                  ? t(customer ? "success.descriptionCustomer" : "success.description")
+                  : t(customer ? "active.descriptionCustomer" : "active.description", {
                       name: userData.artistName,
                       date: fmtDate(locale, userData.importedAt),
                       format: t(`preview.formatNames.${userData.format}`),
@@ -171,7 +171,7 @@ export default function ImportPage() {
                 })}
               </p>
               <p className="mt-2 text-[11px] text-muted-foreground">
-                {t("active.modules")}
+                {t(customer ? "active.modulesCustomer" : "active.modules")}
               </p>
             </div>
           </div>
