@@ -18,6 +18,8 @@
  * En vue label sans zoom, la projection somme celle de chaque artiste : le même
  * ajustement de croissance s'applique à tous, et les fourchettes s'additionnent.
  */
+import { CustomerCalculator } from "@/components/modules/customer/customer-calculator";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import NumberFlow from "@number-flow/react";
@@ -86,7 +88,12 @@ function mergeForecasts(series: ForecastPoint[][]): ForecastPoint[] {
   return Array.from(acc.values()).sort((a, b) => a.month.localeCompare(b.month));
 }
 
+/** Mode client : le calculateur sur les taux réels ; sinon la démo (projection), intacte. */
 export default function CalculatorPage() {
+  return useCustomer() ? <CustomerCalculator /> : <DemoCalculatorPage />;
+}
+
+function DemoCalculatorPage() {
   const locale = useLocale();
   const t = useTranslations("calculator");
   const tc = useTranslations("common");

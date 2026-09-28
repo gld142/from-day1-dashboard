@@ -72,7 +72,7 @@ export type ModuleOverrides = Record<string, boolean>;
  * « mode client ». Mesuré le 28/09 : Streams affichait 0 sur 90 jours pour un
  * relevé mars–avril, et « mise à jour quotidienne ».
  */
-export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/import"]);
+export const CUSTOMER_MODULES: ReadonlySet<string> = new Set(["/mon-releve", "/revenue", "/streams", "/audit", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/calculator", "/import"]);
 
 /** Pages clientes qui ne lisent PAS le relevé de l'artiste ouvert : accessibles sans import. */
 export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set(["/contracts", "/splits", "/rights", "/finances", "/catalog"]);
@@ -95,6 +95,7 @@ export const CUSTOMER_FIGURES_ITEMS: NavItem[] = [
   { href: "/streams", labelKey: "items.streamsMonthly", icon: AudioWaveform },
   { href: "/audit", labelKey: "items.audit", icon: ShieldCheck },
   { href: "/finances", labelKey: "items.finances", icon: ReceiptEuro },
+  { href: "/calculator", labelKey: "items.calculatorReal", icon: Calculator },
 ];
 /** Ce que le client saisit lui-même (contrats le 28/09 ; splits et droits à suivre). */
 export const CUSTOMER_BUSINESS_ITEMS: NavItem[] = [
