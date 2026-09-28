@@ -17,6 +17,8 @@
  * net » gonflait d'autant. Un chiffre qui s'améliore quand on filtre n'est pas
  * un résultat.
  */
+import { CustomerFinances } from "@/components/modules/customer/customer-finances";
+import { useCustomer } from "@/lib/customer-mode";
 import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -76,7 +78,12 @@ import { useRole } from "@/lib/role";
 const ALL = "__all__";
 const YEARS = [2025, 2026] as const;
 
+/** Mode client : le résultat sur les vraies données ; sinon la démo, intacte. */
 export default function FinancesPage() {
+  return useCustomer() ? <CustomerFinances /> : <DemoFinancesPage />;
+}
+
+function DemoFinancesPage() {
   const locale = useLocale();
   const t = useTranslations("finances");
   const tc = useTranslations("common");

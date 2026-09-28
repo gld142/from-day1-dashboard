@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
 import type { Contract } from "@/lib/contracts/contract";
+import type { Expense } from "@/lib/finances/pnl";
 import type { RightsPayment } from "@/lib/rights/payment";
 import { normTitle, type Split } from "@/lib/splits/split";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
@@ -160,4 +161,39 @@ export async function customerRights(workspaceId: string): Promise<CustomerRight
   if (pErr) throw pErr;
   const payments = (rows ?? []).map((r) => ({ ...r, amount_eur: Number(r.amount_eur) })) as RightsPayment[];
   return { artists: artists ?? [], payments };
+}
+
+export type CustomerFinances = {
+  artists: { id: string; name: string }[];
+  expenses: Expense[];
+  rights: { artistId: string; paid_on: string; amount_eur: number }[];
+  statements: { artistId: string; revenueByMonth: Record<string, number> }[];
+};
+
+/** Dépenses, droits et revenus des derniers relevés visibles (RLS) — pour le résultat mois par mois. */
+export async function customerFinances(workspaceId: string): Promise<CustomerFinances> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: ex, error: eErr }, { data: rg, error: rErr }, { data: imports, error: iErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db.from("expenses").select("id, updated_at, artist_id, category, spent_on, amount_eur, label, notes").eq("workspace_id", workspaceId).order("spent_on", { ascending: false }),
+    db.from("rights_payments").select("artist_id, paid_on, amount_eur").eq("workspace_id", workspaceId),
+    db.from("artist_imports").select("artist_id, revenueByMonth:data->revenueByMonth").eq("workspace_id", workspaceId).order("created_at", { ascending: false }),
+  ]);
+  if (aErr) throw aErr;
+  if (eErr) throw eErr;
+  if (rErr) throw rErr;
+  if (iErr) throw iErr;
+  const seen = new Set<string>();
+  const statements: CustomerFinances["statements"] = [];
+  for (const imp of imports ?? []) {
+    if (seen.has(imp.artist_id)) continue; // le plus récent seulement
+    seen.add(imp.artist_id);
+    statements.push({ artistId: imp.artist_id, revenueByMonth: (imp.revenueByMonth ?? {}) as Record<string, number> });
+  }
+  return {
+    artists: artists ?? [],
+    expenses: (ex ?? []).map((e) => ({ ...e, amount_eur: Number(e.amount_eur) })) as Expense[],
+    rights: (rg ?? []).map((r) => ({ artistId: r.artist_id, paid_on: r.paid_on, amount_eur: Number(r.amount_eur) })),
+    statements,
+  };
 }

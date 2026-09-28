@@ -12,7 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
-import type { CustomerContracts, CustomerRights, CustomerSplits } from "@/lib/accounts/customer";
+import type { CustomerContracts, CustomerFinances, CustomerRights, CustomerSplits } from "@/lib/accounts/customer";
 import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
@@ -31,6 +31,7 @@ const RosterCtx = createContext<RosterArtist[] | null>(null);
 const ContractsCtx = createContext<CustomerContracts | null>(null);
 const SplitsCtx = createContext<CustomerSplits | null>(null);
 const RightsCtx = createContext<CustomerRights | null>(null);
+const FinancesCtx = createContext<CustomerFinances | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -57,6 +58,11 @@ export function useCustomerRights(): CustomerRights | null {
   return useContext(RightsCtx);
 }
 
+/** Dépenses, droits et revenus des relevés (RLS) — chargés sur /finances seulement. */
+export function useCustomerFinances(): CustomerFinances | null {
+  return useContext(FinancesCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
@@ -66,6 +72,7 @@ export function CustomerMode({
   contracts = null,
   splits = null,
   rights = null,
+  finances = null,
   children,
 }: {
   info: CustomerInfo;
@@ -74,6 +81,7 @@ export function CustomerMode({
   contracts?: CustomerContracts | null;
   splits?: CustomerSplits | null;
   rights?: CustomerRights | null;
+  finances?: CustomerFinances | null;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -87,7 +95,9 @@ export function CustomerMode({
         <ContractsCtx.Provider value={contracts}>
           <SplitsCtx.Provider value={splits}>
             <RightsCtx.Provider value={rights}>
-              <CustomerRoleProvider>{children}</CustomerRoleProvider>
+              <FinancesCtx.Provider value={finances}>
+                <CustomerRoleProvider>{children}</CustomerRoleProvider>
+              </FinancesCtx.Provider>
             </RightsCtx.Provider>
           </SplitsCtx.Provider>
         </ContractsCtx.Provider>

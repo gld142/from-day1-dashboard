@@ -24,3 +24,17 @@ export async function editableWorkspace(artistId: string): Promise<{ userId: str
     .maybeSingle();
   return me && (me.role === "owner" || me.role === "member") ? { userId: data.user.id, workspaceId: artist.workspace_id as string } : null;
 }
+
+/** Même règle, pour une donnée de la STRUCTURE (sans artiste) : propriétaire ou équipe de cet espace. */
+export async function editableWorkspaceById(workspaceId: string): Promise<{ userId: string; workspaceId: string } | null> {
+  const db = await userDb();
+  const { data } = await db.auth.getUser();
+  if (!data.user) redirect("/connexion");
+  const { data: me } = await db
+    .from("workspace_members")
+    .select("role")
+    .eq("workspace_id", workspaceId)
+    .eq("user_id", data.user.id)
+    .maybeSingle();
+  return me && (me.role === "owner" || me.role === "member") ? { userId: data.user.id, workspaceId } : null;
+}
