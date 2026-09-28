@@ -5,12 +5,14 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { syncSubscription } from "@/lib/accounts/provision";
+import { inviteEmail } from "@/lib/email/templates";
+import { sendEmail } from "@/lib/email/send";
 import { priceId, stripe } from "@/lib/billing/stripe";
 import { isEmail } from "@/lib/onboarding/lead";
 import { adminDb } from "@/lib/supabase/admin";
 import { userDb } from "@/lib/supabase/server";
 
-export type FormState = { status: "idle" | "ok" | "error" | "upgrade"; message?: string; link?: string };
+export type FormState = { status: "idle" | "ok" | "error" | "upgrade"; message?: string; link?: string; emailed?: boolean };
 
 /** L'utilisateur connecté est-il propriétaire de cet espace ? (lu avec SA session : RLS) */
 async function ownerOf(workspaceId: string) {
@@ -94,7 +96,17 @@ export async function createInvitation(_: FormState, form: FormData): Promise<Fo
   }
   revalidatePath("/espace");
   const origin = (await headers()).get("origin") ?? "";
-  return { status: "ok", link: `${origin}/invitation/${token}`, message: email };
+  const link = `${origin}/invitation/${token}`;
+  // L'email part tout seul ; le lien reste affiché pour l'envoyer aussi à la main si besoin.
+  const { data: ws } = await db.from("workspaces").select("name").eq("id", workspaceId).single();
+  let emailed = true;
+  try {
+    await sendEmail(inviteEmail(email, link, ws?.name ?? "Day 1 Pro", role));
+  } catch (err) {
+    console.error("[espace/createInvitation] email", err);
+    emailed = false;
+  }
+  return { status: "ok", link, message: email, emailed };
 }
 
 export async function signOut() {

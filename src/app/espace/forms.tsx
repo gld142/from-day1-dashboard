@@ -43,7 +43,7 @@ export function InviteForm({ workspaceId, artists }: { workspaceId: string; arti
         <Button type="submit" size="lg" variant="outline" disabled={pending}>Créer le lien d&apos;invitation</Button>
       </form>
       {state.status === "error" && <p className="text-sm text-destructive" role="alert">{state.message}</p>}
-      {state.status === "ok" && state.link && <InviteLink link={state.link} email={state.message ?? ""} />}
+      {state.status === "ok" && state.link && <InviteLink link={state.link} email={state.message ?? ""} emailed={!!state.emailed} />}
     </div>
   );
 }
@@ -78,11 +78,14 @@ function InviteFields({ artists }: { artists: { id: string; name: string }[] }) 
   );
 }
 
-function InviteLink({ link, email }: { link: string; email: string }) {
+function InviteLink({ link, email, emailed }: { link: string; email: string; emailed: boolean }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="rounded-lg bg-muted/60 p-3 text-sm">
-      <p>Lien pour <strong>{email}</strong>, valable 7 jours et une seule fois. Envoie-le lui (email, WhatsApp…) :</p>
+      <p>
+        {emailed ? <>Invitation envoyée par email à <strong>{email}</strong>.</> : <>L&apos;email n&apos;a pas pu partir pour <strong>{email}</strong>.</>}
+        {" "}Le lien marche 7 jours, une seule fois{emailed ? " ; tu peux aussi le lui envoyer toi-même" : " : envoie-le lui (email, WhatsApp…)"} :
+      </p>
       <div className="mt-2 flex items-center gap-2">
         <code className="min-w-0 flex-1 truncate rounded bg-background px-2 py-1 text-xs">{link}</code>
         <Button type="button" size="sm" variant="outline"
