@@ -123,3 +123,29 @@ avec des données RÉELLES uniquement (aucun composant `customer-*` n'importe `@
 Vérifier :
 
     npx vitest run src/lib/collect src/lib/tiktok src/lib/market src/lib/index src/lib/__tests__/nav-customer.test.ts
+
+## Relevés, taux et KPI (29/09/2026) — ce qui a été mesuré faux, et verrouillé
+
+- **Change** : plus de taux fixe deviné. L'import convertit chaque ligne au taux BCE du mois
+  de vente (`fx_monthly`, collecte « ecb_fx », `/api/fx`). Mesuré : l'ancien défaut 0,92 €/$
+  gonflait un relevé DistroKid d'août 2026 d'environ 6 %. Mention « source : BCE, taux
+  inversés » obligatoire (conditions de réutilisation de la BCE).
+- **Pays** : jamais `slice(0, 2)`. `toIso2` (table CLDR `iso3.ts` + noms fr/en via Intl).
+  Mesuré : SEN devenait la Suède, AUT l'Australie, « Allemagne » l'Albanie.
+- **Mois** : « Activity Period » / « Sale(s) Month » = mois d'écoute, avant « Reporting ».
+  Mesuré : « Sales Month » tombait sur le mois du relevé (2 mois de décalage).
+- **Annulations** : quantités nettes, compteurs de streams ≤ 0 retirés, revenus mensuels signés
+  acceptés. Mesuré : une annulation isolée ou un mois négatif faisait refuser TOUT le relevé.
+- **Détail gardé** (relevés importés depuis le 29/09) : titre × mois (300 titres max), pays ×
+  mois, ISRC, mois de vente → mois du relevé, streams Spotify 12 mois par titre, retenues.
+- **KPI** : `src/lib/kpi/statement.ts` (relevé), `src/lib/kpi/business.ts` (registres × relevé),
+  `src/lib/kpi/benchmarks.ts` (repères publics cités). Chaque KPI affiche sa formule ; non
+  calculable = `null` + la raison, jamais 0.
+- **Day 1 Index v2** : streams au jour, croissance sur un an dès 15 mois, échelle log symétrique
+  (×1,5 = 100, ÷1,5 = 0), diversité = 1 − Herfindahl des montants. Wikipédia n'y entre PAS.
+- **Attention Wikipédia** : Wikidata (personne à métier musical ou groupe — « Tiakola » renvoie
+  aussi un village indien) puis Pageviews, User-Agent descriptif sans e-mail (403 sans UA).
+
+Vérifier :
+
+    npx vitest run src/lib/userdata src/lib/kpi src/lib/index src/lib/collect src/lib/attention
