@@ -42,6 +42,7 @@ import {
   type ForecastPoint,
 } from "./generators";
 import { DEMO_TODAY, daysAhead, isoDay, isoMonth, rngFor } from "./seed";
+import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import {
   AUTHOR_SHARE_OF_PUBLISHING,
   DEAL_SHARE,
@@ -462,8 +463,9 @@ export type PlacementMoney = {
  *
  * Trois étages, pris dans cet ordre :
  *   1. brut master   = streams × taux mixé FR × coefficient de territoire ;
- *   2. édition       = brut × part édition du DSP (15 %) × sa part d'écriture,
- *                      moins ce que prend son éditeur ;
+ *   2. édition       = brut × part édition du DSP (15 %, hypothèse) × sa part d'écriture
+ *                      × part des créateurs selon les règles Sacem (DEP par tiers,
+ *                      phono selon son contrat d'édition) ;
  *   3. production    = brut × ses points de producteur.
  *
  * Le taux et le territoire sont ceux de l'AUTEUR, faute de mieux : on ne
@@ -481,11 +483,15 @@ export function placementMoney(artistId: string): PlacementMoney[] {
     a.monthlyListeners,
   );
   const rate = blendedRate(TIER_FR) * territoryCoefficient(dist);
-  const editeur = a.publisher ? a.publisher.sharePct / 100 : 0;
+  // Part des créateurs selon les règles Sacem (DEP par tiers + phono du contrat d'édition) ;
+  // éditeur non renseigné → hypothèse par défaut (œuvre éditée, phono 50/50).
+  const creators = creatorsShare(
+    "streaming_paid",
+    a.publisher ? { published: true, publisherPhonoShare: a.publisher.sharePct / 100 } : DEFAULT_PUBLISHING,
+  );
   return placementsFor(artistId).map((placement) => {
     const gross = placement.status === "released" ? placement.streams * rate : 0;
-    const publishing =
-      gross * PUBLISHING_SHARE_OF_DSP * (placement.writerSharePct / 100) * (1 - editeur);
+    const publishing = gross * PUBLISHING_SHARE_OF_DSP * (placement.writerSharePct / 100) * creators;
     const producer = gross * (placement.producerPointsPct / 100);
     return { placement, gross, publishing, producer, net: publishing + producer };
   });

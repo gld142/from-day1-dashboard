@@ -84,7 +84,8 @@ describe("rightsStatements (artistes réels)", () => {
       expect(first).toHaveLength(24);
       for (const s of first) {
         expect(s.received).toBeLessThanOrEqual(s.expected * 1.03 + 1);
-        if (s.status === "gap-detected") expect(s.received).toBeLessThan(s.expected * 0.81);
+        // + 1 € : le reçu est arrondi à l'euro (attendu 11 € → reçu max 0,80 × 11 = 8,8 → 9 €).
+        if (s.status === "gap-detected") expect(s.received).toBeLessThan(s.expected * 0.81 + 1);
         if (s.status === "received") expect(s.received).toBeGreaterThanOrEqual(s.expected * 0.93 - 1);
       }
     }

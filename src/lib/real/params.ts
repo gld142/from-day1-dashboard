@@ -3,6 +3,7 @@
  * Chaque valeur porte sa source. MESURÉ = chiffre publié ; HYPOTHÈSE = valeur
  * de départ à recaler par relevé (calibration.ts).
  */
+import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import type { DSP } from "@/lib/demo/types";
 import type { Range } from "./types";
 
@@ -128,9 +129,18 @@ export const DEAL_SHARE: Record<"licence" | "distribution" | "artiste" | "indé"
   artiste: { low: 0.18, mid: 0.2, high: 0.25 },
   indé: { low: 1, mid: 1, high: 1 },
 };
-/** Part du chiffre DSP qui part vers l'édition, et part de l'auteur dans l'édition. */
+/**
+ * Part du chiffre des plateformes versée aux droits d'auteur (Sacem) — HYPOTHÈSE :
+ * ce taux n'est publié ni par la Sacem ni par les plateformes.
+ */
 export const PUBLISHING_SHARE_OF_DSP = 0.15;
-export const AUTHOR_SHARE_OF_PUBLISHING = 0.5;
+/**
+ * Part de ces droits qui revient aux CRÉATEURS (auteur + compositeur) d'une œuvre
+ * streamée : règles officielles de la Sacem (lib/rights/sacem.ts), œuvre éditée,
+ * phono partagé 50/50 par défaut → 50 % × 2/3 (DEP) + 50 % × 50 % (phono) = 58,3 %.
+ * Corrigé le 05/10/2026 : l'ancien 50 % n'était que la clé DR (radio, télé).
+ */
+export const AUTHOR_SHARE_OF_PUBLISHING = creatorsShare("streaming_paid", DEFAULT_PUBLISHING);
 
 /* ─── Audit — seuils ─── */
 export const AUDIT_GAP_REL = 0.12;

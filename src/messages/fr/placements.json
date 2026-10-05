@@ -56,7 +56,7 @@
     "declared": "Déclarée",
     "yes": "oui",
     "no": "non",
-    "method": "Brut master = streams × taux mixé France × coefficient de territoire. Édition = brut × 15 % (part édition du DSP) × sa part d'écriture, moins la part de son éditeur. Production = brut × ses points. Le territoire est le sien, faute de relever l'audience de chaque interprète : d'où la provenance « estimé »."
+    "method": "Brut master = streams × taux mixé France × coefficient de territoire. Édition = brut × 15 % (part des droits d'auteur, hypothèse) × sa part d'écriture × la part des créateurs selon les règles de la Sacem : un tiers chacun pour l'auteur, le compositeur et l'éditeur sur l'exécution publique, le phono selon son contrat d'édition (58,3 % pour le streaming d'une œuvre éditée à 50/50). Production = brut × ses points. Le territoire est le sien, faute de relever l'audience de chaque interprète : d'où la provenance « estimé »."
   },
   "doors": {
     "rights": "Ce que la SACEM lui doit",
