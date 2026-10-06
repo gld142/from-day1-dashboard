@@ -19,7 +19,7 @@ import {
   AUTHOR_SHARE_OF_PUBLISHING,
   DEAL_SHARE,
   DSP_COEF,
-  PUBLISHING_SHARE_OF_DSP,
+  PUBLISHING_PER_MASTER,
   YOUTUBE_COEF,
   blendedRate,
   type Tier,
@@ -134,7 +134,7 @@ export function artistShare(gross: Range, dealType: Artist["dealType"]): Range {
 
 /** Part auteur de l'édition : brut × part édition du DSP × part auteur dans l'édition — HYPOTHÈSE. */
 export function publishingShare(gross: Range): Range {
-  return scaleRange(gross, PUBLISHING_SHARE_OF_DSP * AUTHOR_SHARE_OF_PUBLISHING);
+  return scaleRange(gross, PUBLISHING_PER_MASTER * AUTHOR_SHARE_OF_PUBLISHING);
 }
 
 /**
@@ -163,7 +163,7 @@ export function publishingShareOf(
   if (shares && !shares.isAuthor) return { value: ZERO, provenance: "declared" };
   if (shares && shares.authorSharePct !== null) {
     return {
-      value: scaleRange(gross, PUBLISHING_SHARE_OF_DSP * (shares.authorSharePct / 100)),
+      value: scaleRange(gross, PUBLISHING_PER_MASTER * (shares.authorSharePct / 100)),
       provenance: "declared",
     };
   }

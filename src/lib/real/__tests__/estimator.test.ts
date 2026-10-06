@@ -95,7 +95,8 @@ describe("summarize / confiance / cascades", () => {
     expect(s.grossMaster.mid).toBeCloseTo(days[0].grossMaster.mid * 7, 0);
     expect(s.artistShare.mid).toBeCloseTo(s.grossMaster.mid * 0.2, 0);
     // Part des créateurs Sacem : 50 % × 2/3 (DEP) + 50 % × 50 % (phono) = 58,3 %
-    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * 0.15 * (0.5 * (2 / 3) + 0.5 * 0.5), 0);
+    // Droits d'auteur : 15 pour 55 versés au master (GESAC 2022)
+    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * (15 / 55) * (0.5 * (2 / 3) + 0.5 * 0.5), 0);
   });
 
   it("sans parts renseignées, les cascades sont simulées (contrat inventé)", () => {
@@ -114,8 +115,8 @@ describe("summarize / confiance / cascades", () => {
     expect(s.artistShare.low).toBeCloseTo(s.grossMaster.low * 0.18, 6);
     expect(s.artistShare.high).toBeCloseTo(s.grossMaster.high * 0.18, 6);
     expect(s.sharesProvenance).toBe("declared");
-    // Auteur à 50 % : brut × 15 % (édition) × 50 %.
-    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * 0.15 * 0.5, 6);
+    // Auteur à 50 % : brut × 15/55 (droits d'auteur, GESAC) × 50 %.
+    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * (15 / 55) * 0.5, 6);
     expect(s.publishingProvenance).toBe("declared");
   });
 
@@ -138,7 +139,7 @@ describe("summarize / confiance / cascades", () => {
     expect(s.artistShare.mid).toBeCloseTo(s.grossMaster.mid * 0.9, 6);
     expect(s.sharesProvenance).toBe("simulated");
     // Défaut = règles Sacem, œuvre éditée, phono 50/50 : 50 % × 2/3 + 50 % × 50 % = 58,3 %
-    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * 0.15 * (0.5 * (2 / 3) + 0.5 * 0.5), 6);
+    expect(s.publishing.mid).toBeCloseTo(s.grossMaster.mid * (15 / 55) * (0.5 * (2 / 3) + 0.5 * 0.5), 6);
     expect(s.publishingProvenance).toBe("simulated");
   });
 
@@ -160,7 +161,7 @@ describe("summarize / confiance / cascades", () => {
     const g = { low: 900, mid: 1000, high: 1100 };
     expect(artistShare(g, "distribution").mid).toBeCloseTo(900, 6);
     expect(artistShare(g, "indé")).toEqual(g);
-    expect(publishingShare(g).mid).toBeCloseTo(87.5, 6); // 1 000 × 15 % × 58,3 % (règles Sacem)
+    expect(publishingShare(g).mid).toBeCloseTo(159.0909, 3); // 1 000 × 15/55 (GESAC) × 58,33 % (règles Sacem)
   });
 
   it("le taux premium SNEP reste la référence (sanity)", () => {

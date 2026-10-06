@@ -46,7 +46,7 @@ import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import {
   AUTHOR_SHARE_OF_PUBLISHING,
   DEAL_SHARE,
-  PUBLISHING_SHARE_OF_DSP,
+  PUBLISHING_PER_MASTER,
   TIER_FR,
   blendedRate,
 } from "@/lib/real/params";
@@ -491,7 +491,7 @@ export function placementMoney(artistId: string): PlacementMoney[] {
   );
   return placementsFor(artistId).map((placement) => {
     const gross = placement.status === "released" ? placement.streams * rate : 0;
-    const publishing = gross * PUBLISHING_SHARE_OF_DSP * (placement.writerSharePct / 100) * creators;
+    const publishing = gross * PUBLISHING_PER_MASTER * (placement.writerSharePct / 100) * creators;
     const producer = gross * (placement.producerPointsPct / 100);
     return { placement, gross, publishing, producer, net: publishing + producer };
   });
@@ -600,7 +600,7 @@ export function rightsStatements(artistId: string): RightsStatement[] {
     const q = quarterOf(d.date);
     grossByQuarter.set(q, (grossByQuarter.get(q) ?? 0) + d.grossMaster.mid);
   }
-  const authorShare = PUBLISHING_SHARE_OF_DSP * AUTHOR_SHARE_OF_PUBLISHING;
+  const authorShare = PUBLISHING_PER_MASTER * AUTHOR_SHARE_OF_PUBLISHING;
   const out: RightsStatement[] = [];
   let i = 0;
   for (const organism of RIGHTS_ORGANISMS) {
