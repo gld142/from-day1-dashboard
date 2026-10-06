@@ -7,15 +7,18 @@ import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import type { DSP } from "@/lib/demo/types";
 import type { Range } from "./types";
 
-/* ─── Ancrage France — MESURÉ, SNEP bilan 2025 (revenus producteurs) ─── */
+/*
+ * ─── Ancrage France — MESURÉ, SNEP bilan 2025, valeur de gros HT (revenus des producteurs) ───
+ * Dossier de presse p. 2 : abonnement audio 553 028 k€, audio financé par la publicité 84 172 k€ ;
+ * p. 6 : 122 Mds de streams audio premium, 31 Mds freemium. Relu le 06/10/2026 (l'ancien 84 M€ / 30 Mds
+ * était déduit du communiqué ; mêmes chiffres que lib/kpi/benchmarks.ts désormais).
+ */
 export const SNEP_2025 = {
-  premiumRevenueEur: 553_000_000,
+  premiumRevenueEur: 553_028_000,
   premiumStreams: 122_000_000_000,
-  /** Déduit de « audio gratuit +12 %, soit +9 M€ » → ≈ 84 M€ en 2025. */
-  freemiumRevenueEur: 84_000_000,
-  /** 122 Md = 80 % des streams audio → ≈ 30 Md de streams gratuits. */
-  freemiumStreams: 30_000_000_000,
-  source: "https://snepmusique.com/communiques-dossiers-de-presse/bilan-2025-snep/",
+  freemiumRevenueEur: 84_172_000,
+  freemiumStreams: 31_000_000_000,
+  source: "https://snepmusique.com/wp-content/uploads/2026/03/Dossier-de-Presse-Bilan-du-Marche-de-la-Musique-2025-en-France.pdf",
 } as const;
 
 export const RATE_FR = {
@@ -130,10 +133,14 @@ export const DEAL_SHARE: Record<"licence" | "distribution" | "artiste" | "indé"
   indé: { low: 1, mid: 1, high: 1 },
 };
 /**
- * Part du chiffre des plateformes versée aux droits d'auteur (Sacem) — HYPOTHÈSE :
- * ce taux n'est publié ni par la Sacem ni par les plateformes.
+ * Droits d'auteur (Sacem) rapportés au BRUT MASTER — le brut de l'estimateur vient des revenus des
+ * producteurs (SNEP, valeur de gros). GESAC, étude sur le streaming musical, 2022 (d'après le Parlement
+ * britannique, 2021) : sur 70 versés aux ayants droit, 55 vont au master et 15 aux auteurs, compositeurs
+ * et éditeurs → 15 / 55 = 27,3 % du brut master.
+ * https://authorsocieties.eu/content/uploads/2022/09/french-keypoints-musicstreamingstudy-es-fr-8-0.pdf
+ * Remplace le 15 % sans source (06/10/2026) : il sous-estimait les droits d'auteur de 45 %.
  */
-export const PUBLISHING_SHARE_OF_DSP = 0.15;
+export const PUBLISHING_PER_MASTER = 15 / 55;
 /**
  * Part de ces droits qui revient aux CRÉATEURS (auteur + compositeur) d'une œuvre
  * streamée : règles officielles de la Sacem (lib/rights/sacem.ts), œuvre éditée,

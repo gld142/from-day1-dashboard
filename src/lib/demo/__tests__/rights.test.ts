@@ -20,7 +20,7 @@ import {
   rightsStatements as genRightsStatements,
   simulatedReceipt,
 } from "@/lib/demo/generators";
-import { AUTHOR_SHARE_OF_PUBLISHING, PUBLISHING_SHARE_OF_DSP } from "@/lib/real/params";
+import { AUTHOR_SHARE_OF_PUBLISHING, PUBLISHING_PER_MASTER } from "@/lib/real/params";
 
 const quarterOf = (date: string) => `${date.slice(0, 4)}-T${Math.ceil(Number(date.slice(5, 7)) / 3)}`;
 const CLOSED = RIGHTS_PERIODS.filter((p) => p !== RIGHTS_PENDING_PERIOD);
@@ -32,7 +32,7 @@ function publishingOfQuarter(artistId: string, period: string): number {
   const sum = dailyEstimates(artistId, 730)
     .filter((d) => quarterOf(d.date) === period)
     .reduce((s, d) => s + d.grossMaster.mid, 0);
-  return Math.round(sum * PUBLISHING_SHARE_OF_DSP * AUTHOR_SHARE_OF_PUBLISHING);
+  return Math.round(sum * PUBLISHING_PER_MASTER * AUTHOR_SHARE_OF_PUBLISHING);
 }
 
 describe("rightsStatements (artistes réels)", () => {
@@ -46,10 +46,11 @@ describe("rightsStatements (artistes réels)", () => {
       expect(s.status).not.toBe("pending");
       expect(Math.abs(s.expected - publishingOfQuarter("dadju", period))).toBeLessThanOrEqual(1);
     }
-    // Ordre de grandeur : garde-fou contre une erreur d'unité (× 100, / 100).
+    // Ordre de grandeur : garde-fou contre une erreur d'unité (× 100, / 100). Borne haute relevée le
+    // 06/10/2026 : droits d'auteur = 15/55 du brut master (GESAC) au lieu de 15 %, soit × 1,82.
     for (const period of CLOSED) {
       expect(sacemOf(period).expected).toBeGreaterThan(50_000);
-      expect(sacemOf(period).expected).toBeLessThan(300_000);
+      expect(sacemOf(period).expected).toBeLessThan(600_000);
     }
   });
 

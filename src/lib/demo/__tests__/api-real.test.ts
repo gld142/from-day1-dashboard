@@ -114,7 +114,7 @@ describe("api.ts sur les artistes réels", () => {
       expect(after.sharesProvenance).toBe("declared");
       expect(after.publishingProvenance).toBe("declared");
       expect(after.artistShare.mid).toBeCloseTo(after.grossMaster.mid * 0.18, 6);
-      expect(after.publishing.mid).toBeCloseTo(after.grossMaster.mid * 0.15 * 0.5, 6);
+      expect(after.publishing.mid).toBeCloseTo(after.grossMaster.mid * (15 / 55) * 0.5, 6); // GESAC : 15 pour 55 au master
       // Les autres artistes n'ont rien renseigné : le roster reste simulé.
       expect(rosterEstimateSummary("day").sharesProvenance).toBe("simulated");
     } finally {

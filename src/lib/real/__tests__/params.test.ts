@@ -9,8 +9,9 @@ import {
 } from "@/lib/real/params";
 
 describe("paramètres de l'estimateur", () => {
-  it("le taux premium France est celui du SNEP 2025 (553 M€ / 122 Md)", () => {
-    expect(RATE_FR.premium).toBeCloseTo(553e6 / 122e9, 8);
+  it("le taux premium France est celui du SNEP 2025 (553 028 k€ / 122 Md, dossier de presse p. 2 et 6)", () => {
+    expect(RATE_FR.premium).toBeCloseTo(553_028e3 / 122e9, 10);
+    expect(RATE_FR.free).toBeCloseTo(84_172e3 / 31e9, 10);
     expect(RATE_FR.premium).toBeGreaterThan(0.004);
     expect(RATE_FR.premium).toBeLessThan(0.005);
   });
