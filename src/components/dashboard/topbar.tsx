@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore, useTransition } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Building2,
   Check,
@@ -12,6 +13,7 @@ import {
   Moon,
   Sun,
   Sunrise,
+  Users,
 } from "lucide-react";
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
@@ -58,6 +60,10 @@ export function Topbar() {
   } = useRole();
   const [, startTransition] = useTransition();
   const customer = useCustomer();
+  const pathname = usePathname();
+  const search = useSearchParams().toString();
+  const here = search ? `${pathname}?${search}` : pathname;
+  const showArtistMenu = customer !== null && (customer.view === "label" || customer.artists.length > 1);
   /* « Suis-je côté client ? » — next-themes ne connaît le thème qu'après
      hydratation. `useSyncExternalStore` le dit sans setState dans un effet,
      qui forcerait un second rendu en cascade. Même solution que /settings. */
@@ -69,13 +75,45 @@ export function Topbar() {
   return (
     <header className="hairline-b sticky top-0 z-30 flex h-14 items-center gap-2 bg-background/80 px-4 backdrop-blur-md">
       <MobileNav />
-      {customer ? (
-        // Mode client : identité fixée — son artiste, son espace.
+      {customer && !showArtistMenu ? (
+        // Artiste invité, ou artiste seul : identité fixée.
         <div className="flex min-w-0 shrink items-center gap-2 px-2">
           <ArtistAvatar artist={artist} size="sm" />
           <span className="truncate text-sm font-medium">{customer.artistName}</span>
           <span className="hidden truncate text-xs text-muted-foreground sm:inline">· {customer.workspaceName}</span>
         </div>
+      ) : customer ? (
+        // Structure : changer d'artiste sans quitter la page (le cookie d'artiste ouvert est posé par /espace/ouvrir).
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2" aria-label="Changer d'artiste">
+              <ArtistAvatar artist={artist} size="sm" />
+              <span className="truncate text-sm font-medium">{customer.artistName}</span>
+              <span className="hidden truncate text-xs text-muted-foreground sm:inline">· {customer.workspaceName}</span>
+              <ChevronsUpDown className="size-3.5 text-muted-foreground" aria-hidden />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-72">
+            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+              Artistes de {customer.workspaceName}
+            </DropdownMenuLabel>
+            {customer.artists.map((a) => (
+              <DropdownMenuItem key={a.id} asChild className="gap-2">
+                <a href={`/espace/ouvrir/${a.id}?vers=${encodeURIComponent(here)}`}>
+                  <span className="flex-1 truncate text-sm">{a.name}</span>
+                  {a.id === customer.artistId && <Check className="size-4 text-brand" aria-hidden />}
+                </a>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild className="gap-2">
+              <Link href="/espace">
+                <Users className="size-4 text-muted-foreground" aria-hidden />
+                <span className="flex-1 text-sm">Gérer les artistes et l&apos;équipe</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         // Sélecteur d'identité : qui suis-je / qui je regarde
         <DropdownMenu>
