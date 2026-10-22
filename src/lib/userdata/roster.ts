@@ -45,6 +45,18 @@ export type RosterAlert =
   | { kind: "behind"; id: string; name: string; lastMonth: string }
   | { kind: "decline"; id: string; name: string; change: number };
 
+/** Le dernier mois couvert par au moins un relevé du roster, additionné sur les artistes qui le couvrent. */
+export type LatestMonth = {
+  month: string;
+  revenue: number;
+  streams: number;
+  per1000: number | null;
+  covered: { id: string; name: string }[];
+  uncovered: { id: string; name: string; reason: "missing" | "behind" }[];
+  /** Mois précédent, sur les artistes qui couvrent les DEUX mois ; `change` = revenus, null sans base. */
+  previous: { revenue: number; streams: number; change: number | null; onArtists: number } | null;
+};
+
 export type RosterSummary = {
   window: { from: string; to: string; months: number } | null;
   lines: RosterLine[];
@@ -52,6 +64,7 @@ export type RosterSummary = {
   top: { id: string; name: string; share: number } | null;
   topThreeShare: number;
   alerts: RosterAlert[];
+  latest: LatestMonth | null;
 };
 
 export const WINDOW_MONTHS = 12;
@@ -90,6 +103,46 @@ export function threeMonthTrend(byMonth: Record<string, number>, first: string, 
 }
 
 const trendOf = (s: RosterStatement, first: string, last: string) => threeMonthTrend(s.revenueByMonth, first, last);
+
+function latestMonth(artists: RosterArtist[], end: string | null): LatestMonth | null {
+  if (!end) return null;
+  const prev = addMonths(end, -1);
+  const covered: LatestMonth["covered"] = [];
+  const uncovered: LatestMonth["uncovered"] = [];
+  let revenue = 0;
+  let streams = 0;
+  let prevRevenue = 0;
+  let prevStreams = 0;
+  let currentOnBoth = 0;
+  let onArtists = 0;
+  for (const a of artists) {
+    const s = a.statement;
+    if (s && s.months.includes(end)) {
+      covered.push({ id: a.id, name: a.name });
+      revenue += revenueOf(s, end);
+      streams += streamsOf(s, end);
+      if (s.months.includes(prev)) {
+        onArtists++;
+        prevRevenue += revenueOf(s, prev);
+        prevStreams += streamsOf(s, prev);
+        currentOnBoth += revenueOf(s, end);
+      }
+    } else {
+      uncovered.push({ id: a.id, name: a.name, reason: s && s.months.length ? "behind" : "missing" });
+    }
+  }
+  return {
+    month: end,
+    revenue,
+    streams,
+    per1000: streams > 0 ? (revenue / streams) * 1000 : null,
+    covered,
+    uncovered,
+    previous: onArtists
+      ? { revenue: prevRevenue, streams: prevStreams, change: prevRevenue > 0 ? currentOnBoth / prevRevenue - 1 : null, onArtists }
+      : null,
+  };
+}
 
 export function summarizeRoster(artists: RosterArtist[]): RosterSummary {
   const spans = artists.map((a) => {
@@ -148,5 +201,6 @@ export function summarizeRoster(artists: RosterArtist[]): RosterSummary {
     top: revenue > 0 && ranked[0] ? { id: ranked[0].id, name: ranked[0].name, share: ranked[0].share } : null,
     topThreeShare: ranked.slice(0, 3).reduce((sum, l) => sum + l.share, 0),
     alerts,
+    latest: latestMonth(artists, end),
   };
 }

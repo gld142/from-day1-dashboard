@@ -99,3 +99,45 @@ describe("summarizeRoster", () => {
     expect(s.totals).toMatchObject({ artists: 2, withStatement: 0, revenue: 0, per1000: null });
   });
 });
+
+describe("summarizeRoster — latest, le dernier mois couvert", () => {
+  it("additionne les artistes qui couvrent le dernier mois et nomme les autres avec la raison", () => {
+    const s = summarizeRoster([
+      artist("a", statement(flat("2026-01", "2026-09", 100, 10_000))),
+      artist("b", statement(flat("2026-01", "2026-09", 50, 5_000))),
+      artist("c", statement(flat("2026-01", "2026-08", 30, 3_000))), // en retard
+      artist("d", null), // sans relevé
+    ]);
+    expect(s.latest).not.toBeNull();
+    expect(s.latest!.month).toBe("2026-09");
+    expect(s.latest!.revenue).toBe(150);
+    expect(s.latest!.streams).toBe(15_000);
+    expect(s.latest!.per1000).toBe(10);
+    expect(s.latest!.covered.map((a) => a.id)).toEqual(["a", "b"]);
+    expect(s.latest!.uncovered).toEqual([
+      { id: "c", name: "C", reason: "behind" },
+      { id: "d", name: "D", reason: "missing" },
+    ]);
+  });
+  it("l'évolution se calcule sur les artistes qui couvrent les DEUX mois", () => {
+    const s = summarizeRoster([
+      artist("a", statement({ ...flat("2026-01", "2026-08", 100, 1_000), "2026-09": [120, 1_000] })),
+      artist("b", statement({ "2026-09": [50, 500] })), // commence ce mois-ci
+    ]);
+    expect(s.latest!.revenue).toBe(170);
+    expect(s.latest!.previous).not.toBeNull();
+    expect(s.latest!.previous!.revenue).toBe(100);
+    expect(s.latest!.previous!.streams).toBe(1_000);
+    expect(s.latest!.previous!.onArtists).toBe(1);
+    expect(s.latest!.previous!.change).toBeCloseTo(0.2, 10); // 120 / 100 − 1, en flottant
+  });
+  it("sans mois précédent, ou avec un précédent à zéro : pas d'évolution", () => {
+    const only = summarizeRoster([artist("a", statement({ "2026-09": [10, 100] }))]);
+    expect(only.latest!.previous).toBeNull();
+    const zero = summarizeRoster([artist("a", statement({ "2026-08": [0, 0], "2026-09": [10, 100] }))]);
+    expect(zero.latest!.previous).toEqual({ revenue: 0, streams: 0, change: null, onArtists: 1 });
+  });
+  it("aucun relevé : latest est null", () => {
+    expect(summarizeRoster([artist("a", null)]).latest).toBeNull();
+  });
+});

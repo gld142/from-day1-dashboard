@@ -15,6 +15,7 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
+import { LabelMonthSheet } from "@/components/modules/structure/label-month-sheet";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { useCustomer, useCustomerRoster } from "@/lib/customer-mode";
 import { downloadCsv, round2 } from "@/lib/export";
@@ -88,6 +89,9 @@ export function CustomerRoster() {
         </Sheet>
       ) : (
         <div className="space-y-3">
+          {customer?.view === "label" && summary.latest && (
+            <LabelMonthSheet latest={summary.latest} totalArtists={totals.artists} alerts={alerts} />
+          )}
           {/* À quel point la structure tient à un seul nom. */}
           <Sheet family="money">
             <SheetHeading action={period ? `12 mois · ${period}` : undefined}>Concentration des revenus</SheetHeading>
