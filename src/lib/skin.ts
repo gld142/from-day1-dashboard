@@ -1,18 +1,22 @@
 "use client";
 
 /**
- * Skins Day 1 — deux signatures visuelles dérivées de la persona.
+ * Skins Day 1 — deux signatures visuelles. En mode client, la skin dérive de la
+ * VUE du client (type d'espace : artiste / label) ; en démo, de la persona.
  *
- *  - "structure" (persona label) : précision, retenue — rayons 8 px, accent
- *    désaturé, aucune lueur, mouvements sobres (opacité, glissements de layout).
- *  - "artist" (persona artiste) : chaleur, souffle — rayons 14 px, accent plus
- *    chaud, halo doux, entrées décalées, salutation en fondu.
+ *  - "structure" (vue ou persona label) : précision, retenue — rayons 8 px,
+ *    accent désaturé, aucune lueur, mouvements sobres (opacité, glissements de
+ *    layout).
+ *  - "artist" (vue ou persona artiste) : chaleur, souffle — rayons 14 px,
+ *    accent plus chaud, halo doux, entrées décalées, salutation en fondu.
  *
  * La skin est posée en `data-skin` sur le shell du dashboard (DashboardShell) ;
  * elle ne change QUE des tokens CSS (globals.css) et la signature de mouvement.
  * Les trois thèmes (nuit / aube / jour) restent indépendants.
  */
 import { useEffect, useState, useSyncExternalStore } from "react";
+import type { DashboardView } from "@/lib/accounts/view";
+import { useCustomer } from "@/lib/customer-mode";
 import { useRole, type Persona } from "@/lib/role";
 
 export type Skin = "structure" | "artist";
@@ -21,9 +25,16 @@ export function skinFor(persona: Persona): Skin {
   return persona === "label" ? "structure" : "artist";
 }
 
-/** Skin courante, dérivée de la persona du RoleProvider. */
+/** Mode client : la skin suit la VUE (type d'espace), pas la persona de démo. */
+export function skinForView(view: DashboardView): Skin {
+  return view === "label" ? "structure" : "artist";
+}
+
+/** Skin courante : la vue du client en mode client, sinon la persona de démo. */
 export function useSkin(): Skin {
-  return skinFor(useRole().persona);
+  const customer = useCustomer();
+  const persona = useRole().persona;
+  return customer ? skinForView(customer.view) : skinFor(persona);
 }
 
 /* ─── Entrées « une fois par navigation » ─────────────────────────────────
