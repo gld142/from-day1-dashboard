@@ -18,7 +18,7 @@ import {
 import { CustomerMode } from "@/lib/customer-mode";
 import { demoEnabled } from "@/lib/demo-mode";
 import { GATE_COOKIE, isValidToken } from "@/lib/gate";
-import { CUSTOMER_HOME, isCustomerPath, isStructurePath, needsStatement } from "@/lib/nav";
+import { customerHome, isCustomerPath, isStructurePath, needsStatement } from "@/lib/nav";
 
 /**
  * Deux mondes derrière le même dashboard :
@@ -32,8 +32,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (view.kind === "blocked") redirect("/espace");
 
   if (view.kind === "customer") {
-    const path = (await headers()).get("x-d1-path") ?? CUSTOMER_HOME;
-    if (!isCustomerPath(path, view.info.role)) redirect(view.data ? CUSTOMER_HOME : "/import");
+    const home = customerHome(view.info.view);
+    const path = (await headers()).get("x-d1-path") ?? home;
+    if (!isCustomerPath(path, view.info.role)) redirect(view.data ? home : "/import");
     // La vue structure et les contrats ne dépendent pas du relevé de l'artiste ouvert ; les autres pages, si.
     if (!view.data && needsStatement(path)) redirect("/import");
     const on = (m: string) => path === m || path.startsWith(`${m}/`);

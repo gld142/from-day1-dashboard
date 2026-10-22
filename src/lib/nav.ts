@@ -44,6 +44,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import type { CustomerInfo } from "@/lib/customer-mode";
+import type { DashboardView } from "@/lib/accounts/view";
 import type { Persona } from "@/lib/role";
 
 export type NavItem = {
@@ -92,8 +93,31 @@ export const STATEMENT_FREE_MODULES: ReadonlySet<string> = new Set([
  */
 export const CUSTOMER_STRUCTURE_MODULES: ReadonlySet<string> = new Set(["/roster", "/ar-watch"]);
 
-/** Accueil du mode client : le relevé mensuel, sans « hier » inventé (le Pulse est quotidien). */
+/** Accueil du mode client : le relevé mensuel pour un artiste, le roster pour une structure. */
 export const CUSTOMER_HOME = "/mon-releve";
+export const LABEL_HOME = "/roster";
+export function customerHome(view: DashboardView): string {
+  return view === "label" ? LABEL_HOME : CUSTOMER_HOME;
+}
+
+/**
+ * Où revenir après avoir rouvert un autre artiste (`/espace/ouvrir/[id]?vers=`) :
+ * seulement une page du dashboard ouverte à ce rôle, sinon l'accueil de la vue.
+ * `perimetre` est retiré : on vient d'ouvrir un artiste, le périmètre redevient lui.
+ */
+export function returnPath(vers: string | null, role: CustomerInfo["role"], view: DashboardView): string {
+  const home = customerHome(view);
+  if (!vers) return home;
+  if (vers === "import") return "/import";
+  if (!vers.startsWith("/") || vers.startsWith("//") || vers.includes("..") || vers.includes("\\")) return home;
+  const [path, query = ""] = vers.split("?", 2);
+  if (!isCustomerPath(path, role)) return home;
+  const params = new URLSearchParams(query);
+  params.delete("perimetre");
+  const q = params.toString();
+  return q ? `${path}?${q}` : path;
+}
+
 export const CUSTOMER_HOME_ITEM: NavItem = { href: CUSTOMER_HOME, labelKey: "items.statement", icon: FileText };
 export const CUSTOMER_ROSTER_ITEM: NavItem = { href: "/roster", labelKey: "items.roster", icon: UsersRound };
 export const CUSTOMER_CATALOG_ITEM: NavItem = { href: "/catalog", labelKey: "items.catalog", icon: LibraryBig };

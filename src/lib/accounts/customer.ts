@@ -30,15 +30,16 @@ export type CustomerView =
 /**
  * Qui regarde le dashboard ? Tout est lu avec la session de la personne (RLS) :
  * elle ne peut ouvrir qu'un artiste qu'elle a le droit de voir.
+ * `wantedArtistId` impose l'artiste ouvert (sinon : celui du cookie, puis le premier visible).
  */
-export async function customerView(): Promise<CustomerView> {
+export async function customerView(wantedArtistId?: string): Promise<CustomerView> {
   const db = await userDb();
   const { data: auth } = await db.auth.getUser();
   if (!auth.user) return { kind: "anonymous" };
 
   const { data: artists } = await db.from("artists").select("id, name, workspace_id").order("created_at");
   if (!artists?.length) return { kind: "blocked", reason: "no-artist" };
-  const wanted = (await cookies()).get(ARTIST_COOKIE)?.value;
+  const wanted = wantedArtistId ?? (await cookies()).get(ARTIST_COOKIE)?.value;
   const artist = artists.find((a) => a.id === wanted) ?? artists[0];
 
   const [{ data: ws }, { data: me }, { data: imp }] = await Promise.all([

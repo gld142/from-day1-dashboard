@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isCustomerPath, isStructurePath, needsStatement } from "../nav";
+import { customerHome, isCustomerPath, isStructurePath, needsStatement, returnPath } from "../nav";
 
 describe("isCustomerPath — pages ouvertes aux clients", () => {
   it("relevé, revenus, streams et import : ouverts à tous les rôles", () => {
@@ -42,5 +42,38 @@ describe("needsStatement — renvoi vers /import quand l'artiste n'a pas de rele
     for (const path of ["/mon-releve", "/revenue", "/streams", "/audit"]) expect(needsStatement(path)).toBe(true);
     for (const path of ["/import", "/roster", "/contracts", "/splits", "/rights", "/finances", "/catalog", "/tour", "/placements", "/sync"]) expect(needsStatement(path)).toBe(false);
     for (const path of ["/pulse", "/market", "/audience", "/algo-position", "/discovery", "/day1-index", "/ar-watch"]) expect(needsStatement(path)).toBe(false);
+  });
+});
+
+describe("customerHome — page d'arrivée selon la vue", () => {
+  it("vue label : le roster ; vue artiste : le relevé", () => {
+    expect(customerHome("label")).toBe("/roster");
+    expect(customerHome("artist")).toBe("/mon-releve");
+  });
+});
+
+describe("returnPath — revenir sur la page d'origine après avoir changé d'artiste", () => {
+  it("sans indication : l'accueil de la vue", () => {
+    expect(returnPath(null, "owner", "label")).toBe("/roster");
+    expect(returnPath(null, "owner", "artist")).toBe("/mon-releve");
+  });
+  it("« import » (lien historique de /espace) reste accepté", () => {
+    expect(returnPath("import", "owner", "label")).toBe("/import");
+  });
+  it("une page ouverte au rôle est rendue telle quelle, query comprise", () => {
+    expect(returnPath("/revenue", "owner", "label")).toBe("/revenue");
+    expect(returnPath("/streams?periode=12", "member", "label")).toBe("/streams?periode=12");
+  });
+  it("le périmètre label est retiré : on rouvre un artiste", () => {
+    expect(returnPath("/revenue?perimetre=label", "owner", "label")).toBe("/revenue");
+    expect(returnPath("/revenue?perimetre=label&periode=6", "owner", "label")).toBe("/revenue?periode=6");
+  });
+  it("une page fermée au rôle, un chemin externe ou douteux : l'accueil", () => {
+    expect(returnPath("/roster", "artist", "artist")).toBe("/mon-releve");
+    expect(returnPath("https://evil.example/x", "owner", "label")).toBe("/roster");
+    expect(returnPath("//evil.example", "owner", "label")).toBe("/roster");
+    expect(returnPath("/revenue/../valuation", "owner", "label")).toBe("/roster");
+    expect(returnPath("/valuation", "owner", "label")).toBe("/roster");
+    expect(returnPath("revenue", "owner", "label")).toBe("/roster");
   });
 });
