@@ -17,6 +17,8 @@ export function LabelMonthSheet({ latest, totalArtists, alerts }: { latest: Late
   const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
   const eurCents = (n: number) => new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
   const pct = (n: number) => new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1, signDisplay: "exceptZero" }).format(n);
+  const n = latest.covered.length;
+  const covered = (what: string) => `${what}, ${n} artiste${n > 1 ? "s" : ""} couvert${n > 1 ? "s" : ""}`;
   const change = latest.previous?.change ?? null;
   const behind = latest.uncovered.filter((u) => u.reason === "behind");
   const missing = latest.uncovered.filter((u) => u.reason === "missing");
@@ -29,13 +31,15 @@ export function LabelMonthSheet({ latest, totalArtists, alerts }: { latest: Late
         <div>
           <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">{eur(latest.revenue)}</p>
           <p className="sheet-ink mt-1.5 text-[13px]">
-            revenus déclarés, tous artistes
-            {change !== null && latest.previous ? ` · ${pct(change)} vs ${month(addMonths(latest.month, -1))} (sur ${latest.previous.onArtists} artiste${latest.previous.onArtists > 1 ? "s" : ""})` : ""}
+            {covered("revenus déclarés")}
+            {change !== null && latest.previous
+              ? ` · ${pct(change)} vs ${month(addMonths(latest.month, -1))}${latest.previous.onArtists < n ? ` (sur ${latest.previous.onArtists} artiste${latest.previous.onArtists > 1 ? "s" : ""})` : ""}`
+              : ""}
           </p>
         </div>
         <div>
           <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">{fmtCompact(locale, latest.streams)}</p>
-          <p className="sheet-ink mt-1.5 text-[13px]">streams, tous artistes</p>
+          <p className="sheet-ink mt-1.5 text-[13px]">{covered("streams")}</p>
         </div>
       </div>
       <AffiliatedPoints
