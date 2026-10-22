@@ -110,7 +110,9 @@ export function returnPath(vers: string | null, role: CustomerInfo["role"], view
   if (!vers) return home;
   if (vers === "import") return "/import";
   if (!vers.startsWith("/") || vers.startsWith("//") || vers.includes("..") || vers.includes("\\")) return home;
-  const [path, query = ""] = vers.split("?", 2);
+  const cut = vers.indexOf("?");
+  const path = cut === -1 ? vers : vers.slice(0, cut);
+  const query = cut === -1 ? "" : vers.slice(cut + 1);
   if (!isCustomerPath(path, role)) return home;
   const params = new URLSearchParams(query);
   params.delete("perimetre");

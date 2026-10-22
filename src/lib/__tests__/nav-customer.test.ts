@@ -68,6 +68,9 @@ describe("returnPath — revenir sur la page d'origine après avoir changé d'ar
     expect(returnPath("/revenue?perimetre=label", "owner", "label")).toBe("/revenue");
     expect(returnPath("/revenue?perimetre=label&periode=6", "owner", "label")).toBe("/revenue?periode=6");
   });
+  it("la query est coupée au premier « ? » seulement : un second « ? » en fait partie", () => {
+    expect(returnPath("/revenue?q=a?b&periode=6", "owner", "label")).toBe("/revenue?q=a%3Fb&periode=6");
+  });
   it("une page fermée au rôle, un chemin externe ou douteux : l'accueil", () => {
     expect(returnPath("/roster", "artist", "artist")).toBe("/mon-releve");
     expect(returnPath("https://evil.example/x", "owner", "label")).toBe("/roster");
