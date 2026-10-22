@@ -86,7 +86,8 @@ export function Topbar() {
         // Structure : changer d'artiste sans quitter la page (le cookie d'artiste ouvert est posé par /espace/ouvrir).
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2" aria-label="Changer d'artiste">
+            <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2">
+              <span className="sr-only">Changer d&apos;artiste : </span>
               <ArtistAvatar artist={artist} size="sm" />
               <span className="truncate text-sm font-medium">{customer.artistName}</span>
               <span className="hidden truncate text-xs text-muted-foreground sm:inline">· {customer.workspaceName}</span>
@@ -99,7 +100,10 @@ export function Topbar() {
             </DropdownMenuLabel>
             {customer.artists.map((a) => (
               <DropdownMenuItem key={a.id} asChild className="gap-2">
-                <a href={`/espace/ouvrir/${a.id}?vers=${encodeURIComponent(here)}`}>
+                <a
+                  href={`/espace/ouvrir/${a.id}?vers=${encodeURIComponent(here)}`}
+                  aria-current={a.id === customer.artistId ? "true" : undefined}
+                >
                   <span className="flex-1 truncate text-sm">{a.name}</span>
                   {a.id === customer.artistId && <Check className="size-4 text-brand" aria-hidden />}
                 </a>
