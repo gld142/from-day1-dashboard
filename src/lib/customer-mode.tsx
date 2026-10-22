@@ -12,6 +12,7 @@
  */
 import { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 import { CustomerRoleProvider } from "@/lib/role";
+import type { DashboardView, WorkspaceKind } from "@/lib/accounts/view";
 import type { CustomerContracts, CustomerFinances, CustomerRegister, CustomerRights, CustomerSignals, CustomerSplits } from "@/lib/accounts/customer";
 import type { Placement } from "@/lib/registers/placements";
 import type { Show } from "@/lib/registers/shows";
@@ -24,9 +25,14 @@ export type CustomerInfo = {
   workspaceId: string;
   email: string;
   workspaceName: string;
+  workspaceKind: WorkspaceKind;
+  /** Vue du dashboard, décidée par le type d'espace et le rôle (voir accounts/view.ts). */
+  view: DashboardView;
   role: "owner" | "member" | "artist";
   artistId: string;
   artistName: string;
+  /** Les artistes de l'espace visibles par cette personne (RLS), triés par création. */
+  artists: { id: string; name: string }[];
 };
 
 const Ctx = createContext<CustomerInfo | null>(null);

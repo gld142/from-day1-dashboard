@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
+import { isWorkspaceKind, viewFor, type MemberRole } from "@/lib/accounts/view";
 import type { Contract } from "@/lib/contracts/contract";
 import type { Expense } from "@/lib/finances/pnl";
 import type { Placement } from "@/lib/registers/placements";
@@ -41,14 +42,27 @@ export async function customerView(): Promise<CustomerView> {
   const artist = artists.find((a) => a.id === wanted) ?? artists[0];
 
   const [{ data: ws }, { data: me }, { data: imp }] = await Promise.all([
-    db.from("workspaces").select("name, subscription_status").eq("id", artist.workspace_id).single(),
+    db.from("workspaces").select("name, kind, subscription_status").eq("id", artist.workspace_id).single(),
     db.from("workspace_members").select("role").eq("workspace_id", artist.workspace_id).eq("user_id", auth.user.id).single(),
     db.from("artist_imports").select("data").eq("artist_id", artist.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
   if (!ws || !me || !OPEN.has(ws.subscription_status)) return { kind: "blocked", reason: "subscription" };
+  const workspaceKind = isWorkspaceKind(ws.kind) ? ws.kind : "other";
+  const role = me.role as MemberRole;
   return {
     kind: "customer",
-    info: { userId: auth.user.id, workspaceId: artist.workspace_id, email: auth.user.email ?? "", workspaceName: ws.name, role: me.role, artistId: artist.id, artistName: artist.name },
+    info: {
+      userId: auth.user.id,
+      workspaceId: artist.workspace_id,
+      email: auth.user.email ?? "",
+      workspaceName: ws.name,
+      workspaceKind,
+      view: viewFor(workspaceKind, role),
+      role,
+      artistId: artist.id,
+      artistName: artist.name,
+      artists: artists.filter((a) => a.workspace_id === artist.workspace_id).map((a) => ({ id: a.id, name: a.name })),
+    },
     data: (imp?.data as UserData | undefined) ?? null,
   };
 }
