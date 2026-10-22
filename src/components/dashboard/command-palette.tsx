@@ -72,12 +72,12 @@ export function CommandPalette() {
                 return (
                   <CommandItem
                     key={item.href}
-                    value={`${t(item.labelKey)} ${item.href}`}
+                    value={`${item.label ?? t(item.labelKey)} ${item.href}`}
                     onSelect={() => go(item.href)}
                     className="gap-2.5"
                   >
                     <Icon className="size-4 text-muted-foreground" aria-hidden />
-                    {t(item.labelKey)}
+                    {item.label ?? t(item.labelKey)}
                   </CommandItem>
                 );
               })}

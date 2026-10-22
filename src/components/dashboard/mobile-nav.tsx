@@ -102,7 +102,7 @@ export function MobileNav() {
                             )}
                             aria-hidden
                           />
-                          {t(item.labelKey)}
+                          {item.label ?? t(item.labelKey)}
                         </Link>
                       </li>
                     );

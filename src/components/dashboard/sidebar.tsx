@@ -95,7 +95,7 @@ export function Sidebar() {
                       <Link
                         href={item.href}
                         // Libellé complet au survol quand il est tronqué par un badge.
-                        title={t(item.labelKey)}
+                        title={item.label ?? t(item.labelKey)}
                         className={cn(
                           "relative z-10 flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[13px] transition-colors",
                           active
@@ -110,7 +110,7 @@ export function Sidebar() {
                           )}
                           aria-hidden
                         />
-                        <span className="truncate">{t(item.labelKey)}</span>
+                        <span className="truncate">{item.label ?? t(item.labelKey)}</span>
                         {item.badgeKey && (
                           <Badge
                             variant="outline"

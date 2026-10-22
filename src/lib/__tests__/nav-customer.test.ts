@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { customerHome, isCustomerPath, isStructurePath, needsStatement, returnPath } from "../nav";
+import { customerHome, customerSections, isCustomerPath, isStructurePath, needsStatement, returnPath } from "../nav";
+import type { CustomerInfo } from "@/lib/customer-mode";
 
 describe("isCustomerPath — pages ouvertes aux clients", () => {
   it("relevé, revenus, streams et import : ouverts à tous les rôles", () => {
@@ -84,5 +85,30 @@ describe("returnPath — revenir sur la page d'origine après avoir changé d'ar
     expect(returnPath("/revenue/../valuation", "owner", "label")).toBe("/roster");
     expect(returnPath("/valuation", "owner", "label")).toBe("/roster");
     expect(returnPath("revenue", "owner", "label")).toBe("/roster");
+  });
+});
+
+const info = (over: Partial<CustomerInfo>): CustomerInfo => ({
+  userId: "u", workspaceId: "w", email: "a@b.fr", workspaceName: "Label Nord", workspaceKind: "label", view: "label",
+  role: "owner", artistId: "a1", artistName: "Dadju", artists: [{ id: "a1", name: "Dadju" }, { id: "a2", name: "Kiko" }], ...over,
+});
+const importItem = { href: "/import", labelKey: "items.importer" } as never;
+
+describe("customerSections — le menu du client", () => {
+  it("vue label : Roster en tête, puis « Relevé de {artiste} », puis Catalogue", () => {
+    const [overview] = customerSections(info({}), importItem);
+    expect(overview.items.map((i) => i.href)).toEqual(["/roster", "/mon-releve", "/catalog"]);
+    expect(overview.items[1].label).toBe("Relevé de Dadju");
+  });
+  it("vue artiste, propriétaire : Mon relevé, Roster, Catalogue ; sans libellé résolu", () => {
+    const [overview] = customerSections(info({ view: "artist", workspaceKind: "artist" }), importItem);
+    expect(overview.items.map((i) => i.href)).toEqual(["/mon-releve", "/roster", "/catalog"]);
+    expect(overview.items[0].label).toBeUndefined();
+  });
+  it("artiste invité : ni Roster ni A&R", () => {
+    const sections = customerSections(info({ view: "artist", role: "artist" }), importItem);
+    const hrefs = sections.flatMap((s) => s.items.map((i) => i.href));
+    expect(hrefs).not.toContain("/roster");
+    expect(hrefs).not.toContain("/ar-watch");
   });
 });

@@ -50,6 +50,8 @@ import type { Persona } from "@/lib/role";
 export type NavItem = {
   href: string;
   labelKey: string;
+  /** Libellé déjà résolu (ex. « Relevé de Dadju ») : prioritaire sur `labelKey` quand il existe. */
+  label?: string;
   icon: LucideIcon;
   personas?: Persona[];
   /** Réservé : plus aucune pastille dans la navigation depuis la refonte du
@@ -184,6 +186,28 @@ export type NavSection = {
   labelKey: string;
   items: NavItem[];
 };
+
+/**
+ * Le menu du mode client : seulement les pages branchées sur des données réelles.
+ * Vue label : Roster en tête, le relevé nommé d'après l'artiste ouvert. Le roster
+ * et l'A&R (vue structure) : propriétaire et équipe, jamais l'artiste invité.
+ */
+export function customerSections(customer: CustomerInfo, importItem: NavItem): NavSection[] {
+  const statement: NavItem = customer.view === "label" ? { ...CUSTOMER_HOME_ITEM, label: `Relevé de ${customer.artistName}` } : CUSTOMER_HOME_ITEM;
+  const overview =
+    customer.role === "artist"
+      ? [statement, CUSTOMER_CATALOG_ITEM]
+      : customer.view === "label"
+        ? [CUSTOMER_ROSTER_ITEM, statement, CUSTOMER_CATALOG_ITEM]
+        : [statement, CUSTOMER_ROSTER_ITEM, CUSTOMER_CATALOG_ITEM];
+  return [
+    { labelKey: "sections.overview", items: overview },
+    { labelKey: "sections.signals", items: customer.role === "artist" ? CUSTOMER_SIGNALS_ITEMS : [...CUSTOMER_SIGNALS_ITEMS, CUSTOMER_AR_ITEM] },
+    { labelKey: "sections.figures", items: CUSTOMER_FIGURES_ITEMS },
+    { labelKey: "sections.rights", items: CUSTOMER_BUSINESS_ITEMS },
+    { labelKey: "sections.account", items: [importItem] },
+  ];
+}
 
 export const NAV_SECTIONS: NavSection[] = [
   {
