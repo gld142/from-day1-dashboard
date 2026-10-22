@@ -109,14 +109,21 @@ export function returnPath(vers: string | null, role: CustomerInfo["role"], view
   const home = customerHome(view);
   if (!vers) return home;
   if (vers === "import") return "/import";
-  if (!vers.startsWith("/") || vers.startsWith("//") || vers.includes("..") || vers.includes("\\")) return home;
-  const cut = vers.indexOf("?");
-  const path = cut === -1 ? vers : vers.slice(0, cut);
-  const query = cut === -1 ? "" : vers.slice(cut + 1);
-  if (!isCustomerPath(path, role)) return home;
-  const params = new URLSearchParams(query);
-  params.delete("perimetre");
-  const q = params.toString();
+  if (!vers.startsWith("/") || vers.startsWith("//") || vers.includes("\\")) return home;
+  // Le parseur résout les segments « . » et « .. », encodés ou non : on juge le chemin RÉSOLU.
+  const BASE = "http://day1.invalid";
+  let u: URL;
+  try {
+    u = new URL(vers, BASE);
+  } catch {
+    return home;
+  }
+  if (u.origin !== BASE) return home;
+  const path = u.pathname;
+  // Les chemins du dashboard ne contiennent jamais de « % » : un chemin encore encodé après résolution est rejeté.
+  if (path.startsWith("//") || path.includes("%") || !isCustomerPath(path, role)) return home;
+  u.searchParams.delete("perimetre");
+  const q = u.searchParams.toString();
   return q ? `${path}?${q}` : path;
 }
 

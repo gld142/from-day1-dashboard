@@ -71,6 +71,12 @@ describe("returnPath — revenir sur la page d'origine après avoir changé d'ar
   it("la query est coupée au premier « ? » seulement : un second « ? » en fait partie", () => {
     expect(returnPath("/revenue?q=a?b&periode=6", "owner", "label")).toBe("/revenue?q=a%3Fb&periode=6");
   });
+  it("les segments-points encodés sont résolus AVANT le contrôle, et rejetés", () => {
+    expect(returnPath("/revenue/%2e%2e/valuation", "owner", "label")).toBe("/roster");
+    expect(returnPath("/revenue/.%2e/espace", "owner", "label")).toBe("/roster");
+    expect(returnPath("/revenue/%2e%2e/%2e%2e//evil.example", "owner", "label")).toBe("/roster");
+    expect(returnPath("/revenue?x=1#frag", "owner", "label")).toBe("/revenue?x=1");
+  });
   it("une page fermée au rôle, un chemin externe ou douteux : l'accueil", () => {
     expect(returnPath("/roster", "artist", "artist")).toBe("/mon-releve");
     expect(returnPath("https://evil.example/x", "owner", "label")).toBe("/roster");
