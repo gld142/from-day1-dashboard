@@ -55,6 +55,12 @@ export type UserData = {
   totalStreams: number;
   totalRevenueEur: number;
   active: boolean;
+  /**
+   * Relevé VIRTUEL d'une structure (vue label) : plusieurs relevés additionnés par
+   * `mergeStatements`. Absent d'un relevé d'artiste. `coverage` : mois → nombre
+   * d'artistes dont le relevé couvre ce mois (les pages atténuent les mois partiels).
+   */
+  scope?: { kind: "label"; artists: number; withStatement: number; coverage: Record<string, number> };
 };
 
 /** Titres gardés mois par mois (les autres restent dans les totaux par titre) : borne la taille en base. */
