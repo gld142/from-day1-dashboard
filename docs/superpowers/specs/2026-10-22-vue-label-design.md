@@ -192,6 +192,12 @@ Sur ces deux pages, en vue label :
   `missingDetail` : « {nom} : relevé importé avant le détail par titre. Réimporte son relevé
   pour voir ses titres ici. »
 - Export CSV : fichier `day1-revenus-label` / `day1-streams-label`.
+- Streams, « Santé du catalogue » : les notes « détail par titre / par pays » ne s'y affichent
+  pas (elles portent sur le détail des REVENUS, les tables de streams sont toujours complètes).
+  La demi-vie d'un titre est dite « non calculable sur le label » dès que les relevés ne couvrent
+  pas les mêmes mois (mesuré le 23/10 : sur l'union des mois, un titre dont le relevé s'arrête
+  tôt semble tomber à zéro) ; le seuil Spotify est dit « non calculable » quand les fenêtres de
+  12 mois diffèrent.
 - Aucun relevé dans l'espace : le message « Aucun relevé importé » actuel, avec le lien Importer.
 
 ### 7. Type d'espace dans `/espace`
@@ -259,6 +265,10 @@ Commandes :
     npm run build
 
 ## Hors périmètre, pour plus tard
+
+Demi-vie sur le label avec des relevés de périodes différentes : tronquer la série de chaque
+titre à la période du relevé de son artiste dans `halfLives` (`src/lib/kpi/statement.ts`), avec
+un test de couverture partielle — remplace le « non calculable » actuel.
 
 Périmètre label sur Audit / Catalogue / Pulse ; aperçu label dans `/espace` ; état des relevés
 dans le menu d'artistes ; fusion côté client pour changer d'artiste sans recharger ; vouvoiement ;
