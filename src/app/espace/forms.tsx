@@ -25,27 +25,37 @@ const IDLE: FormState = { status: "idle" };
 /** Type d'espace (artiste, label…) : c'est lui qui décide de la vue du dashboard. Propriétaire seulement. */
 export function WorkspaceKindForm({ workspaceId, kind }: { workspaceId: string; kind: WorkspaceKind }) {
   const [state, action, pending] = useActionState(setWorkspaceKind, IDLE);
-  const [value, setValue] = useState<WorkspaceKind>(kind);
   return (
     <form action={action} className="grid gap-2">
       <input type="hidden" name="workspaceId" value={workspaceId} />
-      <div className="flex flex-wrap items-end gap-2">
-        <div>
-          <Label htmlFor="ws-kind" className="mb-2 block">Type d&apos;espace</Label>
-          <select id="ws-kind" name="kind" value={value} onChange={(e) => setValue(e.target.value as WorkspaceKind)} className="h-9 min-w-48 rounded-lg border bg-background px-2 text-sm">
-            {WORKSPACE_KINDS.map((k) => (
-              <option key={k} value={k}>{KIND_LABEL[k]}</option>
-            ))}
-          </select>
-        </div>
-        <Button type="submit" size="sm" variant="outline" disabled={pending || value === kind}>Enregistrer</Button>
-        {state.status === "ok" && value === kind && <span className="text-xs text-muted-foreground">Enregistré.</span>}
-      </div>
+      {/* key={kind} : après l'action, React 19 réinitialise le formulaire et ramène le <select> à sa
+          valeur par défaut. Mesuré le 23/10 avec un <select> contrôlé : état « publisher », DOM
+          « management ». Un <select> non contrôlé, remonté avec le nouveau type, reste d'accord
+          avec la base ; l'état « modifié » vit dans ce bloc et repart à zéro avec lui. */}
+      <KindPicker key={kind} kind={kind} pending={pending} saved={state.status === "ok"} />
       <p className="text-xs text-muted-foreground">
         Un label, un manager, un éditeur ou un distributeur arrive sur son roster ; un artiste sur son relevé. Un artiste invité garde sa vue à lui quoi qu&apos;il arrive.
       </p>
       {state.status === "error" && <p className="text-xs text-destructive" role="alert">{state.message}</p>}
     </form>
+  );
+}
+
+function KindPicker({ kind, pending, saved }: { kind: WorkspaceKind; pending: boolean; saved: boolean }) {
+  const [dirty, setDirty] = useState(false);
+  return (
+    <div className="flex flex-wrap items-end gap-2">
+      <div>
+        <Label htmlFor="ws-kind" className="mb-2 block">Type d&apos;espace</Label>
+        <select id="ws-kind" name="kind" defaultValue={kind} onChange={(e) => setDirty(e.target.value !== kind)} className="h-9 min-w-48 rounded-lg border bg-background px-2 text-sm">
+          {WORKSPACE_KINDS.map((k) => (
+            <option key={k} value={k}>{KIND_LABEL[k]}</option>
+          ))}
+        </select>
+      </div>
+      <Button type="submit" size="sm" variant="outline" disabled={pending || !dirty}>Enregistrer</Button>
+      {saved && !dirty && <span className="text-xs text-muted-foreground">Enregistré.</span>}
+    </div>
   );
 }
 
