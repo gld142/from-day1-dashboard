@@ -143,8 +143,8 @@ Règles :
   sommes.
 - Titres : clés `"{titre} · {artiste}"` pour `trackStreams`, `trackRevenue`, `trackIsrc`,
   `trackMonthStreams`, `trackMonthRevenue`, `trackSpotify12` (deux « Intro » ne se mélangent
-  jamais). Deux artistes homonymes (aucune unicité du nom en base) sont suffixés par le début
-  de leur id : « Intro · Léo (aaaa) ». Pas de plafond à 300 : les pages affichent déjà un top N.
+  jamais). Deux artistes homonymes (aucune unicité du nom en base) sont suffixés par leur rang :
+  « Intro · Léo #1 », « Intro · Léo #2 ». Pas de plafond à 300 : les pages affichent déjà un top N.
 - Témoin « detail » : les cinq champs mois par mois (`trackMonthStreams`, `trackMonthRevenue`,
   `countryMonthStreams`, `countryMonthRevenue`, `saleReportRevenue`) doivent tous être présents.
 - `totalRevenueEur` du relevé virtuel = somme des `revenueByMonth` fusionnés, au centime

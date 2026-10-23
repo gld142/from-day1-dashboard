@@ -153,8 +153,8 @@ describe("mergeStatements — le relevé virtuel du label", () => {
       ],
       opts,
     );
-    expect(Object.keys(data!.trackStreams).sort()).toEqual(["Intro · Léo (aaaa)", "Intro · Léo (bbbb)"]);
-    expect(data!.trackIsrc).toEqual({ "Intro · Léo (aaaa)": "FR1", "Intro · Léo (bbbb)": "FR2" });
+    expect(Object.keys(data!.trackStreams).sort()).toEqual(["Intro · Léo #1", "Intro · Léo #2"]);
+    expect(data!.trackIsrc).toEqual({ "Intro · Léo #1": "FR1", "Intro · Léo #2": "FR2" });
   });
 
   it("trackIsrc et withheldEur sont absents quand aucun relevé ne les porte", () => {
