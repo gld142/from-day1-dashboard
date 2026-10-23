@@ -149,3 +149,44 @@ Vérifier :
 Vérifier :
 
     npx vitest run src/lib/userdata src/lib/kpi src/lib/index src/lib/collect src/lib/attention
+
+## Vue label (22-23/10/2026) — invariants
+
+- **Qui voit quoi** : `viewFor(kind, role)` (`src/lib/accounts/view.ts`). C'est le TYPE D'ESPACE
+  déclaré à l'achat (`workspaces.kind`) qui tranche, jamais le nombre d'artistes ; un artiste
+  invité (rôle « artist ») est toujours en vue artiste. `CustomerRoleProvider` garde la persona
+  `artist` ; la peau lit la vue du client (`skinForView`, `src/lib/skin.ts`).
+- **Arrivée et changement d'artiste** : un label arrive sur `/roster` (`customerHome`). Rouvrir un
+  artiste passe par `/espace/ouvrir/[id]?vers=` et `returnPath` juge le chemin RÉSOLU, pas le texte
+  reçu : les points-segments encodés contournaient un contrôle naïf de `..` (mesuré). Le paramètre
+  `perimetre` est retiré au passage.
+- **Relevé fusionné** (`mergeStatements`, `src/lib/userdata/merge.ts`) : titres clés « Titre · Artiste »
+  (homonymes « #1 », « #2 »). Un détail facultatif est OMIS dès qu'UN artiste en manque, et l'artiste
+  est nommé (`missingDetail`) ; le témoin du « détail » = les cinq champs mois par mois.
+  `totalRevenueEur` = somme des `revenueByMonth` fusionnés ; `scope.coverage` marque les mois partiels.
+- **Chargement** : `customerLabelStatement` lit le DERNIER relevé de chaque artiste (`limit(1)`),
+  jamais tout l'historique ; seulement en vue label, sur /revenue et /streams, et seulement avec
+  `?perimetre=label` (le proxy transmet la query dans `x-d1-search`).
+- **Navigation vers `?perimetre=label` ou vers un autre artiste = TOUJOURS une navigation complète**
+  (`<a href>`, `window.location.assign`), jamais `<Link>` / `router.push` : le layout `(dashboard)`
+  n'est pas re-rendu en navigation client (lu dans la source de Next 16,
+  `walk-tree-with-flight-router-state.js`), le relevé label resterait `null`.
+- **Streams en périmètre label** : pas de notes « titres / pays » (elles décrivent le détail des
+  REVENUS) ; demi-vie et seuil Spotify « non calculables » quand les relevés couvrent des périodes
+  ou des fenêtres différentes (un titre dont le relevé s'arrête tôt aurait l'air de tomber à zéro —
+  mesuré sur une fixture).
+- **Avatar de la barre du haut** (client réel) : construit depuis l'artiste OUVERT (initiales du nom,
+  `rosterHue(rang)` = même teinte que le roster). `getArtist` retombe sur le premier artiste de démo
+  (`ARTISTS[0]`) quand l'artiste n'a pas de relevé importé : ne jamais l'utiliser pour un client.
+
+Vérifier :
+
+    npx vitest run src/lib/accounts src/lib/userdata/__tests__/merge.test.ts src/lib/userdata/__tests__/roster.test.ts src/lib/__tests__/nav-customer.test.ts src/lib/__tests__/skin.test.ts src/components/modules/customer/__tests__/shared-label.test.ts
+
+Vérification en navigateur : les scripts de seed et de nettoyage vivent dans
+`.superpowers/qa/seed-label.mjs` et `clean-label.mjs` (dossier ignoré par git : ils n'existent que
+dans ce worktree ; leur contenu est recopié dans le plan, Task 13 Step 2). Les chiffres attendus sont
+dans le plan, Task 13 Step 4 (déduits du seed). Le 23/10/2026, l'hôte Supabase
+`tzjgcyqlxbczeoeqgolh.supabase.co` ne se résolvait pas (NXDOMAIN depuis le Mac, le reste d'Internet
+répondant) : la mesure avant/après dans le navigateur reste À FAIRE, aucun chiffre de ce paragraphe
+n'a donc été lu à l'écran.
