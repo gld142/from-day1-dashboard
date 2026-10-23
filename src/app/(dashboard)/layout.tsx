@@ -34,7 +34,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (view.kind === "customer") {
     const home = customerHome(view.info.view);
-    const path = (await headers()).get("x-d1-path") ?? home;
+    const h = await headers();
+    const path = h.get("x-d1-path") ?? home;
+    const search = h.get("x-d1-search") ?? "";
     if (!isCustomerPath(path, view.info.role)) redirect(view.data ? home : "/import");
     // La vue structure et les contrats ne dépendent pas du relevé de l'artiste ouvert ; les autres pages, si.
     if (!view.data && needsStatement(path)) redirect("/import");
@@ -61,8 +63,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
               : null;
     const signals = signalsNeeds ? await customerSignals(view.info.workspaceId, signalsNeeds) : null;
     const ws = view.info.workspaceId;
-    // Vue label : le relevé virtuel de l'espace pour « Tout le label » (Revenus, Streams).
-    const label = view.info.view === "label" && (on("/revenue") || on("/streams")) ? await customerLabelStatement(ws, view.info.workspaceName) : null;
+    // Vue label : le relevé virtuel de l'espace pour « Tout le label » (Revenus, Streams),
+    // seulement quand l'URL demande le périmètre label.
+    const wantsLabel = new URLSearchParams(search).get("perimetre") === "label";
+    const label = view.info.view === "label" && (on("/revenue") || on("/streams")) && wantsLabel ? await customerLabelStatement(ws, view.info.workspaceName) : null;
     const registers = {
       ...(on("/tour") ? { shows: await customerShows(ws) } : {}),
       ...(on("/placements") ? { placements: await customerPlacements(ws) } : {}),

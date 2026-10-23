@@ -7,7 +7,7 @@
 
 import { CustomerRevenue } from "@/components/modules/customer/customer-revenue";
 import { useCustomer } from "@/lib/customer-mode";
-import { useCallback, useMemo } from "react";
+import { Suspense, useCallback, useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Area,
@@ -97,7 +97,11 @@ const TOOLTIP_STYLE = {
 
 /** Mode client : la page sur les relevés importés ; sinon la démo, intacte. */
 export default function RevenuePage() {
-  return useCustomer() ? <CustomerRevenue /> : <DemoRevenuePage />;
+  return useCustomer() ? (
+    <Suspense fallback={null}>
+      <CustomerRevenue />
+    </Suspense>
+  ) : <DemoRevenuePage />;
 }
 
 function DemoRevenuePage() {

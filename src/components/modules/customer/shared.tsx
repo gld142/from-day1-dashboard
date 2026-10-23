@@ -5,8 +5,11 @@
  * libellés, formats, graphique mois par mois, tableau simple.
  */
 import { useLocale } from "next-intl";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useRouter } from "next/navigation";
+import { Bar, BarChart, Cell, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import type { CustomerInfo } from "@/lib/customer-mode";
 import { fmtCompact, fmtEur, fmtMonth } from "@/lib/format";
+import type { LabelStatement } from "@/lib/userdata/merge";
 import type { MonthPoint } from "@/lib/userdata/statement-insights";
 import type { UserData } from "@/lib/userdata/store";
 
@@ -63,6 +66,67 @@ export function statementLine(d: UserData, month: (m: string) => string, locale:
   const sorted = [...d.months].sort();
   const period = sorted.length ? `${month(sorted[0])} → ${month(sorted[sorted.length - 1])}` : "";
   return `Relevé ${FORMAT_LABEL[d.format] ?? d.format} · ${period} · importé le ${new Date(d.importedAt).toLocaleDateString(locale)}`;
+}
+
+/** « Tout le label · 4 artistes, 3 relevés · mars 2026 → sept. 2026 » */
+export function labelLine(d: UserData, month: (m: string) => string): string {
+  const s = d.scope;
+  const sorted = [...d.months].sort();
+  const period = sorted.length ? `${month(sorted[0])} → ${month(sorted[sorted.length - 1])}` : "";
+  const n = (k: number, w: string) => `${k} ${w}${k > 1 ? "s" : ""}`;
+  return s ? `Tout le label · ${n(s.artists, "artiste")}, ${n(s.withStatement, "relevé")} · ${period}` : period;
+}
+
+/**
+ * Sélecteur de périmètre (vue label) : « Tout le label » = la même page avec
+ * `?perimetre=label` ; un artiste = on le rouvre (cookie) et on revient ici.
+ */
+export function ScopeSelect({ page, scope, customer }: { page: "/revenue" | "/streams"; scope: "artist" | "label"; customer: CustomerInfo }) {
+  const router = useRouter();
+  if (customer.view !== "label") return null;
+  return (
+    <select
+      value={scope === "label" ? "label" : customer.artistId}
+      aria-label="Périmètre"
+      className="h-9 rounded-md border bg-transparent px-3 text-sm"
+      onChange={(e) => {
+        const v = e.target.value;
+        if (v === "label") router.push(`${page}?perimetre=label`);
+        else window.location.assign(`/espace/ouvrir/${v}?vers=${encodeURIComponent(page)}`);
+      }}
+    >
+      <option value="label">Tout le label</option>
+      {customer.artists.map((a) => (
+        <option key={a.id} value={a.id}>{a.name}</option>
+      ))}
+    </select>
+  );
+}
+
+/**
+ * Les mois partiels d'un relevé virtuel, expliqués : « avril, mai 2026 : 2 artistes
+ * sur 3 (le relevé de Kiko couvre juin 2026 → sept. 2026) ». Null sans mois partiel.
+ */
+export function coverageNote(points: MonthPoint[], label: LabelStatement, month: (m: string) => string): string | null {
+  const partial = points.filter((p) => p.partial && !p.missing);
+  if (!partial.length) return null;
+  const byCount = new Map<number, string[]>();
+  for (const p of partial) {
+    const c = label.coverage[p.month] ?? 0;
+    byCount.set(c, [...(byCount.get(c) ?? []), p.month]);
+  }
+  const parts = [...byCount.entries()].map(([c, months]) => `${months.map(month).join(", ")} : ${c} artiste${c > 1 ? "s" : ""} sur ${label.withStatement}`);
+  const absent = label.spans.filter((s) => partial.some((p) => p.month < s.from || p.month > s.to));
+  const why = absent.length ? ` (${absent.map((s) => `le relevé de ${s.name} couvre ${month(s.from)} → ${month(s.to)}`).join(" ; ")})` : "";
+  return `${parts.join(" · ")}${why}. Les mois atténués ne sont pas comparables aux autres.`;
+}
+
+/** Les artistes dont le relevé n'a pas tel détail, en une phrase ; null si tous l'ont. */
+export function missingDetailLine(label: LabelStatement, what: "platforms" | "titles" | "countries" | "detail"): string | null {
+  const names = label.missingDetail.filter((m) => m.what.includes(what)).map((m) => m.name);
+  if (!names.length) return null;
+  const detail = { platforms: "le détail par plateforme", titles: "le détail par titre", countries: "le détail par pays", detail: "le détail mois par mois" }[what];
+  return `${names.join(", ")} : relevé importé avant ${detail}. Réimporte ${names.length > 1 ? "leurs relevés" : "son relevé"} pour le voir ici.`;
 }
 
 export function Dot({ color }: { color: string }) {
@@ -153,7 +217,11 @@ export function MonthBars({ points, kind }: { points: MonthPoint[]; kind: "reven
               radius={i === keys.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
               maxBarSize={22}
               isAnimationActive={false}
-            />
+            >
+              {points.map((p) => (
+                <Cell key={p.month} fillOpacity={p.partial ? 0.45 : 1} />
+              ))}
+            </Bar>
           ))}
         </BarChart>
       </ResponsiveContainer>

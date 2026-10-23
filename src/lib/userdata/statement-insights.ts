@@ -21,6 +21,8 @@ export type MonthPoint = {
   streamsByDsp: Partial<Record<DSP, number>>;
   /** null si le relevé ne porte pas le découpage des revenus par plateforme. */
   revenueByDsp: Partial<Record<DSP, number>> | null;
+  /** Relevé virtuel : ce mois n'est pas couvert par tous les relevés (vue label). */
+  partial: boolean;
 };
 
 const sumValues = (o: Partial<Record<string, number>> | undefined) =>
@@ -49,6 +51,7 @@ export function monthSeries(d: UserData): MonthPoint[] {
       per1000: per1000(revenue, streams),
       streamsByDsp: d.streamsByMonth[month] ?? {},
       revenueByDsp: d.revenueByMonthDsp ? (d.revenueByMonthDsp[month] ?? {}) : null,
+      partial: d.scope ? (d.scope.coverage[month] ?? 0) < d.scope.withStatement : false,
     };
   });
 }

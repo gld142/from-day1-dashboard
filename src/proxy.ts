@@ -41,7 +41,11 @@ export async function proxy(request: NextRequest) {
 async function withSession(request: NextRequest, path?: string) {
   const forward = () => {
     const headers = new Headers(request.headers);
-    if (path) headers.set("x-d1-path", path);
+    if (path) {
+      headers.set("x-d1-path", path);
+      // La chaîne de requête brute (« ?perimetre=label »), pour que le layout ne charge que ce que l'URL demande.
+      headers.set("x-d1-search", request.nextUrl.search);
+    }
     return NextResponse.next({ request: { headers } });
   };
   let response = forward();

@@ -149,3 +149,16 @@ describe("streamsSummary / platformMixShift", () => {
     expect(platformMixShift(statement({ "2026-01": { spotify: [1, 0] } }))).toBeNull();
   });
 });
+
+describe("monthSeries — mois partiels d'un relevé virtuel", () => {
+  it("un mois couvert par moins d'artistes que de relevés est « partial »", () => {
+    const d = statement(
+      { "2026-07": { spotify: [100, 1] }, "2026-08": { spotify: [100, 1] } },
+      { scope: { kind: "label", artists: 3, withStatement: 2, coverage: { "2026-07": 1, "2026-08": 2 } } },
+    );
+    expect(monthSeries(d).map((p) => p.partial)).toEqual([true, false]);
+  });
+  it("sans scope : jamais partial", () => {
+    expect(monthSeries(statement({ "2026-08": { spotify: [100, 1] } })).map((p) => p.partial)).toEqual([false]);
+  });
+});
