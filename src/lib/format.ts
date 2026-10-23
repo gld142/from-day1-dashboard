@@ -89,6 +89,16 @@ export function rosterHue(index: number): number {
   return Math.round((Math.max(0, index) * 137.5 + 265) % 360);
 }
 
+/** Initiales déterministes depuis le nom (deux premiers mots, séparés par espace ou point). */
+export function initialsOf(name: string): string {
+  return name
+    .split(/[\s.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join("");
+}
+
 export function artistColor(hue: number, opts?: { l?: number; c?: number }): string {
   return `oklch(${opts?.l ?? 0.62} ${opts?.c ?? 0.15} ${hue})`;
 }

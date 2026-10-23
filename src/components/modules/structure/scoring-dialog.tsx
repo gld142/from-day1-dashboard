@@ -8,7 +8,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Info, Rocket, ShieldCheck } from "lucide-react";
 import { ArtistAvatar } from "@/components/dashboard/artist-badge";
-import { initialsOf } from "@/components/modules/structure/emerging-card";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { EmergingArtist } from "@/lib/demo/types";
-import { fmtCompact, fmtEur } from "@/lib/format";
+import { fmtCompact, fmtEur, initialsOf } from "@/lib/format";
 
 /* ── Modèle déterministe ─────────────────────────────────────────────── */
 

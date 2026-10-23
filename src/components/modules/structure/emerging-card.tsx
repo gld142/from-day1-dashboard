@@ -11,18 +11,8 @@ import { ArtistAvatar } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { EmergingArtist } from "@/lib/demo/types";
-import { fmtCompact, fmtPct } from "@/lib/format";
+import { fmtCompact, fmtPct, initialsOf } from "@/lib/format";
 import { cn } from "@/lib/utils";
-
-/** Initiales déterministes depuis le nom (EmergingArtist n'en porte pas). */
-export function initialsOf(name: string): string {
-  return name
-    .split(/[\s.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join("");
-}
 
 export function EmergingCard({
   artist,

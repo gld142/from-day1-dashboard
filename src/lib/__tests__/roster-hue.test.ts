@@ -4,7 +4,7 @@ import { rosterHue } from "../format";
 describe("rosterHue — la teinte d'un artiste d'un espace client", () => {
   it("part du violet de la marque, puis avance à l'angle d'or", () => {
     expect(rosterHue(0)).toBe(265);
-    expect(rosterHue(1)).toBe(43); // (265 + 137,5) mod 360 arrondi
+    expect(rosterHue(1)).toBe(43); // 42,5 arrondi à 43 (Math.round arrondit ,5 vers le haut)
   });
   it("reste dans [0, 360[ et distingue les premiers artistes", () => {
     const hues = Array.from({ length: 12 }, (_, i) => rosterHue(i));
