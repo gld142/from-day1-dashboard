@@ -28,8 +28,12 @@ export type LabelStatement = {
 
 const cents = (n: number) => Math.round(n * 100) / 100;
 
-function addInto(target: Record<string, number>, source: Record<string, number | undefined> | undefined) {
-  for (const [k, v] of Object.entries(source ?? {})) if (v !== undefined) target[k] = cents((target[k] ?? 0) + v);
+function addInto(
+  target: Record<string, number>,
+  source: Record<string, number | undefined> | undefined,
+  key: (k: string) => string = (k) => k,
+) {
+  for (const [k, v] of Object.entries(source ?? {})) if (v !== undefined) target[key(k)] = cents((target[key(k)] ?? 0) + v);
 }
 function addNested(
   target: Record<string, Record<string, number>>,
@@ -43,7 +47,8 @@ const DETAIL_FIELDS: Record<MissingDetail, (keyof UserData)[]> = {
   platforms: ["revenueByMonthDsp"],
   titles: ["trackRevenue"],
   countries: ["countryRevenue"],
-  detail: ["trackMonthStreams"],
+  // Ces cinq champs sont toujours écrits ensemble par l'import, mais le validateur les accepte un par un.
+  detail: ["trackMonthStreams", "trackMonthRevenue", "countryMonthStreams", "countryMonthRevenue", "saleReportRevenue"],
 };
 
 export function mergeStatements(entries: MergeEntry[], opts: { artistName: string; artists: number }): LabelStatement {
@@ -60,7 +65,13 @@ export function mergeStatements(entries: MergeEntry[], opts: { artistName: strin
   if (!entries.length) return { data: null, artists: opts.artists, withStatement: 0, coverage, spans, missingDetail };
 
   const all = (what: MissingDetail) => !missingDetail.some((m) => m.what.includes(what));
-  const titled = (e: MergeEntry) => (t: string) => `${t} · ${e.name}`;
+  const has = { platforms: all("platforms"), titles: all("titles"), countries: all("countries"), detail: all("detail") };
+  // Deux artistes peuvent porter le même nom (aucune contrainte d'unicité en base) : on suffixe par le début de l'id.
+  const dupes = new Set(entries.map((e) => e.name).filter((n, i, a) => a.indexOf(n) !== i));
+  const titled = (e: MergeEntry) => {
+    const who = dupes.has(e.name) ? `${e.name} (${e.id.slice(0, 4)})` : e.name;
+    return (t: string) => `${t} · ${who}`;
+  };
 
   const streamsByMonth: Record<string, Record<string, number>> = {};
   const revenueByMonth: Record<string, number> = {};
@@ -79,19 +90,18 @@ export function mergeStatements(entries: MergeEntry[], opts: { artistName: strin
   let withheld: number | undefined;
   let importedAt = "";
   let totalStreams = 0;
-  let totalRevenueEur = 0;
 
   for (const e of entries) {
     const d = e.data;
     const key = titled(e);
     addNested(streamsByMonth, d.streamsByMonth as Record<string, Record<string, number | undefined>>);
     addInto(revenueByMonth, d.revenueByMonth);
-    addInto(trackStreams, Object.fromEntries(Object.entries(d.trackStreams).map(([t, v]) => [key(t), v])));
+    addInto(trackStreams, d.trackStreams, key);
     addInto(countryStreams, d.countryStreams);
-    if (all("platforms")) addNested(revenueByMonthDsp, d.revenueByMonthDsp as Record<string, Record<string, number | undefined>>);
-    if (all("titles")) addInto(trackRevenue, Object.fromEntries(Object.entries(d.trackRevenue ?? {}).map(([t, v]) => [key(t), v])));
-    if (all("countries")) addInto(countryRevenue, d.countryRevenue);
-    if (all("detail")) {
+    if (has.platforms) addNested(revenueByMonthDsp, d.revenueByMonthDsp as Record<string, Record<string, number | undefined>>);
+    if (has.titles) addInto(trackRevenue, d.trackRevenue, key);
+    if (has.countries) addInto(countryRevenue, d.countryRevenue);
+    if (has.detail) {
       addNested(trackMonthStreams, d.trackMonthStreams, key);
       addNested(trackMonthRevenue, d.trackMonthRevenue, key);
       addNested(countryMonthStreams, d.countryMonthStreams);
@@ -106,9 +116,11 @@ export function mergeStatements(entries: MergeEntry[], opts: { artistName: strin
     if (d.withheldEur !== undefined) withheld = cents((withheld ?? 0) + d.withheldEur);
     if (d.importedAt > importedAt) importedAt = d.importedAt;
     totalStreams += d.totalStreams;
-    totalRevenueEur += d.totalRevenueEur;
   }
 
+  // Somme des mois fusionnés, pas des `totalRevenueEur` : l'import arrondit son propre total, on ne reprend pas cet écart
+  // (le relevé virtuel doit rester cohérent avec ses `revenueByMonth`).
+  const totalRevenueEur = cents(Object.values(revenueByMonth).reduce((s, v) => s + v, 0));
   const windows = entries.map((e) => JSON.stringify(e.data.spotifyWindow ?? null));
   const sameWindow = windows[0] !== "null" && windows.every((w) => w === windows[0]);
 
@@ -124,15 +136,15 @@ export function mergeStatements(entries: MergeEntry[], opts: { artistName: strin
     revenueByMonth,
     trackStreams,
     countryStreams,
-    ...(all("platforms") ? { revenueByMonthDsp: revenueByMonthDsp as UserData["revenueByMonthDsp"] } : {}),
-    ...(all("titles") ? { trackRevenue } : {}),
-    ...(all("countries") ? { countryRevenue } : {}),
-    ...(all("detail") ? { trackMonthStreams, trackMonthRevenue, countryMonthStreams, countryMonthRevenue, saleReportRevenue } : {}),
+    ...(has.platforms ? { revenueByMonthDsp: revenueByMonthDsp as UserData["revenueByMonthDsp"] } : {}),
+    ...(has.titles ? { trackRevenue } : {}),
+    ...(has.countries ? { countryRevenue } : {}),
+    ...(has.detail ? { trackMonthStreams, trackMonthRevenue, countryMonthStreams, countryMonthRevenue, saleReportRevenue } : {}),
     ...(Object.keys(trackIsrc).length ? { trackIsrc } : {}),
     ...(sameWindow ? { trackSpotify12, spotifyWindow: entries[0].data.spotifyWindow } : {}),
     ...(withheld !== undefined ? { withheldEur: withheld } : {}),
     totalStreams,
-    totalRevenueEur: cents(totalRevenueEur),
+    totalRevenueEur,
     active: true,
     scope: { kind: "label", artists: opts.artists, withStatement: entries.length, coverage },
   };

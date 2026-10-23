@@ -19,6 +19,8 @@ function statement(byMonth: Record<string, [streams: number, revenue: number]>, 
 }
 const entry = (id: string, data: UserData) => ({ id, name: id.toUpperCase(), data });
 const opts = { artistName: "Label Nord", artists: 3 };
+/** Les quatre champs « mois par mois » autres que trackMonthStreams : l'import les écrit toujours avec lui. */
+const monthDetail: Partial<UserData> = { trackMonthRevenue: {}, countryMonthStreams: {}, countryMonthRevenue: {}, saleReportRevenue: {} };
 
 describe("mergeStatements — le relevé virtuel du label", () => {
   it("additionne mois, plateformes et pays ; les mois sont l'union", () => {
@@ -59,7 +61,7 @@ describe("mergeStatements — le relevé virtuel du label", () => {
   it("un détail optionnel absent chez UN artiste est omis, et l'artiste nommé", () => {
     const { data, missingDetail } = mergeStatements(
       [
-        entry("a", statement({ "2026-09": [100, 1] }, { revenueByMonthDsp: { "2026-09": { spotify: 1 } }, trackRevenue: { T: 1 }, countryRevenue: { FR: 1 }, trackMonthStreams: { T: { "2026-09": 100 } } })),
+        entry("a", statement({ "2026-09": [100, 1] }, { revenueByMonthDsp: { "2026-09": { spotify: 1 } }, trackRevenue: { T: 1 }, countryRevenue: { FR: 1 }, trackMonthStreams: { T: { "2026-09": 100 } }, ...monthDetail })),
         entry("b", statement({ "2026-09": [100, 1] })),
       ],
       opts,
@@ -74,8 +76,8 @@ describe("mergeStatements — le relevé virtuel du label", () => {
   it("quand tous l'ont, le détail est fusionné : revenus par plateforme et titre × mois", () => {
     const { data, missingDetail } = mergeStatements(
       [
-        entry("a", statement({ "2026-09": [100, 1] }, { revenueByMonthDsp: { "2026-09": { spotify: 1 } }, trackRevenue: {}, countryRevenue: {}, trackMonthStreams: { T: { "2026-09": 100 } } })),
-        entry("b", statement({ "2026-09": [100, 2] }, { revenueByMonthDsp: { "2026-09": { spotify: 1.5, apple: 0.5 } }, trackRevenue: {}, countryRevenue: {}, trackMonthStreams: { T: { "2026-09": 100 } } })),
+        entry("a", statement({ "2026-09": [100, 1] }, { revenueByMonthDsp: { "2026-09": { spotify: 1 } }, trackRevenue: {}, countryRevenue: {}, trackMonthStreams: { T: { "2026-09": 100 } }, ...monthDetail })),
+        entry("b", statement({ "2026-09": [100, 2] }, { revenueByMonthDsp: { "2026-09": { spotify: 1.5, apple: 0.5 } }, trackRevenue: {}, countryRevenue: {}, trackMonthStreams: { T: { "2026-09": 100 } }, ...monthDetail })),
       ],
       opts,
     );
@@ -126,5 +128,61 @@ describe("mergeStatements — le relevé virtuel du label", () => {
   it("les montants sont arrondis au centime", () => {
     const { data } = mergeStatements([entry("a", statement({ "2026-09": [1, 0.1] })), entry("b", statement({ "2026-09": [1, 0.2] }))], opts);
     expect(data!.revenueByMonth["2026-09"]).toBe(0.3);
+  });
+
+  it("un seul relevé : égal au relevé, aux clés de titres, à scope et à artistName près", () => {
+    const d = statement({ "2026-08": [100, 1.5], "2026-09": [200, 2.5] }, { trackStreams: { T: 300 }, trackRevenue: { T: 4 }, countryStreams: { FR: 300 }, countryRevenue: { FR: 4 }, revenueByMonthDsp: { "2026-08": { spotify: 1.5 }, "2026-09": { spotify: 2.5 } }, trackMonthStreams: { T: { "2026-08": 100, "2026-09": 200 } }, trackMonthRevenue: { T: { "2026-08": 1.5, "2026-09": 2.5 } }, countryMonthStreams: { FR: { "2026-08": 100, "2026-09": 200 } }, countryMonthRevenue: { FR: { "2026-08": 1.5, "2026-09": 2.5 } }, saleReportRevenue: { "2026-08>2026-10": 4 }, withheldEur: 0.5, trackIsrc: { T: "FR1" } });
+    const { data, missingDetail, spans } = mergeStatements([entry("a", d)], opts);
+    expect(missingDetail).toEqual([]);
+    expect(spans).toEqual([{ id: "a", name: "A", from: "2026-08", to: "2026-09" }]);
+    expect(data).toEqual({
+      ...d,
+      artistName: "Label Nord", format: "generic", eurRate: 1, sourceCurrency: "EUR",
+      trackStreams: { "T · A": 300 }, trackRevenue: { "T · A": 4 }, trackIsrc: { "T · A": "FR1" },
+      trackMonthStreams: { "T · A": { "2026-08": 100, "2026-09": 200 } }, trackMonthRevenue: { "T · A": { "2026-08": 1.5, "2026-09": 2.5 } },
+      totalRevenueEur: 4,
+      scope: { kind: "label", artists: 3, withStatement: 1, coverage: { "2026-08": 1, "2026-09": 1 } },
+    });
+  });
+
+  it("deux artistes de même nom : leurs titres restent distincts", () => {
+    const { data } = mergeStatements(
+      [
+        { id: "aaaa-1", name: "Léo", data: statement({ "2026-09": [100, 1] }, { trackStreams: { Intro: 60 }, trackIsrc: { Intro: "FR1" } }) },
+        { id: "bbbb-2", name: "Léo", data: statement({ "2026-09": [100, 1] }, { trackStreams: { Intro: 100 }, trackIsrc: { Intro: "FR2" } }) },
+      ],
+      opts,
+    );
+    expect(Object.keys(data!.trackStreams).sort()).toEqual(["Intro · Léo (aaaa)", "Intro · Léo (bbbb)"]);
+    expect(data!.trackIsrc).toEqual({ "Intro · Léo (aaaa)": "FR1", "Intro · Léo (bbbb)": "FR2" });
+  });
+
+  it("trackIsrc et withheldEur sont absents quand aucun relevé ne les porte", () => {
+    const { data } = mergeStatements([entry("a", statement({ "2026-09": [1, 1] })), entry("b", statement({ "2026-09": [1, 1] }))], opts);
+    expect(data!.trackIsrc).toBeUndefined();
+    expect(data!.withheldEur).toBeUndefined();
+  });
+
+  it("le témoin « detail » exige les cinq champs mois par mois", () => {
+    // Les trois autres détails sont présents chez les deux : seul « detail » doit manquer chez b.
+    const base: Partial<UserData> = { revenueByMonthDsp: { "2026-09": { spotify: 1 } }, trackRevenue: {}, countryRevenue: {} };
+    const { data, missingDetail } = mergeStatements(
+      [
+        entry("a", statement({ "2026-09": [1, 1] }, { ...base, trackMonthStreams: { T: { "2026-09": 1 } }, trackMonthRevenue: {}, countryMonthStreams: {}, countryMonthRevenue: {}, saleReportRevenue: {} })),
+        entry("b", statement({ "2026-09": [1, 1] }, { ...base, trackMonthStreams: { T: { "2026-09": 1 } } })), // sans trackMonthRevenue
+      ],
+      opts,
+    );
+    expect(data!.trackMonthStreams).toBeUndefined();
+    expect(missingDetail).toEqual([{ id: "b", name: "B", what: ["detail"] }]);
+  });
+
+  it("un mois à revenu seul, sans streams : couvert, sans clé fantôme dans streamsByMonth", () => {
+    const d = statement({ "2026-09": [0, 3] });
+    delete (d.streamsByMonth as Record<string, unknown>)["2026-09"];
+    const { data, coverage } = mergeStatements([entry("a", d)], opts);
+    expect(coverage).toEqual({ "2026-09": 1 });
+    expect(data!.revenueByMonth).toEqual({ "2026-09": 3 });
+    expect(data!.streamsByMonth["2026-09"]).toBeUndefined();
   });
 });
