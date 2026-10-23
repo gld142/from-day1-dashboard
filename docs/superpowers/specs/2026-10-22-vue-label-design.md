@@ -116,15 +116,17 @@ Sans aucun relevé : le bloc n'apparaît pas (le Roster affiche déjà « Aucun 
 
 ### 6. Relevé virtuel du label (Revenus, Streams)
 
-**Chargement.** `customerLabelStatement(workspaceId)` (`accounts/customer.ts`) lit, pour chaque
-artiste de l'espace, le dernier `artist_imports.data` complet, et renvoie
-`mergeStatements(entries, { workspaceName })`. Le layout l'appelle **en vue label** quand le
-chemin est `/revenue` ou `/streams` (quel que soit le périmètre demandé : le layout ne voit pas
-la query ; coût = N lectures + une fusion par requête, acceptable jusqu'à quelques dizaines
-d'artistes, à revoir au-delà). Nouveau contexte `useCustomerLabelStatement()` dans
-`customer-mode.tsx`.
+**Chargement.** `customerLabelStatement(workspaceId, workspaceName)` (`accounts/customer.ts`)
+lit, pour chaque artiste de l'espace, son DERNIER `artist_imports.data` (une lecture par artiste,
+`limit(1)`, en parallèle : jamais tout l'historique), et renvoie
+`mergeStatements(entries, { artistName: workspaceName, artists })`. Le layout l'appelle **en vue
+label** quand le chemin est `/revenue` ou `/streams` et que l'URL porte `?perimetre=label` (le
+proxy transmet la query au layout dans l'en-tête `x-d1-search`). Coût = N lectures + une fusion
+par requête, acceptable jusqu'à quelques dizaines d'artistes ; au-delà, une fonction SQL
+`distinct on (artist_id)` en un aller-retour. Nouveau contexte `useCustomerLabelStatement()`
+dans `customer-mode.tsx`.
 
-**Fusion.** `mergeStatements(entries: { id, name, data: UserData }[], opts): LabelStatement`
+**Fusion.** `mergeStatements(entries: { id, name, data: UserData }[], opts: { artistName, artists }): LabelStatement`
 dans `src/lib/userdata/merge.ts`, fonction pure :
 
 ```ts
