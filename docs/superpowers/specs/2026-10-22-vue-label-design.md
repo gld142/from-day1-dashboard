@@ -176,8 +176,11 @@ label (URL tapée), on retombe sur l'artiste.
 
 Sur ces deux pages, en vue label :
 - Sélecteur en tête (`<select>`, même motif que Finances) : « Tout le label » + un item par
-  artiste. Artiste → `router.push("/espace/ouvrir/{id}?vers=/revenue")` ; label →
-  `router.push("/revenue?perimetre=label")`.
+  artiste. Artiste → navigation complète vers `/espace/ouvrir/{id}?vers=/revenue` ; label →
+  navigation complète vers `/revenue?perimetre=label`. Jamais `router.push` ni `<Link>` : le
+  relevé du label est chargé par le layout `(dashboard)`, que Next ne re-rend pas sur une
+  navigation client (mesuré dans la source de Next 16 en relecture du 23/10). Même règle pour
+  les deux liens du bloc « Le label ce mois-ci » du Roster.
 - Sous-titre : « Tout le label · {artists} artistes, {withStatement} relevés · {de} → {à} ».
 - Sous « Mois par mois », quand la couverture varie : « {mois…} : {n} artistes sur {N}
   ({explication : le relevé de X commence en …}) » ; les mois partiels sont hachurés dans le
