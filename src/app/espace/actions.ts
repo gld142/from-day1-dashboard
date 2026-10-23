@@ -7,6 +7,7 @@ import { syncSubscription } from "@/lib/accounts/provision";
 import { appUrl } from "@/lib/app-url";
 import { inviteEmail } from "@/lib/email/templates";
 import { sendEmail } from "@/lib/email/send";
+import { isWorkspaceKind } from "@/lib/accounts/view";
 import { confirmMatches, quantityAfterRemoval } from "@/lib/accounts/manage";
 import { portalConfigurationId, priceId, stripe } from "@/lib/billing/stripe";
 import { isEmail } from "@/lib/onboarding/lead";
@@ -152,6 +153,22 @@ export async function renameArtist(_: FormState, form: FormData): Promise<FormSt
     return { status: "error", message: "L'artiste n'a pas pu être renommé." };
   }
   revalidatePath("/espace");
+  return { status: "ok" };
+}
+
+/** Le type d'espace décide de la vue du dashboard (artiste / label) — propriétaire seulement. */
+export async function setWorkspaceKind(_: FormState, form: FormData): Promise<FormState> {
+  const workspaceId = String(form.get("workspaceId") ?? "");
+  const kind = String(form.get("kind") ?? "");
+  if (!isWorkspaceKind(kind)) return { status: "error", message: "Type d'espace inconnu." };
+  if (!(await ownerOf(workspaceId))) return { status: "error", message: "Seul le propriétaire de l'espace peut changer son type." };
+  const { error } = await adminDb().from("workspaces").update({ kind }).eq("id", workspaceId);
+  if (error) {
+    console.error("[espace/setWorkspaceKind]", error);
+    return { status: "error", message: "Le type n'a pas pu être enregistré." };
+  }
+  revalidatePath("/espace");
+  revalidatePath("/", "layout");
   return { status: "ok" };
 }
 

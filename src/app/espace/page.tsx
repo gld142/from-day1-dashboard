@@ -3,10 +3,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isWorkspaceKind } from "@/lib/accounts/view";
 import { quoteFor, eurHT as eur } from "@/lib/billing/pricing";
 import { userDb } from "@/lib/supabase/server";
 import { openBillingPortal, signOut } from "./actions";
-import { AddArtistForm, ArtistActions, ClearPurchaseDraft, DangerZone, InviteForm, RemoveMemberButton, RevokeInvitationButton } from "./forms";
+import { AddArtistForm, ArtistActions, ClearPurchaseDraft, DangerZone, InviteForm, RemoveMemberButton, RevokeInvitationButton, WorkspaceKindForm } from "./forms";
 
 export const metadata: Metadata = { title: "Day 1 Pro — Mon espace", robots: { index: false } };
 
@@ -40,7 +41,7 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
   }
 
   const [{ data: ws }, { data: artists }, { data: team }, { data: invites }, { data: imports }] = await Promise.all([
-    db.from("workspaces").select("id, name, subscription_status, artist_quantity, current_period_end, cancel_at, company_name, siret").eq("id", me.workspace_id).single(),
+    db.from("workspaces").select("id, name, kind, subscription_status, artist_quantity, current_period_end, cancel_at, company_name, siret").eq("id", me.workspace_id).single(),
     db.from("artists").select("id, name").eq("workspace_id", me.workspace_id).order("created_at"),
     db.from("workspace_members").select("user_id, email, role, artist_id").eq("workspace_id", me.workspace_id).order("created_at"),
     db.from("invitations").select("id, email, role, expires_at").eq("workspace_id", me.workspace_id).is("accepted_at", null).order("created_at", { ascending: false }),
@@ -60,7 +61,7 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
       {welcome && <ClearPurchaseDraft />}
       {welcome && (
         <p className="mb-6 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm">
-          Bienvenue dans ton espace. {owner && artistList.length === 0 ? "Commence par ajouter ton premier artiste." : ""}
+          Bienvenue dans ton espace. {owner && artistList.length === 0 ? (ws.kind === "artist" ? "Commence par ajouter ton premier artiste." : "Commence par ajouter tes artistes.") : ""}
         </p>
       )}
 
@@ -68,6 +69,12 @@ export default async function EspacePage({ searchParams }: { searchParams: Promi
         <h1 className="text-2xl font-semibold tracking-tight">{ws.name}</h1>
         <span className="text-sm text-muted-foreground">{ROLE_LABEL[me.role]}</span>
       </div>
+
+      {owner && (
+        <Card title="Espace">
+          <WorkspaceKindForm workspaceId={ws.id} kind={isWorkspaceKind(ws.kind) ? ws.kind : "other"} />
+        </Card>
+      )}
 
       {owner && (
         <Card title="Abonnement">

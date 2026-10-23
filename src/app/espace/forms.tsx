@@ -5,6 +5,7 @@ import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { KIND_LABEL, WORKSPACE_KINDS, type WorkspaceKind } from "@/lib/accounts/view";
 import { eurHT, EXTRA_ARTIST_EUR } from "@/lib/billing/pricing";
 import {
   addArtist,
@@ -15,10 +16,38 @@ import {
   removeMember,
   renameArtist,
   revokeInvitation,
+  setWorkspaceKind,
   type FormState,
 } from "./actions";
 
 const IDLE: FormState = { status: "idle" };
+
+/** Type d'espace (artiste, label…) : c'est lui qui décide de la vue du dashboard. Propriétaire seulement. */
+export function WorkspaceKindForm({ workspaceId, kind }: { workspaceId: string; kind: WorkspaceKind }) {
+  const [state, action, pending] = useActionState(setWorkspaceKind, IDLE);
+  const [value, setValue] = useState<WorkspaceKind>(kind);
+  return (
+    <form action={action} className="grid gap-2">
+      <input type="hidden" name="workspaceId" value={workspaceId} />
+      <div className="flex flex-wrap items-end gap-2">
+        <div>
+          <Label htmlFor="ws-kind" className="mb-2 block">Type d&apos;espace</Label>
+          <select id="ws-kind" name="kind" value={value} onChange={(e) => setValue(e.target.value as WorkspaceKind)} className="h-9 min-w-48 rounded-lg border bg-background px-2 text-sm">
+            {WORKSPACE_KINDS.map((k) => (
+              <option key={k} value={k}>{KIND_LABEL[k]}</option>
+            ))}
+          </select>
+        </div>
+        <Button type="submit" size="sm" variant="outline" disabled={pending || value === kind}>Enregistrer</Button>
+        {state.status === "ok" && value === kind && <span className="text-xs text-muted-foreground">Enregistré.</span>}
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Un label, un manager, un éditeur ou un distributeur arrive sur son roster ; un artiste sur son relevé. Un artiste invité garde sa vue à lui quoi qu&apos;il arrive.
+      </p>
+      {state.status === "error" && <p className="text-xs text-destructive" role="alert">{state.message}</p>}
+    </form>
+  );
+}
 
 export function AddArtistForm({ workspaceId, full }: { workspaceId: string; full: boolean }) {
   const [state, action, pending] = useActionState(addArtist, IDLE);
