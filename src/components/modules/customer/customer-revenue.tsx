@@ -8,6 +8,7 @@
  * Ce que seul un relevé dit : ce que CHAQUE plateforme paie vraiment pour
  * 1 000 streams, et quels titres / pays rapportent. Rien d'inventé : tendance
  * et comparaison annuelle seulement si l'historique les permet.
+ * La page rend aussi le relevé fusionné du label en vue label (`?perimetre=label`).
  */
 import { useMemo } from "react";
 import Link from "next/link";
@@ -68,6 +69,8 @@ export function CustomerRevenue() {
   const coverage = label ? coverageNote(points, label, f.month) : null;
   const titlesMissing = label ? missingDetailLine(label, "titles") : null;
   const countriesMissing = label ? missingDetailLine(label, "countries") : null;
+  const platformsMissing = label ? (missingDetailLine(label, "platforms") ?? "Aucun relevé ne porte le détail par plateforme.") : null;
+  const detailMissing = label ? (missingDetailLine(label, "detail") ?? "Aucun relevé ne porte le détail mois par mois.") : null;
   const hasRev = tracks.some((t) => t.revenue !== null);
   const hasCountryRev = countries.some((c) => c.revenue !== null);
 
@@ -135,7 +138,7 @@ export function CustomerRevenue() {
           {!hasBreakdown ? (
             <p className="sheet-ink text-sm">
               {label
-                ? (missingDetailLine(label, "platforms") ?? "Aucun relevé ne porte le détail par plateforme.")
+                ? platformsMissing
                 : (<>Ce relevé a été importé avant le détail par plateforme.{" "}<Link href="/import" className="underline">Réimporte-le</Link> pour voir les revenus de chaque plateforme.</>)}
             </p>
           ) : (
@@ -203,7 +206,7 @@ export function CustomerRevenue() {
                 formula: "médiane, pondérée par les montants, entre le mois d'écoute et le mois du relevé",
                 missing: hasDetail
                   ? (isLabel ? "Les distributeurs ne donnent pas la date du relevé dans ces fichiers." : "Ton distributeur ne donne pas la date du relevé dans ce fichier.")
-                  : (label ? (missingDetailLine(label, "detail") ?? "Aucun relevé ne porte le détail mois par mois.") : "Réimporte ton relevé : le détail est gardé depuis le 29/09."),
+                  : (detailMissing ?? "Réimporte ton relevé : le détail est gardé depuis le 29/09."),
               },
               {
                 key: "season",

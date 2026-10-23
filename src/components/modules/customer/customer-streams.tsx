@@ -5,26 +5,26 @@
  * tels que le relevé distributeur les déclare. La page de démo (« Streams
  * live », courbes quotidiennes) reste intacte derrière le mot de passe : un
  * relevé mensuel ne dit rien d'« hier » ni du « direct ».
+ * La page rend aussi le relevé fusionné du label en vue label (`?perimetre=label`).
  */
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
-import { useCustomer } from "@/lib/customer-mode";
+import { useStatementScope } from "@/lib/customer-scope";
 import { downloadCsv } from "@/lib/export";
 import { countryRows, monthSeries, platformMixShift, platformRows, streamsSummary, trackRows, type MonthPoint } from "@/lib/userdata/statement-insights";
-import { getUserData, subscribeUserData } from "@/lib/userdata/store";
 import { catalogHealth, halfLives, spotifyThreshold } from "@/lib/kpi/statement";
 import { KpiList } from "./kpi-ui";
-import { DSP_LABEL, Dot, MonthBars, PlatformLegend, SimpleTable, platformColor, statementLine, useFormats } from "./shared";
+import { DSP_LABEL, Dot, MonthBars, PlatformLegend, ScopeSelect, SimpleTable, coverageNote, labelLine, missingDetailLine, platformColor, statementLine, useFormats } from "./shared";
 
 export function CustomerStreams() {
   const f = useFormats();
-  const customer = useCustomer();
-  const data = useSyncExternalStore(subscribeUserData, getUserData, () => null);
+  const { scope, data, label, customer } = useStatementScope();
+  const isLabel = scope === "label";
   const view = useMemo(() => {
     if (!data) return null;
     return {
@@ -43,7 +43,7 @@ export function CustomerStreams() {
   if (!data || !view) {
     return (
       <div className="mx-auto max-w-2xl">
-        <PageHeader title="Streams" subtitle="Aucun relevé importé pour cet artiste." />
+        <PageHeader title="Streams" subtitle={isLabel ? "Aucun relevé importé dans cet espace." : "Aucun relevé importé pour cet artiste."} />
         <Link href="/import" className="inline-flex rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground">Importer un relevé</Link>
       </div>
     );
@@ -55,8 +55,14 @@ export function CustomerStreams() {
   // Le plus gros déplacement entre plateformes (en points de part), s'il est net.
   const moved = shift ? [...shift].sort((a, b) => Math.abs(b.after - b.before) - Math.abs(a.after - a.before))[0] : null;
 
+  // Notes calculées une fois (périmètre label seulement : `label` est nul sinon).
+  const coverage = label ? coverageNote(points, label, f.month) : null;
+  const titlesMissing = label ? missingDetailLine(label, "titles") : null;
+  const countriesMissing = label ? missingDetailLine(label, "countries") : null;
+  const detailMissing = label ? (missingDetailLine(label, "detail") ?? "Aucun relevé ne porte le détail mois par mois.") : null;
+
   const exportCsv = () =>
-    downloadCsv<MonthPoint>(`day1-streams-${customer?.artistName ?? "artiste"}`, points, [
+    downloadCsv<MonthPoint>(`day1-streams-${isLabel ? "label" : (customer?.artistName ?? "artiste")}`, points, [
       { header: "Mois", cell: (p) => p.month },
       { header: "Streams", cell: (p) => (p.missing ? "" : p.streams) },
       ...platforms.map((pl) => ({ header: DSP_LABEL[pl.dsp] ?? pl.dsp, cell: (p: MonthPoint) => (p.missing ? "" : (p.streamsByDsp[pl.dsp] ?? 0)) })),
@@ -65,7 +71,11 @@ export function CustomerStreams() {
   return (
     <div className="rise-in">
       <PrintStyles />
-      <PageHeader title="Streams" subtitle={`${customer?.artistName ?? data.artistName} · ${statementLine(data, f.month, f.locale)}`}>
+      <PageHeader
+        title="Streams"
+        subtitle={isLabel ? labelLine(data, f.month) : `${customer?.artistName ?? data.artistName} · ${statementLine(data, f.month, f.locale)}`}
+      >
+        {customer && <ScopeSelect page="/streams" scope={scope} customer={customer} />}
         <ExportMenu label="Exporter" csvLabel="Mois par mois (CSV)" printLabel="Imprimer / PDF" onExportCsv={exportCsv} />
       </PageHeader>
 
@@ -97,13 +107,14 @@ export function CustomerStreams() {
           />
         </Sheet>
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
-          <ProvenanceBadge provenance="declared" /> Streams tels que déclarés par ton distributeur, mois par mois.
+          <ProvenanceBadge provenance="declared" /> Streams tels que déclarés par {isLabel ? "les distributeurs" : "ton distributeur"}, mois par mois.
         </p>
 
         <Sheet family="streams">
           <SheetHeading action="par plateforme">Mois par mois</SheetHeading>
           <MonthBars points={points} kind="streams" />
           <PlatformLegend dsps={platforms.map((p) => p.dsp)} />
+          {coverage && <p className="sheet-ink mt-2 text-[11px]">{coverage}</p>}
           {missing.length > 0 && (
             <p className="sheet-ink mt-2 text-[11px]">
               Absent{missing.length > 1 ? "s" : ""} du relevé : {missing.map((p) => f.month(p.month)).join(", ")}.
@@ -115,7 +126,7 @@ export function CustomerStreams() {
           <SheetHeading action={shift ? "3 premiers mois du relevé → 3 derniers" : undefined}>Par plateforme</SheetHeading>
           {moved && Math.abs(moved.after - moved.before) >= 0.05 && (
             <p className="mb-3 text-sm">
-              {DSP_LABEL[moved.dsp] ?? moved.dsp} : {f.pct(moved.before)} → {f.pct(moved.after)} de tes streams.
+              {DSP_LABEL[moved.dsp] ?? moved.dsp} : {f.pct(moved.before)} → {f.pct(moved.after)} {isLabel ? "des streams du label" : "de tes streams"}.
             </p>
           )}
           <SimpleTable
@@ -134,21 +145,22 @@ export function CustomerStreams() {
 
         <div className="grid gap-3 xl:grid-cols-2">
           <Sheet family="streams">
-            <SheetHeading>Tes titres les plus écoutés</SheetHeading>
+            <SheetHeading>{isLabel ? "Les titres du label les plus écoutés" : "Tes titres les plus écoutés"}</SheetHeading>
             {tracks.length === 0 ? (
               <p className="sheet-ink text-sm">Pas de titres dans ce relevé.</p>
             ) : (
               <SimpleTable
-                head={["Titre", "Streams", "Part"]}
+                head={[isLabel ? "Titre · Artiste" : "Titre", "Streams", "Part"]}
                 rows={tracks.map((t) => ({
                   key: t.key,
                   cells: [<span key="t" className="block max-w-[16rem] truncate">{t.key}</span>, f.compact(t.streams), share(t.streams)],
                 }))}
               />
             )}
+            {titlesMissing && <p className="sheet-ink mt-2 text-[11px]">{titlesMissing}</p>}
           </Sheet>
           <Sheet family="streams">
-            <SheetHeading>Où l&apos;on t&apos;écoute</SheetHeading>
+            <SheetHeading>{isLabel ? "Où l'on écoute le label" : "Où l'on t'écoute"}</SheetHeading>
             {countries.length === 0 ? (
               <p className="sheet-ink text-sm">Ce relevé ne précise pas les pays.</p>
             ) : (
@@ -157,11 +169,12 @@ export function CustomerStreams() {
                 rows={countries.map((c) => ({ key: c.key, cells: [f.country(c.key), f.compact(c.streams), share(c.streams)] }))}
               />
             )}
+            {countriesMissing && <p className="sheet-ink mt-2 text-[11px]">{countriesMissing}</p>}
           </Sheet>
         </div>
 
         <Sheet family="catalog">
-          <SheetHeading action="calculé sur ton relevé">Santé du catalogue</SheetHeading>
+          <SheetHeading action={isLabel ? "calculé sur les relevés" : "calculé sur ton relevé"}>Santé du catalogue</SheetHeading>
           <KpiList
             rows={[
               {
@@ -192,7 +205,7 @@ export function CustomerStreams() {
                 formula: `médiane du temps entre le pic d'un titre et le premier mois sous la moitié de ce pic (${view.life.titles.length - view.life.stillAbove} titre(s) mesuré(s) ; ${view.life.stillAbove} encore au-dessus de la moitié)`,
                 missing:
                   data.trackMonthStreams === undefined
-                    ? "Réimporte ton relevé : le détail mois par mois des titres est gardé depuis le 29/09."
+                    ? (detailMissing ?? "Réimporte ton relevé : le détail mois par mois des titres est gardé depuis le 29/09.")
                     : view.life.titles.length
                       ? `Aucun titre n'est encore passé sous la moitié de son pic (${view.life.stillAbove} suivi(s)).`
                       : "Il faut au moins 3 mois de recul après le pic d'un titre.",
@@ -204,7 +217,7 @@ export function CustomerStreams() {
                 formula: view.spotify
                   ? `moins de 1 000 streams Spotify sur ${view.spotify.fullYear ? "les 12 derniers mois" : `les ${view.spotify.window?.months ?? 0} derniers mois seulement (la règle porte sur 12)`} du relevé : Spotify ne rémunère plus ces titres depuis avril 2024${view.spotify.below.length ? ` — ${view.spotify.below.slice(0, 5).map((t) => `« ${t.title} » (${f.int(t.streams)})`).join(", ")}${view.spotify.below.length > 5 ? "…" : ""}` : ""}`
                   : "",
-                missing: data.trackMonthStreams === undefined ? "Réimporte ton relevé : le détail Spotify par titre est gardé depuis le 29/09." : "Pas de streams Spotify dans ce relevé.",
+                missing: data.trackMonthStreams === undefined ? (detailMissing ?? "Réimporte ton relevé : le détail Spotify par titre est gardé depuis le 29/09.") : "Pas de streams Spotify dans ce relevé.",
               },
             ]}
           />
