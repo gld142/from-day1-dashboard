@@ -144,9 +144,12 @@ Règles :
   `trackMonthStreams`, `trackMonthRevenue`, `trackSpotify12` (deux « Intro » ne se mélangent
   jamais). Pas de plafond à 300 : les pages affichent déjà un top N.
 - Champs optionnels (`revenueByMonthDsp`, `trackRevenue`, `countryRevenue`, `trackMonth*`,
-  `countryMonth*`, `trackIsrc`, `trackSpotify12`) : fusionnés seulement si **tous** les
-  artistes avec relevé les ont ; sinon omis et les artistes qui en manquent sont listés dans
-  `missingDetail` (what : platforms / titles / countries / detail).
+  `countryMonth*`, `saleReportRevenue`) : fusionnés seulement si **tous** les artistes avec
+  relevé les ont ; sinon omis et les artistes qui en manquent sont listés dans `missingDetail`
+  (what : platforms / titles / countries / detail).
+- `trackIsrc` : correspondance titre → code, pas une somme — fusionné indépendamment du
+  détail mois par mois, émis seulement s'il n'est pas vide (décidé le 23/10 en relecture :
+  un artiste sans ISRC ne fausse pas les autres).
 - `spotifyWindow` : gardé si identique chez tous, sinon omis avec `trackSpotify12`.
 - `withheldEur` : somme des valeurs définies ; absent si aucune.
 - `artistRevenue`, `fx` : omis. `eurRate: 1`, `sourceCurrency: "EUR"` (tout est déjà en euros à
