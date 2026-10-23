@@ -17,6 +17,7 @@ import type { CustomerContracts, CustomerFinances, CustomerRegister, CustomerRig
 import type { Placement } from "@/lib/registers/placements";
 import type { Show } from "@/lib/registers/shows";
 import type { SyncLicense } from "@/lib/registers/sync";
+import type { LabelStatement } from "@/lib/userdata/merge";
 import type { RosterArtist } from "@/lib/userdata/roster";
 import { clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
@@ -49,6 +50,7 @@ export type CustomerRegisters = {
 };
 const RegistersCtx = createContext<CustomerRegisters>({});
 const SignalsCtx = createContext<CustomerSignals | null>(null);
+const LabelCtx = createContext<LabelStatement | null>(null);
 
 /** Les infos du client en mode client, `null` en mode démo. */
 export function useCustomer(): CustomerInfo | null {
@@ -89,6 +91,11 @@ export function useCustomerSignals(): CustomerSignals | null {
   return useContext(SignalsCtx);
 }
 
+/** Le relevé virtuel du label (vue label) — chargé sur /revenue et /streams seulement. */
+export function useCustomerLabelStatement(): LabelStatement | null {
+  return useContext(LabelCtx);
+}
+
 const subscribeNever = () => () => {};
 
 export function CustomerMode({
@@ -101,6 +108,7 @@ export function CustomerMode({
   finances = null,
   registers = {},
   signals = null,
+  label = null,
   children,
 }: {
   info: CustomerInfo;
@@ -112,6 +120,7 @@ export function CustomerMode({
   finances?: CustomerFinances | null;
   registers?: CustomerRegisters;
   signals?: CustomerSignals | null;
+  label?: LabelStatement | null;
   children: React.ReactNode;
 }) {
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
@@ -128,7 +137,9 @@ export function CustomerMode({
               <FinancesCtx.Provider value={finances}>
                 <RegistersCtx.Provider value={registers}>
                   <SignalsCtx.Provider value={signals}>
-                    <CustomerRoleProvider>{children}</CustomerRoleProvider>
+                    <LabelCtx.Provider value={label}>
+                      <CustomerRoleProvider>{children}</CustomerRoleProvider>
+                    </LabelCtx.Provider>
                   </SignalsCtx.Provider>
                 </RegistersCtx.Provider>
               </FinancesCtx.Provider>

@@ -9,6 +9,7 @@ import type { Show } from "@/lib/registers/shows";
 import type { SyncLicense } from "@/lib/registers/sync";
 import type { RightsPayment } from "@/lib/rights/payment";
 import { normTitle, type Split } from "@/lib/splits/split";
+import { mergeStatements, type LabelStatement } from "@/lib/userdata/merge";
 import type { RosterArtist, RosterStatement } from "@/lib/userdata/roster";
 import type { UserData } from "@/lib/userdata/store";
 import type { SourceRun } from "@/lib/collect/freshness";
@@ -90,6 +91,25 @@ export async function customerRoster(workspaceId: string): Promise<RosterArtist[
     if (!latest.has(artist_id)) latest.set(artist_id, statement as RosterStatement);
   }
   return (artists ?? []).map((a) => ({ id: a.id, name: a.name, statement: latest.get(a.id) ?? null }));
+}
+
+/**
+ * Le relevé virtuel de l'espace (vue label) : le DERNIER relevé de chaque
+ * artiste, complet, fusionné par `mergeStatements`. Lu avec la session de la
+ * personne (RLS). Chargé seulement sur /revenue et /streams en vue label.
+ */
+export async function customerLabelStatement(workspaceId: string, workspaceName: string): Promise<LabelStatement> {
+  const db = await userDb();
+  const [{ data: artists, error: aErr }, { data: imports, error: iErr }] = await Promise.all([
+    db.from("artists").select("id, name").eq("workspace_id", workspaceId).order("created_at"),
+    db.from("artist_imports").select("artist_id, data").eq("workspace_id", workspaceId).order("created_at", { ascending: false }),
+  ]);
+  if (aErr) throw aErr;
+  if (iErr) throw iErr;
+  const latest = new Map<string, UserData>();
+  for (const imp of imports ?? []) if (!latest.has(imp.artist_id)) latest.set(imp.artist_id, imp.data as UserData);
+  const entries = (artists ?? []).filter((a) => latest.has(a.id)).map((a) => ({ id: a.id, name: a.name, data: latest.get(a.id)! }));
+  return mergeStatements(entries, { artistName: workspaceName, artists: artists?.length ?? 0 });
 }
 
 export type CustomerContracts = { artists: { id: string; name: string }[]; contracts: Contract[] };

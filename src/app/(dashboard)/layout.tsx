@@ -6,6 +6,7 @@ import { Topbar } from "@/components/dashboard/topbar";
 import {
   customerContracts,
   customerFinances,
+  customerLabelStatement,
   customerPlacements,
   customerRights,
   customerRoster,
@@ -60,13 +61,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
               : null;
     const signals = signalsNeeds ? await customerSignals(view.info.workspaceId, signalsNeeds) : null;
     const ws = view.info.workspaceId;
+    // Vue label : le relevé virtuel de l'espace pour « Tout le label » (Revenus, Streams).
+    const label = view.info.view === "label" && (on("/revenue") || on("/streams")) ? await customerLabelStatement(ws, view.info.workspaceName) : null;
     const registers = {
       ...(on("/tour") ? { shows: await customerShows(ws) } : {}),
       ...(on("/placements") ? { placements: await customerPlacements(ws) } : {}),
       ...(on("/sync") ? { sync: await customerSync(ws) } : {}),
     };
     return (
-      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights} finances={finances} registers={registers} signals={signals}>
+      <CustomerMode info={view.info} data={view.data} roster={roster} contracts={contracts} splits={splits} rights={rights} finances={finances} registers={registers} signals={signals} label={label}>
         <Shell>{children}</Shell>
       </CustomerMode>
     );
