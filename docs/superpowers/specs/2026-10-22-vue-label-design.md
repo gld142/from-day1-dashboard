@@ -132,6 +132,7 @@ type LabelStatement = {
   data: UserData;                              // le relevé virtuel
   artists: number; withStatement: number;
   coverage: Record<string, number>;            // mois → nombre d'artistes dont le relevé couvre ce mois
+  spans: { id: string; name: string; from: string; to: string }[]; // période de chaque relevé (explique les mois partiels)
   missingDetail: { id: string; name: string; what: ("platforms" | "titles" | "countries" | "detail")[] }[];
 };
 ```
@@ -142,7 +143,12 @@ Règles :
   sommes.
 - Titres : clés `"{titre} · {artiste}"` pour `trackStreams`, `trackRevenue`, `trackIsrc`,
   `trackMonthStreams`, `trackMonthRevenue`, `trackSpotify12` (deux « Intro » ne se mélangent
-  jamais). Pas de plafond à 300 : les pages affichent déjà un top N.
+  jamais). Deux artistes homonymes (aucune unicité du nom en base) sont suffixés par le début
+  de leur id : « Intro · Léo (aaaa) ». Pas de plafond à 300 : les pages affichent déjà un top N.
+- Témoin « detail » : les cinq champs mois par mois (`trackMonthStreams`, `trackMonthRevenue`,
+  `countryMonthStreams`, `countryMonthRevenue`, `saleReportRevenue`) doivent tous être présents.
+- `totalRevenueEur` du relevé virtuel = somme des `revenueByMonth` fusionnés, au centime
+  (l'import arrondit son propre total à l'euro ; on ne reprend pas cet écart).
 - Champs optionnels (`revenueByMonthDsp`, `trackRevenue`, `countryRevenue`, `trackMonth*`,
   `countryMonth*`, `saleReportRevenue`) : fusionnés seulement si **tous** les artistes avec
   relevé les ont ; sinon omis et les artistes qui en manquent sont listés dans `missingDetail`
