@@ -57,9 +57,10 @@ export function CustomerStreams() {
 
   // Notes calculées une fois (périmètre label seulement : `label` est nul sinon).
   const coverage = label ? coverageNote(points, label, f.month) : null;
-  const titlesMissing = label ? missingDetailLine(label, "titles") : null;
-  const countriesMissing = label ? missingDetailLine(label, "countries") : null;
   const detailMissing = label ? (missingDetailLine(label, "detail") ?? "Aucun relevé ne porte le détail mois par mois.") : null;
+  // Demi-vie : sur le label, un titre dont le relevé s'arrête tôt semblerait tomber à zéro
+  // (halfLives lit 0 sur les mois absents) — calculable seulement si tous couvrent les mêmes mois.
+  const sameSpan = !label || label.spans.every((s) => s.from === label.spans[0]?.from && s.to === label.spans[0]?.to);
 
   const exportCsv = () =>
     downloadCsv<MonthPoint>(`day1-streams-${isLabel ? "label" : (customer?.artistName ?? "artiste")}`, points, [
@@ -157,7 +158,6 @@ export function CustomerStreams() {
                 }))}
               />
             )}
-            {titlesMissing && <p className="sheet-ink mt-2 text-[11px]">{titlesMissing}</p>}
           </Sheet>
           <Sheet family="streams">
             <SheetHeading>{isLabel ? "Où l'on écoute le label" : "Où l'on t'écoute"}</SheetHeading>
@@ -169,7 +169,6 @@ export function CustomerStreams() {
                 rows={countries.map((c) => ({ key: c.key, cells: [f.country(c.key), f.compact(c.streams), share(c.streams)] }))}
               />
             )}
-            {countriesMissing && <p className="sheet-ink mt-2 text-[11px]">{countriesMissing}</p>}
           </Sheet>
         </div>
 
@@ -201,10 +200,11 @@ export function CustomerStreams() {
               {
                 key: "half",
                 label: "Demi-vie d'un titre",
-                value: view.life.median !== null ? `${view.life.median} mois` : null,
+                value: sameSpan && view.life.median !== null ? `${view.life.median} mois` : null,
                 formula: `médiane du temps entre le pic d'un titre et le premier mois sous la moitié de ce pic (${view.life.titles.length - view.life.stillAbove} titre(s) mesuré(s) ; ${view.life.stillAbove} encore au-dessus de la moitié)`,
-                missing:
-                  data.trackMonthStreams === undefined
+                missing: !sameSpan
+                  ? "Les relevés ne couvrent pas les mêmes mois : demi-vie non calculable sur le label (un titre dont le relevé s'arrête tôt semblerait tomber à zéro)."
+                  : data.trackMonthStreams === undefined
                     ? (detailMissing ?? "Réimporte ton relevé : le détail mois par mois des titres est gardé depuis le 29/09.")
                     : view.life.titles.length
                       ? `Aucun titre n'est encore passé sous la moitié de son pic (${view.life.stillAbove} suivi(s)).`
@@ -217,14 +217,19 @@ export function CustomerStreams() {
                 formula: view.spotify
                   ? `moins de 1 000 streams Spotify sur ${view.spotify.fullYear ? "les 12 derniers mois" : `les ${view.spotify.window?.months ?? 0} derniers mois seulement (la règle porte sur 12)`} du relevé : Spotify ne rémunère plus ces titres depuis avril 2024${view.spotify.below.length ? ` — ${view.spotify.below.slice(0, 5).map((t) => `« ${t.title} » (${f.int(t.streams)})`).join(", ")}${view.spotify.below.length > 5 ? "…" : ""}` : ""}`
                   : "",
-                missing: data.trackMonthStreams === undefined ? (detailMissing ?? "Réimporte ton relevé : le détail Spotify par titre est gardé depuis le 29/09.") : "Pas de streams Spotify dans ce relevé.",
+                missing:
+                  data.trackMonthStreams === undefined
+                    ? (detailMissing ?? "Réimporte ton relevé : le détail Spotify par titre est gardé depuis le 29/09.")
+                    : isLabel && data.trackSpotify12 === undefined
+                      ? "Les relevés ne couvrent pas la même fenêtre Spotify de 12 mois : seuil non calculable sur le label."
+                      : "Pas de streams Spotify dans ce relevé.",
               },
             ]}
           />
-          {view.life.titles.length > 0 && (
+          {view.life.titles.length > 0 && sameSpan && (
             <div className="mt-4">
               <SimpleTable
-                head={["Titre", "Pic", "Streams au pic", "Demi-vie"]}
+                head={[isLabel ? "Titre · Artiste" : "Titre", "Pic", "Streams au pic", "Demi-vie"]}
                 rows={view.life.titles.slice(0, 8).map((t) => ({
                   key: t.title,
                   cells: [<span key="t" className="block max-w-[16rem] truncate">{t.title}</span>, f.month(t.peakMonth), f.compact(t.peak), t.halfLife === null ? "pas encore" : `${t.halfLife} mois`],
