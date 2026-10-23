@@ -9,7 +9,8 @@
 export const WORKSPACE_KINDS = ["artist", "label", "management", "publisher", "distributor", "other"] as const;
 export type WorkspaceKind = (typeof WORKSPACE_KINDS)[number];
 export type DashboardView = "artist" | "label";
-export type MemberRole = "owner" | "member" | "artist";
+export const MEMBER_ROLES = ["owner", "member", "artist"] as const;
+export type MemberRole = (typeof MEMBER_ROLES)[number];
 
 export const KIND_LABEL: Record<WorkspaceKind, string> = {
   artist: "Artiste",
@@ -22,6 +23,10 @@ export const KIND_LABEL: Record<WorkspaceKind, string> = {
 
 export function isWorkspaceKind(v: string): v is WorkspaceKind {
   return (WORKSPACE_KINDS as readonly string[]).includes(v);
+}
+
+export function isMemberRole(v: string): v is MemberRole {
+  return (MEMBER_ROLES as readonly string[]).includes(v);
 }
 
 export function viewFor(kind: WorkspaceKind, role: MemberRole): DashboardView {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KIND_LABEL, WORKSPACE_KINDS, isWorkspaceKind, viewFor } from "../view";
+import { KIND_LABEL, MEMBER_ROLES, WORKSPACE_KINDS, isMemberRole, isWorkspaceKind, viewFor } from "../view";
 
 describe("viewFor — qui voit la vue label", () => {
   it("un espace « artiste » : vue artiste pour tous les rôles", () => {
@@ -18,6 +18,11 @@ describe("viewFor — qui voit la vue label", () => {
     for (const kind of WORKSPACE_KINDS) expect(isWorkspaceKind(kind)).toBe(true);
     expect(isWorkspaceKind("majeur")).toBe(false);
     expect(isWorkspaceKind("")).toBe(false);
+  });
+  it("isMemberRole accepte les trois rôles et rien d'autre", () => {
+    for (const role of MEMBER_ROLES) expect(isMemberRole(role)).toBe(true);
+    expect(isMemberRole("admin")).toBe(false);
+    expect(isMemberRole("")).toBe(false);
   });
   it("chaque type a un libellé français", () => {
     for (const kind of WORKSPACE_KINDS) expect(KIND_LABEL[kind].length).toBeGreaterThan(0);

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { FileUp } from "lucide-react";
 import { customerHome, customerSections, isCustomerPath, isStructurePath, needsStatement, returnPath } from "../nav";
+import type { NavItem } from "../nav";
 import type { CustomerInfo } from "@/lib/customer-mode";
 
 describe("isCustomerPath — pages ouvertes aux clients", () => {
@@ -92,7 +94,7 @@ const info = (over: Partial<CustomerInfo>): CustomerInfo => ({
   userId: "u", workspaceId: "w", email: "a@b.fr", workspaceName: "Label Nord", workspaceKind: "label", view: "label",
   role: "owner", artistId: "a1", artistName: "Dadju", artists: [{ id: "a1", name: "Dadju" }, { id: "a2", name: "Kiko" }], ...over,
 });
-const importItem = { href: "/import", labelKey: "items.importer" } as never;
+const importItem: NavItem = { href: "/import", labelKey: "items.importer", icon: FileUp };
 
 describe("customerSections — le menu du client", () => {
   it("vue label : Roster en tête, puis « Relevé de {artiste} », puis Catalogue", () => {

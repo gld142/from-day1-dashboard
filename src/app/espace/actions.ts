@@ -168,7 +168,6 @@ export async function setWorkspaceKind(_: FormState, form: FormData): Promise<Fo
     return { status: "error", message: "Le type n'a pas pu être enregistré." };
   }
   revalidatePath("/espace");
-  revalidatePath("/", "layout");
   return { status: "ok" };
 }
 

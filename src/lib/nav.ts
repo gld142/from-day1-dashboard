@@ -193,11 +193,12 @@ export type NavSection = {
  * et l'A&R (vue structure) : propriétaire et équipe, jamais l'artiste invité.
  */
 export function customerSections(customer: CustomerInfo, importItem: NavItem): NavSection[] {
-  const statement: NavItem = customer.view === "label" ? { ...CUSTOMER_HOME_ITEM, label: `Relevé de ${customer.artistName}` } : CUSTOMER_HOME_ITEM;
+  const isLabel = customer.view === "label";
+  const statement: NavItem = isLabel ? { ...CUSTOMER_HOME_ITEM, label: `Relevé de ${customer.artistName}` } : CUSTOMER_HOME_ITEM;
   const overview =
     customer.role === "artist"
       ? [statement, CUSTOMER_CATALOG_ITEM]
-      : customer.view === "label"
+      : isLabel
         ? [CUSTOMER_ROSTER_ITEM, statement, CUSTOMER_CATALOG_ITEM]
         : [statement, CUSTOMER_ROSTER_ITEM, CUSTOMER_CATALOG_ITEM];
   return [

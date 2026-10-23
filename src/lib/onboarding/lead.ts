@@ -2,7 +2,10 @@
  * La lead du parcours d'achat : créée dès l'étape « identité », complétée à
  * chaque étape — si la personne s'arrête avant de payer, on peut la rappeler.
  */
-export const PROFILES = ["artist", "label", "management", "publisher", "distributor", "other"] as const;
+import { WORKSPACE_KINDS } from "@/lib/accounts/view";
+
+/** Même liste que les types d'espace (`workspaces.kind`) : une seule source, `accounts/view.ts`. */
+export const PROFILES = WORKSPACE_KINDS;
 export const TEAM_SIZES = ["solo", "2-5", "6-20", "21-50", "50+"] as const;
 export const ROLES = ["artist", "manager", "ar", "label-head", "accountant", "lawyer", "other"] as const;
 export const NEEDS = ["streams", "revenue", "rights", "audit", "splits", "roster", "contracts"] as const;

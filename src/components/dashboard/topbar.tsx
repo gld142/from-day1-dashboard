@@ -20,6 +20,8 @@ import type { Locale } from "@/i18n/config";
 import { ARTISTS, LABEL, getArtist } from "@/lib/demo/api";
 import Link from "next/link";
 import { useCustomer } from "@/lib/customer-mode";
+import { rosterHue } from "@/lib/format";
+import { initialsOf } from "@/components/modules/structure/emerging-card";
 import { DEMO_ARTIST_ID, useRole } from "@/lib/role";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -71,6 +73,15 @@ export function Topbar() {
 
   const focused = focusedArtistId ? getArtist(focusedArtistId) : null;
   const artist = getArtist(persona === "artist" ? artistId : DEMO_ARTIST_ID);
+  /* Client réel : l'avatar vient de l'artiste OUVERT (nom, rang dans l'espace), jamais d'un artiste de démo —
+     sans relevé importé, `getArtist` retombe sur le premier artiste de démo (ses initiales, sa couleur). */
+  const customerAvatar = customer
+    ? {
+        name: customer.artistName,
+        initials: initialsOf(customer.artistName),
+        hue: rosterHue(customer.artists.findIndex((a) => a.id === customer.artistId)),
+      }
+    : null;
 
   return (
     <header className="hairline-b sticky top-0 z-30 flex h-14 items-center gap-2 bg-background/80 px-4 backdrop-blur-md">
@@ -78,7 +89,7 @@ export function Topbar() {
       {customer && !showArtistMenu ? (
         // Artiste invité, ou artiste seul : identité fixée.
         <div className="flex min-w-0 shrink items-center gap-2 px-2">
-          <ArtistAvatar artist={artist} size="sm" />
+          <ArtistAvatar artist={customerAvatar ?? artist} size="sm" />
           <span className="truncate text-sm font-medium">{customer.artistName}</span>
           <span className="hidden truncate text-xs text-muted-foreground sm:inline">· {customer.workspaceName}</span>
         </div>
@@ -88,7 +99,7 @@ export function Topbar() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-9 min-w-0 shrink gap-2 px-2">
               <span className="sr-only">Changer d&apos;artiste : </span>
-              <ArtistAvatar artist={artist} size="sm" />
+              <ArtistAvatar artist={customerAvatar ?? artist} size="sm" />
               <span className="truncate text-sm font-medium">{customer.artistName}</span>
               <span className="hidden truncate text-xs text-muted-foreground sm:inline">· {customer.workspaceName}</span>
               <ChevronsUpDown className="size-3.5 text-muted-foreground" aria-hidden />

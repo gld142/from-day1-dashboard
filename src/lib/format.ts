@@ -80,6 +80,15 @@ export function artistGradient(hue: number): string {
   return `linear-gradient(135deg, oklch(0.55 0.16 ${hue}) 0%, oklch(0.4 0.12 ${(hue + 40) % 360}) 100%)`;
 }
 
+/**
+ * Teinte stable d'un artiste d'un espace client : son rang d'ajout, à l'angle
+ * d'or, en partant du violet de la marque (jamais le rouge d'une baisse en
+ * premier). Le roster et la barre du haut s'en servent : même artiste, même couleur.
+ */
+export function rosterHue(index: number): number {
+  return Math.round((Math.max(0, index) * 137.5 + 265) % 360);
+}
+
 export function artistColor(hue: number, opts?: { l?: number; c?: number }): string {
   return `oklch(${opts?.l ?? 0.62} ${opts?.c ?? 0.15} ${hue})`;
 }

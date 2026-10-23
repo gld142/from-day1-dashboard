@@ -32,7 +32,7 @@ export type CustomerInfo = {
   role: "owner" | "member" | "artist";
   artistId: string;
   artistName: string;
-  /** Les artistes de l'espace visibles par cette personne (RLS), triés par création. */
+  /** Les artistes de CET espace visibles par cette personne (RLS), triés par création. */
   artists: { id: string; name: string }[];
 };
 

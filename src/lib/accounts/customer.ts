@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { userDb } from "@/lib/supabase/server";
-import { isWorkspaceKind, viewFor, type MemberRole } from "@/lib/accounts/view";
+import { isMemberRole, isWorkspaceKind, viewFor, type MemberRole } from "@/lib/accounts/view";
 import type { Contract } from "@/lib/contracts/contract";
 import type { Expense } from "@/lib/finances/pnl";
 import type { Placement } from "@/lib/registers/placements";
@@ -50,7 +50,8 @@ export async function customerView(wantedArtistId?: string): Promise<CustomerVie
   ]);
   if (!ws || !me || !OPEN.has(ws.subscription_status)) return { kind: "blocked", reason: "subscription" };
   const workspaceKind = isWorkspaceKind(ws.kind) ? ws.kind : "other";
-  const role = me.role as MemberRole;
+  // Garanti par la contrainte SQL ; en cas de valeur inconnue, la vue la plus restrictive (artiste invité).
+  const role: MemberRole = isMemberRole(me.role) ? me.role : "artist";
   return {
     kind: "customer",
     info: {

@@ -14,7 +14,6 @@
   },
   "items": {
     "statement": "Mon relevé",
-    "statementOf": "Relevé de {artist}",
     "pulse": "Pulse",
     "roster": "Roster",
     "streams": "Streams live",

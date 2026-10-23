@@ -19,13 +19,10 @@ import { LabelMonthSheet } from "@/components/modules/structure/label-month-shee
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { useCustomer, useCustomerRoster } from "@/lib/customer-mode";
 import { downloadCsv, round2 } from "@/lib/export";
-import { artistColor, fmtCompact, fmtEur, fmtMonth } from "@/lib/format";
+import { artistColor, rosterHue, fmtCompact, fmtEur, fmtMonth } from "@/lib/format";
 import { DECLINE_ALERT, summarizeRoster, type RosterAlert, type RosterLine } from "@/lib/userdata/roster";
 
 const FORMAT_LABEL: Record<string, string> = { distrokid: "DistroKid", tunecore: "TuneCore", believe: "Believe", generic: "CSV" };
-
-/** Teinte stable par artiste : ordre d'ajout, à l'angle d'or, en partant du violet de la marque (jamais le rouge d'une baisse en premier). */
-const hueAt = (i: number) => Math.round((i * 137.5 + 265) % 360);
 
 const openHref = (id: string) => `/espace/ouvrir/${id}`;
 const importHref = (id: string) => `/espace/ouvrir/${id}?vers=import`;
@@ -35,7 +32,7 @@ export function CustomerRoster() {
   const customer = useCustomer();
   const artists = useCustomerRoster();
   const summary = useMemo(() => summarizeRoster(artists ?? []), [artists]);
-  const hues = useMemo(() => new Map((artists ?? []).map((a, i) => [a.id, hueAt(i)])), [artists]);
+  const hues = useMemo(() => new Map((artists ?? []).map((a, i) => [a.id, rosterHue(i)])), [artists]);
 
   const pct = (share: number, sign = false) =>
     new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 1, signDisplay: sign ? "exceptZero" : "auto" }).format(share);
