@@ -83,8 +83,23 @@ Décidé avec Gaël le 28/09/2026 : la démo sert aux présentations et ne bouge
 - Code : branche `demo` et étiquette `demo-2026-09-25` (commit c276112) sur GitHub.
 - Le dossier `from-day1-dashboard` est lié à ce projet Vercel : un `vercel --prod`
   lancé depuis là REMPLACE la démo. Ne le faire que pour la démo elle-même.
-- Le vrai produit (cette branche `achat` et la suite) se déploie dans un AUTRE
-  projet Vercel, à créer au moment de la mise en ligne.
+- Le vrai produit (cette branche `achat` et la suite) se déploie dans le projet
+  Vercel **`day1-pro`** (créé le 23/10/2026, `prj_1O9MqhfhFl6QohWzGjTERY3M5FVG`,
+  adresse https://day1-pro-gld142s-projects.vercel.app, protection « Vercel
+  Authentication » désactivée, variables de production posées par `vercel env add`).
+  Déployer depuis un worktree PROPRE de `achat` lié à ce projet, jamais depuis un
+  dossier où une autre session travaille (un `vercel --prod` embarque l'arbre de
+  travail, modifications non commitées comprises) :
+
+      git worktree add /tmp/day1-deploy achat
+      mkdir -p /tmp/day1-deploy/.vercel && cp from-day1-dashboard-achat/.vercel/project.json /tmp/day1-deploy/.vercel/
+      (cd /tmp/day1-deploy && vercel --prod --yes --scope gld142s-projects)
+      git worktree remove /tmp/day1-deploy --force
+
+  Une variable ajoutée après le début d'un build n'est pas dans ce build : redéployer.
+  Webhook Stripe de la production déclaré le 23/10 (`scripts/setup-stripe-webhook.sh`,
+  clé de TEST). Emails : `RESEND_API_KEY` + `RESEND_FROM_EMAIL` obligatoires en
+  production (`sendEmail` lève sinon) — à poser sur Vercel dès que Gaël a la clé.
 - Une adresse `*.vercel.app` ajoutée à la main tombe derrière la connexion Vercel
   (protection du compte) : essayé le 28/09, inutilisable pour une présentation.
 
