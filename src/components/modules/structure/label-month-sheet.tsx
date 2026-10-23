@@ -5,7 +5,6 @@
  * mois couvert, additionné sur les artistes qui le couvrent, et qui manque.
  * Tout vient des relevés déjà chargés par le roster (RosterArtist[]).
  */
-import Link from "next/link";
 import { useLocale } from "next-intl";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { fmtCompact, fmtEur, fmtMonth } from "@/lib/format";
@@ -66,8 +65,9 @@ export function LabelMonthSheet({ latest, totalArtists, alerts }: { latest: Late
         ]}
       />
       <div className="mt-4 flex flex-wrap gap-2">
-        <Link href="/revenue?perimetre=label" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Revenus du label →</Link>
-        <Link href="/streams?perimetre=label" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Streams du label →</Link>
+        {/* Navigation complète : le relevé du label est chargé par le layout (dashboard), que Next ne re-rend pas sur une navigation client. */}
+        <a href="/revenue?perimetre=label" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Revenus du label →</a>
+        <a href="/streams?perimetre=label" className="rounded-md border px-3 py-1.5 text-xs hover:bg-muted">Streams du label →</a>
       </div>
     </Sheet>
   );

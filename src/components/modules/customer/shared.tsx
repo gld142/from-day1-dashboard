@@ -5,7 +5,6 @@
  * libellés, formats, graphique mois par mois, tableau simple.
  */
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
 import { Bar, BarChart, Cell, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import { fmtCompact, fmtEur, fmtMonth } from "@/lib/format";
@@ -80,9 +79,10 @@ export function labelLine(d: UserData, month: (m: string) => string): string {
 /**
  * Sélecteur de périmètre (vue label) : « Tout le label » = la même page avec
  * `?perimetre=label` ; un artiste = on le rouvre (cookie) et on revient ici.
+ * Navigation complète dans les deux cas : le relevé du label est chargé par le layout
+ * (dashboard), que Next ne re-rend pas sur une navigation client.
  */
 export function ScopeSelect({ page, scope, customer }: { page: "/revenue" | "/streams"; scope: "artist" | "label"; customer: CustomerInfo }) {
-  const router = useRouter();
   if (customer.view !== "label") return null;
   return (
     <select
@@ -91,7 +91,7 @@ export function ScopeSelect({ page, scope, customer }: { page: "/revenue" | "/st
       className="h-9 rounded-md border bg-transparent px-3 text-sm"
       onChange={(e) => {
         const v = e.target.value;
-        if (v === "label") router.push(`${page}?perimetre=label`);
+        if (v === "label") window.location.assign(`${page}?perimetre=label`);
         else window.location.assign(`/espace/ouvrir/${v}?vers=${encodeURIComponent(page)}`);
       }}
     >

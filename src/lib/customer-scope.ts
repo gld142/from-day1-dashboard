@@ -5,6 +5,10 @@
  *  - « artist » : le relevé de l'artiste ouvert (store, comme avant) ;
  *  - « label »  : le relevé virtuel de l'espace, demandé par `?perimetre=label`,
  *    seulement en vue label (sinon on retombe sur l'artiste).
+ *
+ * En périmètre label, `data` peut être `null` (aucun relevé dans l'espace) alors que
+ * `label` est non nul : la page affiche alors « Aucun relevé importé dans cet espace »,
+ * elle ne retombe pas sur l'artiste.
  */
 import { useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
