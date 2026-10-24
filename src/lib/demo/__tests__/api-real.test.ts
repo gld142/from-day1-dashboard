@@ -240,6 +240,15 @@ describe("api.ts sur les artistes réels", () => {
       expect(listenersProvenance(USER_ARTIST_ID)).toBe("simulated");
       expect(todayProvenance(USER_ARTIST_ID)).toBe("reconstructed");
     });
+    it("le seuil est celui du store : round(streams / 2,6) = 0 → secours (simulé), 1 → estimé", () => {
+      /* 1 stream : round(1 / 2,6) = 0 → `|| 1000` dans store.ts → simulé. 2 streams : round(0,77) = 1 → estimé.
+         Avant (relecture du 24/10/2026) : `streams > 0` disait « estimé » pour 1 stream alors que Pulse
+         affichait la valeur de secours. */
+      setCustomerDataSilently({ ...IMPORT, streamsByMonth: { "2026-08": { spotify: 12_000 }, "2026-09": { spotify: 1 } } });
+      expect(listenersProvenance(USER_ARTIST_ID)).toBe("simulated");
+      setCustomerDataSilently({ ...IMPORT, streamsByMonth: { "2026-08": { spotify: 12_000 }, "2026-09": { spotify: 2 } } });
+      expect(listenersProvenance(USER_ARTIST_ID)).toBe("estimated");
+    });
     it("sans import actif, « my-project » n'est personne : simulé", () => {
       expect(todayProvenance(USER_ARTIST_ID)).toBe("simulated");
       expect(listenersProvenance(USER_ARTIST_ID)).toBe("simulated");

@@ -88,7 +88,8 @@ describe("agrégats TikTok et marché au périmètre", () => {
   it("marketRosterTracks : zéro titre pour une liste vide, le défaut vaut tout le roster", () => {
     expect(marketRosterTracks(undefined, [])).toBe(0);
     expect(marketRosterTracks(undefined, ARTISTS)).toBe(marketRosterTracks());
-    expect(marketRosterTracks(undefined, compos)).toBeLessThanOrEqual(marketRosterTracks());
+    /* Mesuré le 24/10/2026 : 0 titre pour les compositeurs contre 5 pour le roster — strictement moins. */
+    expect(marketRosterTracks(undefined, compos)).toBeLessThan(marketRosterTracks());
   });
 });
 

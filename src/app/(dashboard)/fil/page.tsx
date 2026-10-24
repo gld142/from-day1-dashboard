@@ -39,6 +39,11 @@ import { useRole } from "@/lib/role";
 import { useFeed } from "@/lib/userdata/use-feed";
 import { cn } from "@/lib/utils";
 
+/** Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et le dialogue. */
+function artistsFor(jobRole: JobRole | null, daId: string | null) {
+  return jobRole === "da" && daId ? ARTISTS.filter((a) => a.daId === daId) : ARTISTS;
+}
+
 const URGENCY_TONE: Record<Urgency, string> = {
   urgent: "border-transparent bg-destructive/10 text-destructive",
   important: "border-transparent bg-warning/10 text-warning",
@@ -61,14 +66,18 @@ function Feed() {
   const { notes, forMe, add, done, jobRole, daId } = useFeed();
   const { isLabel, setPersona } = useRole();
 
+  /* Les artistes que je peux filtrer ou citer : les siens pour un DA, tout le roster sinon
+     (même règle que le dialogue de nouvelle note, `artistsForMe`). */
+  const myArtists = artistsFor(jobRole, daId);
+  /* Le filtre artiste vient de l'URL (`?artist=`) : partageable, et la colonne Notes du roster
+     arrive déjà filtrée. Un id inconnu de la maison, ou hors du périmètre du DA = pas de filtre. */
+  const artistParam = params.get("artist");
+  const artistFilter = artistParam && myArtists.some((a) => a.id === artistParam) ? artistParam : null;
   /* Arrivée depuis le roster (`?artist=`) : le compteur Notes du roster compte TOUTES les
      notes ouvertes de l'artiste, donc on ouvre en « Tout » (sinon la liste filtrée par rôle
-     est souvent vide). Seul l'état initial change : changer d'artiste ensuite garde le mode. */
-  const [mode, setMode] = useState<"mine" | "all">(() => (params.get("artist") ? "all" : "mine"));
-  /* Le filtre artiste vient de l'URL (`?artist=`) : partageable, et la colonne
-     Notes du roster arrive déjà filtrée. Un id inconnu de la maison = pas de filtre. */
-  const artistParam = params.get("artist");
-  const artistFilter = artistParam && ARTISTS.some((a) => a.id === artistParam) ? artistParam : null;
+     est souvent vide). Sur le filtre VALIDÉ : un `?artist=` rejeté ouvre en « Pour moi ».
+     Seul l'état initial change : changer d'artiste ensuite garde le mode. */
+  const [mode, setMode] = useState<"mine" | "all">(() => (artistFilter ? "all" : "mine"));
   /* Écriture de l'URL sans aller-retour serveur — même motif que /roster : `replaceState`
      s'intègre au routeur Next 16 et `useSearchParams` ci-dessus relit la valeur. */
   const setArtistFilter = useCallback((id: string | null) => {
@@ -130,7 +139,7 @@ function Feed() {
             className="h-8 rounded-lg border bg-background px-2 text-[12px]"
           >
             <option value="">{t("filters.anyArtist")}</option>
-            {ARTISTS.map((a) => (
+            {myArtists.map((a) => (
               <option key={a.id} value={a.id}>
                 {a.name}
               </option>
@@ -216,7 +225,7 @@ function NewNoteDialog({
       ? `${t("roles.da")} · ${daName}`
       : t(`roles.${jobRole}`)
     : t("author.structure");
-  const artistsForMe = jobRole === "da" && daId ? ARTISTS.filter((a) => a.daId === daId) : ARTISTS;
+  const artistsForMe = artistsFor(jobRole, daId);
 
   const reset = () => {
     setText("");

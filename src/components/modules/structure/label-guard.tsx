@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Garde-fou persona : les pages structure (/roster, /ar-watch) sont réservées
+ * Garde-fou persona : les pages structure (/roster, /ar-watch, /fil) sont réservées
  * à la vue label. En vue artiste, on affiche un état vide élégant avec un
  * raccourci pour basculer de persona. Purement présentationnel : les textes
  * viennent du namespace de la page appelante.
