@@ -6,8 +6,8 @@
  * « Traité ». Démo : localStorage (feed-store). Sans rôle choisi (maison day1),
  * tout est « pour moi » et l'auteur est « Structure ».
  *
- * Réservé à la persona structure dans la navigation (nav.ts) : les notes parlent
- * d'autres artistes qu'un artiste solo n'a pas à lire.
+ * Réservé à la persona structure (nav.ts + garde `LabelGuard`, comme /roster) : les
+ * notes parlent d'autres artistes qu'un artiste solo n'a pas à lire, même en tapant l'URL.
  */
 import { Suspense, useCallback, useMemo, useState } from "react";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { CheckCircle2, Plus } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
+import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ import { ARTISTS, getArtist, getDa } from "@/lib/demo/data";
 import { fmtDate } from "@/lib/format";
 import { JOB_ROLES, type JobRole } from "@/lib/roles";
 import { FEED_TEXT_MAX, URGENCIES, sortNotes, type Urgency } from "@/lib/userdata/feed-store";
+import { useRole } from "@/lib/role";
 import { useFeed } from "@/lib/userdata/use-feed";
 import { cn } from "@/lib/utils";
 
@@ -57,8 +59,12 @@ function Feed() {
   const locale = useLocale();
   const params = useSearchParams();
   const { notes, forMe, add, done, jobRole, daId } = useFeed();
+  const { isLabel, setPersona } = useRole();
 
-  const [mode, setMode] = useState<"mine" | "all">("mine");
+  /* Arrivée depuis le roster (`?artist=`) : le compteur Notes du roster compte TOUTES les
+     notes ouvertes de l'artiste, donc on ouvre en « Tout » (sinon la liste filtrée par rôle
+     est souvent vide). Seul l'état initial change : changer d'artiste ensuite garde le mode. */
+  const [mode, setMode] = useState<"mine" | "all">(() => (params.get("artist") ? "all" : "mine"));
   /* Le filtre artiste vient de l'URL (`?artist=`) : partageable, et la colonne
      Notes du roster arrive déjà filtrée. Un id inconnu de la maison = pas de filtre. */
   const artistParam = params.get("artist");
@@ -69,14 +75,28 @@ function Feed() {
     window.history.replaceState(null, "", id ? `/fil?artist=${encodeURIComponent(id)}` : "/fil");
   }, []);
 
-  const openCount = useMemo(() => notes.filter((n) => n.status === "open").length, [notes]);
-  const shown = useMemo(() => {
-    const base = mode === "mine" ? forMe : notes;
-    return sortNotes(artistFilter ? base.filter((n) => n.artistId === artistFilter) : base);
-  }, [mode, forMe, notes, artistFilter]);
+  /* Listes que chaque mode affichera, filtre artiste appliqué : les compteurs des pastilles
+     sont exactement ces longueurs (« Tout » inclut les notes traitées, comme la liste). */
+  const lists = useMemo(() => {
+    const byArtist = (l: typeof notes) => (artistFilter ? l.filter((n) => n.artistId === artistFilter) : l);
+    return { mine: byArtist(forMe), all: byArtist(notes) };
+  }, [forMe, notes, artistFilter]);
+  const shown = useMemo(() => sortNotes(lists[mode]), [lists, mode]);
 
   const roleName = (r: JobRole) => t(`roles.${r}`);
   const toLabel = (to: JobRole[]) => (to.length === JOB_ROLES.length ? t("note.everyone") : to.map(roleName).join(", "));
+
+  /* Garde persona APRÈS tous les hooks (ordre constant), comme /roster et /ar-watch. */
+  if (!isLabel) {
+    return (
+      <LabelGuard
+        title={t("guard.title")}
+        description={t("guard.description")}
+        cta={t("guard.cta")}
+        onSwitch={() => setPersona("label")}
+      />
+    );
+  }
 
   return (
     <div className="rise-in">
@@ -85,7 +105,7 @@ function Feed() {
       </PageHeader>
 
       <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]">
-        <div className="flex items-center gap-1.5" role="group" aria-label={t("filters.mine")}>
+        <div className="flex items-center gap-1.5" role="group" aria-label={t("filters.modeLabel")}>
           {(["mine", "all"] as const).map((m) => (
             <button
               key={m}
@@ -98,7 +118,7 @@ function Feed() {
               )}
             >
               {t(`filters.${m}`)}{" "}
-              <span className="num opacity-70">{m === "mine" ? forMe.length : openCount}</span>
+              <span className="num opacity-70">{lists[m].length}</span>
             </button>
           ))}
         </div>
@@ -187,9 +207,15 @@ function NewNoteDialog({
   const [dueDate, setDueDate] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  /* Auteur : mon rôle (« Finance · moi », « DA · Inès M. »), ou « Structure » sans rôle. */
+  /* Auteur : le libellé du rôle seul (« Finance »), « DA · <nom du DA> » pour un DA, ou
+     « Structure » sans rôle. Pas de « · moi » : la note est relue plus tard par d'autres rôles.
+     `fromName` est un texte d'affichage figé dans la langue de création (démo). */
   const daName = jobRole === "da" && daId ? (getDa(daId)?.name ?? null) : null;
-  const fromName = jobRole ? `${t(`roles.${jobRole}`)} · ${daName ?? t("author.me")}` : t("author.structure");
+  const fromName = jobRole
+    ? daName
+      ? `${t("roles.da")} · ${daName}`
+      : t(`roles.${jobRole}`)
+    : t("author.structure");
   const artistsForMe = jobRole === "da" && daId ? ARTISTS.filter((a) => a.daId === daId) : ARTISTS;
 
   const reset = () => {
@@ -312,7 +338,13 @@ function NewNoteDialog({
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              reset();
+              setOpen(false);
+            }}
+          >
             {t("new.cancel")}
           </Button>
           <Button onClick={submit}>{t("new.submit")}</Button>

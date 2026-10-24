@@ -2,6 +2,7 @@
   "title": "Cross-team feed",
   "subtitle": "A fact posted by one team the moment it has it, seen by the team that needs it at the right time — without waiting for the meeting.",
   "filters": {
+    "modeLabel": "View",
     "mine": "For me to handle",
     "all": "Everything",
     "artist": "Artist",
@@ -14,12 +15,11 @@
     "noArtist": "No artist",
     "due": "Due {date}",
     "done": "Handled on {date}",
-    "markDone": "Handled",
-    "created": "{date}"
+    "markDone": "Handled"
   },
   "urgency": { "urgent": "Urgent", "important": "Important", "info": "Info" },
   "roles": { "da": "A&R", "finance": "Finance", "juridique": "Legal", "direction": "Management", "presidence": "Chairman's office" },
-  "author": { "structure": "Label", "me": "me" },
+  "author": { "structure": "Label" },
   "empty": { "mine": "Nothing for you to handle.", "all": "The feed is empty." },
   "new": {
     "button": "New note",
@@ -35,5 +35,6 @@
     "cancel": "Cancel",
     "needTo": "Pick at least one team.",
     "needText": "Write the note."
-  }
+  },
+  "guard": { "title": "Label view only", "description": "The feed connects the label's departments and its notes cover several artists. In artist view you only access your own data.", "cta": "Switch to label view" }
 }
