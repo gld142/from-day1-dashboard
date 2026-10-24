@@ -287,6 +287,21 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
   jamais rendre `<NextIntlClientProvider>` sans `messages` : next-intl 4 hérite alors de TOUT
   `getMessages()`. Mesuré le 24/10 : le pitch et le nom de son contact se lisaient dans le HTML
   de /connexion et /inscription (publiques) de la maison day1 (1 → 0 après correctif).
+- **Namespaces de page** (`PAGE_SCOPED_NAMESPACES`, `src/messages/index.ts`) : comparatif,
+  onboardings ET `welcome` (écran co-brandé /welcome?source=…, seul lecteur
+  `cobrand-screen.tsx`). Ils ne partent qu'avec leur page, jamais avec la racine : /welcome
+  enveloppe sa vue dans `PageIntlProvider` (`pageMessages`). `welcome` n'est pas non plus dans
+  `getMessages` (aucun lecteur serveur ; un fournisseur sans `messages` ne peut donc pas
+  l'emporter). Un nouveau namespace lu par une seule page s'ajoute à cette liste. Mesuré le
+  24/10 (curl, fr) : le bloc Believe (contact nommé « Ismaël », « Différenciation Believe vs
+  DistroKid ») se lisait dans le HTML de /connexion et /inscription des DEUX maisons (1 → 0 sur
+  3005 et 3006 ; « Believe » restant = libellés marché et formats d'import, légitimes).
+- **Canaux /welcome par maison** : `tenant.welcomeSources` / `welcomeDefaultSource`
+  (`src/lib/tenant.ts`). day1 : les cinq, direct par défaut. universal : capitol, umpg, universal
+  (entités Universal Music Group) et direct, universal par défaut — jamais Believe ni un autre
+  partenaire : `resolveSource` ne le résout pas, la bascule de canal (`sourceIdsFor`) ne le liste
+  pas, `pageMessages` n'envoie pas son bloc. L'écran client n'importe que des TYPES de
+  `sources.ts` (la page lui passe le canal résolu et la liste ouverte).
 - **Aucun nom d'artiste exclu en clair** : `roster-data.test.ts` (tables de la maison) et
   `excluded-artists.test.ts` (messages) cherchent le NOM, pas l'id — un interprète écrit en dur
   passe à travers `inRoster` (mesuré : « Trop loin », interprète Dadju, chez Universal).
@@ -297,5 +312,5 @@ d'auteur 15/55), mesuré en rejouant la sonde sur ses deux parents.
 
 Vérifier :
 
-    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/__tests__/internal-pages.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts src/messages/__tests__/excluded-artists.test.ts
+    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/__tests__/internal-pages.test.ts src/lib/__tests__/welcome-scope.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts src/messages/__tests__/excluded-artists.test.ts
     NEXT_PUBLIC_TENANT=universal npx vitest run

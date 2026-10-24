@@ -19,7 +19,9 @@ import { fmtEur } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { skinFor, useHydrated } from "@/lib/skin";
 import { cn } from "@/lib/utils";
-import { SOURCE_IDS, type SourceConfig } from "./sources";
+/* Types seulement : la configuration des canaux (dont ceux qu'une maison n'ouvre pas) reste
+   côté serveur ; la page passe le canal résolu et la liste des canaux ouverts. */
+import type { SourceConfig, WelcomeSource } from "./sources";
 
 /**
  * Dégradé animé derrière le bandeau co-brandé (variante artiste) : WebGL
@@ -35,10 +37,13 @@ const STEPS = [1, 2, 3] as const;
 
 export function CobrandScreen({
   source,
+  sourceIds,
   gapEur,
   gapArtists,
 }: {
   source: SourceConfig;
+  /** Canaux ouverts dans la maison (bascule de canal) — `sourceIdsFor()`, jamais tous. */
+  sourceIds: readonly WelcomeSource[];
   gapEur: number;
   /** Nombre d'artistes réellement concernés par un écart — mesuré, pas écrit. */
   gapArtists: number;
@@ -232,7 +237,7 @@ export function CobrandScreen({
         className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs"
       >
         <span className="text-muted-foreground">{t("switchSource")}</span>
-        {SOURCE_IDS.map((id) => (
+        {sourceIds.map((id) => (
           <Link
             key={id}
             href={`/welcome?source=${id}`}

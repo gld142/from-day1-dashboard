@@ -8,6 +8,12 @@
  */
 export type TenantId = "day1" | "universal";
 
+/**
+ * Canaux co-brandés de l'écran /welcome?source=… (configuration dans
+ * components/modules/welcome/sources.ts, textes dans messages/<locale>/welcome.json).
+ */
+export type WelcomeSourceId = "capitol" | "umpg" | "universal" | "believe" | "direct";
+
 export type Tenant = {
   id: TenantId;
   /** « Day 1 Dashboard Pro » / « Day One × Universal » — le nom du label de démo. */
@@ -31,6 +37,16 @@ export type Tenant = {
    * maison : 404, absentes des listes, textes non envoyés (`isRouteAllowedForTenant`).
    */
   internalPages: boolean;
+  /**
+   * Canaux de /welcome que cette maison ouvre : `resolveSource` n'en résout pas d'autre, la
+   * bascule de canal n'en liste pas d'autre, et seuls leurs textes partent vers le navigateur
+   * (`pageMessages`). La maison universal n'ouvre que des entités Universal Music Group
+   * (capitol, umpg, universal) et le canal direct : jamais le canal d'un autre partenaire
+   * (Believe : contact nommé, positionnement de Day 1 face à DistroKid).
+   */
+  welcomeSources: readonly WelcomeSourceId[];
+  /** Canal d'un `?source=` absent, inconnu ou fermé dans cette maison (fait partie de `welcomeSources`). */
+  welcomeDefaultSource: WelcomeSourceId;
 };
 
 export const TENANTS: Record<TenantId, Tenant> = {
@@ -45,6 +61,8 @@ export const TENANTS: Record<TenantId, Tenant> = {
     roles: false,
     defaultArtistId: "dadju",
     internalPages: true,
+    welcomeSources: ["capitol", "umpg", "universal", "believe", "direct"],
+    welcomeDefaultSource: "direct",
   },
   universal: {
     id: "universal",
@@ -57,6 +75,8 @@ export const TENANTS: Record<TenantId, Tenant> = {
     roles: true,
     defaultArtistId: "nono-la-grinta",
     internalPages: false,
+    welcomeSources: ["capitol", "umpg", "universal", "direct"],
+    welcomeDefaultSource: "universal",
   },
 };
 

@@ -1,6 +1,12 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
-import { internalPageMessages, rootClientMessages, type InternalNamespace } from "@/messages";
+import {
+  internalPageMessages,
+  pageMessages,
+  rootClientMessages,
+  type InternalNamespace,
+  type PageScopedNamespace,
+} from "@/messages";
 import { defaultLocale, locales, type Locale } from "./config";
 
 /**
@@ -18,7 +24,7 @@ async function requestLocale(): Promise<Locale> {
   return locales.includes(raw as Locale) ? (raw as Locale) : defaultLocale;
 }
 
-/** Racine (app/layout.tsx), sur TOUTES les pages : aucun namespace de page interne. */
+/** Racine (app/layout.tsx), sur TOUTES les pages : aucun namespace de page (PAGE_SCOPED_NAMESPACES). */
 export async function RootIntlProvider({ children }: { children: React.ReactNode }) {
   const messages = rootClientMessages(await requestLocale());
   return <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>;
@@ -37,5 +43,21 @@ export async function InternalPageIntlProvider({
   children: React.ReactNode;
 }) {
   const messages = internalPageMessages(await requestLocale(), namespaces);
+  return <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>;
+}
+
+/**
+ * Autour de la vue d'une page qui lit un namespace de page (/welcome : `welcome`) : les messages
+ * racine + ces namespaces TELS QUE LA MAISON LES REÇOIT (welcome : ses seuls canaux,
+ * `tenant.welcomeSources`). Même règle de remplacement que ci-dessus.
+ */
+export async function PageIntlProvider({
+  namespaces,
+  children,
+}: {
+  namespaces: readonly PageScopedNamespace[];
+  children: React.ReactNode;
+}) {
+  const messages = pageMessages(await requestLocale(), namespaces);
   return <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>;
 }

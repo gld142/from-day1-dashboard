@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { demoEnabled } from "@/lib/demo-mode";
 import { CobrandScreen } from "@/components/modules/welcome/cobrand-screen";
-import { resolveSource } from "@/components/modules/welcome/sources";
+import { resolveSource, sourceIdsFor } from "@/components/modules/welcome/sources";
+import { PageIntlProvider } from "@/i18n/intl-providers";
 import { ARTISTS, auditFindings } from "@/lib/demo/api";
 import { isDspGap } from "@/lib/real/audit-gap";
 import { TENANT } from "@/lib/tenant";
@@ -14,8 +15,13 @@ export const metadata: Metadata = {
 
 /**
  * Écran co-brandé par canal d'acquisition (spec §7).
- * `?source=universal|believe`, sinon canal direct. Hors du shell dashboard
+ * `?source=<canal>` parmi les canaux OUVERTS de la maison (`TENANT.welcomeSources` :
+ * universal n'ouvre ni n'affiche Believe), sinon le canal par défaut de la maison
+ * (direct chez day1, universal chez universal). Hors du shell dashboard
  * (pas de sidebar / topbar) : c'est un écran d'atterrissage.
+ *
+ * Le namespace `welcome` ne part qu'avec cette page (namespace de page, voir
+ * messages/index.ts) : la vue est enveloppée dans `PageIntlProvider`.
  */
 export default async function WelcomePage({
   searchParams,
@@ -36,6 +42,13 @@ export default async function WelcomePage({
   const gapArtists = new Set(gaps.map((f) => f.artistId)).size;
 
   return (
-    <CobrandScreen source={source} gapEur={gapEur} gapArtists={gapArtists} />
+    <PageIntlProvider namespaces={["welcome"]}>
+      <CobrandScreen
+        source={source}
+        sourceIds={sourceIdsFor()}
+        gapEur={gapEur}
+        gapArtists={gapArtists}
+      />
+    </PageIntlProvider>
   );
 }

@@ -159,30 +159,58 @@ const MESSAGES = {
 /**
  * Namespaces lus SEULEMENT par les pages internes From Day 1 (nav.ts, `internal`) :
  * /comparatif (comparison-table) et /onboardings (partner-board, dont le pitch de Day 1
- * À PROPOS d'Universal). Ils ne partent vers le navigateur qu'avec leur propre page
- * (`internalPageMessages`), jamais avec le fournisseur racine (`rootClientMessages`).
+ * À PROPOS d'Universal). Namespaces « de page » (ci-dessous) ; une maison sans pages internes
+ * (`tenant.internalPages`) ne les reçoit pas du tout, même côté serveur.
  */
 export const INTERNAL_NAMESPACES = ["comparatif", "onboardings"] as const;
 export type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
 
-type AllMessages = (typeof MESSAGES)[Locale];
-type RootClientMessages = Omit<AllMessages, InternalNamespace>;
+/**
+ * Namespaces « DE PAGE » : ils ne partent vers le navigateur qu'avec la page qui les lit, dans un
+ * fournisseur imbriqué autour de sa vue (`pageMessages`, i18n/intl-providers.tsx), jamais avec le
+ * fournisseur racine (`rootClientMessages`), sérialisé dans CHAQUE page — /connexion et
+ * /inscription comprises (publiques, sans porte).
+ * - comparatif, onboardings : les pages internes (INTERNAL_NAMESPACES).
+ * - welcome : l'écran co-brandé /welcome?source=… (seul lecteur : cobrand-screen.tsx). Un bloc par
+ *   partenaire, dont Believe (contact nommé, positionnement face à DistroKid) ; chaque maison n'en
+ *   reçoit que ses canaux (`tenant.welcomeSources`). Mesuré le 24/10/2026 (curl) : tout le
+ *   namespace, bloc Believe compris, se lisait dans le HTML de /connexion et /inscription des deux
+ *   maisons.
+ */
+export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome"] as const;
+export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
 
-function withoutInternal(messages: AllMessages | RootClientMessages): RootClientMessages {
-  return Object.fromEntries(
-    Object.entries(messages).filter(([ns]) => !(INTERNAL_NAMESPACES as readonly string[]).includes(ns)),
-  ) as RootClientMessages;
+/**
+ * Namespaces de page absents des messages de la REQUÊTE (`getMessages`) dans toutes les maisons :
+ * leur contenu dépend de la maison (welcome : ses canaux) et aucun composant serveur ne les lit.
+ * Hors de la requête, un `<NextIntlClientProvider>` rendu sans `messages` (qui hérite de tout
+ * `getMessages()`) ne peut pas les emporter, et la maison universal ne porte jamais le bloc d'un
+ * autre partenaire, même côté serveur. Un composant serveur qui en aurait besoin passerait par
+ * `pageMessages`.
+ */
+const PAGE_ONLY_NAMESPACES = ["welcome"] as const satisfies readonly PageScopedNamespace[];
+
+type AllMessages = (typeof MESSAGES)[Locale];
+type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
+type WelcomeMessages = AllMessages["welcome"];
+/** welcome tel qu'une maison le reçoit : les seuls canaux qu'elle ouvre. */
+type HouseWelcomeMessages = Omit<WelcomeMessages, "sources"> & { sources: Partial<WelcomeMessages["sources"]> };
+type PageScopedMessages = Pick<AllMessages, InternalNamespace> & { welcome: HouseWelcomeMessages };
+
+function without<T extends object, K extends string>(messages: T, namespaces: readonly K[]): Omit<T, K> {
+  const drop: readonly string[] = namespaces;
+  return Object.fromEntries(Object.entries(messages).filter(([ns]) => !drop.includes(ns))) as Omit<T, K>;
 }
 
 /**
  * Les messages de la requête (i18n/request.ts) : ce que lisent les composants SERVEUR
- * (`getTranslations`). Une maison sans pages internes (`tenant.internalPages`) ne reçoit pas
- * leurs textes, même côté serveur.
+ * (`getTranslations`). Jamais les namespaces de page « seulement » (PAGE_ONLY_NAMESPACES) ; une
+ * maison sans pages internes (`tenant.internalPages`) ne reçoit pas non plus leurs textes.
  */
 export function getMessages(locale: Locale, tenant: Tenant = TENANT) {
-  const all = MESSAGES[locale];
-  if (tenant.internalPages) return all;
-  return withoutInternal(all);
+  const request = without(MESSAGES[locale], PAGE_ONLY_NAMESPACES);
+  if (tenant.internalPages) return request;
+  return without(request, INTERNAL_NAMESPACES);
 }
 
 /**
@@ -190,27 +218,48 @@ export function getMessages(locale: Locale, tenant: Tenant = TENANT) {
  * /connexion et /inscription comprises (publiques, sans porte). Sans prop `messages`, next-intl 4
  * (`NextIntlClientProviderServer`) hérite de tout `getMessages()` : mesuré le 24/10/2026, le pitch
  * « Universal détient la donnée… » et le nom de son contact se lisaient dans le HTML de /connexion
- * de la maison day1 (et de la maison universal avant f12fb51). Dans les deux maisons, la racine
- * n'envoie donc AUCUN namespace interne.
+ * de la maison day1 (et de la maison universal avant f12fb51), puis, le même jour, le bloc Believe
+ * de welcome dans celui des deux maisons. Dans les deux maisons, la racine n'envoie donc AUCUN
+ * namespace de page.
  */
 export function rootClientMessages(locale: Locale, tenant: Tenant = TENANT): RootClientMessages {
-  return withoutInternal(getMessages(locale, tenant));
+  return without(getMessages(locale, tenant), PAGE_SCOPED_NAMESPACES) as RootClientMessages;
+}
+
+/** welcome d'une maison : ses seuls canaux (`tenant.welcomeSources`), le reste à l'identique. */
+function houseWelcome(locale: Locale, tenant: Tenant): HouseWelcomeMessages {
+  const { sources, ...rest } = MESSAGES[locale].welcome;
+  const open: readonly string[] = tenant.welcomeSources;
+  return { ...rest, sources: Object.fromEntries(Object.entries(sources).filter(([id]) => open.includes(id))) };
 }
 
 /**
- * Les messages d'un fournisseur IMBRIQUÉ autour d'une page interne : les messages racine plus les
- * namespaces demandés. Il faut les deux : un IntlProvider imbriqué ne fusionne pas avec le parent
- * (use-intl : `messages` fourni remplace celui du contexte). Une maison sans pages internes n'en
- * reçoit aucun, même demandé (la page appelle `notFound()` avant ; ceci est la défense en
- * profondeur).
+ * Les messages d'un fournisseur IMBRIQUÉ autour de la vue d'une page : les messages racine plus les
+ * namespaces de page demandés, tels que la maison les reçoit. Il faut les deux : un IntlProvider
+ * imbriqué ne fusionne pas avec le parent (use-intl : `messages` fourni remplace celui du
+ * contexte).
+ * - page interne : rien dans une maison sans pages internes, même demandé (la page appelle
+ *   `notFound()` avant ; ceci est la défense en profondeur) ;
+ * - welcome : les seuls canaux de la maison (la maison universal ne reçoit pas le bloc Believe).
  */
+export function pageMessages(
+  locale: Locale,
+  namespaces: readonly PageScopedNamespace[],
+  tenant: Tenant = TENANT,
+): RootClientMessages & Partial<PageScopedMessages> {
+  const scoped: Partial<PageScopedMessages> = {};
+  for (const ns of namespaces) {
+    if (ns === "welcome") scoped.welcome = houseWelcome(locale, tenant);
+    else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });
+  }
+  return { ...rootClientMessages(locale, tenant), ...scoped };
+}
+
+/** `pageMessages` restreint aux pages internes (/comparatif, /onboardings). */
 export function internalPageMessages(
   locale: Locale,
   namespaces: readonly InternalNamespace[],
   tenant: Tenant = TENANT,
 ): RootClientMessages & Partial<Pick<AllMessages, InternalNamespace>> {
-  const root = rootClientMessages(locale, tenant);
-  if (!tenant.internalPages) return root;
-  const all = MESSAGES[locale];
-  return { ...root, ...Object.fromEntries(namespaces.map((ns) => [ns, all[ns]])) };
+  return pageMessages(locale, namespaces, tenant);
 }

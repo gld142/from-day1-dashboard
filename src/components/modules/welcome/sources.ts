@@ -3,8 +3,15 @@
  * Un canal = un partenaire qui envoie ses artistes / équipes vers Day 1 via
  * `/welcome?source=<id>`. Les textes vivent dans messages/<locale>/welcome.json ;
  * ici, uniquement la configuration structurelle (logo, persona, sidebar).
+ *
+ * Chaque maison n'ouvre que SES canaux (`tenant.welcomeSources`, lib/tenant.ts) : la maison
+ * universal ne connaît ni la page ni les textes du canal Believe. Module SERVEUR en pratique :
+ * l'écran client n'en importe que des types (la page lui passe le canal résolu et la liste
+ * des canaux ouverts), la configuration des autres partenaires ne part pas dans son JS.
  */
-export type WelcomeSource = "capitol" | "umpg" | "universal" | "believe" | "direct";
+import { TENANT, type Tenant, type WelcomeSourceId } from "@/lib/tenant";
+
+export type WelcomeSource = WelcomeSourceId;
 
 export type SourceConfig = {
   id: WelcomeSource;
@@ -84,8 +91,19 @@ export const SOURCES: Record<WelcomeSource, SourceConfig> = {
 
 export const SOURCE_IDS = Object.keys(SOURCES) as WelcomeSource[];
 
-/** Résout `?source=` (string, tableau ou absent) vers un canal connu, sinon direct. */
-export function resolveSource(raw: string | string[] | undefined): SourceConfig {
+/** Les canaux qu'ouvre la maison, dans l'ordre de SOURCES (bascule de canal de /welcome). */
+export function sourceIdsFor(tenant: Tenant = TENANT): WelcomeSource[] {
+  return SOURCE_IDS.filter((id) => tenant.welcomeSources.includes(id));
+}
+
+/**
+ * Résout `?source=` (string, tableau ou absent) vers un canal OUVERT dans la maison, sinon vers
+ * le canal par défaut de la maison (`welcomeDefaultSource` : direct chez day1, universal chez
+ * universal). Comparaison à la liste, jamais `s in SOURCES` : « toString » ou « constructor »
+ * sont `in` tout objet (mesuré : `resolveSource("toString")` rendait une fonction).
+ */
+export function resolveSource(raw: string | string[] | undefined, tenant: Tenant = TENANT): SourceConfig {
   const s = Array.isArray(raw) ? raw[0] : raw;
-  return s && s in SOURCES ? SOURCES[s as WelcomeSource] : SOURCES.direct;
+  const id = sourceIdsFor(tenant).find((open) => open === s);
+  return SOURCES[id ?? tenant.welcomeDefaultSource];
 }
