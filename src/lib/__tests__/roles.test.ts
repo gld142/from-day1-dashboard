@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { JOB_ROLES, ROLES, effectiveOverrides, hasUserOverrides, isJobRole, roleLanding, roleOverrides, roleScope } from "@/lib/roles";
+import { JOB_ROLES, ROLES, effectiveOverrides, hasUserOverrides, isJobRole, modulesState, roleLanding, roleOverrides, roleScope } from "@/lib/roles";
 
 const ALL = ["/pulse", "/roster", "/fil", "/streams", "/market", "/revenue", "/audience", "/algo-position", "/finances", "/calculator", "/valuation", "/splits", "/contracts", "/rights", "/placements", "/urssaf", "/audit", "/day1-index", "/copilot", "/ar-watch", "/fans", "/discovery", "/sync", "/tour", "/catalog", "/team", "/import", "/settings"];
 
@@ -64,5 +64,25 @@ describe("effectiveOverrides — le choix de l'utilisateur gagne sur le prérég
     expect(hasUserOverrides({})).toBe(false);
     expect(hasUserOverrides({ "/tour": false })).toBe(true);
     expect(hasUserOverrides(effectiveOverrides("finance", ALL, {}))).toBe(true); // ce serait l'erreur : passer la fusion
+  });
+});
+
+/* use-modules.ts analysait `snap` et appelait `hasUserOverrides` sur les choix bruts — mais une
+   mutation `hasUserOverrides(merged)` y aurait survécu à tous les tests (relecture du 24/10/2026).
+   La paire { overrides, hasOverrides } est donc calculée par une fonction pure, testée ici. */
+describe("modulesState — la paire que lit le hook des modules", () => {
+  it("un rôle seul, sans choix : le préréglage du rôle, et « Réinitialiser » éteint", () => {
+    const s = modulesState("{}", "finance", ALL);
+    expect(s.overrides).toEqual(roleOverrides("finance", ALL));
+    expect(s.hasOverrides).toBe(false);
+  });
+  it("un choix de l'utilisateur : fusionné par-dessus le rôle, et « Réinitialiser » allumé", () => {
+    const s = modulesState(JSON.stringify({ "/roster": true }), "finance", ALL);
+    expect(s.overrides["/roster"]).toBe(true);
+    expect(s.overrides["/revenue"]).toBe(true);
+    expect(s.hasOverrides).toBe(true);
+  });
+  it("sans rôle ni choix : rien", () => {
+    expect(modulesState("{}", null, ALL)).toEqual({ overrides: {}, hasOverrides: false });
   });
 });

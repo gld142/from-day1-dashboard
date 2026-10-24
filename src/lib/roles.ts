@@ -91,6 +91,21 @@ export function hasUserOverrides(user: ModuleOverrides): boolean {
   return Object.keys(user).length > 0;
 }
 
+/**
+ * La paire que lit use-modules.ts, depuis le snapshot BRUT du store (la chaîne JSON des choix
+ * de l'utilisateur) : les modules effectifs (rôle sous choix) et « Réinitialiser » (choix
+ * seuls). Pure, pour qu'un `hasUserOverrides(merged)` glissé dans le hook ne survive pas aux
+ * tests — relecture du 24/10/2026.
+ */
+export function modulesState(
+  snap: string,
+  role: JobRole | null,
+  catalogHrefs: readonly string[],
+): { overrides: ModuleOverrides; hasOverrides: boolean } {
+  const user = JSON.parse(snap) as ModuleOverrides;
+  return { overrides: effectiveOverrides(role, catalogHrefs, user), hasOverrides: hasUserOverrides(user) };
+}
+
 /** Périmètre du rôle : les artistes du DA, sinon tout le roster. */
 export function roleScope(role: JobRole | null, daId: string | null): { daId: string | null } {
   return role === "da" && daId ? { daId } : { daId: null };

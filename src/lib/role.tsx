@@ -28,6 +28,7 @@ import {
   subscribeUserData,
   USER_ARTIST_ID,
 } from "@/lib/userdata/store";
+import { getDa } from "@/lib/demo/data";
 import { isJobRole, roleScope, type JobRole } from "@/lib/roles";
 import { TENANT } from "@/lib/tenant";
 
@@ -149,18 +150,42 @@ function persistRole(next: RoleState): void {
 
 /**
  * Pur, sans DOM : l'état de rôle depuis la chaîne stockée. Une persona ou un
- * rôle inconnus (ancien stockage, valeur bricolée) retombent sur la valeur par
- * défaut — jamais une erreur. Exporté pour le test unitaire.
+ * rôle inconnus (ancien stockage, valeur bricolée), un JSON invalide, « null »
+ * ou un tableau retombent sur la valeur par défaut — jamais une erreur
+ * (mesuré le 24/10/2026 : `JSON.parse` levait sur « {bad » et sur « null »).
+ * Un `daId` qui n'est pas un DA connu est abandonné : avec le rôle DA, il
+ * donnerait un périmètre vide et Pulse diviserait 0 par 0. La valeur par
+ * défaut est UNE référence (readRole en dépend). Exporté pour le test unitaire.
  */
 export function parseRoleState(raw: string | null): RoleState {
   if (!raw) return DEFAULT_ROLE;
-  const saved = JSON.parse(raw) as Partial<Record<keyof RoleState, unknown>>;
+  let saved: unknown;
+  try {
+    saved = JSON.parse(raw);
+  } catch {
+    return DEFAULT_ROLE;
+  }
+  if (!saved || typeof saved !== "object" || Array.isArray(saved)) return DEFAULT_ROLE;
+  const s = saved as Partial<Record<keyof RoleState, unknown>>;
   return {
-    persona: saved.persona === "artist" || saved.persona === "label" ? saved.persona : "artist",
-    focusedArtistId: typeof saved.focusedArtistId === "string" ? saved.focusedArtistId : null,
-    jobRole: isJobRole(saved.jobRole) ? saved.jobRole : null,
-    daId: typeof saved.daId === "string" ? saved.daId : null,
+    persona: s.persona === "artist" || s.persona === "label" ? s.persona : "artist",
+    focusedArtistId: typeof s.focusedArtistId === "string" ? s.focusedArtistId : null,
+    jobRole: isJobRole(s.jobRole) ? s.jobRole : null,
+    daId: typeof s.daId === "string" && getDa(s.daId) ? s.daId : null,
   };
+}
+
+/**
+ * Pur : le rôle et son DA tels que le fournisseur les expose — seulement dans la
+ * maison à rôles (`TENANT.roles`). Ailleurs, un rôle resté en stockage est inerte :
+ * ni la navigation ni la barre du haut ne doivent le voir. Exporté pour le test
+ * unitaire (le fournisseur lui-même ne se teste pas sans DOM).
+ */
+export function boundRole(
+  state: Pick<RoleState, "jobRole" | "daId">,
+  rolesEnabled: boolean,
+): Pick<RoleState, "jobRole" | "daId"> {
+  return rolesEnabled ? { jobRole: state.jobRole, daId: state.daId } : { jobRole: null, daId: null };
 }
 
 /** Pur : deux appels d'affilée renvoient la même référence tant que le
@@ -198,7 +223,9 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
   const role = useSyncExternalStore(subscribeRole, readRole, () => DEFAULT_ROLE);
   /* Maison à rôles : la persona reste « structure » — le sélecteur propose des métiers, pas des personas. */
   const persona: Persona = TENANT.roles ? "label" : role.persona;
-  const { focusedArtistId, jobRole, daId } = role;
+  const { focusedArtistId } = role;
+  /* Hors maison à rôles, un rôle resté en stockage n'existe pas (boundRole, testé). */
+  const { jobRole, daId } = boundRole(role, TENANT.roles);
 
   const setPersona = useCallback((p: Persona) => {
     // Changement de persona = on repart de la vue par défaut, sans rôle.
@@ -213,8 +240,8 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     writeRole({ persona: "label", focusedArtistId: null, jobRole: next, daId: next === "da" ? nextDaId : null });
   }, []);
 
-  /* Le périmètre ne restreint que dans la maison à rôles : ailleurs, un `daId` resté en stockage est inerte. */
-  const scopeDaId = TENANT.roles ? roleScope(jobRole, daId).daId : null;
+  /* Le périmètre du rôle (jobRole et daId sont déjà nuls hors maison à rôles). */
+  const scopeDaId = roleScope(jobRole, daId).daId;
 
   // Données réelles importées : en persona artiste, le profil utilisateur
   // remplace l'artiste de démo dans TOUT le dashboard.

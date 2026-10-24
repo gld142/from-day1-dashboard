@@ -16,12 +16,11 @@ import {
   isModuleVisible,
   navCatalogForPersona,
   navForPersona,
-  type ModuleOverrides,
   type NavItem,
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
-import { effectiveOverrides, hasUserOverrides } from "@/lib/roles";
+import { modulesState } from "@/lib/roles";
 import {
   hydrateModules,
   modulesSnapshot,
@@ -39,16 +38,12 @@ export function useModules() {
   }, []);
   const snap = useSyncExternalStore(subscribeModules, modulesSnapshot, () => SERVER_SNAPSHOT);
   const catalog = useMemo(() => navCatalogForPersona(persona), [persona]);
-  /* Préréglage du rôle sous les choix explicites de l'utilisateur (roles.ts, effectiveOverrides —
-     l'ordre de la fusion y est testé). `snap` n'est analysé qu'une fois par rendu : les choix
-     servent à la fusion ET à « Réinitialiser », qui ne compte que les choix de l'utilisateur. */
-  const { overrides, hasOverrides } = useMemo(() => {
-    const user = JSON.parse(snap) as ModuleOverrides;
-    return {
-      overrides: effectiveOverrides(jobRole, catalog.flatMap((s) => s.items.map((i) => i.href)), user),
-      hasOverrides: hasUserOverrides(user),
-    };
-  }, [snap, jobRole, catalog]);
+  /* Préréglage du rôle sous les choix explicites de l'utilisateur, et « Réinitialiser » qui ne
+     compte que ces choix : la paire vient de roles.ts (modulesState), pure et testée. */
+  const { overrides, hasOverrides } = useMemo(
+    () => modulesState(snap, jobRole, catalog.flatMap((s) => s.items.map((i) => i.href))),
+    [snap, jobRole, catalog],
+  );
 
   const customer = useCustomer();
   const sections = useMemo(() => {
