@@ -238,3 +238,34 @@ describe("titres des projets = titres du relevé, à la lettre", () => {
     }
   });
 });
+
+/*
+ * Ce qu'une maison montre ne NOMME jamais un artiste qu'elle exclut (day1 : Kiko ; universal :
+ * Dadju) — pas seulement par l'artistId : un interprète, un titre, une note écrits en clair passent
+ * à travers `inRoster`. MESURÉ le 24/10/2026 : le placement « Trop loin » de Zeg P (inédit simulé)
+ * avait Dadju pour interprète, et /placements l'affichait dans la maison universal.
+ */
+describe.each(Object.values(TENANTS))("maison $id : aucune table montrée ne nomme un artiste exclu", (tenant) => {
+  it("ARTISTS, PROJECTS, TRACKS, SPLITS, CONTRACTS, PLACEMENTS, TEAM, EMERGING, SYNC_BRIEFS, LABEL", async () => {
+    const data = await loadHouse(tenant.id);
+    const names = ALL_ARTISTS.filter((a) => tenant.excludedArtists.includes(a.id)).map((a) => a.name);
+    expect(names).toHaveLength(tenant.excludedArtists.length);
+    const tables = {
+      ARTISTS: data.ARTISTS,
+      PROJECTS: data.PROJECTS,
+      TRACKS: data.TRACKS,
+      SPLITS: data.SPLITS,
+      CONTRACTS: data.CONTRACTS,
+      PLACEMENTS: data.PLACEMENTS,
+      TEAM: data.TEAM,
+      EMERGING: data.EMERGING,
+      SYNC_BRIEFS: data.SYNC_BRIEFS,
+      LABEL: data.LABEL,
+    };
+    for (const [table, rows] of Object.entries(tables)) {
+      const text = JSON.stringify(rows);
+      expect(text.length, `${table} vide : le test ne lirait rien`).toBeGreaterThan(2);
+      for (const name of names) expect(text, `${table} nomme ${name}`).not.toMatch(new RegExp(`\\b${name}\\b`, "i"));
+    }
+  });
+});

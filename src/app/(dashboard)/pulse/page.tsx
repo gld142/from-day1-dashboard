@@ -52,7 +52,6 @@ import {
   EMERGING,
   LABEL,
   SPLITS,
-  TEAM,
   TRACKS,
   auditFindings,
   catalogValuation,

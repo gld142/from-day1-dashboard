@@ -1009,7 +1009,10 @@ export const ALL_PLACEMENTS: Placement[] = [
   { id: "pl-nuit", artistId: "zeg-p", title: "Nuit blanche", performer: "Nono La Grinta",
     roles: ["compositeur", "producteur"], writerSharePct: 30, producerPointsPct: 4,
     status: "unreleased", date: "2026-11-14", declared: false, streams: 0 },
-  { id: "pl-loin", artistId: "zeg-p", title: "Trop loin", performer: "Dadju",
+  /* Inédit SIMULÉ : son interprète est un artiste de LA MAISON. Dadju n'existe pas chez Universal,
+     où /placements l'affichait (mesuré le 24/10/2026) : Leto, présent dans les deux maisons, prend
+     sa place ; la maison day1 ne change pas. */
+  { id: "pl-loin", artistId: "zeg-p", title: "Trop loin", performer: inRoster("dadju") ? "Dadju" : "Leto",
     roles: ["compositeur"], writerSharePct: 15, producerPointsPct: 0,
     status: "unreleased", date: "2026-10-30", declared: true, streams: 0 },
   { id: "pl-sahara", artistId: "zeg-p", title: "Sahara", performer: "ElGrandeToto",

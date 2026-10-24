@@ -275,11 +275,22 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
   redirection). Sans ces variables, la suite e2e échoue d'emblée avec un message explicite :
   avant le 24/10, elle ne passait plus la porte depuis le 25/09 (13/13 échecs, mesuré).
 
+- **Pages internes From Day 1** (`internal` dans nav.ts : /comparatif, /onboardings — le pitch de
+  Day 1 À PROPOS d'Universal) : n'existent que si `TENANT.internalPages` (day1). Ailleurs, leur
+  `page.tsx` SERVEUR appelle `notFound()` avant la vue client (`*-view.tsx`),
+  `sectionsForTenant` les retire de la navigation, de la palette ⌘K et de Réglages → Modules
+  (un choix `{ "/onboardings": true }` ne les rouvre pas), et `getMessages` n'envoie pas leurs
+  namespaces. Le NextIntlClientProvider racine hérite de TOUS les messages : mesuré le 24/10, le
+  pitch se lisait dans le HTML de /connexion des deux maisons (toujours le cas dans la maison day1).
+- **Aucun nom d'artiste exclu en clair** : `roster-data.test.ts` (tables de la maison) et
+  `excluded-artists.test.ts` (messages) cherchent le NOM, pas l'id — un interprète écrit en dur
+  passe à travers `inRoster` (mesuré : « Trop loin », interprète Dadju, chez Universal).
+
 Témoin chiffré (24/10, `rosterRows()` des cinq artistes conservés) : identique avant et après les
 tâches 1 à 3 du chantier ; l'écart avec la démo du 25/09 vient du seul commit e468871 (droits
 d'auteur 15/55), mesuré en rejouant la sonde sur ses deux parents.
 
 Vérifier :
 
-    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts
+    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/__tests__/internal-pages.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts src/messages/__tests__/excluded-artists.test.ts
     NEXT_PUBLIC_TENANT=universal npx vitest run
