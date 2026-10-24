@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-24",
+  "capturedAt": "2026-10-24T00:58:40.606Z",
+  "spotify": {
+    "monthlyListeners": 194353,
+    "followers": 57964,
+    "topTracks": [
+      {
+        "name": "Discipline",
+        "spotifyId": "1oHLNUqnUwtCE2ks737fqq",
+        "playcount": 7082299
+      },
+      {
+        "name": "Mon autre",
+        "spotifyId": "2dxXlskKUVQ8558OPr5F4L",
+        "playcount": 1309813
+      },
+      {
+        "name": "Douter",
+        "spotifyId": "005qFe7U4oVqJteXYYEWLQ",
+        "playcount": 87492
+      },
+      {
+        "name": "Hauteur",
+        "spotifyId": "4SzrnrK1JA1LLyOPp0NrOx",
+        "playcount": 50342
+      },
+      {
+        "name": "Maman",
+        "spotifyId": "6bHDcGfkubgTfWM0S4vlxg",
+        "playcount": 241722
+      }
+    ]
+  },
+  "kworb": null,
+  "deezer": {
+    "fans": 18524,
+    "topTracks": [
+      {
+        "title": "Discipline",
+        "rank": 706474
+      },
+      {
+        "title": "Céline",
+        "rank": 528000
+      },
+      {
+        "title": "Drapeau Rouge",
+        "rank": 540316
+      },
+      {
+        "title": "Les Abeilles",
+        "rank": 375641
+      },
+      {
+        "title": "Jardin",
+        "rank": 501322
+      },
+      {
+        "title": "Baby Pleure (Live Session)",
+        "rank": 482132
+      },
+      {
+        "title": "Les Miens",
+        "rank": 480298
+      },
+      {
+        "title": "Reste",
+        "rank": 432021
+      },
+      {
+        "title": "Coup d'Avance",
+        "rank": 406713
+      },
+      {
+        "title": "Toxique",
+        "rank": 422718
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 14670
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 4490
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 4391
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 4020
+    },
+    {
+      "city": "Toulouse",
+      "country": "FR",
+      "listeners": 2316
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "date": "2026-10-24",
+  "capturedAt": "2026-10-24T00:58:02.415Z",
+  "spotify": {
+    "monthlyListeners": 401821,
+    "followers": 266323,
+    "topTracks": [
+      {
+        "name": "come into my arms",
+        "spotifyId": "7BsF2M59SaoOQI9HOWk8bU",
+        "playcount": 25218139
+      },
+      {
+        "name": "Silencio",
+        "spotifyId": "5cBeYTPwgbGXw6cZtGzIc3",
+        "playcount": 7801170
+      },
+      {
+        "name": "the end.",
+        "spotifyId": "107WqQJ4jDCZPzni6qb58v",
+        "playcount": 11594382
+      },
+      {
+        "name": "soft & tender",
+        "spotifyId": "4A2943U1KOEH6Uc3KNLbq3",
+        "playcount": 10421348
+      },
+      {
+        "name": "Parfois",
+        "spotifyId": "66l6fr2bzlqqyTiUgozKBY",
+        "playcount": 1069593
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 95534004,
+    "dailyStreams": 47230,
+    "tracks": [
+      {
+        "name": "come into my arms",
+        "total": 23618457,
+        "daily": 12418
+      },
+      {
+        "name": "the end.",
+        "total": 11071608,
+        "daily": 4564
+      },
+      {
+        "name": "soft & tender",
+        "total": 10129849,
+        "daily": 2346
+      },
+      {
+        "name": "Silencio",
+        "total": 6828702,
+        "daily": 6853
+      },
+      {
+        "name": "novembre",
+        "total": 4455448,
+        "daily": 1054
+      },
+      {
+        "name": "echo",
+        "total": 3989055,
+        "daily": 753
+      },
+      {
+        "name": "le manège",
+        "total": 3490194,
+        "daily": 900
+      },
+      {
+        "name": "corazón caramelo",
+        "total": 3242506,
+        "daily": 1929
+      },
+      {
+        "name": "open arms",
+        "total": 2855534,
+        "daily": 1401
+      },
+      {
+        "name": "Soleil Soleil (feat. November Ultra)",
+        "total": 2848433,
+        "daily": 675
+      },
+      {
+        "name": "miel",
+        "total": 2541214,
+        "daily": 504
+      },
+      {
+        "name": "Honey",
+        "total": 2391470,
+        "daily": 813
+      },
+      {
+        "name": "sunflower ‘24",
+        "total": 2390531,
+        "daily": 2167
+      },
+      {
+        "name": "Prière pour la nuit",
+        "total": 2203362,
+        "daily": 542
+      },
+      {
+        "name": "bedroom walls",
+        "total": 1728098,
+        "daily": 461
+      },
+      {
+        "name": "fade",
+        "total": 1233416,
+        "daily": 822
+      },
+      {
+        "name": "over & over & over",
+        "total": 1204828,
+        "daily": 404
+      },
+      {
+        "name": "Cariño",
+        "total": 1103804,
+        "daily": 1305
+      },
+      {
+        "name": "Doux & Tendre - French Version",
+        "total": 1024726,
+        "daily": 244
+      },
+      {
+        "name": "thelma & louise",
+        "total": 787418,
+        "daily": 385
+      },
+      {
+        "name": "incantation (interlude)",
+        "total": 762355,
+        "daily": 163
+      },
+      {
+        "name": "Parfois",
+        "total": 734552,
+        "daily": 3175
+      },
+      {
+        "name": "i talk too much",
+        "total": 734177,
+        "daily": 662
+      },
+      {
+        "name": "nostalgia / ultra",
+        "total": 729564,
+        "daily": 346
+      },
+      {
+        "name": "corazón caramelo - A COLORS SHOW",
+        "total": 708061,
+        "daily": 201
+      },
+      {
+        "name": "monomania",
+        "total": 669409,
+        "daily": 234
+      },
+      {
+        "name": "septembre",
+        "total": 529862,
+        "daily": 229
+      },
+      {
+        "name": "novembre - ultra version",
+        "total": 408223,
+        "daily": 251
+      },
+      {
+        "name": "blue door",
+        "total": 392890,
+        "daily": 303
+      },
+      {
+        "name": "le salon - introduction",
+        "total": 317921,
+        "daily": 148
+      },
+      {
+        "name": "Clouds Away - From Arco",
+        "total": 287485,
+        "daily": 978
+      },
+      {
+        "name": "Amnésie - November Ultra Version",
+        "total": 120852,
+        "daily": null
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 52723,
+    "topTracks": [
+      {
+        "title": "novembre",
+        "rank": 726893
+      },
+      {
+        "title": "over & over & over",
+        "rank": 703054
+      },
+      {
+        "title": "soft & tender",
+        "rank": 684362
+      },
+      {
+        "title": "le manège",
+        "rank": 668914
+      },
+      {
+        "title": "Leave a message (Live)",
+        "rank": 636699
+      },
+      {
+        "title": "monomania",
+        "rank": 647440
+      },
+      {
+        "title": "miel",
+        "rank": 332529
+      },
+      {
+        "title": "Clouds Away (From Arco)",
+        "rank": 589234
+      },
+      {
+        "title": "Silencio",
+        "rank": 554975
+      },
+      {
+        "title": "Parfois",
+        "rank": 562006
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 10553
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 10232
+    },
+    {
+      "city": "Mexico City",
+      "country": "MX",
+      "listeners": 5692
+    },
+    {
+      "city": "London",
+      "country": "GB",
+      "listeners": 3685
+    },
+    {
+      "city": "Santiago",
+      "country": "CL",
+      "listeners": 3310
+    }
+  ]
+}

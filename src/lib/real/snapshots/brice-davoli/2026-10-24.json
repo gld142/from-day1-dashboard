@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-24",
+  "capturedAt": "2026-10-24T00:58:57.337Z",
+  "spotify": {
+    "monthlyListeners": 251682,
+    "followers": 9598,
+    "topTracks": [
+      {
+        "name": "Castle In The Sky",
+        "spotifyId": "5Wbd9DlFbclvsWIOqOyQFj",
+        "playcount": 2835869
+      },
+      {
+        "name": "Amore addio",
+        "spotifyId": "1mlY0pxOOzpZ5GEtT3GAVE",
+        "playcount": 908945
+      },
+      {
+        "name": "Love Stream",
+        "spotifyId": "3byX1QDmDs6PjddQwWZFy4",
+        "playcount": 7650425
+      },
+      {
+        "name": "Amarti ancora",
+        "spotifyId": "6vvAGqqEBS4er9wH2bAMUD",
+        "playcount": 514223
+      },
+      {
+        "name": "Je t'attendrai",
+        "spotifyId": "1QhKkwMWlFNrLOiBHUUVjJ",
+        "playcount": 493440
+      }
+    ]
+  },
+  "kworb": null,
+  "deezer": {
+    "fans": 1686,
+    "topTracks": [
+      {
+        "title": "Castle In The Sky",
+        "rank": 499198
+      },
+      {
+        "title": "Swedish Garden",
+        "rank": 476898
+      },
+      {
+        "title": "Migrating Birds",
+        "rank": 286056
+      },
+      {
+        "title": "Luna Mia Cara",
+        "rank": 232367
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Istanbul",
+      "country": "TR",
+      "listeners": 8920
+    },
+    {
+      "city": "Mexico City",
+      "country": "MX",
+      "listeners": 2816
+    },
+    {
+      "city": "Izmir",
+      "country": "TR",
+      "listeners": 2519
+    },
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 2500
+    },
+    {
+      "city": "Athens",
+      "country": "GR",
+      "listeners": 2444
+    }
+  ]
+}

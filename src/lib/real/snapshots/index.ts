@@ -1,45 +1,65 @@
 /* Généré par scripts/snapshot.mjs — ne pas éditer à la main. */
 import type { MarketSnapshot, Snapshot } from "../types";
+import brice_davoli_2026_10_24 from "./brice-davoli/2026-10-24.json";
 import dadju_2026_09_15 from "./dadju/2026-09-15.json";
 import dadju_2026_09_16 from "./dadju/2026-09-16.json";
 import dadju_2026_09_17 from "./dadju/2026-09-17.json";
 import dadju_2026_09_18 from "./dadju/2026-09-18.json";
 import dadju_2026_09_25 from "./dadju/2026-09-25.json";
+import dadju_2026_10_24 from "./dadju/2026-10-24.json";
+import dakeez_2026_10_24 from "./dakeez/2026-10-24.json";
 import elgrandetoto_2026_09_25 from "./elgrandetoto/2026-09-25.json";
+import elgrandetoto_2026_10_24 from "./elgrandetoto/2026-10-24.json";
+import gustave_rudman_2026_10_24 from "./gustave-rudman/2026-10-24.json";
 import kiko_2026_09_15 from "./kiko/2026-09-15.json";
 import kiko_2026_09_16 from "./kiko/2026-09-16.json";
 import kiko_2026_09_17 from "./kiko/2026-09-17.json";
 import kiko_2026_09_18 from "./kiko/2026-09-18.json";
 import kiko_2026_09_25 from "./kiko/2026-09-25.json";
+import kiko_2026_10_24 from "./kiko/2026-10-24.json";
+import leto_2026_10_24 from "./leto/2026-10-24.json";
+import louane_2026_10_24 from "./louane/2026-10-24.json";
 import nono_la_grinta_2026_09_15 from "./nono-la-grinta/2026-09-15.json";
 import nono_la_grinta_2026_09_16 from "./nono-la-grinta/2026-09-16.json";
 import nono_la_grinta_2026_09_17 from "./nono-la-grinta/2026-09-17.json";
 import nono_la_grinta_2026_09_18 from "./nono-la-grinta/2026-09-18.json";
 import nono_la_grinta_2026_09_25 from "./nono-la-grinta/2026-09-25.json";
+import nono_la_grinta_2026_10_24 from "./nono-la-grinta/2026-10-24.json";
 import november_ultra_2026_09_25 from "./november-ultra/2026-09-25.json";
+import november_ultra_2026_10_24 from "./november-ultra/2026-10-24.json";
+import wamen_2026_10_24 from "./wamen/2026-10-24.json";
 import zeg_p_2026_09_25 from "./zeg-p/2026-09-25.json";
+import zeg_p_2026_10_24 from "./zeg-p/2026-10-24.json";
 import market_2026_09_17 from "./market/2026-09-17.json";
 import market_2026_09_18 from "./market/2026-09-18.json";
 import market_2026_09_25 from "./market/2026-09-25.json";
+import market_2026_10_24 from "./market/2026-10-24.json";
 
 /** Relevés par artiste, triés par date croissante. */
 export const SNAPSHOTS: Record<string, Snapshot[]> = {
-  "dadju": [dadju_2026_09_15, dadju_2026_09_16, dadju_2026_09_17, dadju_2026_09_18, dadju_2026_09_25] as Snapshot[],
-  "elgrandetoto": [elgrandetoto_2026_09_25] as Snapshot[],
-  "kiko": [kiko_2026_09_15, kiko_2026_09_16, kiko_2026_09_17, kiko_2026_09_18, kiko_2026_09_25] as Snapshot[],
-  "nono-la-grinta": [nono_la_grinta_2026_09_15, nono_la_grinta_2026_09_16, nono_la_grinta_2026_09_17, nono_la_grinta_2026_09_18, nono_la_grinta_2026_09_25] as Snapshot[],
-  "november-ultra": [november_ultra_2026_09_25] as Snapshot[],
-  "zeg-p": [zeg_p_2026_09_25] as Snapshot[],
+  "brice-davoli": [brice_davoli_2026_10_24] as Snapshot[],
+  "dadju": [dadju_2026_09_15, dadju_2026_09_16, dadju_2026_09_17, dadju_2026_09_18, dadju_2026_09_25, dadju_2026_10_24] as Snapshot[],
+  "dakeez": [dakeez_2026_10_24] as Snapshot[],
+  "elgrandetoto": [elgrandetoto_2026_09_25, elgrandetoto_2026_10_24] as Snapshot[],
+  "gustave-rudman": [gustave_rudman_2026_10_24] as Snapshot[],
+  "kiko": [kiko_2026_09_15, kiko_2026_09_16, kiko_2026_09_17, kiko_2026_09_18, kiko_2026_09_25, kiko_2026_10_24] as Snapshot[],
+  "leto": [leto_2026_10_24] as Snapshot[],
+  "louane": [louane_2026_10_24] as Snapshot[],
+  "nono-la-grinta": [nono_la_grinta_2026_09_15, nono_la_grinta_2026_09_16, nono_la_grinta_2026_09_17, nono_la_grinta_2026_09_18, nono_la_grinta_2026_09_25, nono_la_grinta_2026_10_24] as Snapshot[],
+  "november-ultra": [november_ultra_2026_09_25, november_ultra_2026_10_24] as Snapshot[],
+  "wamen": [wamen_2026_10_24] as Snapshot[],
+  "zeg-p": [zeg_p_2026_09_25, zeg_p_2026_10_24] as Snapshot[],
 };
 
-export const LATEST_DATE = "2026-09-25";
+export const LATEST_DATE = "2026-10-24";
 
 /** Relevés du Top 200 Spotify France, par date de relevé. */
 export const MARKET: Record<string, MarketSnapshot> = {
   "2026-09-17": market_2026_09_17 as MarketSnapshot,
   "2026-09-18": market_2026_09_18 as MarketSnapshot,
   "2026-09-25": market_2026_09_25 as MarketSnapshot,
+  "2026-10-24": market_2026_10_24 as MarketSnapshot,
 };
 
 /** Dates des relevés marché, croissantes. */
-export const MARKET_DATES: string[] = ["2026-09-17", "2026-09-18", "2026-09-25"];
+export const MARKET_DATES: string[] = ["2026-09-17", "2026-09-18", "2026-09-25", "2026-10-24"];

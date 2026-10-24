@@ -1,0 +1,1434 @@
+{
+  "date": "2026-10-24",
+  "capturedAt": "2026-10-24T00:58:18.259Z",
+  "spotify": {
+    "monthlyListeners": 5459900,
+    "followers": 1932421,
+    "topTracks": [
+      {
+        "name": "Pineapple",
+        "spotifyId": "1jSRu1IRoB6DPKsWTVGzTB",
+        "playcount": 69402994
+      },
+      {
+        "name": "Lululemon",
+        "spotifyId": "4NUbhcdKi2nfq6RUUgKyWV",
+        "playcount": 6469529
+      },
+      {
+        "name": "Macaroni (feat. Ninho)",
+        "spotifyId": "4Z9CNGHElj2rLkB8mQdvnA",
+        "playcount": 136770134
+      },
+      {
+        "name": "Ballon D'or",
+        "spotifyId": "3ygslH1eoPaSrhW8ewR4Og",
+        "playcount": 37411008
+      },
+      {
+        "name": "Chérie coco",
+        "spotifyId": "0xQsGakPk9wUzWNQEmut53",
+        "playcount": 11765162
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 2215971587,
+    "dailyStreams": 1241092,
+    "tracks": [
+      {
+        "name": "2step (feat. Leto)",
+        "total": 203328299,
+        "daily": 26387
+      },
+      {
+        "name": "Macaroni (feat. Ninho)",
+        "total": 136534431,
+        "daily": 52440
+      },
+      {
+        "name": "Tes parents (feat. Ninho)",
+        "total": 126868432,
+        "daily": 41921
+      },
+      {
+        "name": "Mapessa (feat. Tiakola)",
+        "total": 95998274,
+        "daily": 40253
+      },
+      {
+        "name": "J’crois qu’ils ont pas compris",
+        "total": 73601118,
+        "daily": 35472
+      },
+      {
+        "name": "Pineapple",
+        "total": 68433662,
+        "daily": 248031
+      },
+      {
+        "name": "NO LÈCHE",
+        "total": 66546417,
+        "daily": 15703
+      },
+      {
+        "name": "Train de vie (feat. PLK)",
+        "total": 64123862,
+        "daily": 16296
+      },
+      {
+        "name": "A&H",
+        "total": 44021700,
+        "daily": 16391
+      },
+      {
+        "name": "La vie du binks (feat. Hornet La Frappe, Leto, Sadek, Soprano)",
+        "total": 38219033,
+        "daily": 6161
+      },
+      {
+        "name": "Ballon D'or",
+        "total": 37181035,
+        "daily": 48537
+      },
+      {
+        "name": "Ride",
+        "total": 35898665,
+        "daily": 7937
+      },
+      {
+        "name": "Busy",
+        "total": 33761051,
+        "daily": 23031
+      },
+      {
+        "name": "17%",
+        "total": 30318560,
+        "daily": 8648
+      },
+      {
+        "name": "Connexion Macabre",
+        "total": 30063730,
+        "daily": 48358
+      },
+      {
+        "name": "Mozart Capitaine Jackson (Episode 2)",
+        "total": 29952652,
+        "daily": 5525
+      },
+      {
+        "name": "MATHÉMATIQUE",
+        "total": 27232887,
+        "daily": 35876
+      },
+      {
+        "name": "Mwen An Sa",
+        "total": 26101242,
+        "daily": 18941
+      },
+      {
+        "name": "Tout gâché",
+        "total": 25656046,
+        "daily": 10911
+      },
+      {
+        "name": "Rihanna",
+        "total": 24482242,
+        "daily": 9630
+      },
+      {
+        "name": "Big Meech",
+        "total": 22421088,
+        "daily": 2276
+      },
+      {
+        "name": "Mélodie",
+        "total": 20787338,
+        "daily": 5402
+      },
+      {
+        "name": "Week-end (feat. Leto)",
+        "total": 18184197,
+        "daily": 1011
+      },
+      {
+        "name": "Chaque jour",
+        "total": 17224635,
+        "daily": 9012
+      },
+      {
+        "name": "Biberon",
+        "total": 17150881,
+        "daily": 3160
+      },
+      {
+        "name": "Nouveaux riches (feat. Niska)",
+        "total": 16378091,
+        "daily": 2093
+      },
+      {
+        "name": "Ma jolie",
+        "total": 16305765,
+        "daily": 1628
+      },
+      {
+        "name": "Jeu dangereux",
+        "total": 15836209,
+        "daily": 9069
+      },
+      {
+        "name": "Après la pluie",
+        "total": 15760247,
+        "daily": 1368
+      },
+      {
+        "name": "SENTIMENTS BILLETS DE 100",
+        "total": 15715749,
+        "daily": 5274
+      },
+      {
+        "name": "Paris c'est magique",
+        "total": 15580502,
+        "daily": 1820
+      },
+      {
+        "name": "Sosa",
+        "total": 15440830,
+        "daily": 2796
+      },
+      {
+        "name": "Immonde",
+        "total": 14965600,
+        "daily": 4438
+      },
+      {
+        "name": "Dans le noir",
+        "total": 13484477,
+        "daily": 2882
+      },
+      {
+        "name": "Double binks (feat. Ninho & Zed)",
+        "total": 12669246,
+        "daily": 3458
+      },
+      {
+        "name": "Avon Barksdale (feat. Ninho)",
+        "total": 12523283,
+        "daily": 3446
+      },
+      {
+        "name": "Ouais Ouais (feat. Hamza)",
+        "total": 12088890,
+        "daily": 1767
+      },
+      {
+        "name": "Chérie coco",
+        "total": 11538483,
+        "daily": 50233
+      },
+      {
+        "name": "Tout recommencer",
+        "total": 11478807,
+        "daily": 1029
+      },
+      {
+        "name": "Flashback (feat. Leto)",
+        "total": 11390162,
+        "daily": 835
+      },
+      {
+        "name": "Yeah",
+        "total": 11238156,
+        "daily": 2406
+      },
+      {
+        "name": "Derrière nos tours (feat. Maes)",
+        "total": 11116549,
+        "daily": 3395
+      },
+      {
+        "name": "Double Bang 6",
+        "total": 11044811,
+        "daily": 4444
+      },
+      {
+        "name": "Changer de vie",
+        "total": 10140942,
+        "daily": 1222
+      },
+      {
+        "name": "TNF",
+        "total": 10115052,
+        "daily": 2636
+      },
+      {
+        "name": "Détruire et aimer",
+        "total": 10092855,
+        "daily": 3890
+      },
+      {
+        "name": "God Bless",
+        "total": 9736649,
+        "daily": 12333
+      },
+      {
+        "name": "Benzo",
+        "total": 9597320,
+        "daily": 1451
+      },
+      {
+        "name": "Double Bang 5",
+        "total": 9521945,
+        "daily": 2947
+      },
+      {
+        "name": "C'est mort (feat. Leto & RK)",
+        "total": 9472210,
+        "daily": 259
+      },
+      {
+        "name": "Le Nord",
+        "total": 8888762,
+        "daily": 2132
+      },
+      {
+        "name": "Crésus (feat. Leto)",
+        "total": 8773974,
+        "daily": 3970
+      },
+      {
+        "name": "Sur le banc (feat. SDM)",
+        "total": 8387038,
+        "daily": 3544
+      },
+      {
+        "name": "Tchapalo (feat. SDM)",
+        "total": 8320657,
+        "daily": 3703
+      },
+      {
+        "name": "Bonbonne",
+        "total": 8243831,
+        "daily": 1291
+      },
+      {
+        "name": "Préjudice",
+        "total": 8170658,
+        "daily": 1857
+      },
+      {
+        "name": "0.9 (feat. Leto)",
+        "total": 7614391,
+        "daily": 1455
+      },
+      {
+        "name": "L.F.O.L.F (feat. Leto)",
+        "total": 7489803,
+        "daily": 3584
+      },
+      {
+        "name": "Favéla (#STATION 3)",
+        "total": 7361748,
+        "daily": 4282
+      },
+      {
+        "name": "Réflexes",
+        "total": 7255147,
+        "daily": 5946
+      },
+      {
+        "name": "L E A K",
+        "total": 7210524,
+        "daily": 1346
+      },
+      {
+        "name": "Power",
+        "total": 7122108,
+        "daily": 1159
+      },
+      {
+        "name": "RODEO DRIVE (feat. Hamza)",
+        "total": 7049107,
+        "daily": 2545
+      },
+      {
+        "name": "Favel (feat. Leto)",
+        "total": 6679509,
+        "daily": 872
+      },
+      {
+        "name": "Trapstar",
+        "total": 6654602,
+        "daily": 1742
+      },
+      {
+        "name": "Charbon (feat. Booba)",
+        "total": 6421670,
+        "daily": 1065
+      },
+      {
+        "name": "Kiffe la mode (feat. Naza & Tiakola)",
+        "total": 6302273,
+        "daily": 2255
+      },
+      {
+        "name": "Fly",
+        "total": 6235450,
+        "daily": 831
+      },
+      {
+        "name": "Lululemon",
+        "total": 6216051,
+        "daily": 73971
+      },
+      {
+        "name": "100 visages",
+        "total": 6212540,
+        "daily": 834
+      },
+      {
+        "name": "BÂTIMENT (feat. Leto & Yaro)",
+        "total": 5939606,
+        "daily": 438
+      },
+      {
+        "name": "Outro",
+        "total": 5889453,
+        "daily": 1310
+      },
+      {
+        "name": "Baby girl (feat. Leto)",
+        "total": 5748402,
+        "daily": 680
+      },
+      {
+        "name": "⁠ÇA DONNE",
+        "total": 5736723,
+        "daily": 6358
+      },
+      {
+        "name": "Gangsta et Célèbre",
+        "total": 5719685,
+        "daily": 1841
+      },
+      {
+        "name": "Tu déconnes (feat. Rim'K)",
+        "total": 5699135,
+        "daily": 398
+      },
+      {
+        "name": "ZOMBIE M'APPELLE",
+        "total": 5635238,
+        "daily": 8692
+      },
+      {
+        "name": "VSOP",
+        "total": 5582839,
+        "daily": 5128
+      },
+      {
+        "name": "La familia",
+        "total": 5572483,
+        "daily": 960
+      },
+      {
+        "name": "Christian Dior (feat. MHD)",
+        "total": 5415387,
+        "daily": 662
+      },
+      {
+        "name": "Le nord se souvient",
+        "total": 5321770,
+        "daily": 393
+      },
+      {
+        "name": "TITANIC",
+        "total": 5151827,
+        "daily": 4958
+      },
+      {
+        "name": "Mozart",
+        "total": 4983022,
+        "daily": 599
+      },
+      {
+        "name": "Tristesse",
+        "total": 4972781,
+        "daily": 556
+      },
+      {
+        "name": "Jeune soldat",
+        "total": 4952445,
+        "daily": 1304
+      },
+      {
+        "name": "TP1G",
+        "total": 4932474,
+        "daily": 971
+      },
+      {
+        "name": "Adios",
+        "total": 4893321,
+        "daily": 789
+      },
+      {
+        "name": "Petit frère",
+        "total": 4891743,
+        "daily": 808
+      },
+      {
+        "name": "Truc en moi (feat. Cheu-B et Kepler)",
+        "total": 4852525,
+        "daily": 524
+      },
+      {
+        "name": "Double Bang 7",
+        "total": 4816858,
+        "daily": 1005
+      },
+      {
+        "name": "Air Force (feat. Leto)",
+        "total": 4779926,
+        "daily": 970
+      },
+      {
+        "name": "YOUNG RICH PAPI",
+        "total": 4762333,
+        "daily": 13399
+      },
+      {
+        "name": "YSL (feat. S.Pri Noir & Leto)",
+        "total": 4761408,
+        "daily": 858
+      },
+      {
+        "name": "T'avais raison",
+        "total": 4641561,
+        "daily": 756
+      },
+      {
+        "name": "Trop frais (feat. Guy2Bezbar)",
+        "total": 4639256,
+        "daily": 553
+      },
+      {
+        "name": "187 mesures (feat. Ninho)",
+        "total": 4573541,
+        "daily": 2265
+      },
+      {
+        "name": "SHAI ALEXANDER",
+        "total": 4395425,
+        "daily": 3533
+      },
+      {
+        "name": "Ma chérie",
+        "total": 4394768,
+        "daily": 507
+      },
+      {
+        "name": "J'AIME",
+        "total": 4373137,
+        "daily": 1938
+      },
+      {
+        "name": "Vibes",
+        "total": 4355605,
+        "daily": 688
+      },
+      {
+        "name": "Bébé Na Bébé (feat. Leto)",
+        "total": 4318355,
+        "daily": 583
+      },
+      {
+        "name": "Hall à la scène",
+        "total": 4282104,
+        "daily": 416
+      },
+      {
+        "name": "CÔTÉ NOIR (feat. Leto)",
+        "total": 4265057,
+        "daily": 402
+      },
+      {
+        "name": "Turn Up (feat. Leto & MHD)",
+        "total": 4126602,
+        "daily": 1285
+      },
+      {
+        "name": "10 ans d’âge",
+        "total": 4086203,
+        "daily": 1051
+      },
+      {
+        "name": "Nicki",
+        "total": 3911302,
+        "daily": 308
+      },
+      {
+        "name": "All Eyez On Me",
+        "total": 3842396,
+        "daily": 391
+      },
+      {
+        "name": "T'es allée où? (feat. Soolking)",
+        "total": 3837076,
+        "daily": 425
+      },
+      {
+        "name": "Mauvaise Humeur",
+        "total": 3750590,
+        "daily": 659
+      },
+      {
+        "name": "Dans nos blocks",
+        "total": 3744848,
+        "daily": 384
+      },
+      {
+        "name": "BOUGE",
+        "total": 3704239,
+        "daily": 18847
+      },
+      {
+        "name": "Gaine D 2.0",
+        "total": 3669121,
+        "daily": 305
+      },
+      {
+        "name": "Prada",
+        "total": 3652453,
+        "daily": 450
+      },
+      {
+        "name": "HLM",
+        "total": 3485261,
+        "daily": 255
+      },
+      {
+        "name": "Sapologue",
+        "total": 3469082,
+        "daily": 491
+      },
+      {
+        "name": "Big Money (feat. Lacrim)",
+        "total": 3451370,
+        "daily": 350
+      },
+      {
+        "name": "Rock n Puff",
+        "total": 3447657,
+        "daily": 181
+      },
+      {
+        "name": "Drill Papers",
+        "total": 3444756,
+        "daily": 116
+      },
+      {
+        "name": "Facile",
+        "total": 3443791,
+        "daily": 780
+      },
+      {
+        "name": "Sensationnel",
+        "total": 3440407,
+        "daily": 711
+      },
+      {
+        "name": "Mec de la rue",
+        "total": 3399925,
+        "daily": 281
+      },
+      {
+        "name": "TerrainHoraireBoloss",
+        "total": 3363783,
+        "daily": 411
+      },
+      {
+        "name": "Pure (feat. Sadek)",
+        "total": 3353623,
+        "daily": 277
+      },
+      {
+        "name": "Franklin Saint",
+        "total": 3308306,
+        "daily": 466
+      },
+      {
+        "name": "Espèce",
+        "total": 3105339,
+        "daily": 318
+      },
+      {
+        "name": "Big Meech",
+        "total": 3096504,
+        "daily": 237
+      },
+      {
+        "name": "ZANPAKUTO",
+        "total": 3090224,
+        "daily": 4775
+      },
+      {
+        "name": "J'ai l'impression",
+        "total": 3041983,
+        "daily": 990
+      },
+      {
+        "name": "Choses à dire",
+        "total": 2890974,
+        "daily": 337
+      },
+      {
+        "name": "SHAKE TON BOOTY",
+        "total": 2849577,
+        "daily": 1942
+      },
+      {
+        "name": "Gangsta",
+        "total": 2714709,
+        "daily": 289
+      },
+      {
+        "name": "Trafiquants",
+        "total": 2695968,
+        "daily": 223
+      },
+      {
+        "name": "Balmain",
+        "total": 2515360,
+        "daily": 196
+      },
+      {
+        "name": "Jusqu'à la mort",
+        "total": 2508962,
+        "daily": 565
+      },
+      {
+        "name": "10 OU 20",
+        "total": 2428534,
+        "daily": 2063
+      },
+      {
+        "name": "Vovo",
+        "total": 2381129,
+        "daily": 603
+      },
+      {
+        "name": "Trafic",
+        "total": 2340760,
+        "daily": 438
+      },
+      {
+        "name": "JE NE PLEURE MEME PLUS (feat. Leto)",
+        "total": 2331509,
+        "daily": 662
+      },
+      {
+        "name": "Bitume",
+        "total": 2304967,
+        "daily": 281
+      },
+      {
+        "name": "Tu meurs pour moi ?",
+        "total": 2286119,
+        "daily": 1955
+      },
+      {
+        "name": "N’écoute pas tes copines",
+        "total": 2267535,
+        "daily": 371
+      },
+      {
+        "name": "X-ADV",
+        "total": 2244089,
+        "daily": 1047
+      },
+      {
+        "name": "17bal",
+        "total": 2233997,
+        "daily": 676
+      },
+      {
+        "name": "Pdv (feat. DA Uzi)",
+        "total": 2226850,
+        "daily": 124
+      },
+      {
+        "name": "JAMAIS ON STRESSE",
+        "total": 2195004,
+        "daily": 1216
+      },
+      {
+        "name": "Barrio (feat. Koba LaD)",
+        "total": 2121421,
+        "daily": 414
+      },
+      {
+        "name": "Life",
+        "total": 2106876,
+        "daily": 399
+      },
+      {
+        "name": "Ze Pequeno",
+        "total": 2104689,
+        "daily": 505
+      },
+      {
+        "name": "BEAUCOUP DE LARMES",
+        "total": 2088922,
+        "daily": 3726
+      },
+      {
+        "name": "Double face (feat. Leto)",
+        "total": 2068196,
+        "daily": 882
+      },
+      {
+        "name": "Overbooké (feat. Franglish)",
+        "total": 2067043,
+        "daily": 423
+      },
+      {
+        "name": "MIMI",
+        "total": 2059665,
+        "daily": 1191
+      },
+      {
+        "name": "Toute épreuve",
+        "total": 1989205,
+        "daily": 403
+      },
+      {
+        "name": "O.G. (feat. Dinos)",
+        "total": 1902135,
+        "daily": 225
+      },
+      {
+        "name": "Bang",
+        "total": 1894893,
+        "daily": 122
+      },
+      {
+        "name": "Hood (feat. Leto)",
+        "total": 1891779,
+        "daily": 133
+      },
+      {
+        "name": "La rue dort ap",
+        "total": 1889019,
+        "daily": 296
+      },
+      {
+        "name": "G'en reviens pas",
+        "total": 1878036,
+        "daily": 341
+      },
+      {
+        "name": "Tchtouchouchou",
+        "total": 1874986,
+        "daily": 308
+      },
+      {
+        "name": "Décisions",
+        "total": 1870638,
+        "daily": 434
+      },
+      {
+        "name": "Crime",
+        "total": 1791768,
+        "daily": 137
+      },
+      {
+        "name": "POCHES PLEINES",
+        "total": 1779823,
+        "daily": 1024
+      },
+      {
+        "name": "Rockstar",
+        "total": 1763699,
+        "daily": 305
+      },
+      {
+        "name": "Bisous à mes fils",
+        "total": 1760297,
+        "daily": 2045
+      },
+      {
+        "name": "Winter Melo Music",
+        "total": 1759872,
+        "daily": 34248
+      },
+      {
+        "name": "Empire",
+        "total": 1744914,
+        "daily": 628
+      },
+      {
+        "name": "Tellement",
+        "total": 1738166,
+        "daily": 2495
+      },
+      {
+        "name": "Tu brasses ou tu meurs",
+        "total": 1734224,
+        "daily": 482
+      },
+      {
+        "name": "Ends",
+        "total": 1720853,
+        "daily": 1477
+      },
+      {
+        "name": "AIME MOI",
+        "total": 1714725,
+        "daily": 1358
+      },
+      {
+        "name": "Chiffrer",
+        "total": 1703092,
+        "daily": 1455
+      },
+      {
+        "name": "Sal Mélodie",
+        "total": 1688739,
+        "daily": 1719
+      },
+      {
+        "name": "Double Bang 1",
+        "total": 1686934,
+        "daily": 307
+      },
+      {
+        "name": "Gang Gang",
+        "total": 1684370,
+        "daily": 300
+      },
+      {
+        "name": "GOÛT AMER",
+        "total": 1655245,
+        "daily": 2003
+      },
+      {
+        "name": "Jump dans la Porsche",
+        "total": 1654555,
+        "daily": 130
+      },
+      {
+        "name": "Un peu d’amour (feat. Leto)",
+        "total": 1619679,
+        "daily": 221
+      },
+      {
+        "name": "Jeune papa",
+        "total": 1601584,
+        "daily": 166
+      },
+      {
+        "name": "La capitale est sous contrôle",
+        "total": 1585944,
+        "daily": 228
+      },
+      {
+        "name": "Koke",
+        "total": 1577274,
+        "daily": 288
+      },
+      {
+        "name": "Libérez mes gars",
+        "total": 1568601,
+        "daily": 321
+      },
+      {
+        "name": "Guedro remontée",
+        "total": 1560218,
+        "daily": 311
+      },
+      {
+        "name": "Parle en cash",
+        "total": 1527316,
+        "daily": 202
+      },
+      {
+        "name": "Trou noir",
+        "total": 1500953,
+        "daily": 129
+      },
+      {
+        "name": "Je m'en souviens",
+        "total": 1490098,
+        "daily": 403
+      },
+      {
+        "name": "Tout est bon",
+        "total": 1482643,
+        "daily": 111
+      },
+      {
+        "name": "Je me demande",
+        "total": 1479672,
+        "daily": 448
+      },
+      {
+        "name": "Charbon & Diamant",
+        "total": 1475200,
+        "daily": 3151
+      },
+      {
+        "name": "Un monde imparfait",
+        "total": 1473723,
+        "daily": 232
+      },
+      {
+        "name": "⁠THUG CEREMONY",
+        "total": 1471077,
+        "daily": 907
+      },
+      {
+        "name": "Ghetto",
+        "total": 1427643,
+        "daily": 224
+      },
+      {
+        "name": "C’est des oufs (feat. Kepler & Tvslym)",
+        "total": 1423001,
+        "daily": 583
+      },
+      {
+        "name": "Double Bang 4",
+        "total": 1388542,
+        "daily": 260
+      },
+      {
+        "name": "NBA",
+        "total": 1369311,
+        "daily": 1022
+      },
+      {
+        "name": "Double Bang 3",
+        "total": 1319337,
+        "daily": 277
+      },
+      {
+        "name": "CHÈVRE GOAT NTABA - GRM x yard",
+        "total": 1303981,
+        "daily": 5226
+      },
+      {
+        "name": "On ira loin - Extrait de la BO de « En Passant Pécho »",
+        "total": 1290394,
+        "daily": 103
+      },
+      {
+        "name": "Palpe du papel",
+        "total": 1249846,
+        "daily": 433
+      },
+      {
+        "name": "One love",
+        "total": 1233995,
+        "daily": 258
+      },
+      {
+        "name": "Hall Black",
+        "total": 1229705,
+        "daily": 90
+      },
+      {
+        "name": "Pluton",
+        "total": 1218011,
+        "daily": 408
+      },
+      {
+        "name": "10 BOUTEILLES DE CHAMP",
+        "total": 1212599,
+        "daily": 969
+      },
+      {
+        "name": "DÉCHARGER",
+        "total": 1201480,
+        "daily": 742
+      },
+      {
+        "name": "Double Bang 2",
+        "total": 1196450,
+        "daily": 226
+      },
+      {
+        "name": "Jusqu'aux étoiles",
+        "total": 1189855,
+        "daily": 282
+      },
+      {
+        "name": "Life",
+        "total": 1180633,
+        "daily": 189
+      },
+      {
+        "name": "Cupidon",
+        "total": 1156169,
+        "daily": 184
+      },
+      {
+        "name": "P.I.M.P.",
+        "total": 1154268,
+        "daily": 270
+      },
+      {
+        "name": "Tu ne vois pas",
+        "total": 1149561,
+        "daily": 328
+      },
+      {
+        "name": "Zim Zima",
+        "total": 1149087,
+        "daily": 1002
+      },
+      {
+        "name": "TRAHISON POUR DU PAPERS",
+        "total": 1148973,
+        "daily": 1093
+      },
+      {
+        "name": "REDFLAG (feat. Leto)",
+        "total": 1135650,
+        "daily": 4119
+      },
+      {
+        "name": "PAS BESOIN D'AMOUR",
+        "total": 1089441,
+        "daily": 1804
+      },
+      {
+        "name": "Mais ça va",
+        "total": 1088037,
+        "daily": 141
+      },
+      {
+        "name": "Tout ira mieux",
+        "total": 1080021,
+        "daily": 509
+      },
+      {
+        "name": "Gangsta Paradise",
+        "total": 1077409,
+        "daily": 131
+      },
+      {
+        "name": "Money Amor",
+        "total": 1076568,
+        "daily": 241
+      },
+      {
+        "name": "Quartier chaud",
+        "total": 1066004,
+        "daily": 471
+      },
+      {
+        "name": "Bendo",
+        "total": 1044128,
+        "daily": 557
+      },
+      {
+        "name": "Pas assez",
+        "total": 1040449,
+        "daily": 105
+      },
+      {
+        "name": "PILENLI",
+        "total": 1033439,
+        "daily": 625
+      },
+      {
+        "name": "PARCE QUE JE NE T'AIME PLUS",
+        "total": 1028251,
+        "daily": 370
+      },
+      {
+        "name": "JE ME SENS BEAUCOUP MIEUX",
+        "total": 1027709,
+        "daily": 492
+      },
+      {
+        "name": "17 MOOD",
+        "total": 1025500,
+        "daily": 423
+      },
+      {
+        "name": "JEUNE ET AMBITIEUX",
+        "total": 1015774,
+        "daily": 1584
+      },
+      {
+        "name": "On bégaie pas",
+        "total": 983499,
+        "daily": 95
+      },
+      {
+        "name": "SOUS LE SUN",
+        "total": 965770,
+        "daily": 844
+      },
+      {
+        "name": "ON VA LES ÉTEINDRE",
+        "total": 965651,
+        "daily": 710
+      },
+      {
+        "name": "Jay-Z Beyonce (feat. Leto)",
+        "total": 964360,
+        "daily": 199
+      },
+      {
+        "name": "Jeunes et ambitieux",
+        "total": 941071,
+        "daily": 153
+      },
+      {
+        "name": "POUR SURVIVRE",
+        "total": 940811,
+        "daily": 540
+      },
+      {
+        "name": "Grosse fumée gros flingue",
+        "total": 904571,
+        "daily": 80
+      },
+      {
+        "name": "Petit à Petit",
+        "total": 900038,
+        "daily": 641
+      },
+      {
+        "name": "RAMBO",
+        "total": 898075,
+        "daily": 365
+      },
+      {
+        "name": "BEDO DU MATIN",
+        "total": 888350,
+        "daily": 661
+      },
+      {
+        "name": "EN PÉTARD",
+        "total": 885110,
+        "daily": 456
+      },
+      {
+        "name": "Lady Gaga",
+        "total": 878014,
+        "daily": 97
+      },
+      {
+        "name": "Otage",
+        "total": 857990,
+        "daily": 1008
+      },
+      {
+        "name": "Si t'es mon poto",
+        "total": 850137,
+        "daily": 72
+      },
+      {
+        "name": "RORONOA ZORO",
+        "total": 825930,
+        "daily": 927
+      },
+      {
+        "name": "Naomi",
+        "total": 812938,
+        "daily": 2578
+      },
+      {
+        "name": "Trap House",
+        "total": 809185,
+        "daily": 102
+      },
+      {
+        "name": "COUP DE FLAMME",
+        "total": 775064,
+        "daily": 523
+      },
+      {
+        "name": "QTVOR",
+        "total": 773678,
+        "daily": 3137
+      },
+      {
+        "name": "AGRIPPE TON GUN",
+        "total": 738257,
+        "daily": 405
+      },
+      {
+        "name": "BM OU MERCO",
+        "total": 712671,
+        "daily": 541
+      },
+      {
+        "name": "TU RÉALISES",
+        "total": 698676,
+        "daily": 511
+      },
+      {
+        "name": "L'ESCALIER",
+        "total": 640938,
+        "daily": 452
+      },
+      {
+        "name": "Cochonne",
+        "total": 604840,
+        "daily": 75
+      },
+      {
+        "name": "JUSTE UN PEU",
+        "total": 600747,
+        "daily": 234
+      },
+      {
+        "name": "Give My Money (feat. Leto & NSG)",
+        "total": 582584,
+        "daily": 257
+      },
+      {
+        "name": "SOLD OUT",
+        "total": 550006,
+        "daily": 262
+      },
+      {
+        "name": "FEMME FONTAINE",
+        "total": 516561,
+        "daily": 621
+      },
+      {
+        "name": "SONIC",
+        "total": 513386,
+        "daily": 625
+      },
+      {
+        "name": "BIMBO",
+        "total": 492358,
+        "daily": 344
+      },
+      {
+        "name": "OPÉRATIONNEL",
+        "total": 472298,
+        "daily": 951
+      },
+      {
+        "name": "Sugar Daddy (feat. Leto & Guy2Bezbar)",
+        "total": 469689,
+        "daily": 71
+      },
+      {
+        "name": "WINDOW SHOPPER (feat. Leto)",
+        "total": 443258,
+        "daily": 88
+      },
+      {
+        "name": "D1GRI (feat. Leto)",
+        "total": 438434,
+        "daily": 4382
+      },
+      {
+        "name": "POCKET FULL",
+        "total": 436308,
+        "daily": 267
+      },
+      {
+        "name": "Pineapple, Pt. 2",
+        "total": 429136,
+        "daily": 28722
+      },
+      {
+        "name": "Bad Bitch",
+        "total": 421648,
+        "daily": 12
+      },
+      {
+        "name": "Coup dur",
+        "total": 384121,
+        "daily": 69
+      },
+      {
+        "name": "Copa",
+        "total": 314220,
+        "daily": 454
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 1299261,
+    "topTracks": [
+      {
+        "title": "Pineapple",
+        "rank": 997123
+      },
+      {
+        "title": "Lululemon",
+        "rank": 994468
+      },
+      {
+        "title": "Chérie coco",
+        "rank": 962346
+      },
+      {
+        "title": "Macaroni (feat. Ninho)",
+        "rank": 926780
+      },
+      {
+        "title": "Busy",
+        "rank": 935476
+      },
+      {
+        "title": "Ballon D'or",
+        "rank": 922774
+      },
+      {
+        "title": "Connexion Macabre",
+        "rank": 891694
+      },
+      {
+        "title": "Tes parents (feat. Ninho)",
+        "rank": 885909
+      },
+      {
+        "title": "BOUGE",
+        "rank": 889592
+      },
+      {
+        "title": "MATHÉMATIQUE",
+        "rank": 892679
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 413916
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 159833
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 158889
+    },
+    {
+      "city": "Abidjan",
+      "country": "CI",
+      "listeners": 129465
+    },
+    {
+      "city": "Lille",
+      "country": "FR",
+      "listeners": 87629
+    }
+  ]
+}

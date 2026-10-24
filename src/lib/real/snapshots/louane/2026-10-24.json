@@ -1,0 +1,724 @@
+{
+  "date": "2026-10-24",
+  "capturedAt": "2026-10-24T00:58:31.949Z",
+  "spotify": {
+    "monthlyListeners": 2231233,
+    "followers": 1653053,
+    "topTracks": [
+      {
+        "name": "Avenir - Radio Edit",
+        "spotifyId": "5iWMMihPvhjDTXME2aO8Sy",
+        "playcount": 111266556
+      },
+      {
+        "name": "Secret",
+        "spotifyId": "7dISpxgINJOQSuXUTEfB9x",
+        "playcount": 88593814
+      },
+      {
+        "name": "Jour 1",
+        "spotifyId": "2SsYn9MxSz0Fxbzy99wTe1",
+        "playcount": 75330191
+      },
+      {
+        "name": "Derrière le brouillard",
+        "spotifyId": "6r6nk82xSKVf9SoJTY1w2p",
+        "playcount": 65100046
+      },
+      {
+        "name": "maman",
+        "spotifyId": "1FsIoCTWHx6lB0f3PgYdtz",
+        "playcount": 32238976
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 1145068345,
+    "dailyStreams": 273180,
+    "tracks": [
+      {
+        "name": "Avenir - Radio Edit",
+        "total": 111050820,
+        "daily": 25730
+      },
+      {
+        "name": "It Won’t Kill Ya",
+        "total": 88964834,
+        "daily": 4178
+      },
+      {
+        "name": "Secret",
+        "total": 88420307,
+        "daily": 21747
+      },
+      {
+        "name": "Jour 1",
+        "total": 75169025,
+        "daily": 19367
+      },
+      {
+        "name": "Si t'étais là",
+        "total": 65546484,
+        "daily": 15356
+      },
+      {
+        "name": "Derrière le brouillard",
+        "total": 64964643,
+        "daily": 16165
+      },
+      {
+        "name": "Je vole",
+        "total": 59742763,
+        "daily": 10435
+      },
+      {
+        "name": "On était beau",
+        "total": 53254140,
+        "daily": 12274
+      },
+      {
+        "name": "Tissues (with Louane) - French Version",
+        "total": 49537445,
+        "daily": 10653
+      },
+      {
+        "name": "Aimer à mort",
+        "total": 45090158,
+        "daily": 12273
+      },
+      {
+        "name": "Pardonne-moi",
+        "total": 33837609,
+        "daily": 5184
+      },
+      {
+        "name": "maman",
+        "total": 32121965,
+        "daily": 14644
+      },
+      {
+        "name": "La mer est calme",
+        "total": 30417751,
+        "daily": 7849
+      },
+      {
+        "name": "Donne-moi ton cœur",
+        "total": 26279275,
+        "daily": 2516
+      },
+      {
+        "name": "Les étoiles",
+        "total": 22279594,
+        "daily": 5318
+      },
+      {
+        "name": "la pluie",
+        "total": 22097427,
+        "daily": 5714
+      },
+      {
+        "name": "Avenir",
+        "total": 19464150,
+        "daily": 10010
+      },
+      {
+        "name": "No",
+        "total": 16302526,
+        "daily": 3341
+      },
+      {
+        "name": "Midi sur novembre",
+        "total": 15566812,
+        "daily": 1739
+      },
+      {
+        "name": "Orchestra - 20th Anniversary Version",
+        "total": 10700143,
+        "daily": 4940
+      },
+      {
+        "name": "Le bateau coule",
+        "total": 9156028,
+        "daily": 1645
+      },
+      {
+        "name": "Immobile",
+        "total": 7729020,
+        "daily": 570
+      },
+      {
+        "name": "Tornade",
+        "total": 6835129,
+        "daily": 487
+      },
+      {
+        "name": "Désolée",
+        "total": 6620674,
+        "daily": 967
+      },
+      {
+        "name": "Chiens",
+        "total": 6370675,
+        "daily": 6557
+      },
+      {
+        "name": "La fille",
+        "total": 5937540,
+        "daily": 2162
+      },
+      {
+        "name": "Alien",
+        "total": 5912281,
+        "daily": 1587
+      },
+      {
+        "name": "Tourne",
+        "total": 5833648,
+        "daily": 524
+      },
+      {
+        "name": "Jeune",
+        "total": 5605289,
+        "daily": 439
+      },
+      {
+        "name": "Nos secrets",
+        "total": 5374838,
+        "daily": 790
+      },
+      {
+        "name": "Santa Claus Is Coming To Town",
+        "total": 5369450,
+        "daily": 55
+      },
+      {
+        "name": "Toute ma vie",
+        "total": 5089324,
+        "daily": 704
+      },
+      {
+        "name": "Jour de pluie",
+        "total": 4847688,
+        "daily": 1025
+      },
+      {
+        "name": "La mère à Titi",
+        "total": 4810223,
+        "daily": 861
+      },
+      {
+        "name": "Tu m’as dit",
+        "total": 4664912,
+        "daily": 1915
+      },
+      {
+        "name": "Capitaine (feat. Styleto)",
+        "total": 4631025,
+        "daily": 956
+      },
+      {
+        "name": "Chambre 12",
+        "total": 4473113,
+        "daily": 438
+      },
+      {
+        "name": "Les Montgolfières",
+        "total": 3849112,
+        "daily": 1162
+      },
+      {
+        "name": "Ecchymoses",
+        "total": 3766933,
+        "daily": 463
+      },
+      {
+        "name": "Dans ma tête",
+        "total": 3766207,
+        "daily": 989
+      },
+      {
+        "name": "soleil",
+        "total": 3592530,
+        "daily": 1777
+      },
+      {
+        "name": "Midi sur novembre",
+        "total": 3180595,
+        "daily": 216
+      },
+      {
+        "name": "Nuit pourpre",
+        "total": 2944904,
+        "daily": 245
+      },
+      {
+        "name": "Jeune (j’ai envie)",
+        "total": 2834906,
+        "daily": 305
+      },
+      {
+        "name": "Non-sens",
+        "total": 2808149,
+        "daily": 212
+      },
+      {
+        "name": "Incontrôlable",
+        "total": 2751296,
+        "daily": 347
+      },
+      {
+        "name": "Tranquille",
+        "total": 2729286,
+        "daily": 230
+      },
+      {
+        "name": "Sans arrêt",
+        "total": 2663283,
+        "daily": 308
+      },
+      {
+        "name": "Lego",
+        "total": 2642529,
+        "daily": 188
+      },
+      {
+        "name": "Pour oublier l’amour",
+        "total": 2625250,
+        "daily": 251
+      },
+      {
+        "name": "Nous",
+        "total": 2590794,
+        "daily": 223
+      },
+      {
+        "name": "Secret - sad orchestra",
+        "total": 2515113,
+        "daily": 1673
+      },
+      {
+        "name": "Aidez-moi",
+        "total": 2494424,
+        "daily": 1718
+      },
+      {
+        "name": "Stp",
+        "total": 2421217,
+        "daily": 617
+      },
+      {
+        "name": "Je me demande (feat. Louane)",
+        "total": 2329398,
+        "daily": 2373
+      },
+      {
+        "name": "When We Go Home",
+        "total": 2304661,
+        "daily": 154
+      },
+      {
+        "name": "Du courage",
+        "total": 2194755,
+        "daily": 196
+      },
+      {
+        "name": "La fuite",
+        "total": 2101396,
+        "daily": 151
+      },
+      {
+        "name": "Blonde",
+        "total": 2073202,
+        "daily": 189
+      },
+      {
+        "name": "Tourne - Radio Edit",
+        "total": 2070507,
+        "daily": 296
+      },
+      {
+        "name": "Donne-moi ton co3ur",
+        "total": 2002215,
+        "daily": 265
+      },
+      {
+        "name": "Poésie indécise",
+        "total": 2001909,
+        "daily": 142
+      },
+      {
+        "name": "Rester seule",
+        "total": 1978589,
+        "daily": 269
+      },
+      {
+        "name": "A quoi tu penses",
+        "total": 1902144,
+        "daily": 454
+      },
+      {
+        "name": "Peut-être",
+        "total": 1874213,
+        "daily": 157
+      },
+      {
+        "name": "Chambre 12 - Radio Edit",
+        "total": 1771224,
+        "daily": 118
+      },
+      {
+        "name": "Notre amour boit la tasse",
+        "total": 1759631,
+        "daily": 184
+      },
+      {
+        "name": "A quoi tu penses vraiment",
+        "total": 1629165,
+        "daily": 373
+      },
+      {
+        "name": "Fais le bien",
+        "total": 1528640,
+        "daily": 88
+      },
+      {
+        "name": "conduire",
+        "total": 1515238,
+        "daily": 7018
+      },
+      {
+        "name": "Tu me manques",
+        "total": 1506116,
+        "daily": 464
+      },
+      {
+        "name": "A l’autre",
+        "total": 1482620,
+        "daily": 189
+      },
+      {
+        "name": "Avant",
+        "total": 1470960,
+        "daily": 366
+      },
+      {
+        "name": "Hey Beautiful (with Louane & Tiny Habits)",
+        "total": 1392769,
+        "daily": 886
+      },
+      {
+        "name": "Comment Faire",
+        "total": 1257780,
+        "daily": 109
+      },
+      {
+        "name": "Pleure",
+        "total": 1233607,
+        "daily": 100
+      },
+      {
+        "name": "J'peux pas",
+        "total": 1230948,
+        "daily": 227
+      },
+      {
+        "name": "Songes",
+        "total": 1152597,
+        "daily": 94
+      },
+      {
+        "name": "Sans ta voix",
+        "total": 1090269,
+        "daily": 265
+      },
+      {
+        "name": "Love",
+        "total": 1053132,
+        "daily": 123
+      },
+      {
+        "name": "douce",
+        "total": 1037954,
+        "daily": 679
+      },
+      {
+        "name": "3919",
+        "total": 868308,
+        "daily": 105
+      },
+      {
+        "name": "maman - acoustique",
+        "total": 793486,
+        "daily": 200
+      },
+      {
+        "name": "et si",
+        "total": 721655,
+        "daily": 428
+      },
+      {
+        "name": "toi",
+        "total": 711100,
+        "daily": 456
+      },
+      {
+        "name": "souvenirs",
+        "total": 696378,
+        "daily": 551
+      },
+      {
+        "name": "Nuages",
+        "total": 688698,
+        "daily": 195
+      },
+      {
+        "name": "Les excuses",
+        "total": 656008,
+        "daily": 172
+      },
+      {
+        "name": "rien ne dure",
+        "total": 631434,
+        "daily": 271
+      },
+      {
+        "name": "My Own Beat (feat. Clean Bandit)",
+        "total": 607644,
+        "daily": 91
+      },
+      {
+        "name": "Secret - Session rue Boyer",
+        "total": 596315,
+        "daily": 122
+      },
+      {
+        "name": "Ta peau",
+        "total": 585620,
+        "daily": 66
+      },
+      {
+        "name": "monde",
+        "total": 570792,
+        "daily": 227
+      },
+      {
+        "name": "Tu m'as dit - P3gase remix",
+        "total": 560678,
+        "daily": 171
+      },
+      {
+        "name": "Mademoiselle tout le monde",
+        "total": 554172,
+        "daily": 54
+      },
+      {
+        "name": "solo",
+        "total": 536409,
+        "daily": 513
+      },
+      {
+        "name": "reste",
+        "total": 530713,
+        "daily": 245
+      },
+      {
+        "name": "Parano",
+        "total": 510919,
+        "daily": 111
+      },
+      {
+        "name": "quand tu mens",
+        "total": 510693,
+        "daily": 258
+      },
+      {
+        "name": "It's Beginning To Look A Lot Like Christmas",
+        "total": 510244,
+        "daily": 12
+      },
+      {
+        "name": "Gabrielle",
+        "total": 487695,
+        "daily": 400
+      },
+      {
+        "name": "Jour 1 - Birthday Party Version",
+        "total": 483038,
+        "daily": 118
+      },
+      {
+        "name": "maman - English Version",
+        "total": 464493,
+        "daily": 150
+      },
+      {
+        "name": "je pleure",
+        "total": 461118,
+        "daily": 296
+      },
+      {
+        "name": "sens",
+        "total": 455419,
+        "daily": 276
+      },
+      {
+        "name": "Le bateau coule - Session rue Boyer",
+        "total": 432928,
+        "daily": 114
+      },
+      {
+        "name": "La fille - Session rue Boyer",
+        "total": 421062,
+        "daily": 95
+      },
+      {
+        "name": "demain",
+        "total": 419406,
+        "daily": 172
+      },
+      {
+        "name": "Les Gens",
+        "total": 406066,
+        "daily": 46
+      },
+      {
+        "name": "tout pour toi",
+        "total": 399747,
+        "daily": 1278
+      },
+      {
+        "name": "yeux",
+        "total": 388150,
+        "daily": 7154
+      },
+      {
+        "name": "Pardonne-moi - Acoustique version",
+        "total": 375587,
+        "daily": 99
+      },
+      {
+        "name": "Avant - Session rue Boyer",
+        "total": 373087,
+        "daily": 89
+      },
+      {
+        "name": "Secret - English version",
+        "total": 349420,
+        "daily": 93
+      },
+      {
+        "name": "tu l’sais déjà",
+        "total": 340588,
+        "daily": 153
+      },
+      {
+        "name": "Pour oublier l’amour - La gaminerie Remix",
+        "total": 318068,
+        "daily": 19
+      },
+      {
+        "name": "kiss or kill her",
+        "total": 317033,
+        "daily": 150
+      },
+      {
+        "name": "Secret - Instrumental",
+        "total": 278812,
+        "daily": 54
+      },
+      {
+        "name": "Nuages - Acoustique version",
+        "total": 249850,
+        "daily": 72
+      },
+      {
+        "name": "Thérapie",
+        "total": 218684,
+        "daily": 25
+      },
+      {
+        "name": "C’est Nouveau",
+        "total": 199450,
+        "daily": 29
+      },
+      {
+        "name": "maman - live from stade de france",
+        "total": 196483,
+        "daily": 82
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 1993324,
+    "topTracks": [
+      {
+        "title": "Secret",
+        "rank": 849481
+      },
+      {
+        "title": "Derrière le brouillard",
+        "rank": 865504
+      },
+      {
+        "title": "Chiens",
+        "rank": 835407
+      },
+      {
+        "title": "maman",
+        "rank": 858309
+      },
+      {
+        "title": "Jour 1",
+        "rank": 856224
+      },
+      {
+        "title": "On était beau",
+        "rank": 808460
+      },
+      {
+        "title": "mode avion",
+        "rank": 830706
+      },
+      {
+        "title": "Si t'étais là",
+        "rank": 831185
+      },
+      {
+        "title": "Orchestra (20th Anniversary Version)",
+        "rank": 800338
+      },
+      {
+        "title": "la pluie",
+        "rank": 799692
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 90006
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 38982
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 31006
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 30641
+    },
+    {
+      "city": "Berlin",
+      "country": "DE",
+      "listeners": 28348
+    }
+  ]
+}

@@ -221,9 +221,8 @@ export const ALL_ARTISTS: Artist[] = [
     deezerId: "53565962",
   },
   {
-    /* Pop / variété. La chaîne YouTube est INCERTAINE (recherche du 23/10, non confirmée par
-       une page officielle) : vérifier le titre de chaîne dans le premier relevé (Task 4, Step 3)
-       et vider le champ si ce n'est pas elle. */
+    /* Pop / variété. Chaîne YouTube non identifiée (l'id trouvé le 23/10 n'a rien donné au
+       relevé du 24/10, retiré). */
     id: "louane",
     name: "Louane",
     genre: "Pop / variété",
@@ -240,7 +239,6 @@ export const ALL_ARTISTS: Artist[] = [
     daId: "da-variete",
     spotifyId: "7wjeXCtRND2ZdKfMJFu6JC",
     deezerId: "4453455",
-    youtubeChannelId: "UCxROfILs1ORiiUWCDdkfqaA",
   },
   {
     /* R&B / soul, Paris. Pas de chaîne YouTube identifiée. */
@@ -377,6 +375,33 @@ const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
       tracks: ["FADE UP", "Avion de chasse"] },
     { id: "zp-cites", title: "Cités de France", type: "ep", releaseDate: "2022-06-10",
       tracks: ["Cités de France", "Juste une minute", "Blood"] },
+  ],
+  /* Titres RELEVÉS le 2026-10-24 sur la page Spotify (Task 4 du plan Universal v2). Projets et dates :
+     HYPOTHÈSES de démonstration. */
+  leto: [
+    { id: "le-releve", title: "Titres les plus écoutés", type: "album", releaseDate: "2025-10-10",
+      tracks: ["Pineapple", "Lululemon", "Macaroni (feat. Ninho)", "Ballon D'or", "Chérie coco"] },
+  ],
+  dakeez: [
+    { id: "dk-releve", title: "Titres les plus écoutés", type: "ep", releaseDate: "2025-11-07",
+      tracks: ["CHAMPAGNE CHERRY", "AMOUR & SACRIFICE PART.II", "SUPERSTAR"] },
+  ],
+  louane: [
+    { id: "lo-releve", title: "Titres les plus écoutés", type: "album", releaseDate: "2025-02-14",
+      tracks: ["Avenir", "Secret", "Jour 1", "Derrière le brouillard", "maman"] },
+  ],
+  wamen: [
+    { id: "wa-releve", title: "Titres les plus écoutés", type: "ep", releaseDate: "2025-09-19",
+      tracks: ["Discipline", "Mon autre", "Douter"] },
+  ],
+  /* Compositeurs : ce qu'ils sortent SOUS LEUR NOM ; l'essentiel est dans PLACEMENTS. */
+  "gustave-rudman": [
+    { id: "gr-releve", title: "Sous son nom", type: "ep", releaseDate: "2024-05-17",
+      tracks: ["The Lake", "Two Shadows", "Euphoria Funfair"] },
+  ],
+  "brice-davoli": [
+    { id: "bd-releve", title: "Bandes originales", type: "album", releaseDate: "2024-09-06",
+      tracks: ["Castle In The Sky", "Amore addio", "Love Stream"] },
   ],
   kiko: [
     { id: "ki-golden-boy", title: "Golden Boy", type: "ep", releaseDate: "2025-11-21",

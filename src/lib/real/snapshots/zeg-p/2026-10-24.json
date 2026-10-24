@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-24",
+  "capturedAt": "2026-10-24T00:58:11.477Z",
+  "spotify": {
+    "monthlyListeners": 929420,
+    "followers": 40175,
+    "topTracks": [
+      {
+        "name": "FADE UP",
+        "spotifyId": "4ZpIuzx91EAPK3VimONbfB",
+        "playcount": 149797321
+      },
+      {
+        "name": "Avion de chasse",
+        "spotifyId": "3dDTJbtHZhsbe426l5Msk1",
+        "playcount": 10154497
+      },
+      {
+        "name": "Blood",
+        "spotifyId": "5snMfEYZCwQBGsqlpB6cis",
+        "playcount": 761821
+      },
+      {
+        "name": "Cités de France",
+        "spotifyId": "57BMICnS6fDk1Ynh5e5zvj",
+        "playcount": 7291499
+      },
+      {
+        "name": "Juste une minute",
+        "spotifyId": "2yiIfIO1JYMiXebaBEodWD",
+        "playcount": 5853054
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 175478882,
+    "dailyStreams": 86175,
+    "tracks": [
+      {
+        "name": "FADE UP",
+        "total": 148916497,
+        "daily": 41182
+      },
+      {
+        "name": "Avion de chasse",
+        "total": 9383640,
+        "daily": 33256
+      },
+      {
+        "name": "Cités de France",
+        "total": 7171442,
+        "daily": 3739
+      },
+      {
+        "name": "Juste une minute",
+        "total": 5820183,
+        "daily": 1522
+      },
+      {
+        "name": "Tout gâcher",
+        "total": 3388328,
+        "daily": 1107
+      },
+      {
+        "name": "Blood",
+        "total": 645544,
+        "daily": 5295
+      },
+      {
+        "name": "Personne d'autre",
+        "total": 153248,
+        "daily": 74
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 22895,
+    "topTracks": [
+      {
+        "title": "Avion de chasse",
+        "rank": 931643
+      },
+      {
+        "title": "FADE UP",
+        "rank": 858347
+      },
+      {
+        "title": "Juste une minute",
+        "rank": 669826
+      },
+      {
+        "title": "Blood",
+        "rank": 667609
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 45429
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 20556
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 19701
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 15356
+    },
+    {
+      "city": "Lille",
+      "country": "FR",
+      "listeners": 9946
+    }
+  ]
+}
