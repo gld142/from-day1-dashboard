@@ -14,6 +14,8 @@ export type Tenant = {
   name: string;
   /** Marque de la sidebar et du menu mobile. */
   shortName: string;
+  /** Marque des pages publiques (porte /acces, connexion, inscription, espace). */
+  publicName: string;
   tagline: string;
   /** Co-marque (null = Day 1 seul). */
   logo: { text: string; bg: string; fg: string } | null;
@@ -30,6 +32,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
     id: "day1",
     name: "Day 1 Dashboard Pro",
     shortName: "From Day 1",
+    publicName: "Day 1 Pro",
     tagline: "Dashboard 360°",
     logo: null,
     excludedArtists: ["kiko"],
@@ -40,6 +43,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
     id: "universal",
     name: "Day One × Universal",
     shortName: "Day One × Universal",
+    publicName: "Day One × Universal",
     tagline: "Un dashboard par métier",
     logo: { text: "UNIVERSAL", bg: "#000000", fg: "#ffffff" },
     excludedArtists: ["dadju"],
@@ -61,6 +65,11 @@ export function tenantFor(raw: string | undefined): Tenant {
  * Next ne remplace la variable côté client que sous cette forme exacte.
  */
 export const TENANT: Tenant = tenantFor(process.env.NEXT_PUBLIC_TENANT);
+
+/** Titre d'une page publique : « <marque publique de la maison> — <page> ». */
+export function publicTitle(page: string, tenant: Tenant = TENANT): string {
+  return `${tenant.publicName} — ${page}`;
+}
 
 /** Retire de `list` les artistes exclus par la maison (ordre conservé). */
 export function excludeArtists<T extends { id: string }>(list: T[], tenant: Tenant = TENANT): T[] {

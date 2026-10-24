@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { publicTitle } from "@/lib/tenant";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
@@ -9,7 +10,7 @@ import { userDb } from "@/lib/supabase/server";
 import { openBillingPortal, signOut } from "./actions";
 import { AddArtistForm, ArtistActions, ClearPurchaseDraft, DangerZone, InviteForm, RemoveMemberButton, RevokeInvitationButton, WorkspaceKindForm } from "./forms";
 
-export const metadata: Metadata = { title: "Day 1 Pro — Mon espace", robots: { index: false } };
+export const metadata: Metadata = { title: publicTitle("Mon espace"), robots: { index: false } };
 
 const ROLE_LABEL: Record<string, string> = { owner: "Propriétaire", member: "Équipe", artist: "Artiste" };
 const STATUS_LABEL: Record<string, string> = {

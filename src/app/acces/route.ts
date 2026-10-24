@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { demoEnabled } from "@/lib/demo-mode";
+import { gateBrandHtml, gateTitle } from "@/lib/public-brand";
 import { GATE_COOKIE, GATE_PATH, isValidToken, tokenFor } from "@/lib/gate";
 
 /** Seules les adresses internes sont acceptées comme retour (pas de redirection ouverte). */
@@ -13,18 +14,18 @@ export function GET(request: NextRequest) {
   if (!demoEnabled()) return NextResponse.redirect(new URL("/connexion", request.url));
   const next = safeNext(request.nextUrl.searchParams.get("next"));
   const error = request.nextUrl.searchParams.has("e");
-  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>From Day 1 — Accès</title>
+  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(gateTitle())}</title>
 <style>
 body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0B0A12;color:#FAFAFE;font:16px/1.5 system-ui,-apple-system,sans-serif}
 form{width:min(360px,calc(100% - 32px));display:flex;flex-direction:column;gap:14px}
-h1{font-size:22px;margin:0 0 4px;font-weight:600}p{margin:0;color:rgba(250,250,254,.6);font-size:14px}
+h1{font-size:22px;margin:0 0 4px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pill{border-radius:4px;padding:3px 8px;font-size:11px;font-weight:700;letter-spacing:.12em}p{margin:0;color:rgba(250,250,254,.6);font-size:14px}
 input{padding:14px 16px;border-radius:12px;border:1px solid rgba(250,250,254,.2);background:rgba(250,250,254,.06);color:inherit;font:inherit}
 input:focus{outline:2px solid #7B5CF0;outline-offset:2px}
 button{padding:14px;border:0;border-radius:999px;background:#7B5CF0;color:#fff;font:inherit;font-weight:500;cursor:pointer}
 .e{color:#ff8a8a}
 </style></head><body>
 <form method="post" action="${GATE_PATH}">
-<h1>Day 1 Pro</h1><p>Accès sur invitation pendant la phase pilote.</p>
+${gateBrandHtml()}<p>Accès sur invitation pendant la phase pilote.</p>
 <input type="password" name="password" placeholder="Mot de passe" autocomplete="current-password" autofocus required>
 <input type="hidden" name="next" value="${esc(next)}">
 ${error ? '<p class="e">Mot de passe incorrect.</p>' : ""}
