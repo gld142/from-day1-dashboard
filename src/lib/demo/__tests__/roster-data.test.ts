@@ -13,6 +13,7 @@ import {
 import { ARTIST_CATEGORIES, isArtistCategory } from "@/lib/demo/types";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
 import { TENANTS, type TenantId } from "@/lib/tenant";
+import { mentionsName } from "@/lib/__tests__/name-search";
 
 type Seed = { id: string; spotifyId?: string; deezerId?: string; youtubeChannelId?: string };
 const SEEDS: Seed[] = JSON.parse(readFileSync(new URL("../../../../scripts/artists.json", import.meta.url), "utf8"));
@@ -250,6 +251,8 @@ describe.each(Object.values(TENANTS))("maison $id : aucune table montrée ne nom
     const data = await loadHouse(tenant.id);
     const names = ALL_ARTISTS.filter((a) => tenant.excludedArtists.includes(a.id)).map((a) => a.name);
     expect(names).toHaveLength(tenant.excludedArtists.length);
+    // Témoin : la recherche trouve le nom là où il est (le roster complet).
+    for (const name of names) expect(mentionsName(JSON.stringify(ALL_ARTISTS), name), name).toBe(true);
     const tables = {
       ARTISTS: data.ARTISTS,
       PROJECTS: data.PROJECTS,
@@ -265,7 +268,7 @@ describe.each(Object.values(TENANTS))("maison $id : aucune table montrée ne nom
     for (const [table, rows] of Object.entries(tables)) {
       const text = JSON.stringify(rows);
       expect(text.length, `${table} vide : le test ne lirait rien`).toBeGreaterThan(2);
-      for (const name of names) expect(text, `${table} nomme ${name}`).not.toMatch(new RegExp(`\\b${name}\\b`, "i"));
+      for (const name of names) expect(mentionsName(text, name), `${table} nomme ${name}`).toBe(false);
     }
   });
 });

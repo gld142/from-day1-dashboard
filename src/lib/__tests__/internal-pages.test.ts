@@ -12,7 +12,7 @@ import {
   navForPersona,
   sectionsForTenant,
 } from "@/lib/nav";
-import { getMessages, internalPageMessages, rootClientMessages } from "@/messages";
+import { getMessages, internalPageMessages, pageMessages, rootClientMessages } from "@/messages";
 import { TENANTS, type TenantId } from "@/lib/tenant";
 
 /* Les fournisseurs next-intl lisent la langue de la requête (`getLocale`, next-intl/server) :
@@ -20,8 +20,11 @@ import { TENANTS, type TenantId } from "@/lib/tenant";
 const requestLocale = vi.hoisted(() => ({ value: "fr" as "fr" | "en" }));
 vi.mock("next-intl/server", () => ({ getLocale: async () => requestLocale.value }));
 
-/** Les marqueurs du pitch interne : le texte À PROPOS d'Universal (fr, en) et le nom du contact. */
-const PITCH = /Universal détient la donnée|Universal holds the data|Bertil/;
+/** Le texte du pitch À PROPOS d'Universal, tel qu'il est écrit (fr, en : onboardings.json). Un
+    marqueur qui ne correspond à aucun texte ne peut pas échouer : le témoin plus bas le vérifie. */
+const PITCH_TEXT = /Universal détient la donnée|Universal holds the data/;
+/** Les marqueurs du pitch interne : son texte et le nom de son contact. */
+const PITCH = new RegExp(`${PITCH_TEXT.source}|Bertil`);
 
 const flat = (sections: ReturnType<typeof navForPersona>) => sections.flatMap((s) => s.items.map((i) => i.href));
 
@@ -86,7 +89,15 @@ describe("getMessages — les textes des pages internes ne partent pas vers le n
         Object.keys(day1).filter((k) => k !== "onboardings" && k !== "comparatif").sort(),
       );
       for (const k of Object.keys(universal)) expect(universal[k], k).toBe(day1[k]);
-      expect(JSON.stringify(universal)).not.toMatch(/Universal détient la donnée|Universal owns the data/);
+      expect(JSON.stringify(universal)).not.toMatch(PITCH_TEXT);
+    });
+    /* Témoin du marqueur ci-dessus : jusqu'au 24/10 il cherchait « Universal owns the data », que
+       rien n'écrit (le texte anglais est « Universal holds the data ») — en anglais, il ne pouvait
+       pas échouer. Il doit trouver le pitch là où il est : la page /onboardings de la maison day1. */
+    it(`${locale} : témoin — le marqueur du pitch trouve son texte dans les messages de /onboardings (day1)`, () => {
+      expect(JSON.stringify(internalPageMessages(locale, ["onboardings"], TENANTS.day1))).toMatch(PITCH_TEXT);
+      expect(JSON.stringify(pageMessages(locale, ["onboardings"], TENANTS.day1))).toMatch(PITCH_TEXT);
+      expect(JSON.stringify(getMessages(locale, TENANTS.day1))).toMatch(PITCH_TEXT);
     });
   }
 });

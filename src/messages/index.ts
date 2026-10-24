@@ -157,12 +157,18 @@ const MESSAGES = {
 } as const;
 
 /**
+ * Les namespaces, clés de `MESSAGES` communes aux deux langues : les listes ci-dessous en sont
+ * typées (`satisfies`), une faute de frappe y échoue à `tsc` sur la ligne même de la liste.
+ */
+type Namespace = keyof (typeof MESSAGES)[Locale];
+
+/**
  * Namespaces lus SEULEMENT par les pages internes From Day 1 (nav.ts, `internal`) :
  * /comparatif (comparison-table) et /onboardings (partner-board, dont le pitch de Day 1
  * À PROPOS d'Universal). Namespaces « de page » (ci-dessous) ; une maison sans pages internes
  * (`tenant.internalPages`) ne les reçoit pas du tout, même côté serveur.
  */
-export const INTERNAL_NAMESPACES = ["comparatif", "onboardings"] as const;
+export const INTERNAL_NAMESPACES = ["comparatif", "onboardings"] as const satisfies readonly Namespace[];
 export type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
 
 /**
@@ -177,7 +183,7 @@ export type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
  *   namespace, bloc Believe compris, se lisait dans le HTML de /connexion et /inscription des deux
  *   maisons.
  */
-export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome"] as const;
+export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome"] as const satisfies readonly Namespace[];
 export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
 
 /**
