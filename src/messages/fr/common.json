@@ -10,6 +10,7 @@
     "switchTo": "Vue {role}",
     "viewingAs": "Vous voyez le dashboard comme : {name}",
     "jobTitle": "Mon métier",
+    "overview": "Vue d'ensemble",
     "chooseDa": "Je suis DA de…",
     "job": {
       "da": "DA",

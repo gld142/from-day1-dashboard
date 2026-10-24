@@ -55,8 +55,12 @@ export const ROLES: Record<JobRole, RoleConfig> = {
   },
 };
 
-/** Page d'arrivée : le DA arrive sur son roster déjà filtré. */
-export function roleLanding(role: JobRole, daId: string | null): string {
+/** Arrivée de la « Vue d'ensemble » (aucun rôle) : la vue structure neutre, tout le roster. */
+export const OVERVIEW_LANDING = "/pulse";
+
+/** Page d'arrivée : le DA arrive sur son roster déjà filtré ; sans rôle, la vue d'ensemble. */
+export function roleLanding(role: JobRole | null, daId: string | null): string {
+  if (!role) return OVERVIEW_LANDING;
   if (role === "da" && daId) return `/roster?da=${encodeURIComponent(daId)}`;
   return ROLES[role].landing;
 }

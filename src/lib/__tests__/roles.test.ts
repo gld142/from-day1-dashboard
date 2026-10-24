@@ -86,3 +86,18 @@ describe("modulesState — la paire que lit le hook des modules", () => {
     expect(modulesState("{}", null, ALL)).toEqual({ overrides: {}, hasOverrides: false });
   });
 });
+
+/* « Vue d'ensemble » (barre du haut, maison à rôles) : revenir à « aucun rôle » — la vue structure
+   neutre, tout le roster. Avant le 24/10/2026, le menu n'offrait aucun chemin retour : `setJobRole(null)`
+   n'était jamais appelé. */
+describe("vue d'ensemble — aucun rôle", () => {
+  it("arrivée sur /pulse, quel que soit le DA resté en mémoire", () => {
+    expect(roleLanding(null, null)).toBe("/pulse");
+    expect(roleLanding(null, "da-urbain")).toBe("/pulse");
+  });
+  it("navigation structure complète et périmètre tout le roster", () => {
+    expect(roleOverrides(null, ALL)).toEqual({});
+    expect(roleScope(null, null)).toEqual({ daId: null });
+    expect(modulesState("{}", null, ALL).overrides).toEqual({});
+  });
+});

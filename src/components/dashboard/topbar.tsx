@@ -10,6 +10,7 @@ import {
   Check,
   ChevronsUpDown,
   Languages,
+  LayoutDashboard,
   MicVocal,
   Moon,
   Sun,
@@ -70,8 +71,9 @@ export function Topbar() {
   } = useRole();
   const tr = useTranslations("roster");
   const router = useRouter();
-  /* Choisir un métier : l'état de rôle change ET on part sur la page d'arrivée du rôle (le DA : son roster filtré). */
-  const pickRole = (role: JobRole, nextDaId: string | null) => {
+  /* Choisir un métier : l'état de rôle change ET on part sur la page d'arrivée du rôle (le DA : son roster filtré).
+     `null` = « Vue d'ensemble » : aucun rôle, la vue structure neutre (tout le roster), arrivée sur /pulse. */
+  const pickRole = (role: JobRole | null, nextDaId: string | null) => {
     setJobRole(role, nextDaId);
     router.push(roleLanding(role, nextDaId));
   };
@@ -182,6 +184,11 @@ export function Topbar() {
                 <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
                   {t("roles.jobTitle")}
                 </DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => pickRole(null, null)} className="gap-2">
+                  <LayoutDashboard className="size-4" aria-hidden />
+                  <span className="flex-1">{t("roles.overview")}</span>
+                  {jobRole === null && <Check className="size-4 text-brand" aria-hidden />}
+                </DropdownMenuItem>
                 {JOB_ROLES.filter((r) => r !== "da").map((r) => (
                   <DropdownMenuItem key={r} onClick={() => pickRole(r, null)} className="gap-2">
                     <Briefcase className="size-4" aria-hidden />
