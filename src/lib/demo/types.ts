@@ -31,6 +31,16 @@ export type CareerStage = "emerging" | "developing" | "established" | "peak";
  */
 export type Provenance = "measured" | "declared" | "reconstructed" | "estimated" | "simulated";
 
+/** Catégorie de roster : un DA (directeur artistique) suit chaque catégorie (spec Universal v2, §2). */
+export const ARTIST_CATEGORIES = ["urbain", "variete", "compositeur"] as const;
+export type ArtistCategory = (typeof ARTIST_CATEGORIES)[number];
+
+export function isArtistCategory(v: string | null | undefined): v is ArtistCategory {
+  return (ARTIST_CATEGORIES as readonly string[]).includes(v ?? "");
+}
+
+export type DA = { id: string; name: string; category: ArtistCategory };
+
 export type Artist = {
   id: string;
   name: string;
@@ -58,6 +68,9 @@ export type Artist = {
   /** Éditeur qui le représente — null s'il est en auto-édition. */
   publisher?: { name: string; sharePct: number } | null;
   country: string;
+  category: ArtistCategory;
+  /** DA (directeur artistique) qui suit l'artiste — id de DAS. */
+  daId: string;
   /** Identifiants externes (artistes réels de la démo). */
   spotifyId?: string;
   deezerId?: string;

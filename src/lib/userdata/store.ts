@@ -263,6 +263,10 @@ export function userArtist(): Artist | null {
           : "emerging",
     day1Index: index,
     signedSince: d.months[0] ? `${d.months[0]}-01` : "2024-01-01",
+    // Client réel : pas de catégorie de roster ni de DA de démo. « urbain » est
+    // la valeur neutre du type ; le DA vide ne correspond à aucun filtre.
+    category: "urbain",
+    daId: "",
     dealType: "indé",
     country: "FR",
   };

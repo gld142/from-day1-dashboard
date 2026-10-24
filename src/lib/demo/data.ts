@@ -7,6 +7,7 @@
  */
 import type {
   Artist,
+  DA,
   Placement,
   Contract,
   EmergingArtist,
@@ -35,6 +36,20 @@ function listenersFromSnapshot(artistId: string, fallback: number): number {
 }
 
 /**
+ * Les DA de démo. Prénoms FICTIFS (à remplacer par les vrais si Gaël les donne) ;
+ * chaque artiste est rattaché au DA de sa catégorie.
+ */
+export const DAS: DA[] = [
+  { id: "da-urbain", name: "Inès M.", category: "urbain" },
+  { id: "da-variete", name: "Julien R.", category: "variete" },
+  { id: "da-compos", name: "Sofia K.", category: "compositeur" },
+];
+
+export function getDa(id: string): DA | null {
+  return DAS.find((d) => d.id === id) ?? null;
+}
+
+/**
  * Le roster réel de la démo (spec §6). Les chiffres d'audience viennent des
  * snapshots ; hue, initiales, index, dates de signature sont simulés.
  */
@@ -52,6 +67,8 @@ export const ARTISTS: Artist[] = [
     signedSince: "2017-05-19",
     dealType: "artiste",
     country: "FR",
+    category: "urbain",
+    daId: "da-urbain",
     spotifyId: "4sbXXFzEWJY2zsZjelerjX",
     deezerId: "4803754",
     youtubeChannelId: "UC8HMvOLE0etpO_eVjJ98bHA",
@@ -69,6 +86,8 @@ export const ARTISTS: Artist[] = [
     signedSince: "2023-03-10",
     dealType: "artiste",
     country: "FR",
+    category: "urbain",
+    daId: "da-urbain",
     spotifyId: "4P2HohWBtvSxxwabNDdYXN",
     deezerId: "194146027",
     youtubeChannelId: "UCv3rmdK3RqjN0PNkxJEfBwg",
@@ -88,6 +107,8 @@ export const ARTISTS: Artist[] = [
     kind: "performer",
     publisher: null,
     country: "FR",
+    category: "urbain",
+    daId: "da-urbain",
     spotifyId: "0naOCLau0NmL1kdFlbZAfr",
     deezerId: "68625462",
     youtubeChannelId: "UCzteqa2qTb6SqazU1MyHzUA",
@@ -110,6 +131,8 @@ export const ARTISTS: Artist[] = [
     kind: "composer",
     publisher: { name: "Day 1 Édition", sharePct: 25 },
     country: "FR",
+    category: "compositeur",
+    daId: "da-compos",
     spotifyId: "1rpxM2mBJnWdfPeieLDYOc",
     deezerId: "11809227",
     youtubeChannelId: "UC03zElk3Y0AQAuIJZ3GhnAw",
@@ -127,6 +150,8 @@ export const ARTISTS: Artist[] = [
     signedSince: "2025-01-15",
     dealType: "distribution",
     country: "TG",
+    category: "urbain",
+    daId: "da-urbain",
     spotifyId: "4P2zZ1OLqeeKDLXc34Yfsv",
     deezerId: "188212297",
     youtubeChannelId: "UClmZnCCKgupJOucmLOvm71A",
@@ -148,6 +173,8 @@ export const ARTISTS: Artist[] = [
     signedSince: "2019-06-01",
     dealType: "distribution",
     country: "MA",
+    category: "urbain",
+    daId: "da-urbain",
     spotifyId: "4BFLElxtBEdsdwGA1kHTsx",
     deezerId: "52463032",
     youtubeChannelId: "UCVG705xosVltZb52R0hHr_g",
