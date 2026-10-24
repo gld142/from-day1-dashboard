@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { ChevronDown, Menu, Sunrise } from "lucide-react";
 import { useModules } from "@/lib/userdata/use-modules";
 import { useNavCollapse } from "@/lib/nav-collapse";
+import { TENANT } from "@/lib/tenant";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +23,6 @@ export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
-  const tc = useTranslations("common");
   const { sections } = useModules();
   // Même choix qu'en barre latérale : ce que l'utilisateur replie d'un côté
   // reste replié de l'autre (même clé de stockage).
@@ -35,7 +35,7 @@ export function MobileNav() {
           variant="ghost"
           size="icon"
           className="lg:hidden"
-          aria-label={tc("app.name")}
+          aria-label={TENANT.shortName}
         >
           <Menu className="size-5" aria-hidden />
         </Button>
@@ -46,7 +46,7 @@ export function MobileNav() {
             <span className="flex size-6 items-center justify-center rounded-md bg-brand text-brand-foreground">
               <Sunrise className="size-3.5" aria-hidden />
             </span>
-            {tc("app.name")}
+            {TENANT.shortName}
           </SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100svh-3.5rem)] px-2 py-3">

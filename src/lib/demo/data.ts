@@ -18,10 +18,12 @@ import type {
 } from "./types";
 import { daysAgo, daysAhead, isoDay } from "./seed";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
+import { TENANT } from "@/lib/tenant";
 
+/** Le label de démo porte le nom de la maison : « Day 1 Dashboard Pro » ou « Day One × Universal ». */
 export const LABEL = {
-  id: "day1-dashboard-pro",
-  name: "Day 1 Dashboard Pro",
+  id: TENANT.id === "universal" ? "day-one-universal" : "day1-dashboard-pro",
+  name: TENANT.name,
   foundedYear: 2026,
 };
 

@@ -8,6 +8,7 @@ import { ChevronDown, Sunrise } from "lucide-react";
 import { useCustomer } from "@/lib/customer-mode";
 import { useModules } from "@/lib/userdata/use-modules";
 import { useNavCollapse } from "@/lib/nav-collapse";
+import { TENANT } from "@/lib/tenant";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -29,19 +30,24 @@ export function Sidebar() {
 
   return (
     <aside className="sticky top-0 hidden h-svh w-60 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex">
-      {/* Marque */}
+      {/* Marque — celle de la maison du build ; la co-marque s'affiche en pastille. */}
       <div className="flex h-14 items-center gap-2.5 px-4">
-        <span className="flex size-7 items-center justify-center rounded-lg bg-brand text-brand-foreground">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-brand text-brand-foreground">
           <Sunrise className="size-4" aria-hidden />
         </span>
-        <div className="leading-none">
-          <div className="font-heading text-[15px] font-semibold tracking-tight">
-            {tc("app.name")}
-          </div>
-          <div className="mt-0.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-            {tc("app.tagline")}
-          </div>
+        <div className="min-w-0 leading-none">
+          <div className="truncate font-heading text-[15px] font-semibold tracking-tight">{TENANT.shortName}</div>
+          <div className="mt-0.5 truncate text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{TENANT.tagline}</div>
         </div>
+        {TENANT.logo && (
+          <span
+            className="ml-auto shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold tracking-[0.12em]"
+            style={{ background: TENANT.logo.bg, color: TENANT.logo.fg }}
+            aria-label={`Co-marque ${TENANT.logo.text}`}
+          >
+            {TENANT.logo.text}
+          </span>
+        )}
       </div>
 
       {/* Le viewport Radix enveloppe le contenu dans un `display: table` qui

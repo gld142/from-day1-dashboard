@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { TENANT } from "@/lib/tenant";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -20,7 +21,7 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "From Day 1 — Dashboard 360°",
+  title: `${TENANT.name} — ${TENANT.tagline}`,
   description:
     "Streams, revenus, droits, contrats — tout le business d'un artiste, en live, en un seul endroit.",
 };

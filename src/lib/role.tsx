@@ -24,10 +24,12 @@ import {
   subscribeUserData,
   USER_ARTIST_ID,
 } from "@/lib/userdata/store";
+import { TENANT } from "@/lib/tenant";
 
 export type Persona = "artist" | "label";
 
-export const DEMO_ARTIST_ID = "dadju";
+/** L'artiste ouvert par défaut en persona artiste : celui de la maison (Dadju n'existe pas chez Universal). */
+export const DEMO_ARTIST_ID = TENANT.defaultArtistId;
 
 type RoleContextValue = {
   persona: Persona;
