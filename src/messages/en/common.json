@@ -8,7 +8,16 @@
     "artist": "Artist",
     "label": "Label",
     "switchTo": "{role} view",
-    "viewingAs": "Viewing the dashboard as: {name}"
+    "viewingAs": "Viewing the dashboard as: {name}",
+    "jobTitle": "My role",
+    "chooseDa": "I'm the A&R of…",
+    "job": {
+      "da": "A&R",
+      "finance": "Finance",
+      "juridique": "Legal",
+      "direction": "Management",
+      "presidence": "Chairman's office"
+    }
   },
   "themes": {
     "night": "Night",

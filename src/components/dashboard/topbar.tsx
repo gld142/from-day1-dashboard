@@ -3,8 +3,9 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore, useTransition } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
+  Briefcase,
   Building2,
   Check,
   ChevronsUpDown,
@@ -18,10 +19,14 @@ import {
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
 import { ARTISTS, LABEL, getArtist } from "@/lib/demo/api";
+import { DAS, getDa } from "@/lib/demo/data";
+import { scopedArtists } from "@/lib/demo/scope";
 import Link from "next/link";
 import { useCustomer } from "@/lib/customer-mode";
 import { initialsOf, rosterHue } from "@/lib/format";
 import { DEMO_ARTIST_ID, useRole } from "@/lib/role";
+import { JOB_ROLES, roleLanding, type JobRole } from "@/lib/roles";
+import { TENANT } from "@/lib/tenant";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,7 +63,24 @@ export function Topbar() {
     focusedArtistId,
     setFocusedArtistId,
     isLabel,
+    jobRole,
+    daId,
+    scopeDaId,
+    setJobRole,
   } = useRole();
+  const tr = useTranslations("roster");
+  const router = useRouter();
+  /* Choisir un métier : l'état de rôle change ET on part sur la page d'arrivée du rôle (le DA : son roster filtré). */
+  const pickRole = (role: JobRole, nextDaId: string | null) => {
+    setJobRole(role, nextDaId);
+    router.push(roleLanding(role, nextDaId));
+  };
+  const da = daId ? getDa(daId) : null;
+  const roleTitle = jobRole
+    ? `${t(`roles.job.${jobRole}`)}${jobRole === "da" && da ? ` · ${da.name}` : ""}`
+    : null;
+  /* En vue structure, la liste d'artistes du menu suit le périmètre du rôle (le DA ne voit que les siens). */
+  const menuArtists = scopeDaId ? scopedArtists({ daId: scopeDaId }) : ARTISTS;
   const [, startTransition] = useTransition();
   const customer = useCustomer();
   const pathname = usePathname();
@@ -146,7 +168,7 @@ export function Topbar() {
                     <Building2 className="size-3.5" aria-hidden />
                   </span>
                   <span className="truncate text-sm font-medium">
-                    {focused ? focused.name : LABEL.name}
+                    {focused ? focused.name : (roleTitle ?? LABEL.name)}
                   </span>
                 </>
               )}
@@ -154,19 +176,52 @@ export function Topbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-64">
-            <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
-              {t("roles.artist")} / {t("roles.label")}
-            </DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setPersona("artist")} className="gap-2">
-              <MicVocal className="size-4" aria-hidden />
-              <span className="flex-1">{t("roles.switchTo", { role: t("roles.artist") })}</span>
-              {persona === "artist" && <Check className="size-4 text-brand" aria-hidden />}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setPersona("label")} className="gap-2">
-              <Building2 className="size-4" aria-hidden />
-              <span className="flex-1">{t("roles.switchTo", { role: t("roles.label") })}</span>
-              {persona === "label" && <Check className="size-4 text-brand" aria-hidden />}
-            </DropdownMenuItem>
+            {TENANT.roles ? (
+              /* Maison à rôles : on choisit un métier, pas une persona (la persona reste « structure »). */
+              <>
+                <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {t("roles.jobTitle")}
+                </DropdownMenuLabel>
+                {JOB_ROLES.filter((r) => r !== "da").map((r) => (
+                  <DropdownMenuItem key={r} onClick={() => pickRole(r, null)} className="gap-2">
+                    <Briefcase className="size-4" aria-hidden />
+                    <span className="flex-1">{t(`roles.job.${r}`)}</span>
+                    {jobRole === r && <Check className="size-4 text-brand" aria-hidden />}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {t("roles.chooseDa")}
+                </DropdownMenuLabel>
+                {DAS.map((d) => (
+                  <DropdownMenuItem key={d.id} onClick={() => pickRole("da", d.id)} className="gap-2">
+                    <span className="flex size-5 items-center justify-center rounded bg-brand/15 text-[10px] font-semibold text-brand">
+                      {d.name[0]}
+                    </span>
+                    <span className="flex-1 text-sm">
+                      {d.name} <span className="text-muted-foreground">· {tr(`category.${d.category}`)}</span>
+                    </span>
+                    {jobRole === "da" && daId === d.id && <Check className="size-4 text-brand" aria-hidden />}
+                  </DropdownMenuItem>
+                ))}
+              </>
+            ) : (
+              <>
+                <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                  {t("roles.artist")} / {t("roles.label")}
+                </DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => setPersona("artist")} className="gap-2">
+                  <MicVocal className="size-4" aria-hidden />
+                  <span className="flex-1">{t("roles.switchTo", { role: t("roles.artist") })}</span>
+                  {persona === "artist" && <Check className="size-4 text-brand" aria-hidden />}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setPersona("label")} className="gap-2">
+                  <Building2 className="size-4" aria-hidden />
+                  <span className="flex-1">{t("roles.switchTo", { role: t("roles.label") })}</span>
+                  {persona === "label" && <Check className="size-4 text-brand" aria-hidden />}
+                </DropdownMenuItem>
+              </>
+            )}
             {isLabel && (
               <>
                 <DropdownMenuSeparator />
@@ -183,7 +238,7 @@ export function Topbar() {
                   <span className="flex-1 text-sm">{LABEL.name}</span>
                   {!focusedArtistId && <Check className="size-4 text-brand" aria-hidden />}
                 </DropdownMenuItem>
-                {ARTISTS.map((a) => (
+                {menuArtists.map((a) => (
                   <DropdownMenuItem
                     key={a.id}
                     onClick={() => setFocusedArtistId(a.id)}

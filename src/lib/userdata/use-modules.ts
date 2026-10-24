@@ -21,7 +21,7 @@ import {
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
-import { roleOverrides, type JobRole } from "@/lib/roles";
+import { roleOverrides } from "@/lib/roles";
 import {
   hydrateModules,
   modulesSnapshot,
@@ -33,9 +33,7 @@ import {
 const SERVER_SNAPSHOT = "{}";
 
 export function useModules() {
-  const { persona } = useRole();
-  // TODO Task 8 : lire `jobRole` depuis `useRole()` (ajouté à RoleState par la Task 8) ; d'ici là, aucun rôle.
-  const jobRole: JobRole | null = null; // posé par la Task 8
+  const { persona, jobRole } = useRole();
   useEffect(() => {
     hydrateModules();
   }, []);

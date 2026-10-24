@@ -8,6 +8,10 @@
  *  - "label"   : la structure voit tout le roster, peut zoomer sur un artiste,
  *                et accède aux modules réservés (P&L, A&R, roster, dépenses).
  *
+ * Maison à rôles (Universal, `TENANT.roles`) : la persona est toujours « label »
+ * et l'identité se choisit par métier (`jobRole`, roles.ts) ; le DA porte en
+ * plus un périmètre (`daId` → `scopeDaId`) que les agrégats structure suivent.
+ *
  * En production, ce contexte sera alimenté par la session (auth) et les
  * permissions granulaires ; l'API du hook ne changera pas.
  */
@@ -24,6 +28,7 @@ import {
   subscribeUserData,
   USER_ARTIST_ID,
 } from "@/lib/userdata/store";
+import { isJobRole, roleScope, type JobRole } from "@/lib/roles";
 import { TENANT } from "@/lib/tenant";
 
 export type Persona = "artist" | "label";
@@ -43,6 +48,14 @@ type RoleContextValue = {
   isLabel: boolean;
   /** True si des données réelles importées sont actives (mode "Mes données"). */
   hasUserData: boolean;
+  /** Rôle métier (maison Universal) ; null = aucun rôle choisi, ou maison sans rôles. */
+  jobRole: JobRole | null;
+  /** Le DA incarné quand `jobRole === "da"`. */
+  daId: string | null;
+  /** Périmètre effectif : l'id du DA quand le rôle restreint, sinon null (tout le roster). */
+  scopeDaId: string | null;
+  /** Choisir un rôle passe en persona structure et repart de la vue roster ; null retire le rôle. */
+  setJobRole: (role: JobRole | null, daId?: string | null) => void;
 };
 
 const RoleContext = createContext<RoleContextValue | null>(null);
@@ -63,6 +76,10 @@ export function CustomerRoleProvider({ children }: { children: React.ReactNode }
       setFocusedArtistId: noop,
       isLabel: false,
       hasUserData: true,
+      jobRole: null,
+      daId: null,
+      scopeDaId: null,
+      setJobRole: noop,
     }),
     [],
   );
@@ -71,7 +88,13 @@ export function CustomerRoleProvider({ children }: { children: React.ReactNode }
 
 const STORAGE_KEY = "day1-role";
 
-type RoleState = { persona: Persona; focusedArtistId: string | null };
+export type RoleState = {
+  persona: Persona;
+  focusedArtistId: string | null;
+  /** Rôle métier (roles.ts) ; une valeur inconnue en stockage vaut « aucun rôle ». */
+  jobRole: JobRole | null;
+  daId: string | null;
+};
 
 /**
  * L'état de rôle vit dans localStorage, et React s'y abonne.
@@ -85,7 +108,7 @@ type RoleState = { persona: Persona; focusedArtistId: string | null };
  * appel, React boucle sans fin. On mémorise donc la chaîne brute et on ne
  * refabrique l'objet que lorsqu'elle change.
  */
-const DEFAULT_ROLE: RoleState = { persona: "artist", focusedArtistId: null };
+const DEFAULT_ROLE: RoleState = { persona: "artist", focusedArtistId: null, jobRole: null, daId: null };
 
 const roleListeners = new Set<() => void>();
 let roleRaw: string | null | undefined;
@@ -107,7 +130,7 @@ if (typeof window !== "undefined") {
     if (fromUrl === "artist" || fromUrl === "label") {
       window.localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ persona: fromUrl, focusedArtistId: null }),
+        JSON.stringify({ persona: fromUrl, focusedArtistId: null, jobRole: null, daId: null }),
       );
     }
   } catch {
@@ -124,6 +147,22 @@ function persistRole(next: RoleState): void {
   }
 }
 
+/**
+ * Pur, sans DOM : l'état de rôle depuis la chaîne stockée. Une persona ou un
+ * rôle inconnus (ancien stockage, valeur bricolée) retombent sur la valeur par
+ * défaut — jamais une erreur. Exporté pour le test unitaire.
+ */
+export function parseRoleState(raw: string | null): RoleState {
+  if (!raw) return DEFAULT_ROLE;
+  const saved = JSON.parse(raw) as Partial<Record<keyof RoleState, unknown>>;
+  return {
+    persona: saved.persona === "artist" || saved.persona === "label" ? saved.persona : "artist",
+    focusedArtistId: typeof saved.focusedArtistId === "string" ? saved.focusedArtistId : null,
+    jobRole: isJobRole(saved.jobRole) ? saved.jobRole : null,
+    daId: typeof saved.daId === "string" ? saved.daId : null,
+  };
+}
+
 /** Pur : deux appels d'affilée renvoient la même référence tant que le
  *  stockage n'a pas changé. C'est la condition de `useSyncExternalStore`. */
 function readRole(): RoleState {
@@ -131,18 +170,7 @@ function readRole(): RoleState {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw !== roleRaw) {
       roleRaw = raw;
-      let next = DEFAULT_ROLE;
-      if (raw) {
-        const saved = JSON.parse(raw) as Partial<RoleState>;
-        next = {
-          persona:
-            saved.persona === "artist" || saved.persona === "label"
-              ? saved.persona
-              : "artist",
-          focusedArtistId: saved.focusedArtistId ?? null,
-        };
-      }
-      roleValue = next;
+      roleValue = parseRoleState(raw);
     }
     return roleValue;
   } catch {
@@ -168,16 +196,25 @@ function writeRole(next: RoleState): void {
 
 export function RoleProvider({ children }: { children: React.ReactNode }) {
   const role = useSyncExternalStore(subscribeRole, readRole, () => DEFAULT_ROLE);
-  const { persona, focusedArtistId } = role;
+  /* Maison à rôles : la persona reste « structure » — le sélecteur propose des métiers, pas des personas. */
+  const persona: Persona = TENANT.roles ? "label" : role.persona;
+  const { focusedArtistId, jobRole, daId } = role;
 
   const setPersona = useCallback((p: Persona) => {
-    // Changement de persona = on repart de la vue par défaut.
-    writeRole({ persona: p, focusedArtistId: null });
+    // Changement de persona = on repart de la vue par défaut, sans rôle.
+    writeRole({ persona: p, focusedArtistId: null, jobRole: null, daId: null });
   }, []);
 
   const setFocusedArtistId = useCallback((id: string | null) => {
     writeRole({ ...roleValue, focusedArtistId: id });
   }, []);
+
+  const setJobRole = useCallback((next: JobRole | null, nextDaId: string | null = null) => {
+    writeRole({ persona: "label", focusedArtistId: null, jobRole: next, daId: next === "da" ? nextDaId : null });
+  }, []);
+
+  /* Le périmètre ne restreint que dans la maison à rôles : ailleurs, un `daId` resté en stockage est inerte. */
+  const scopeDaId = TENANT.roles ? roleScope(jobRole, daId).daId : null;
 
   // Données réelles importées : en persona artiste, le profil utilisateur
   // remplace l'artiste de démo dans TOUT le dashboard.
@@ -198,8 +235,12 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
       setFocusedArtistId,
       isLabel: persona === "label",
       hasUserData,
+      jobRole,
+      daId,
+      scopeDaId,
+      setJobRole,
     }),
-    [persona, focusedArtistId, setPersona, setFocusedArtistId, artistSelfId, hasUserData],
+    [persona, focusedArtistId, setPersona, setFocusedArtistId, artistSelfId, hasUserData, jobRole, daId, scopeDaId, setJobRole],
   );
 
   return <RoleContext.Provider value={value}>{children}</RoleContext.Provider>;

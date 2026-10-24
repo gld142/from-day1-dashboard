@@ -47,7 +47,6 @@ import {
   type NightItem,
 } from "@/components/modules/pilotage/pulse-blocks";
 import {
-  ARTISTS,
   CONTRACTS,
   EMERGING,
   LABEL,
@@ -87,6 +86,8 @@ import {
   tourDates,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
+import { scopedArtists } from "@/lib/demo/scope";
+import type { Artist } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { yearWindow } from "@/lib/year-window";
@@ -106,10 +107,10 @@ function daysUntil(iso: string): number {
   );
 }
 
-/** Somme des dailyTotals de tout le roster, jour par jour. */
-function aggregatedDaily(days: number): Array<{ date: string; streams: number }> {
+/** Somme des dailyTotals du roster (au périmètre du rôle), jour par jour. */
+function aggregatedDaily(roster: Artist[], days: number): Array<{ date: string; streams: number }> {
   const acc = new Map<string, number>();
-  for (const a of ARTISTS) {
+  for (const a of roster) {
     for (const d of dailyTotals(a.id, days)) {
       acc.set(d.date, (acc.get(d.date) ?? 0) + d.streams);
     }
@@ -144,7 +145,9 @@ function pendingRights(statements: ReturnType<typeof rightsStatements>): number 
 function PulsePage() {
   const t = useTranslations("pulse");
   const locale = useLocale();
-  const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId } = useRole();
+  const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId, scopeDaId } = useRole();
+  /* Le périmètre du rôle (DA : ses artistes). Sans rôle : tout le roster de la maison. */
+  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
 
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
@@ -155,7 +158,7 @@ function PulsePage() {
      rentrera jamais tant que c'est le cas, et qu'aucune autre page ne
      signale. Côté structure, on additionne tous les compositeurs du roster. */
   const worksLead = useMemo(() => {
-    const ids = showArtist ? [artistId] : ARTISTS.map((a) => a.id);
+    const ids = showArtist ? [artistId] : roster.map((a) => a.id);
     const composers = ids.filter(isComposer);
     if (composers.length === 0) return null;
     const facts = composers.map(placementFacts);
@@ -166,7 +169,7 @@ function PulsePage() {
       .filter((x): x is NonNullable<typeof x> => x !== null)
       .sort((a, b) => a.date.localeCompare(b.date))[0];
     return works > 0 ? { atStake, works, next } : null;
-  }, [showArtist, artistId]);
+  }, [showArtist, artistId, roster]);
   const syncOpen = useMemo(() => syncBriefs().length, []);
   const syncSoon = useMemo(() => syncBriefsClosingSoon(), []);
 
@@ -183,8 +186,8 @@ function PulsePage() {
   /* Le bilan d'année — calculé dans lib/year-window pour que Pulse et Revenus
      ne puissent pas diverger. */
   const year = useMemo(
-    () => yearWindow(showArtist ? [artistId] : ARTISTS.map((a) => a.id)),
-    [showArtist, artistId],
+    () => yearWindow(showArtist ? [artistId] : roster.map((a) => a.id)),
+    [showArtist, artistId, roster],
   );
 
   const yearBand = (
@@ -361,9 +364,10 @@ function PulsePage() {
     void sharesKey;
     if (showArtist) return null;
 
-    const totals = labelTotals();
-    const rows = rosterRows();
-    const agg = aggregatedDaily(365);
+    const rosterIds = new Set(roster.map((a) => a.id));
+    const totals = labelTotals(roster);
+    const rows = rosterRows(roster);
+    const agg = aggregatedDaily(roster, 365);
     const today = agg[agg.length - 1]?.streams ?? 0;
     const yesterday = agg[agg.length - 2]?.streams ?? 0;
     const deltaToday = yesterday === 0 ? 0 : ((today - yesterday) / yesterday) * 100;
@@ -375,9 +379,9 @@ function PulsePage() {
     /* Qui bouge : tout le roster, trié par variation — pas seulement le top 3. */
     const movers = [...rows].sort((a, b) => b.delta30d - a.delta30d);
     const topEarner = rows[0]; // rosterRows est trié par revenus 12 mois
-    const est = rosterEstimateSummaries();
+    const est = rosterEstimateSummaries(roster);
 
-    const monthly = ARTISTS.map((a) => monthlyRevenueTotals(a.id, 24));
+    const monthly = roster.map((a) => monthlyRevenueTotals(a.id, 24));
     const revMonth = monthly.reduce((s, m) => s + (m[m.length - 1]?.amount ?? 0), 0);
     const revPrev = monthly.reduce((s, m) => s + (m[m.length - 2]?.amount ?? 0), 0);
     const dayOfMonth = DEMO_TODAY.getUTCDate();
@@ -393,29 +397,31 @@ function PulsePage() {
     const revDelta =
       revPrevSoFar === 0 ? 0 : ((revMonth - revPrevSoFar) / revPrevSoFar) * 100;
     const revForecast = dayOfMonth === 0 ? revMonth : (revMonth / dayOfMonth) * daysInMonth;
-    const monthExpenses = ARTISTS.reduce(
+    const monthExpenses = roster.reduce(
       (s, a) => s + expensesFor(a.id, 1).reduce((x, e) => x + e.amount, 0),
       0,
     );
 
-    const nextShow = ARTISTS.flatMap((a) =>
+    const nextShow = roster.flatMap((a) =>
       tourDates(a.id)
         .filter((d) => d.status === "upcoming")
         .map((d) => ({ ...d, artistName: getArtist(a.id).name })),
     ).sort((a, b) => a.date.localeCompare(b.date))[0];
-    const alertCount = CONTRACTS.flatMap((c) => c.alerts).filter(
+    const alertCount = CONTRACTS.filter((c) => rosterIds.has(c.artistId)).flatMap((c) => c.alerts).filter(
       (a) => a.severity !== "info",
     ).length;
     const tiktok = rosterTiktokSignal();
 
-    const gap = ARTISTS.reduce((s, a) => s + openGap(auditFindings(a.id)), 0);
-    const rightsPending = ARTISTS.reduce(
+    const gap = roster.reduce((s, a) => s + openGap(auditFindings(a.id)), 0);
+    const rightsPending = roster.reduce(
       (s, a) => s + pendingRights(rightsStatements(a.id)),
       0,
     );
-    const splitsPending = SPLITS.filter((s) => s.status !== "signed").length;
+    const splitsPending = SPLITS.filter(
+      (s) => s.status !== "signed" && rosterIds.has(TRACKS.find((t) => t.id === s.trackId)?.artistId ?? ""),
+    ).length;
     const groupRows = marketShares("group");
-    const rosterNames = new Set(ARTISTS.map((a) => a.name.toLowerCase()));
+    const rosterNames = new Set(roster.map((a) => a.name.toLowerCase()));
     const rosterMarket = marketShares("artist").filter((r) =>
       rosterNames.has(r.label.toLowerCase()),
     );
@@ -425,10 +431,10 @@ function PulsePage() {
        contradiction avec /market qui lit pourtant la même capture Kworb.
        Le décompte vient désormais de la même fonction que /market. */
     const rosterTracks = marketRosterTracks();
-    const valuation = ARTISTS.reduce((s, a) => s + catalogValuation(a.id).mid, 0);
+    const valuation = roster.reduce((s, a) => s + catalogValuation(a.id).mid, 0);
     /* Un artiste est « renseigné » quand l'utilisateur a saisi ou importé ses
        pourcentages — pas quand le contrat de démo existe. */
-    const missingContracts = ARTISTS.filter((a) => getShares(a.id) === null).length;
+    const missingContracts = roster.filter((a) => getShares(a.id) === null).length;
 
     return {
       totals,
@@ -452,7 +458,7 @@ function PulsePage() {
       doors: { splitsPending, rosterShare, rosterMarket, rosterTracks, groupRows, alertCount },
       missingContracts,
     };
-  }, [showArtist, sharesKey]);
+  }, [showArtist, sharesKey, roster]);
 
   /* ───────────────────────────── Rendu ───────────────────────────── */
 
@@ -989,7 +995,7 @@ function PulsePage() {
                   <span>{fmtCompact(locale, l.today)}</span>
                 </p>
                 <p className="sheet-ink mt-1.5 text-[13px]">
-                  {t("hero.todayLabel", { count: ARTISTS.length })}{" "}
+                  {t("hero.todayLabel", { count: roster.length })}{" "}
                   <b className={l.deltaToday >= 0 ? "text-success" : "text-destructive"}>
                     {fmtPct(locale, l.deltaToday)}
                   </b>{" "}
@@ -1152,7 +1158,7 @@ function PulsePage() {
               <p className="flex items-center gap-2.5 text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
                 <AudienceGlyph size="md" className="opacity-75" />
                 <span>
-                  {fmtCompact(locale, ARTISTS.reduce((s, a) => s + a.monthlyListeners, 0))}
+                  {fmtCompact(locale, roster.reduce((s, a) => s + a.monthlyListeners, 0))}
                 </span>
               </p>
               <p className="sheet-ink mt-1 text-xs">
@@ -1165,7 +1171,7 @@ function PulsePage() {
                     key: "index",
                     label: t("audience.indexLabel"),
                     value: `${Math.round(
-                      ARTISTS.reduce((s, a) => s + a.day1Index, 0) / ARTISTS.length,
+                      roster.reduce((s, a) => s + a.day1Index, 0) / roster.length,
                     )} / 100`,
                   },
                   ...(l.night.tiktok
@@ -1302,7 +1308,7 @@ function PulsePage() {
                 <ProvenanceBadge provenance="simulated" className="mr-1.5 align-middle" />
                 {t("importBand.statusLabel", {
                   count: l.missingContracts,
-                  total: ARTISTS.length,
+                  total: roster.length,
                 })}
               </span>
             }

@@ -8,7 +8,16 @@
     "artist": "Artiste",
     "label": "Structure",
     "switchTo": "Vue {role}",
-    "viewingAs": "Vous voyez le dashboard comme : {name}"
+    "viewingAs": "Vous voyez le dashboard comme : {name}",
+    "jobTitle": "Mon métier",
+    "chooseDa": "Je suis DA de…",
+    "job": {
+      "da": "DA",
+      "finance": "Finance",
+      "juridique": "Juridique",
+      "direction": "Direction",
+      "presidence": "Présidence"
+    }
   },
   "themes": {
     "night": "Nuit",

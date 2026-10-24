@@ -49,3 +49,6 @@ playwright-report/
 # Moteur binaire impeccable (12 Mo) — téléchargé à la volée, jamais versionné
 .claude/skills/impeccable/scripts/bin/
 .superpowers/
+
+# Serveur de dev de la maison universal (NEXT_DIST_DIR=.next-um, port 3006)
+.next-um/
