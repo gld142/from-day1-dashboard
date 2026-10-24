@@ -41,8 +41,6 @@ const rights = frMessages<{
 }>("rights");
 
 const THEME = "night" as const;
-/** Les artistes du roster de démo, dans l'ordre d'affichage de la ventilation. */
-const ARTISTES = ["Dadju", "Nono La Grinta", "Kiko"];
 /** Compteur d'appels au formateur, posé par le patch — témoin d'hydratation. */
 const COMPTEUR = "__intlPatchCalls";
 
@@ -107,18 +105,37 @@ function euros(texte: string, quoi: string): number {
   return n;
 }
 
-/** Les lignes « Écart » de la ventilation, par artiste. */
+/**
+ * Les lignes « Écart » de la ventilation, par artiste, dans l'ordre d'affichage.
+ *
+ * La liste des artistes est LUE dans la ventilation, pas écrite ici : le roster
+ * dépend de la maison du build (`src/lib/tenant.ts` — day1 retire Kiko,
+ * universal retire Dadju) et la ventilation porte tous les artistes du roster
+ * qui ont des relevés. Mesuré le 24/10/2026 (`rightsStatements` sur `ARTISTS`) :
+ * 11 artistes en maison day1, 24 relevés et au moins un écart chacun — la liste
+ * de trois noms écrite le 24/09 ne couvrait donc plus l'agrégat, et la somme B
+ * n'aurait pas pu égaler le KPI A.
+ *
+ * Une ligne = un bouton (ArtistRightsBreakdown) ; le nom est le premier span
+ * bloc de son ArtistBadge — la pastille d'initiales le précède dans `innerText`
+ * (aria-hidden, mais rendue), d'où cette lecture ciblée.
+ */
 async function ventilation(page: Page): Promise<{ nom: string; texte: string }[]> {
-  const lignes = (await page.getByTestId("rights-by-artist").innerText())
-    .split("\n")
-    .map((l) => l.trim());
-  return ARTISTES.map((nom) => {
-    const i = lignes.indexOf(nom);
-    expect(i, `« ${nom} » absent de la ventilation`).toBeGreaterThanOrEqual(0);
-    const j = lignes.findIndex((l, k) => k > i && l === rights.byArtist.gap);
-    expect(j, `« ${rights.byArtist.gap} » absent après « ${nom} »`).toBeGreaterThan(i);
-    return { nom, texte: lignes[j + 1] };
-  });
+  const boutons = page.getByTestId("rights-by-artist").getByRole("button");
+  const n = await boutons.count();
+  // Avec un seul artiste, B et C ne diraient rien de plus que A.
+  expect(n, "la ventilation par artiste doit porter au moins deux artistes").toBeGreaterThan(1);
+  const out: { nom: string; texte: string }[] = [];
+  for (let i = 0; i < n; i++) {
+    const bouton = boutons.nth(i);
+    const nom = (await bouton.locator("span.block").first().innerText()).trim();
+    expect(nom, `ligne ${i + 1} de la ventilation : nom d'artiste illisible`).not.toBe("");
+    const lignes = (await bouton.innerText()).split("\n").map((l) => l.trim());
+    const j = lignes.indexOf(rights.byArtist.gap);
+    expect(j, `« ${rights.byArtist.gap} » absent de la ligne « ${nom} »`).toBeGreaterThanOrEqual(0);
+    out.push({ nom, texte: lignes[j + 1] });
+  }
+  return out;
 }
 
 /**
