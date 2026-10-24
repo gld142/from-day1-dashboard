@@ -18,6 +18,7 @@ describe("tenantFor — la maison se choisit au build", () => {
     expect(TENANTS.day1.logo).toBeNull();
     expect(TENANTS.day1.roles).toBe(false);
     expect(TENANTS.day1.name).toBe("Day 1 Dashboard Pro");
+    expect(TENANTS.day1.shortName).toBe("From Day 1");
   });
   it("chaque maison exclut exactement un artiste, et son artiste par défaut n'est pas exclu", () => {
     expect(TENANTS.day1.excludedArtists).toEqual(["kiko"]);

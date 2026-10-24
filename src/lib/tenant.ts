@@ -29,7 +29,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
   day1: {
     id: "day1",
     name: "Day 1 Dashboard Pro",
-    shortName: "Day 1",
+    shortName: "From Day 1",
     tagline: "Dashboard 360°",
     logo: null,
     excludedArtists: ["kiko"],
