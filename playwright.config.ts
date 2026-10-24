@@ -17,6 +17,8 @@ const prod = process.env.E2E_SERVER === "prod";
 
 export default defineConfig({
   testDir: "./e2e",
+  // Contrôle unique de la porte (mauvais mot de passe = message clair). Tourne APRÈS le webServer.
+  globalSetup: "./e2e/global-setup.ts",
   timeout: 120_000,
   expect: { timeout: 20_000 },
   fullyParallel: true,
