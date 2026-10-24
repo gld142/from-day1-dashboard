@@ -51,7 +51,7 @@ describe("revenueForecast — bande de confiance", () => {
   });
 
   it("les points historiques n'ont pas de bande", () => {
-    for (const p of revenueForecast("kiko")) {
+    for (const p of revenueForecast("dakeez")) {
       if (p.actual === null) continue;
       expect(p.projected).toBeNull();
       expect(p.low).toBeNull();

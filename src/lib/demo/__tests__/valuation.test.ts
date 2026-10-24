@@ -63,8 +63,8 @@ describe("catalogValuation", () => {
   );
 
   it("est déterministe", () => {
-    expect(JSON.stringify(catalogValuation("kiko"))).toBe(
-      JSON.stringify(catalogValuation("kiko")),
+    expect(JSON.stringify(catalogValuation("dakeez"))).toBe(
+      JSON.stringify(catalogValuation("dakeez")),
     );
   });
 });

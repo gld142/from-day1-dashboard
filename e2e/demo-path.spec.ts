@@ -16,8 +16,8 @@ import {
  *  clic Dadju (top movers) → /pulse (Dadju) → /streams → /revenue?period=day
  *  (tuile « Hier » cernée, onglets de période, panneau « part » et ses 3
  *  onglets, tableau par plateforme) → /audit → bascule persona artiste
- *  (topbar) → /pulse (artiste Dadju) → retour structure → /roster → clic Kiko
- *  → /pulse (Kiko). Plus /onboardings et /welcome?source=believe.
+ *  (topbar) → /pulse (artiste Dadju) → retour structure → /roster → clic Nono
+ *  La Grinta → /pulse (Nono). Plus /onboardings et /welcome?source=believe.
  *
  * 3 thèmes × 2 viewports (desktop 1440×900, mobile 390×844). À chaque étape :
  * screenshot + intégrité (console, MISSING_MESSAGE, débordement, texte).
@@ -45,7 +45,7 @@ const switchTo = (role: string) => common.roles.switchTo.replace("{role}", role)
 async function switchPersona(page: Page, role: "artist" | "label") {
   await topbar(page)
     .getByRole("button")
-    .filter({ hasText: new RegExp(`${LABEL_NAME}|Dadju|Kiko|Nono`) })
+    .filter({ hasText: new RegExp(`${LABEL_NAME}|Dadju|Nono`) })
     .first()
     .click();
   await page.getByRole("menuitem", { name: switchTo(common.roles[role]) }).click();
@@ -154,18 +154,19 @@ for (const vp of VIEWPORTS) {
         await expect(page.locator("#ma-part-title")).toHaveText(revenue.shares.title);
         await step("revenue-artist-dadju");
 
-        /* 9. Retour structure → /roster → clic Kiko → /pulse (Kiko). */
+        /* 9. Retour structure → /roster → clic Nono La Grinta → /pulse (Nono). Kiko n'est plus
+           dans la maison day1 (tenant.ts). */
         await switchPersona(page, "label");
         await page.goto("/roster", { waitUntil: "domcontentloaded" });
         await ready(page, theme);
-        await page.locator("main tr", { hasText: "Kiko" }).first().click();
-        await expect(page.locator("main tr[aria-selected='true']")).toContainText("Kiko");
+        await page.locator("main tr", { hasText: "Nono La Grinta" }).first().click();
+        await expect(page.locator("main tr[aria-selected='true']")).toContainText("Nono La Grinta");
         await page.waitForTimeout(400);
-        await step("roster-kiko");
+        await step("roster-nono");
         await page.goto("/pulse", { waitUntil: "domcontentloaded" });
         await ready(page, theme);
-        await expect(topbar(page)).toContainText("Kiko");
-        await step("pulse-kiko");
+        await expect(topbar(page)).toContainText("Nono La Grinta");
+        await step("pulse-nono");
 
         /* 10. Onboardings partenaires (carte Universal). */
         await page.goto("/onboardings", { waitUntil: "domcontentloaded" });

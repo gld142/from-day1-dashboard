@@ -11,9 +11,15 @@ import {
   revenueSeries,
   streamSeries,
 } from "@/lib/demo/generators";
-import { realDailyEstimates, realStreamSeries } from "@/lib/real";
+import { hasRealData, realDailyEstimates, realStreamSeries } from "@/lib/real";
 
 const ARTIST_IDS = ARTISTS.map((a) => a.id);
+/* La couche réelle ne répond que pour un artiste qui a un relevé (sinon elle lève, et
+   api.ts retombe sur les générateurs). Les artistes arrivés au roster avant leur premier
+   relevé n'y figurent qu'à partir de celui-ci : le filtre les inclut dès qu'il existe. */
+const REAL_IDS = ARTIST_IDS.filter((id) => hasRealData(id));
+/* Idem pour les titres : un artiste sans projet dans PROJECT_SEEDS n'a pas de poids à sommer. */
+const WITH_TRACKS = ARTIST_IDS.filter((id) => TRACKS.some((t) => t.artistId === id));
 
 describe("déterminisme des générateurs", () => {
   it.each(ARTIST_IDS)("streamSeries(%s) : deux appels identiques", (id) => {
@@ -42,7 +48,7 @@ describe("déterminisme des générateurs", () => {
 });
 
 describe("poids des tracks", () => {
-  it.each(ARTIST_IDS)("les poids de %s somment à ~1", (id) => {
+  it.each(WITH_TRACKS)("les poids de %s somment à ~1", (id) => {
     const sum = TRACKS.filter((t) => t.artistId === id).reduce(
       (s, t) => s + t.weight,
       0,
@@ -84,10 +90,10 @@ describe("aucun montant négatif", () => {
 });
 
 describe("déterminisme de la couche réelle", () => {
-  it.each(ARTIST_IDS)("realStreamSeries(%s) : deux appels identiques", (id) => {
+  it.each(REAL_IDS)("realStreamSeries(%s) : deux appels identiques", (id) => {
     expect(JSON.stringify(realStreamSeries(id, 90))).toBe(JSON.stringify(realStreamSeries(id, 90)));
   });
-  it.each(ARTIST_IDS)("realDailyEstimates(%s) : deux appels identiques", (id) => {
+  it.each(REAL_IDS)("realDailyEstimates(%s) : deux appels identiques", (id) => {
     expect(JSON.stringify(realDailyEstimates(id, 30))).toBe(JSON.stringify(realDailyEstimates(id, 30)));
   });
 });

@@ -1,6 +1,7 @@
 /**
- * Le roster de démo : "Day 1 Dashboard Pro", 3 artistes RÉELS (Dadju,
- * Nono La Grinta, Kiko) dont les chiffres d'audience viennent des
+ * Le roster de démo : "Day 1 Dashboard Pro", 12 artistes RÉELS (Dadju, Nono La
+ * Grinta, November Ultra, Zeg P, Kiko, ElGrandeToto, Leto, Dakeez, Louane,
+ * Wamen, Gustave Rudman, Brice Davoli) ; la maison retire le sien. Les chiffres d'audience viennent des
  * snapshots publics committés (src/lib/real/snapshots). Chaque artiste a
  * une identité chromatique (hue) pour que toutes les vues comparatives
  * aient du relief.
@@ -19,7 +20,7 @@ import type {
 } from "./types";
 import { daysAgo, daysAhead, isoDay } from "./seed";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
-import { TENANT } from "@/lib/tenant";
+import { TENANT, excludeArtists } from "@/lib/tenant";
 
 /** Le label de démo porte le nom de la maison : « Day 1 Dashboard Pro » ou « Day One × Universal ». */
 export const LABEL = {
@@ -53,7 +54,7 @@ export function getDa(id: string): DA | null {
  * Le roster réel de la démo (spec §6). Les chiffres d'audience viennent des
  * snapshots ; hue, initiales, index, dates de signature sont simulés.
  */
-export const ARTISTS: Artist[] = [
+export const ALL_ARTISTS: Artist[] = [
   {
     id: "dadju",
     name: "Dadju",
@@ -179,7 +180,143 @@ export const ARTISTS: Artist[] = [
     deezerId: "52463032",
     youtubeChannelId: "UCVG705xosVltZb52R0hHr_g",
   },
+  {
+    /* Rap, PSO Thug. Ids vérifiés le 23/10/2026. Auditeurs de secours ~2 M (ordre de grandeur,
+       remplacé par le premier relevé). */
+    id: "leto",
+    name: "Leto",
+    genre: "Rap",
+    hue: 15,
+    initials: "LE",
+    monthlyListeners: listenersFromSnapshot("leto", 2_000_000),
+    growthRate: 0.02,
+    careerStage: "established",
+    day1Index: 79,
+    signedSince: "2018-09-14",
+    dealType: "licence",
+    country: "FR",
+    category: "urbain",
+    daId: "da-urbain",
+    spotifyId: "6HCBnyTBSLdb3TFn2ayulY",
+    deezerId: "455796",
+    youtubeChannelId: "UCP9zhgBhlIwgF5UEf3Pmj8Q",
+  },
+  {
+    /* R&B / trapsoul, Lyon. Pas de chaîne YouTube identifiée : le relevé passe la source. */
+    id: "dakeez",
+    name: "Dakeez",
+    genre: "R&B / trapsoul",
+    hue: 300,
+    initials: "DK",
+    monthlyListeners: listenersFromSnapshot("dakeez", 150_000),
+    growthRate: 0.07,
+    careerStage: "emerging",
+    day1Index: 48,
+    signedSince: "2025-03-01",
+    dealType: "distribution",
+    country: "FR",
+    category: "urbain",
+    daId: "da-urbain",
+    spotifyId: "63TYAXPLsZ7A3AFeGiGGGu",
+    deezerId: "53565962",
+  },
+  {
+    /* Pop / variété. La chaîne YouTube est INCERTAINE (recherche du 23/10, non confirmée par
+       une page officielle) : vérifier le titre de chaîne dans le premier relevé (Task 4, Step 3)
+       et vider le champ si ce n'est pas elle. */
+    id: "louane",
+    name: "Louane",
+    genre: "Pop / variété",
+    hue: 345,
+    initials: "LO",
+    monthlyListeners: listenersFromSnapshot("louane", 3_000_000),
+    growthRate: 0.015,
+    careerStage: "established",
+    day1Index: 84,
+    signedSince: "2015-03-02",
+    dealType: "artiste",
+    country: "FR",
+    category: "variete",
+    daId: "da-variete",
+    spotifyId: "7wjeXCtRND2ZdKfMJFu6JC",
+    deezerId: "4453455",
+    youtubeChannelId: "UCxROfILs1ORiiUWCDdkfqaA",
+  },
+  {
+    /* R&B / soul, Paris. Pas de chaîne YouTube identifiée. */
+    id: "wamen",
+    name: "Wamen",
+    genre: "R&B / soul",
+    hue: 190,
+    initials: "WA",
+    monthlyListeners: listenersFromSnapshot("wamen", 170_000),
+    growthRate: 0.06,
+    careerStage: "developing",
+    day1Index: 51,
+    signedSince: "2024-06-01",
+    dealType: "distribution",
+    country: "FR",
+    category: "variete",
+    daId: "da-variete",
+    spotifyId: "3IrNp8pf0ugwmIEiGJCRse",
+    deezerId: "182945357",
+  },
+  {
+    /* Compositeur-producteur (orthographe : Gustave). Comme Zeg P : ce qu'il gagne se passe sur
+       les disques des autres (PLACEMENTS). Contrat d'édition « reçu, relecture en cours » dans
+       le fil : il n'a donc PAS encore de contrat dans CONTRACTS. */
+    id: "gustave-rudman",
+    name: "Gustave Rudman",
+    genre: "Composition · Pop / variété",
+    hue: 60,
+    initials: "GR",
+    monthlyListeners: listenersFromSnapshot("gustave-rudman", 100_000),
+    growthRate: 0.02,
+    careerStage: "established",
+    day1Index: 66,
+    signedSince: "2019-01-15",
+    dealType: "indé",
+    kind: "composer",
+    publisher: { name: "Day 1 Édition", sharePct: 25 },
+    country: "FR",
+    category: "compositeur",
+    daId: "da-compos",
+    spotifyId: "2yGaqlHUHvNEpdRlmQCMEC",
+    deezerId: "4722593",
+  },
+  {
+    /* Compositeur-arrangeur, musique à l'image. « Grand catalogue Sacem » selon Gaël, NON vérifié.
+       Page Spotify lue dans le navigateur le 23/10 : le relevé peut la lire ; les auditeurs de
+       secours (~5 k) ne servent qu'avant lui. */
+    id: "brice-davoli",
+    name: "Brice Davoli",
+    genre: "Composition · musique à l'image",
+    hue: 120,
+    initials: "BD",
+    monthlyListeners: listenersFromSnapshot("brice-davoli", 5_000),
+    growthRate: 0.005,
+    careerStage: "established",
+    day1Index: 58,
+    signedSince: "2016-05-10",
+    dealType: "indé",
+    kind: "composer",
+    publisher: { name: "Day 1 Édition", sharePct: 25 },
+    country: "FR",
+    category: "compositeur",
+    daId: "da-compos",
+    spotifyId: "27kwwOnjG09lmLHv3zle84",
+    deezerId: "1570143",
+  },
 ];
+
+/**
+ * Le roster de LA MAISON : le roster complet moins ses exclus (day1 : Kiko ;
+ * universal : Dadju). Tout ce qui dérive du roster (projets, titres, splits,
+ * contrats, accès de l'équipe, placements) est filtré par `inRoster` : un
+ * artiste exclu n'apparaît nulle part, ses fichiers de relevés restent.
+ */
+export const ARTISTS: Artist[] = excludeArtists(ALL_ARTISTS);
+const inRoster = (artistId: string) => ARTISTS.some((a) => a.id === artistId);
 
 export function getArtist(id: string): Artist {
   return ARTISTS.find((a) => a.id === id) ?? ARTISTS[0];
@@ -249,7 +386,7 @@ const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
   ],
 };
 
-export const PROJECTS: Project[] = Object.entries(PROJECT_SEEDS).flatMap(
+export const PROJECTS: Project[] = Object.entries(PROJECT_SEEDS).filter(([artistId]) => inRoster(artistId)).flatMap(
   ([artistId, seeds]) =>
     seeds.map((s) => ({
       id: s.id,
@@ -261,7 +398,7 @@ export const PROJECTS: Project[] = Object.entries(PROJECT_SEEDS).flatMap(
     })),
 );
 
-export const TRACKS: Track[] = Object.entries(PROJECT_SEEDS).flatMap(
+export const TRACKS: Track[] = Object.entries(PROJECT_SEEDS).filter(([artistId]) => inRoster(artistId)).flatMap(
   ([artistId, seeds]) =>
     seeds.flatMap((s, si) =>
       s.tracks.map((title, ti) => {
@@ -347,7 +484,7 @@ export const SPLITS: TrackSplit[] = TRACKS.map((t, i) => {
  * la colonne « Territoire » d'une interface anglaise — « World » est le terme
  * employé des deux côtés dans les contrats de musique.
  */
-export const CONTRACTS: Contract[] = [
+const ALL_CONTRACTS: Contract[] = [
   {
     id: "c-da-artiste",
     artistId: "dadju",
@@ -512,7 +649,113 @@ export const CONTRACTS: Contract[] = [
       },
     ],
   },
+  {
+    /* Avance recoupée à 80 % : c'est la note « finance → DA urbain » du fil (feed-store). */
+    id: "c-le-licence",
+    artistId: "leto",
+    type: "licence",
+    counterparty: "Label",
+    startDate: "2022-09-14",
+    endDate: "2027-09-14",
+    royaltyRate: 21,
+    advance: 300_000,
+    recoupedPct: 80,
+    territory: "World",
+    exclusive: true,
+    alerts: [
+      {
+        kind: "audit-window",
+        severity: "info",
+        dueDate: "2027-03-31",
+        message: {
+          fr: "Fenêtre d'audit contractuelle : exercice 2026 auditable jusqu'au 31/03/2027",
+          en: "Contractual audit window: FY2026 auditable until 31/03/2027",
+        },
+      },
+    ],
+  },
+  {
+    id: "c-dk-distribution",
+    artistId: "dakeez",
+    type: "distribution",
+    counterparty: "Believe Digital",
+    startDate: "2025-03-01",
+    endDate: "2027-03-01",
+    royaltyRate: 85,
+    advance: 15_000,
+    recoupedPct: 35,
+    territory: "World",
+    exclusive: false,
+    alerts: [],
+  },
+  {
+    /* Option à lever avant le 30 : c'est la note « DA variété → juridique » du fil. */
+    id: "c-lo-artiste",
+    artistId: "louane",
+    type: "licence",
+    counterparty: "Label",
+    startDate: "2020-03-02",
+    endDate: "2027-03-02",
+    royaltyRate: 24,
+    advance: 600_000,
+    recoupedPct: 100,
+    territory: "World",
+    exclusive: true,
+    alerts: [
+      {
+        kind: "option",
+        severity: "warning",
+        dueDate: "2026-11-30",
+        message: {
+          fr: "Option de prolongation à lever avant le 30/11 — sinon le contrat court jusqu'à son terme sans album supplémentaire",
+          en: "Extension option to exercise before Nov 30 — otherwise the deal runs to term with no extra album",
+        },
+      },
+    ],
+  },
+  {
+    id: "c-wa-distribution",
+    artistId: "wamen",
+    type: "distribution",
+    counterparty: "Distro",
+    startDate: "2024-06-01",
+    endDate: "2026-12-01",
+    royaltyRate: 85,
+    advance: 0,
+    recoupedPct: 100,
+    territory: "World",
+    exclusive: false,
+    alerts: [
+      {
+        kind: "expiry",
+        severity: "warning",
+        dueDate: "2026-12-01",
+        message: {
+          fr: "Contrat de distribution à échéance le 01/12 — préavis de 60 jours, soit avant le 02/10",
+          en: "Distribution deal expires on 01/12 — 60-day notice, i.e. before 02/10",
+        },
+      },
+    ],
+  },
+  {
+    /* Édition : le même 25 % que `publisher.sharePct` (un seul fait, deux endroits — comme Zeg P). */
+    id: "c-bd-edition",
+    artistId: "brice-davoli",
+    type: "édition",
+    counterparty: "Day 1 Édition",
+    startDate: "2016-05-10",
+    endDate: "2028-05-10",
+    royaltyRate: 75,
+    advance: 0,
+    recoupedPct: 100,
+    territory: "World",
+    exclusive: true,
+    alerts: [],
+  },
 ];
+
+/** Les contrats des artistes de la maison. */
+export const CONTRACTS: Contract[] = ALL_CONTRACTS.filter((c) => inRoster(c.artistId));
 
 /* ─────────────────────────── Équipe ─────────────────────────── */
 
@@ -546,7 +789,7 @@ export const TEAM: TeamMember[] = [
     id: "lisa",
     name: "Lisa M.",
     role: "manager",
-    artistAccess: ["nono-la-grinta", "kiko"],
+    artistAccess: ["nono-la-grinta", "kiko", "dakeez"].filter(inRoster),
     modules: "all",
     lastActive: teamLastActive(1),
   },
@@ -723,7 +966,7 @@ export const SYNC_BRIEFS: SyncBrief[] = [
  * SIMULÉES. Sans elles, le carnet de commandes serait vide et la page ne
  * montrerait pas ce qu'elle sert à montrer.
  */
-export const PLACEMENTS: Placement[] = [
+const ALL_PLACEMENTS: Placement[] = [
   { id: "pl-fadeup", artistId: "zeg-p", title: "FADE UP", performer: "Hamza, SCH",
     roles: ["compositeur", "producteur"], writerSharePct: 25, producerPointsPct: 4,
     status: "released", date: "2020-02-17", declared: true, streams: 148_817_745 },
@@ -752,4 +995,28 @@ export const PLACEMENTS: Placement[] = [
   { id: "pl-encore", artistId: "zeg-p", title: "Encore une fois", performer: "November Ultra",
     roles: ["auteur", "compositeur"], writerSharePct: 45, producerPointsPct: 0,
     status: "pitched", date: "2027-02-20", declared: false, streams: 0 },
+
+  /* Gustave Rudman et Brice Davoli : œuvres SIMULÉES (aucune source publique ne donne les crédits
+     d'écriture). Les interprètes sont ceux du roster pour que le dashboard se recoupe. */
+  { id: "pl-gr-rivage", artistId: "gustave-rudman", title: "Rivage", performer: "Louane",
+    roles: ["auteur", "compositeur"], writerSharePct: 50, producerPointsPct: 0,
+    status: "released", date: "2025-02-14", declared: true, streams: 12_400_000 },
+  { id: "pl-gr-lumiere", artistId: "gustave-rudman", title: "Lumière basse", performer: "Wamen",
+    roles: ["compositeur", "producteur"], writerSharePct: 35, producerPointsPct: 3,
+    status: "released", date: "2025-10-03", declared: false, streams: 1_850_000 },
+  { id: "pl-gr-hiver", artistId: "gustave-rudman", title: "Hiver", performer: "Louane",
+    roles: ["auteur", "compositeur"], writerSharePct: 50, producerPointsPct: 0,
+    status: "unreleased", date: "2026-11-21", declared: false, streams: 0 },
+  { id: "pl-bd-generique", artistId: "brice-davoli", title: "Générique — Les Heures claires", performer: "Orchestre de studio",
+    roles: ["compositeur", "producteur"], writerSharePct: 100, producerPointsPct: 0,
+    status: "released", date: "2024-09-06", declared: true, streams: 420_000 },
+  { id: "pl-bd-theme", artistId: "brice-davoli", title: "Thème principal — Nuit sur la ville", performer: "Orchestre de studio",
+    roles: ["compositeur"], writerSharePct: 100, producerPointsPct: 0,
+    status: "released", date: "2025-05-16", declared: true, streams: 95_000 },
+  { id: "pl-bd-serie", artistId: "brice-davoli", title: "Habillage — série (saison 2)", performer: "Studio Palier",
+    roles: ["compositeur", "producteur"], writerSharePct: 100, producerPointsPct: 0,
+    status: "unreleased", date: "2027-01-10", declared: false, streams: 0 },
 ];
+
+/** Les œuvres des compositeurs de la maison. */
+export const PLACEMENTS: Placement[] = ALL_PLACEMENTS.filter((p) => inRoster(p.artistId));

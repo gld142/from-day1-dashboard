@@ -115,5 +115,55 @@
     "deezerId": "11809227",
     "youtubeChannelId": "UC03zElk3Y0AQAuIJZ3GhnAw",
     "youtubeVideos": []
+  },
+  {
+    "id": "leto",
+    "name": "Leto",
+    "country": "FR",
+    "spotifyId": "6HCBnyTBSLdb3TFn2ayulY",
+    "deezerId": "455796",
+    "youtubeChannelId": "UCP9zhgBhlIwgF5UEf3Pmj8Q",
+    "youtubeVideos": []
+  },
+  {
+    "id": "dakeez",
+    "name": "Dakeez",
+    "country": "FR",
+    "spotifyId": "63TYAXPLsZ7A3AFeGiGGGu",
+    "deezerId": "53565962",
+    "youtubeVideos": []
+  },
+  {
+    "id": "louane",
+    "name": "Louane",
+    "country": "FR",
+    "spotifyId": "7wjeXCtRND2ZdKfMJFu6JC",
+    "deezerId": "4453455",
+    "youtubeChannelId": "UCxROfILs1ORiiUWCDdkfqaA",
+    "youtubeVideos": []
+  },
+  {
+    "id": "wamen",
+    "name": "Wamen",
+    "country": "FR",
+    "spotifyId": "3IrNp8pf0ugwmIEiGJCRse",
+    "deezerId": "182945357",
+    "youtubeVideos": []
+  },
+  {
+    "id": "gustave-rudman",
+    "name": "Gustave Rudman",
+    "country": "FR",
+    "spotifyId": "2yGaqlHUHvNEpdRlmQCMEC",
+    "deezerId": "4722593",
+    "youtubeVideos": []
+  },
+  {
+    "id": "brice-davoli",
+    "name": "Brice Davoli",
+    "country": "FR",
+    "spotifyId": "27kwwOnjG09lmLHv3zle84",
+    "deezerId": "1570143",
+    "youtubeVideos": []
   }
 ]
