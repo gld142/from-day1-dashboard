@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { boundRole, parseRoleState } from "@/lib/role";
+import { boundRole, parseRoleState, withDa } from "@/lib/role";
 
 /* L'état de rôle lu depuis le stockage : ce que la Task 8 ajoute (jobRole, daId)
    doit survivre à un ancien stockage sans ces champs et à des valeurs inconnues. */
@@ -39,8 +39,8 @@ describe("parseRoleState — robuste au stockage abîmé", () => {
   it("JSON invalide, « null », un tableau : la valeur par défaut, sans lever", () => {
     expect(parseRoleState("{bad")).toEqual({ persona: "artist", focusedArtistId: null, jobRole: null, daId: null });
     expect(parseRoleState("null")).toEqual(DEFAULT);
-    expect(parseRoleState("[]")).toEqual(DEFAULT);
-    expect(parseRoleState("42")).toEqual(DEFAULT);
+    expect(parseRoleState("[]")).toBe(DEFAULT);
+    expect(parseRoleState("42")).toBe(DEFAULT);
   });
   it("la valeur par défaut est la même référence d'un appel à l'autre", () => {
     expect(parseRoleState(null)).toBe(DEFAULT);
@@ -51,11 +51,42 @@ describe("parseRoleState — robuste au stockage abîmé", () => {
 });
 
 /* Un `daId` inconnu avec le rôle DA donnait un périmètre de 0 artiste — Pulse aurait affiché
-   `Math.round(0/0)` = NaN (mesuré le 24/10/2026). Le DA est validé contre la liste de démo. */
+   `Math.round(0/0)` = NaN (mesuré le 24/10/2026). Le DA est validé contre la liste de démo.
+   Et un rôle DA SANS DA valide ne vaut aucun rôle : relecture du 24/10/2026, `{ jobRole: "da",
+   daId: null }` donnait tout le roster (roleScope) sous une barre du haut qui disait « DA ». */
 describe("parseRoleState — le DA doit exister", () => {
   it("un daId inconnu est abandonné, un daId connu est gardé", () => {
     expect(parseRoleState(JSON.stringify({ persona: "label", jobRole: "da", daId: "da-inconnu" })).daId).toBeNull();
     expect(parseRoleState(JSON.stringify({ persona: "label", jobRole: "da", daId: "da-compos" })).daId).toBe("da-compos");
+  });
+  it("rôle DA sans DA valide (inconnu, absent, non textuel) : aucun rôle", () => {
+    expect(parseRoleState(JSON.stringify({ persona: "label", jobRole: "da", daId: "da-inconnu" }))).toEqual({
+      persona: "label",
+      focusedArtistId: null,
+      jobRole: null,
+      daId: null,
+    });
+    expect(parseRoleState(JSON.stringify({ persona: "label", jobRole: "da" })).jobRole).toBeNull();
+    expect(parseRoleState(JSON.stringify({ persona: "label", jobRole: "da", daId: 42 })).jobRole).toBeNull();
+  });
+  it("les autres rôles ne portent jamais de DA, même si le stockage en a un", () => {
+    expect(parseRoleState(JSON.stringify({ persona: "label", jobRole: "finance", daId: "da-urbain" }))).toEqual({
+      persona: "label",
+      focusedArtistId: null,
+      jobRole: "finance",
+      daId: null,
+    });
+  });
+});
+
+/* La même règle au moment d'ÉCRIRE le rôle (setJobRole) : `withDa` est le point unique. */
+describe("withDa — un rôle et son DA cohérents", () => {
+  it("DA + DA connu : gardés ; DA sans DA : aucun rôle ; autre rôle : DA retiré", () => {
+    expect(withDa("da", "da-urbain")).toEqual({ jobRole: "da", daId: "da-urbain" });
+    expect(withDa("da", null)).toEqual({ jobRole: null, daId: null });
+    expect(withDa("da", "da-inconnu")).toEqual({ jobRole: null, daId: null });
+    expect(withDa("finance", "da-urbain")).toEqual({ jobRole: "finance", daId: null });
+    expect(withDa(null, "da-urbain")).toEqual({ jobRole: null, daId: null });
   });
 });
 

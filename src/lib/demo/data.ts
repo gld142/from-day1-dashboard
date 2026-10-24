@@ -8,7 +8,6 @@
  */
 import type {
   Artist,
-  DA,
   Placement,
   Contract,
   EmergingArtist,
@@ -36,19 +35,8 @@ function listenersFromSnapshot(artistId: string, fallback: number): number {
   return last?.spotify.monthlyListeners ?? fallback;
 }
 
-/**
- * Les DA de démo. Prénoms FICTIFS (à remplacer par les vrais si Gaël les donne) ;
- * chaque artiste est rattaché au DA de sa catégorie.
- */
-export const DAS: DA[] = [
-  { id: "da-urbain", name: "Inès M.", category: "urbain" },
-  { id: "da-variete", name: "Julien R.", category: "variete" },
-  { id: "da-compos", name: "Sofia K.", category: "compositeur" },
-];
-
-export function getDa(id: string): DA | null {
-  return DAS.find((d) => d.id === id) ?? null;
-}
+/** Les DA de démo vivent dans `das.ts` (module léger pour role.tsx) ; ré-exportés ici. */
+export { DAS, getDa } from "./das";
 
 /**
  * Le roster réel de la démo (spec §6). Les chiffres d'audience viennent des

@@ -28,7 +28,7 @@ import {
   subscribeUserData,
   USER_ARTIST_ID,
 } from "@/lib/userdata/store";
-import { getDa } from "@/lib/demo/data";
+import { getDa } from "@/lib/demo/das";
 import { isJobRole, roleScope, type JobRole } from "@/lib/roles";
 import { TENANT } from "@/lib/tenant";
 
@@ -55,7 +55,8 @@ type RoleContextValue = {
   daId: string | null;
   /** Périmètre effectif : l'id du DA quand le rôle restreint, sinon null (tout le roster). */
   scopeDaId: string | null;
-  /** Choisir un rôle passe en persona structure et repart de la vue roster ; null retire le rôle. */
+  /** Choisir un rôle passe en persona structure et repart de la vue roster ; null retire le rôle.
+   *  « da » exige un DA connu, sinon le rôle retombe sur null (withDa). */
   setJobRole: (role: JobRole | null, daId?: string | null) => void;
 };
 
@@ -153,9 +154,9 @@ function persistRole(next: RoleState): void {
  * rôle inconnus (ancien stockage, valeur bricolée), un JSON invalide, « null »
  * ou un tableau retombent sur la valeur par défaut — jamais une erreur
  * (mesuré le 24/10/2026 : `JSON.parse` levait sur « {bad » et sur « null »).
- * Un `daId` qui n'est pas un DA connu est abandonné : avec le rôle DA, il
- * donnerait un périmètre vide et Pulse diviserait 0 par 0. La valeur par
- * défaut est UNE référence (readRole en dépend). Exporté pour le test unitaire.
+ * Le couple rôle/DA passe par `withDa` : un DA sans DA connu ne vaut aucun rôle.
+ * La valeur par défaut est UNE référence (readRole en dépend). Exporté pour le
+ * test unitaire.
  */
 export function parseRoleState(raw: string | null): RoleState {
   if (!raw) return DEFAULT_ROLE;
@@ -170,9 +171,21 @@ export function parseRoleState(raw: string | null): RoleState {
   return {
     persona: s.persona === "artist" || s.persona === "label" ? s.persona : "artist",
     focusedArtistId: typeof s.focusedArtistId === "string" ? s.focusedArtistId : null,
-    jobRole: isJobRole(s.jobRole) ? s.jobRole : null,
-    daId: typeof s.daId === "string" && getDa(s.daId) ? s.daId : null,
+    ...withDa(isJobRole(s.jobRole) ? s.jobRole : null, typeof s.daId === "string" ? s.daId : null),
   };
+}
+
+/**
+ * Pur : le rôle et son DA, cohérents. Le rôle DA exige un DA CONNU (das.ts) : un
+ * `daId` inconnu ou absent donnerait, avec le rôle DA, un périmètre vide (Pulse
+ * diviserait 0 par 0) — ou, si on ne gardait que le rôle, TOUT le roster sous une
+ * barre du haut qui dit « DA » (relecture du 24/10/2026). Un DA sans DA valide
+ * retombe donc sur « aucun rôle ». Les autres rôles ne portent pas de DA. Point
+ * unique pour la lecture du stockage (parseRoleState) et l'écriture (setJobRole).
+ */
+export function withDa(jobRole: JobRole | null, daId: string | null): Pick<RoleState, "jobRole" | "daId"> {
+  if (jobRole === "da") return daId && getDa(daId) ? { jobRole: "da", daId } : { jobRole: null, daId: null };
+  return { jobRole, daId: null };
 }
 
 /**
@@ -237,7 +250,8 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setJobRole = useCallback((next: JobRole | null, nextDaId: string | null = null) => {
-    writeRole({ persona: "label", focusedArtistId: null, jobRole: next, daId: next === "da" ? nextDaId : null });
+    /* `setJobRole("da", null)` écrit « aucun rôle » (withDa) : le DA se choisit avec son DA. */
+    writeRole({ persona: "label", focusedArtistId: null, ...withDa(next, nextDaId) });
   }, []);
 
   /* Le périmètre du rôle (jobRole et daId sont déjà nuls hors maison à rôles). */
