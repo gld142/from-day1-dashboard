@@ -1,4 +1,6 @@
 import { test } from "@playwright/test";
+import { isRouteAllowedForTenant } from "../src/lib/nav";
+import { TENANT } from "../src/lib/tenant";
 import {
   THEMES,
   assertIntegrity,
@@ -12,8 +14,11 @@ import {
 } from "./helpers";
 
 /**
- * Audit visuel automatisé : 31 routes × 3 thèmes (persona label), plus les
- * 6 pages du parcours de démo en persona artiste. Desktop 1440×900.
+ * Audit visuel automatisé : les routes ci-dessous × 3 thèmes (persona label), plus
+ * les 6 pages du parcours de démo en persona artiste. Desktop 1440×900. Seules les
+ * routes OUVERTES dans la maison du test (`TENANT`, NEXT_PUBLIC_TENANT du processus,
+ * transmise au serveur lancé par Playwright) sont auditées ; les autres sont
+ * déclarées « skip » avec leur raison (voir `openInHouse`).
  * Pour chaque combinaison :
  *  - seed localStorage (thème + rôle) AVANT le goto (addInitScript),
  *  - attend le h1 visible et le thème appliqué,
@@ -59,6 +64,20 @@ const ROUTES = [
   "welcome?source=believe",
 ] as const;
 
+/**
+ * La route existe-t-elle telle quelle dans la maison du test ? Une page interne From Day 1 fermée
+ * (`isRouteAllowedForTenant`) répond 404 ; un canal /welcome hors `tenant.welcomeSources` retombe
+ * sur le canal par défaut de la maison. Les auditer capturerait une 404, ou un autre canal, sous
+ * un nom trompeur (« onboardings-night.png », « welcome-source-believe-night.png »).
+ */
+function openInHouse(route: string): boolean {
+  const url = new URL(`/${route}`, "http://e2e.invalid");
+  if (!isRouteAllowedForTenant(url.pathname, TENANT)) return false;
+  const source = url.searchParams.get("source");
+  const sources: readonly string[] = TENANT.welcomeSources;
+  return url.pathname !== "/welcome" || source === null || sources.includes(source);
+}
+
 /* La porte à mot de passe (d1_gate) avant chaque test : sans elle, le proxy renvoie sur /acces. */
 test.beforeEach(async ({ context, baseURL }) => passerLaPorte(context, baseURL!));
 
@@ -82,5 +101,9 @@ function audit(route: string, persona: Persona) {
   });
 }
 
-for (const route of ROUTES) audit(route, "label");
-for (const route of ARTIST_ROUTES) audit(route, "artist");
+for (const [routes, persona] of [[ROUTES, "label"], [ARTIST_ROUTES, "artist"]] as const) {
+  for (const route of routes) {
+    if (openInHouse(route)) audit(route, persona);
+    else test.skip(`/${route} (${persona}) — fermée dans la maison ${TENANT.id}`, () => {});
+  }
+}
