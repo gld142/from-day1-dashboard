@@ -39,8 +39,8 @@ describe("excludeArtists", () => {
     expect(excludeArtists(roster, TENANTS.day1).map((a) => a.id)).toEqual(["dadju", "zeg-p"]);
     expect(excludeArtists(roster, TENANTS.universal).map((a) => a.id)).toEqual(["kiko", "zeg-p"]);
   });
-  it("par défaut, c'est la maison du build (day1 sous vitest)", () => {
-    expect(TENANT.id).toBe("day1");
-    expect(excludeArtists(roster).map((a) => a.id)).toEqual(["dadju", "zeg-p"]);
+  it("TENANT est la maison de NEXT_PUBLIC_TENANT, et excludeArtists l'utilise par défaut", () => {
+    expect(TENANT).toBe(tenantFor(process.env.NEXT_PUBLIC_TENANT));
+    expect(excludeArtists(roster).map((a) => a.id)).toEqual(excludeArtists(roster, TENANT).map((a) => a.id));
   });
 });

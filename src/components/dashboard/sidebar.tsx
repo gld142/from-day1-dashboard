@@ -43,7 +43,7 @@ export function Sidebar() {
           <span
             className="ml-auto shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold tracking-[0.12em]"
             style={{ background: TENANT.logo.bg, color: TENANT.logo.fg }}
-            aria-label={`Co-marque ${TENANT.logo.text}`}
+            title={`Co-marque ${TENANT.logo.text}`}
           >
             {TENANT.logo.text}
           </span>
