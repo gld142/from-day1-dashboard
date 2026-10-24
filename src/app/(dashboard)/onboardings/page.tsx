@@ -7,8 +7,9 @@ import OnboardingsView from "./onboardings-view";
 /**
  * /onboardings — page interne From Day 1 : le pipeline partenaires, dont le pitch de Day 1
  * À PROPOS d'Universal. Elle n'existe que dans une maison à pages internes (`internalPages`) :
- * ailleurs, le 404 de Next AVANT tout rendu de la vue (doc Next 16, functions/not-found.md :
- * `notFound()` dans la page serveur ; la vue reste un composant client à côté).
+ * ailleurs, le proxy répond déjà 404 (src/proxy.ts). `notFound()` ici est la SECONDE ligne, avant
+ * tout rendu de la vue : il rend l'interface 404, mais avec un statut 200 (réponse en flux sous le
+ * loading.tsx de (dashboard) : doc Next 16, loading.md « Status Codes »).
  */
 export default function OnboardingsPage() {
   if (!isRouteAllowedForTenant("/onboardings", TENANT)) notFound();

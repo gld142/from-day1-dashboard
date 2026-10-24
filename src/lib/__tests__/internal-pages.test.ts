@@ -1,10 +1,13 @@
 /**
  * Pages internes From Day 1 (`internal` dans nav.ts : /comparatif, /onboardings) et
  * maisons. /onboardings contient le pitch de Day 1 À PROPOS d'Universal : dans la maison
- * universal, ces pages n'existent pas (404 de Next), aucune liste (navigation, palette,
- * Réglages → Modules) ne les cite, et leurs textes ne partent pas vers le navigateur.
- * Dans la maison day1, rien ne change.
+ * universal, ces pages n'existent pas (404 réel, posé par le proxy ; `notFound()` de la page en
+ * seconde ligne), aucune liste (navigation, palette, Réglages → Modules) ne les cite, et leurs
+ * textes ne partent pas vers le navigateur. Dans la maison day1, rien ne change.
  */
+import { readdirSync } from "node:fs";
+import { NextRequest } from "next/server";
+import { getRewrittenUrl, isRewrite } from "next/experimental/testing/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   CUSTOMER_AR_ITEM,
@@ -14,7 +17,9 @@ import {
   CUSTOMER_HOME_ITEM,
   CUSTOMER_ROSTER_ITEM,
   CUSTOMER_SIGNALS_ITEMS,
+  INTERNAL_ROUTES,
   NAV_SECTIONS,
+  UNMATCHED_PATH,
   customerSections,
   internalPageMessageKeys,
   isRouteAllowedForTenant,
@@ -30,6 +35,16 @@ import { TENANTS, type TenantId } from "@/lib/tenant";
    hors serveur Next, on la fixe. Rien d'autre n'est simulé. */
 const requestLocale = vi.hoisted(() => ({ value: "fr" as "fr" | "en" }));
 vi.mock("next-intl/server", () => ({ getLocale: async () => requestLocale.value }));
+
+/* Le proxy lit la session Supabase (réseau) : on compte les clients créés, sans réseau. Une page
+   interne de la maison universal doit répondre AVANT (0 client). */
+const supabase = vi.hoisted(() => ({ clients: 0 }));
+vi.mock("@supabase/ssr", () => ({
+  createServerClient: () => {
+    supabase.clients++;
+    return { auth: { getUser: async () => ({ data: { user: null } }) } };
+  },
+}));
 
 /** Le texte du pitch À PROPOS d'Universal, tel qu'il est écrit (fr, en : onboardings.json). Un
     marqueur qui ne correspond à aucun texte ne peut pas échouer : le témoin plus bas le vérifie. */
@@ -216,9 +231,80 @@ describe("libellés des pages internes (nav, Réglages → Modules) : absents de
   }
 });
 
-/* La garde vit dans la page serveur (doc Next 16 : `notFound()` appelé dans la page,
-   functions/not-found.md) ; la maison est lue au chargement du module : on recharge par maison. */
-describe("garde des pages internes : 404 de Next dans la maison universal, la vue dans la maison day1", () => {
+/* 404 RÉEL. `notFound()` dans la page ne suffit pas : le segment (dashboard) a un loading.tsx, la
+   réponse part en flux avec un statut 200 (doc Next 16, file-conventions/not-found.md et loading.md
+   « Status Codes » ; mesuré par la revue du 24/10). La doc recommande de vérifier AVANT, dans le
+   proxy, et de réécrire vers une route introuvable : la liste du proxy est dérivée de nav.ts. */
+describe("INTERNAL_ROUTES — la liste du proxy, dérivée des items `internal` de nav.ts", () => {
+  const items = NAV_SECTIONS.flatMap((s) => s.items);
+  it("chaque item `internal` et rien d'autre ; sous-pages fermées, voisines ouvertes", () => {
+    const expected = items.filter((i) => i.internal).map((i) => i.href);
+    expect(expected.length).toBeGreaterThan(0);
+    expect([...INTERNAL_ROUTES].sort()).toEqual([...expected].sort());
+    for (const href of expected) {
+      for (const p of [href, `${href}/`, `${href}/umpg`, `${href}/a/b`]) {
+        expect(isRouteAllowedForTenant(p, TENANTS.universal), p).toBe(false);
+        expect(isRouteAllowedForTenant(p, TENANTS.day1), p).toBe(true);
+      }
+      for (const p of [`${href}-bis`, `${href}s`]) expect(isRouteAllowedForTenant(p, TENANTS.universal), p).toBe(true);
+    }
+    for (const i of items.filter((x) => !x.internal)) expect(isRouteAllowedForTenant(i.href, TENANTS.universal), i.href).toBe(true);
+  });
+  it("UNMATCHED_PATH ne correspond à aucune route : dossier privé « _ », et aucun segment dynamique à la racine de app/", () => {
+    expect(UNMATCHED_PATH).toMatch(/^\/_[a-z-]+$/);
+    // Un segment dynamique à la racine ([slug], [...slug]), même dans un groupe (x), l'attraperait.
+    const appDir = new URL("../../app/", import.meta.url);
+    const top = readdirSync(appDir, { withFileTypes: true }).filter((d) => d.isDirectory());
+    const groups = top.filter((d) => /^\(.+\)$/.test(d.name)).flatMap((g) =>
+      readdirSync(new URL(`${g.name}/`, appDir), { withFileTypes: true }).filter((d) => d.isDirectory()),
+    );
+    expect(top.length).toBeGreaterThan(3); // témoin : le dossier lu est bien app/
+    for (const d of [...top, ...groups]) expect(d.name, d.name).not.toMatch(/^\[/);
+  });
+});
+
+describe("proxy — une page interne de la maison universal répond 404 avant la porte et la session", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+    supabase.clients = 0;
+  });
+  async function proxyIn(house: TenantId) {
+    vi.stubEnv("NEXT_PUBLIC_TENANT", house);
+    vi.stubEnv("DEMO_MODE", "on");
+    vi.resetModules();
+    return (await import("@/proxy")).proxy;
+  }
+  it("universal : chaque route interne et ses sous-pages sont réécrites vers la route introuvable, sans cookie ni session", async () => {
+    const proxy = await proxyIn("universal");
+    for (const href of INTERNAL_ROUTES) {
+      for (const p of [href, `${href}/umpg`, `${href}?persona=label`]) {
+        const res = await proxy(new NextRequest(`http://localhost:3006${p}`));
+        expect(isRewrite(res), p).toBe(true);
+        expect(new URL(getRewrittenUrl(res)!).pathname, p).toBe(UNMATCHED_PATH);
+      }
+    }
+    expect(supabase.clients).toBe(0);
+  });
+  it("universal : une page ouverte suit son chemin habituel (sans cookie : la porte)", async () => {
+    const proxy = await proxyIn("universal");
+    const res = await proxy(new NextRequest("http://localhost:3006/pulse"));
+    expect(isRewrite(res)).toBe(false);
+    expect(res.headers.get("location")).toBe("http://localhost:3006/acces?next=%2Fpulse");
+  });
+  it("day1 : /onboardings suit la porte comme avant (307 vers /acces?next=…)", async () => {
+    const proxy = await proxyIn("day1");
+    const res = await proxy(new NextRequest("http://localhost:3005/onboardings"));
+    expect(isRewrite(res)).toBe(false);
+    expect(res.status).toBe(307);
+    expect(res.headers.get("location")).toBe("http://localhost:3005/acces?next=%2Fonboardings");
+  });
+});
+
+/* Seconde ligne, derrière le proxy : la page serveur appelle `notFound()` (doc Next 16,
+   functions/not-found.md) — interface 404, statut 200 sous le loading.tsx de (dashboard). La maison
+   est lue au chargement du module : on recharge par maison. */
+describe("garde des pages internes (seconde ligne) : notFound() dans la maison universal, la vue dans la maison day1", () => {
   afterEach(() => {
     vi.unstubAllEnvs();
     vi.resetModules();

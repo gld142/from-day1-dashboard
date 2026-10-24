@@ -34,7 +34,8 @@ export type Tenant = {
   /**
    * Pages internes From Day 1 (`internal` dans nav.ts : comparatif, pipeline partenaires —
    * dont le pitch de Day 1 À PROPOS d'Universal). false = elles n'existent pas dans cette
-   * maison : 404, absentes des listes, textes non envoyés (`isRouteAllowedForTenant`).
+   * maison : 404 réel posé par le proxy, absentes des listes, textes et libellés non envoyés
+   * (`isRouteAllowedForTenant`, `internalPageMessageKeys`).
    */
   internalPages: boolean;
   /**

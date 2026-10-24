@@ -276,11 +276,19 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
   avant le 24/10, elle ne passait plus la porte depuis le 25/09 (13/13 échecs, mesuré).
 
 - **Pages internes From Day 1** (`internal` dans nav.ts : /comparatif, /onboardings — le pitch de
-  Day 1 À PROPOS d'Universal) : n'existent que si `TENANT.internalPages` (day1). Ailleurs, leur
-  `page.tsx` SERVEUR appelle `notFound()` avant la vue client (`*-view.tsx`),
+  Day 1 À PROPOS d'Universal) : n'existent que si `TENANT.internalPages` (day1). Ailleurs :
+  **404 réel posé par le proxy**, avant la porte et la session (`src/proxy.ts`, liste
+  `INTERNAL_ROUTES` dérivée de nav.ts, sous-pages comprises) — réécriture vers `UNMATCHED_PATH`
+  (« _ » : aucune route), où Next rend `app/not-found.tsx` en 404. `notFound()` dans la page ne
+  suffit pas : sous le `loading.tsx` de (dashboard), la réponse part en flux avec un statut 200
+  (doc Next 16, loading.md « Status Codes »). Mesuré le 24/10 (curl sans cookie, 3006) :
+  /onboardings et /comparatif 307 → 404 ; 3005 (day1) inchangé, 307 vers /acces. Leur `page.tsx`
+  SERVEUR garde `notFound()` avant la vue client (`*-view.tsx`) en seconde ligne,
   `sectionsForTenant` les retire de la navigation, de la palette ⌘K et de Réglages → Modules
-  (un choix `{ "/onboardings": true }` ne les rouvre pas), et `getMessages` n'envoie pas leurs
-  namespaces. Dans les DEUX maisons, leurs textes ne partent qu'avec leur page
+  (un choix `{ "/onboardings": true }` ne les rouvre pas), et `getMessages` n'envoie ni leurs
+  namespaces, ni leurs libellés dans nav et settings (`internalPageMessageKeys`, dérivée des items
+  `internal` ; mesuré le 24/10 sur /connexion de 3006 : « Onboardings partenaires » et « usage
+  interne » 1 → 0). Dans les DEUX maisons, leurs textes ne partent qu'avec leur page
   (`src/i18n/intl-providers.tsx`) : le fournisseur racine reçoit `rootClientMessages` (sans
   `INTERNAL_NAMESPACES`), chaque page interne enveloppe sa vue dans `InternalPageIntlProvider`
   (messages racine + SON namespace : un fournisseur imbriqué remplace les messages du parent). Ne

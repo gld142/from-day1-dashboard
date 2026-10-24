@@ -515,16 +515,31 @@ export function internalPageMessageKeys(sections: readonly NavSection[] = NAV_SE
   };
 }
 
+/** Les routes des pages internes From Day 1, DÉRIVÉES des items `internal` (le proxy les ferme). */
+export const INTERNAL_ROUTES: readonly string[] = NAV_SECTIONS.flatMap((s) => s.items)
+  .filter((i) => i.internal)
+  .map((i) => i.href);
+
 /** Page interne From Day 1 (`internal`), ou une de ses sous-pages ? */
 export function isInternalPath(path: string): boolean {
-  return NAV_SECTIONS.some((s) => s.items.some((i) => i.internal && (path === i.href || path.startsWith(`${i.href}/`))));
+  return INTERNAL_ROUTES.some((href) => path === href || path.startsWith(`${href}/`));
 }
+
+/**
+ * Où le proxy réécrit une route que la maison n'ouvre pas : un chemin qu'aucune route ne sert, pour
+ * que Next rende `app/not-found.tsx` (« handles any unmatched URLs », doc Next 16,
+ * file-conventions/not-found.md) avec un VRAI statut 404, hors du segment (dashboard) et de son
+ * loading.tsx. Préfixe « _ » : un dossier privé n'est jamais une route (doc, project-structure.md
+ * « Private folders ») ; un segment dynamique à la racine de app/ l'attraperait (testé).
+ */
+export const UNMATCHED_PATH = "/_page-absente";
 
 /**
  * La route existe-t-elle dans cette maison ? Les pages internes From Day 1 (comparatif,
  * pipeline partenaires — dont le pitch de Day 1 À PROPOS d'Universal) n'existent que là où
- * `tenant.internalPages` : ailleurs, leur page serveur appelle `notFound()`, et
- * `sectionsForTenant` les retire de la navigation, de la palette ⌘K et de Réglages → Modules.
+ * `tenant.internalPages` : ailleurs, le proxy répond 404 avant tout (src/proxy.ts), leur page
+ * serveur appelle `notFound()` en seconde ligne, et `sectionsForTenant` les retire de la
+ * navigation, de la palette ⌘K et de Réglages → Modules.
  */
 export function isRouteAllowedForTenant(href: string, tenant: Tenant): boolean {
   return tenant.internalPages || !isInternalPath(href);

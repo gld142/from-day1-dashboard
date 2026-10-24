@@ -6,9 +6,10 @@ import ComparatifView from "./comparatif-view";
 
 /**
  * /comparatif — page interne From Day 1 : Day 1 face à ses concurrents. Elle n'existe que dans
- * une maison à pages internes (`internalPages`) : ailleurs, le 404 de Next AVANT tout rendu de
- * la vue (doc Next 16, functions/not-found.md : `notFound()` dans la page serveur ; la vue reste
- * un composant client à côté).
+ * une maison à pages internes (`internalPages`) : ailleurs, le proxy répond déjà 404
+ * (src/proxy.ts). `notFound()` ici est la SECONDE ligne, avant tout rendu de la vue : il rend
+ * l'interface 404, mais avec un statut 200 (réponse en flux sous le loading.tsx de (dashboard) :
+ * doc Next 16, loading.md « Status Codes »).
  */
 export default function ComparatifPage() {
   if (!isRouteAllowedForTenant("/comparatif", TENANT)) notFound();
