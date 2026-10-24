@@ -10,7 +10,6 @@ import { useCustomer } from "@/lib/customer-mode";
 import { Suspense, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
-  ARTISTS,
   PROJECTS,
   dailyTotals,
   getArtist,
@@ -20,6 +19,7 @@ import {
 } from "@/lib/demo/api";
 import type { DSP } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtPct } from "@/lib/format";
+import { scopedArtists } from "@/lib/demo/scope";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -67,16 +67,18 @@ function DemoStreamsPage() {
   const locale = useLocale();
   const t = useTranslations("streams");
   const tc = useTranslations("common");
-  const { artistId, focusedArtistId, isLabel } = useRole();
+  const { artistId, focusedArtistId, isLabel, scopeDaId } = useRole();
 
   const [period, setPeriod] = useState<Period>("30d");
   const days = DAYS[period];
   const weekly = days >= 90;
 
   const aggregate = isLabel && !focusedArtistId;
+  /* Le périmètre du rôle (le DA : ses artistes) — l'agrégat et le comparateur le suivent. */
+  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
   const ids = useMemo(
-    () => (aggregate ? ARTISTS.map((a) => a.id) : [artistId]),
-    [aggregate, artistId],
+    () => (aggregate ? roster.map((a) => a.id) : [artistId]),
+    [aggregate, artistId, roster],
   );
   const focusedArtist =
     isLabel && focusedArtistId ? getArtist(focusedArtistId) : null;
@@ -303,7 +305,7 @@ function DemoStreamsPage() {
           </Sheet>
         )}
 
-        {aggregate && <RosterCompare days={days} />}
+        {aggregate && <RosterCompare days={days} artists={roster} />}
 
         <Doors
           title={tc("blocks.doors")}

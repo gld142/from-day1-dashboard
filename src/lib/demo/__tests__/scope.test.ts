@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ARTISTS, DAS } from "@/lib/demo/data";
-import { labelTotals, pnlByArtist, rosterDspEstimates, rosterEstimateSummaries, rosterRows } from "@/lib/demo/api";
-import { FULL_SCOPE, isFullScope, parseScope, scopeQuery, scopedArtists } from "@/lib/demo/scope";
+import { labelTotals, marketRosterTracks, pnlByArtist, rosterDspEstimates, rosterEstimateSummaries, rosterRows, rosterTiktokSignal } from "@/lib/demo/api";
+import { FULL_SCOPE, effectiveScope, isFullScope, parseScope, scopeQuery, scopedArtists } from "@/lib/demo/scope";
 
 const ids = (list: { id: string }[]) => list.map((a) => a.id).sort();
 
@@ -68,5 +68,42 @@ describe("agrégats label sur une liste", () => {
     const parts = rosterEstimateSummaries(compos)["month"].streams;
     expect(parts).toBeLessThanOrEqual(whole);
     expect(rosterDspEstimates("month", compos).reduce((s, d) => s + d.streams, 0)).toBe(parts);
+  });
+});
+
+/* Mesuré le 24/10/2026 sous le DA Sofia K. : `rosterTiktokSignal()` disait 457 720 vidéos (tout
+   le roster) contre 27 800 pour ses trois artistes, et `marketRosterTracks()` comptait les titres
+   de tout le roster. Les deux agrégats prennent désormais la liste du périmètre. */
+describe("agrégats TikTok et marché au périmètre", () => {
+  const compos = scopedArtists({ category: "compositeur" });
+  it("rosterTiktokSignal : le signal des compositeurs est plus petit que celui du roster, et le défaut vaut tout le roster", () => {
+    const whole = rosterTiktokSignal();
+    const part = rosterTiktokSignal(compos);
+    expect(whole).not.toBeNull();
+    expect(part).not.toBeNull();
+    expect(part!.videos).toBeLessThan(whole!.videos);
+    expect(rosterTiktokSignal(ARTISTS)).toEqual(whole);
+    expect(rosterTiktokSignal([])).toBeNull();
+  });
+  it("marketRosterTracks : zéro titre pour une liste vide, le défaut vaut tout le roster", () => {
+    expect(marketRosterTracks(undefined, [])).toBe(0);
+    expect(marketRosterTracks(undefined, ARTISTS)).toBe(marketRosterTracks());
+    expect(marketRosterTracks(undefined, compos)).toBeLessThanOrEqual(marketRosterTracks());
+  });
+});
+
+/* Un DA qui clique « Roster » dans la barre latérale arrive sur /roster sans `?da=` et voyait
+   les 11 artistes quand Pulse en disait 6 (mesuré le 24/10/2026). Le verrou du rôle prime :
+   l'URL ne peut pas l'élargir ; sans verrou, l'URL décide. */
+describe("effectiveScope — le verrou du rôle prime sur l'URL", () => {
+  it("verrou posé : le `da` de l'URL est ignoré, la catégorie reste", () => {
+    expect(effectiveScope({ category: "urbain", daId: null }, "da-compos")).toEqual({ category: "urbain", daId: "da-compos" });
+    expect(effectiveScope({ category: null, daId: "da-urbain" }, "da-compos")).toEqual({ category: null, daId: "da-compos" });
+    expect(effectiveScope(FULL_SCOPE, "da-variete")).toEqual({ category: null, daId: "da-variete" });
+  });
+  it("sans verrou : l'URL décide, telle quelle", () => {
+    const url = { category: "variete" as const, daId: "da-urbain" };
+    expect(effectiveScope(url, null)).toEqual(url);
+    expect(effectiveScope(FULL_SCOPE, null)).toEqual(FULL_SCOPE);
   });
 });

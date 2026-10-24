@@ -2,7 +2,9 @@
 
 /**
  * Filtres du roster de démo : catégorie et DA, en pastilles. L'état vit dans
- * l'URL (`?cat=`, `?da=`) — partageable, et un rôle DA arrive déjà filtré.
+ * l'URL (`?cat=`, `?da=`) — partageable. Sous un rôle DA (`lockedDaId`), le
+ * groupe DA disparaît : un DA ne parcourt pas le roster des autres, il ne
+ * filtre que par catégorie.
  */
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
@@ -40,11 +42,15 @@ function Pill({
 export function RosterFilters({
   scope,
   onChange,
+  lockedDaId = null,
 }: {
   scope: RosterScope;
   onChange: (next: RosterScope) => void;
+  /** Le DA du rôle : son groupe de pastilles est caché, et « Réinitialiser » ne touche que la catégorie. */
+  lockedDaId?: string | null;
 }) {
   const t = useTranslations("roster");
+  const canReset = lockedDaId ? scope.category !== null : !isFullScope(scope);
   return (
     <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]">
       <div
@@ -70,30 +76,32 @@ export function RosterFilters({
           </Pill>
         ))}
       </div>
-      <div
-        className="flex flex-wrap items-center gap-1.5"
-        role="group"
-        aria-label={t("filters.da")}
-      >
-        <span className="mr-1 text-muted-foreground">{t("filters.da")}</span>
-        <Pill active={scope.daId === null} onClick={() => onChange({ ...scope, daId: null })}>
-          {t("filters.allDa")}
-        </Pill>
-        {DAS.map((d) => (
-          <Pill
-            key={d.id}
-            active={scope.daId === d.id}
-            onClick={() => onChange({ ...scope, daId: scope.daId === d.id ? null : d.id })}
-          >
-            {d.name}
+      {!lockedDaId && (
+        <div
+          className="flex flex-wrap items-center gap-1.5"
+          role="group"
+          aria-label={t("filters.da")}
+        >
+          <span className="mr-1 text-muted-foreground">{t("filters.da")}</span>
+          <Pill active={scope.daId === null} onClick={() => onChange({ ...scope, daId: null })}>
+            {t("filters.allDa")}
           </Pill>
-        ))}
-      </div>
-      {/* Hors périmètre complet : un seul geste pour revenir à tout le roster. */}
-      {!isFullScope(scope) && (
+          {DAS.map((d) => (
+            <Pill
+              key={d.id}
+              active={scope.daId === d.id}
+              onClick={() => onChange({ ...scope, daId: scope.daId === d.id ? null : d.id })}
+            >
+              {d.name}
+            </Pill>
+          ))}
+        </div>
+      )}
+      {/* Hors périmètre complet : un seul geste pour revenir à tout le roster (le sien, sous le verrou). */}
+      {canReset && (
         <button
           type="button"
-          onClick={() => onChange({ category: null, daId: null })}
+          onClick={() => onChange({ category: null, daId: lockedDaId })}
           className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
         >
           {t("filters.reset")}

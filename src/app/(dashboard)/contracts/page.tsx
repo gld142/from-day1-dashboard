@@ -16,7 +16,8 @@ import { CustomerContracts } from "@/components/modules/customer/customer-contra
 import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ARTISTS, CONTRACTS, getArtist } from "@/lib/demo/api";
+import { CONTRACTS, getArtist } from "@/lib/demo/api";
+import { scopedArtists } from "@/lib/demo/scope";
 import { DEMO_TODAY } from "@/lib/demo/seed";
 import type { Contract } from "@/lib/demo/types";
 import { fmtDate, fmtEur, fmtInt } from "@/lib/format";
@@ -48,14 +49,17 @@ function DemoContractsPage() {
   const t = useTranslations("contracts");
   const tc = useTranslations("common");
   const locale = useLocale();
-  const { isLabel, artistId, focusedArtistId } = useRole();
+  const { isLabel, artistId, focusedArtistId, scopeDaId } = useRole();
   const grouped = isLabel && !focusedArtistId;
   const focusedArtist = isLabel && focusedArtistId ? getArtist(focusedArtistId) : null;
+  /* Le périmètre du rôle (le DA : ses artistes) — les contrats groupés le suivent. */
+  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
 
-  const contracts = useMemo<Contract[]>(
-    () => (grouped ? CONTRACTS : CONTRACTS.filter((c) => c.artistId === artistId)),
-    [grouped, artistId],
-  );
+  const contracts = useMemo<Contract[]>(() => {
+    if (!grouped) return CONTRACTS.filter((c) => c.artistId === artistId);
+    const ids = new Set(roster.map((a) => a.id));
+    return CONTRACTS.filter((c) => ids.has(c.artistId));
+  }, [grouped, artistId, roster]);
 
   const alerts = useMemo(
     () =>
@@ -121,11 +125,11 @@ function DemoContractsPage() {
 
   const groups = useMemo(() => {
     if (!grouped) return [{ artist: null, contracts }];
-    return ARTISTS.map((a) => ({
+    return roster.map((a) => ({
       artist: a,
       contracts: contracts.filter((c) => c.artistId === a.id),
     })).filter((g) => g.contracts.length > 0);
-  }, [grouped, contracts]);
+  }, [grouped, contracts, roster]);
 
   const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
   const recoupedPct =

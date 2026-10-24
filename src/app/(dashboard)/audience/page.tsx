@@ -24,7 +24,8 @@ import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
  */
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ARTISTS, getArtist } from "@/lib/demo/api";
+import { getArtist } from "@/lib/demo/api";
+import { scopedArtists } from "@/lib/demo/scope";
 import { fmtCompact, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -49,12 +50,14 @@ function AudiencePage() {
   const t = useTranslations("audience");
   const tc = useTranslations("common");
   const locale = useLocale();
-  const { artistId, focusedArtistId, isLabel } = useRole();
+  const { artistId, focusedArtistId, isLabel, scopeDaId } = useRole();
 
   const aggregate = isLabel && !focusedArtistId;
+  /* Le périmètre du rôle (le DA : ses artistes) — l'agrégat et le comparatif le suivent. */
+  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
   const ids = useMemo(
-    () => (aggregate ? ARTISTS.map((a) => a.id) : [artistId]),
-    [aggregate, artistId],
+    () => (aggregate ? roster.map((a) => a.id) : [artistId]),
+    [aggregate, artistId, roster],
   );
   const focusedArtist = isLabel && focusedArtistId ? getArtist(focusedArtistId) : null;
 
@@ -167,7 +170,7 @@ function AudiencePage() {
           <DiscoveryDonut ids={ids} bare />
         </Sheet>
 
-        {aggregate && <AudienceRosterTable />}
+        {aggregate && <AudienceRosterTable artists={roster} />}
 
         <Doors
           title={tc("blocks.doors")}

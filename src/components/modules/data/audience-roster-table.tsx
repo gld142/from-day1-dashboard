@@ -7,6 +7,7 @@
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ARTISTS, countryBreakdown } from "@/lib/demo/api";
+import type { Artist } from "@/lib/demo/types";
 import { fmtCompact, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -22,14 +23,15 @@ import {
 } from "@/components/ui/table";
 import { followersFor, segmentsFor } from "./derive";
 
-export function AudienceRosterTable() {
+/** `artists` : le périmètre comparé (le DA : les siens) ; tout le roster par défaut. */
+export function AudienceRosterTable({ artists = ARTISTS }: { artists?: Artist[] }) {
   const locale = useLocale();
   const t = useTranslations("audience");
   const { setFocusedArtistId } = useRole();
 
   const rows = useMemo(
     () =>
-      ARTISTS.map((a) => {
+      artists.map((a) => {
         const segs = segmentsFor([a.id]);
         const superfans = segs.find((s) => s.id === "superfans")?.count ?? 0;
         const engaged = segs.find((s) => s.id === "engaged")?.count ?? 0;
@@ -47,7 +49,7 @@ export function AudienceRosterTable() {
           topMarket: top ? (locale === "fr" ? top.nameFr : top.nameEn) : "—",
         };
       }).sort((a, b) => b.listeners - a.listeners),
-    [locale],
+    [locale, artists],
   );
 
   const maxEngagement = Math.max(1, ...rows.map((r) => r.engagement));

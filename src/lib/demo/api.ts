@@ -411,10 +411,12 @@ export function tiktokSignal(artistId: string): TikTokSignal | null {
  * Signal TikTok du roster : Σ vidéos et Σ delta des artistes réels ; le titre
  * le plus repris est celui de l'artiste qui cumule le plus de vidéos (les
  * relevés ne donnent pas le détail par son) ; meilleur rang FR non nul ;
- * provenance = la plus faible. null si aucun artiste réel.
+ * provenance = la plus faible. null si aucun artiste réel. `artists` = le
+ * périmètre (le DA : les siens) — mesuré le 24/10/2026 sous Sofia K. : 457 720
+ * vidéos pour tout le roster contre 27 800 pour ses trois artistes.
  */
-export function rosterTiktokSignal(): TikTokSignal | null {
-  const parts = ARTISTS.flatMap((a) => {
+export function rosterTiktokSignal(artists: Artist[] = ARTISTS): TikTokSignal | null {
+  const parts = artists.flatMap((a) => {
     const s = tiktokSignal(a.id);
     return s ? [s] : [];
   });
@@ -454,13 +456,13 @@ export function marketReading(date?: string): MorningReading | null {
 /**
  * Titres distincts du Top 200 où un artiste du roster figure, invités compris.
  * Source unique pour /market (« N titres classés ») et /pulse : les compter
- * séparément les faisait diverger.
+ * séparément les faisait diverger. `artists` = le périmètre (Pulse sous un DA).
  */
-export function marketRosterTracks(date?: string): number {
+export function marketRosterTracks(date?: string, artists: Artist[] = ARTISTS): number {
   const s = marketSnapshot(date);
   if (!s) return 0;
   return rosterTrackCount(
-    ARTISTS.map((a) => ({ id: a.id, name: a.name, spotifyId: a.spotifyId })),
+    artists.map((a) => ({ id: a.id, name: a.name, spotifyId: a.spotifyId })),
     s.tracks,
   );
 }

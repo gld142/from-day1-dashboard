@@ -23,7 +23,6 @@ import {
   YAxis,
 } from "recharts";
 import {
-  ARTISTS,
   ESTIMATE_PERIODS,
   dspEstimates,
   estimateSummaries,
@@ -43,6 +42,7 @@ import type { RevenueSource } from "@/lib/demo/types";
 import { REVENUE_SOURCES } from "@/lib/demo/types";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
+import { scopedArtists } from "@/lib/demo/scope";
 import { useRole } from "@/lib/role";
 import { yearWindow } from "@/lib/year-window";
 import { useUrlParam } from "@/lib/url-param";
@@ -109,9 +109,11 @@ function DemoRevenuePage() {
   const tc = useTranslations("common");
   const tDsp = useTranslations("streams.dsp.names");
   const locale = useLocale();
-  const { persona, artistId, isLabel, focusedArtistId, setFocusedArtistId } =
+  const { persona, artistId, isLabel, focusedArtistId, setFocusedArtistId, scopeDaId } =
     useRole();
   const aggregated = isLabel && !focusedArtistId;
+  /* Le périmètre du rôle (le DA : ses artistes) — tous les agrégats structure le suivent. */
+  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
 
   /* Période de l'estimation, portée par l'URL (?period=) : le lien « Voir le
    * détail » de Pulse et un rechargement retombent sur la même vue. */
@@ -122,7 +124,7 @@ function DemoRevenuePage() {
   );
 
   const data = useMemo(() => {
-    const ids = aggregated ? ARTISTS.map((a) => a.id) : [artistId];
+    const ids = aggregated ? roster.map((a) => a.id) : [artistId];
 
     // Série mensuelle empilée par source (24 mois).
     const byMonth = new Map<string, Record<string, number>>();
@@ -201,13 +203,13 @@ function DemoRevenuePage() {
          rentable » du Copilot, trompeur ici : la liste descendrait dans un
          ordre pendant que les barres en dessineraient un autre. */
       pnl: aggregated
-        ? [...pnlByArtist(12)].sort((a, b) => b.revenue - a.revenue)
+        ? [...pnlByArtist(12, roster)].sort((a, b) => b.revenue - a.revenue)
         : [],
       spark: monthlyRevenueTotals(ids[0], 24)
         .slice(-12)
         .map((m) => ({ value: m.amount })),
     };
-  }, [aggregated, artistId]);
+  }, [aggregated, artistId, roster]);
 
   /* ── Estimation live (couche réelle) : l'artiste en focus, ou le roster ────
    * Les parts renseignées (panneau « Ta part ») changent les cascades : la clé
@@ -215,17 +217,17 @@ function DemoRevenuePage() {
   const sharesKey = useSharesSnapshot();
   const est = useMemo<Record<EstimatePeriod, EstimateSummary> | null>(() => {
     void sharesKey;
-    if (aggregated) return rosterEstimateSummaries();
+    if (aggregated) return rosterEstimateSummaries(roster);
     return hasReal(artistId) ? estimateSummaries(artistId) : null;
-  }, [aggregated, artistId, sharesKey]);
+  }, [aggregated, artistId, sharesKey, roster]);
 
   /* Par plateforme sur la période choisie : streams, brut master (mid),
    * provenance la plus faible, taux effectif €/stream — la somme des lignes
    * retombe sur le brut master de la tuile correspondante. */
   const byDsp = useMemo<DspEstimate[]>(() => {
-    if (aggregated) return rosterDspEstimates(period);
+    if (aggregated) return rosterDspEstimates(period, roster);
     return hasReal(artistId) ? dspEstimates(artistId, period) : [];
-  }, [aggregated, artistId, period]);
+  }, [aggregated, artistId, period, roster]);
 
   const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
   /** Une part, sans signe. */
@@ -235,8 +237,8 @@ function DemoRevenuePage() {
     );
   /* Les faits d'année, partagés avec la bande « Ton année » de Pulse. */
   const year = useMemo(
-    () => yearWindow(aggregated ? ARTISTS.map((a) => a.id) : [artistId]),
-    [aggregated, artistId],
+    () => yearWindow(aggregated ? roster.map((a) => a.id) : [artistId]),
+    [aggregated, artistId, roster],
   );
 
   /* Revenus ET streams sur le même axe de temps.
@@ -250,7 +252,7 @@ function DemoRevenuePage() {
    * Il est cadré sur `year.months`, les douze mois complets du chiffre
    * principal : pas une fenêtre de plus. */
   const composed = useMemo(() => {
-    const ids = aggregated ? ARTISTS.map((a) => a.id) : [artistId];
+    const ids = aggregated ? roster.map((a) => a.id) : [artistId];
     const garde = new Set(year.months);
     const revenus = new Map<string, number>();
     const streams = new Map<string, number>();
@@ -268,7 +270,7 @@ function DemoRevenuePage() {
       revenue: revenus.get(month) ?? 0,
       streams: streams.get(month) ?? 0,
     }));
-  }, [aggregated, artistId, year.months]);
+  }, [aggregated, artistId, year.months, roster]);
 
   /* Les 12 mois que résume le chiffre du centre, dans une série qui en montre
      24 : la zone ombrée dit lesquels. */

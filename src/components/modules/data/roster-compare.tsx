@@ -16,12 +16,14 @@ import {
   YAxis,
 } from "recharts";
 import { ARTISTS, dailyTotals, getArtist } from "@/lib/demo/api";
+import type { Artist } from "@/lib/demo/types";
 import { artistColor, fmtCompact, fmtDate } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistAvatar } from "@/components/dashboard/artist-badge";
 import { aggregateWeekly } from "./derive";
 
-export function RosterCompare({ days }: { days: number }) {
+/** `artists` : le périmètre comparé (le DA : les siens) ; tout le roster par défaut. */
+export function RosterCompare({ days, artists: roster = ARTISTS }: { days: number; artists?: Artist[] }) {
   const locale = useLocale();
   const t = useTranslations("streams");
   const { setFocusedArtistId } = useRole();
@@ -29,7 +31,7 @@ export function RosterCompare({ days }: { days: number }) {
 
   const artists = useMemo(
     () =>
-      ARTISTS.map((artist) => {
+      roster.map((artist) => {
         const series = dailyTotals(artist.id, days);
         return {
           artist,
@@ -37,7 +39,7 @@ export function RosterCompare({ days }: { days: number }) {
           total: series.reduce((s, p) => s + p.streams, 0),
         };
       }).sort((a, b) => b.total - a.total),
-    [days, weekly],
+    [days, weekly, roster],
   );
 
   const chartData = useMemo(() => {

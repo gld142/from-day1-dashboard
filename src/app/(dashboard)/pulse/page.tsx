@@ -418,7 +418,7 @@ function PulsePage() {
     const alertCount = CONTRACTS.filter((c) => rosterIds.has(c.artistId)).flatMap((c) => c.alerts).filter(
       (a) => a.severity !== "info",
     ).length;
-    const tiktok = rosterTiktokSignal();
+    const tiktok = rosterTiktokSignal(roster);
 
     const gap = roster.reduce((s, a) => s + openGap(auditFindings(a.id)), 0);
     const rightsPending = roster.reduce(
@@ -437,8 +437,8 @@ function PulsePage() {
     /* Le libellé dit « titres » : il faut compter les titres. `length`
        comptait les ARTISTES du roster présents — 2 au lieu de 4, et en
        contradiction avec /market qui lit pourtant la même capture Kworb.
-       Le décompte vient désormais de la même fonction que /market. */
-    const rosterTracks = marketRosterTracks();
+       Le décompte vient désormais de la même fonction que /market, au périmètre du rôle. */
+    const rosterTracks = marketRosterTracks(undefined, roster);
     const valuation = roster.reduce((s, a) => s + catalogValuation(a.id).mid, 0);
     /* Un artiste est « renseigné » quand l'utilisateur a saisi ou importé ses
        pourcentages — pas quand le contrat de démo existe. */
@@ -1180,9 +1180,13 @@ function PulsePage() {
                   {
                     key: "index",
                     label: t("audience.indexLabel"),
-                    value: `${Math.round(
-                      roster.reduce((s, a) => s + a.day1Index, 0) / roster.length,
-                    )} / 100`,
+                    /* Périmètre vide (DA sans artiste) : « — », pas NaN. */
+                    value:
+                      roster.length === 0
+                        ? "—"
+                        : `${Math.round(
+                            roster.reduce((s, a) => s + a.day1Index, 0) / roster.length,
+                          )} / 100`,
                   },
                   ...(l.night.tiktok
                     ? [

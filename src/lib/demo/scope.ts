@@ -37,3 +37,13 @@ export function scopeQuery(scope: RosterScope): string {
 export function isFullScope(scope: RosterScope): boolean {
   return !scope.category && !scope.daId;
 }
+
+/**
+ * Périmètre effectif de /roster : le verrou du rôle (`scopeDaId`, le DA) prime sur l'URL —
+ * un DA ne parcourt pas le roster des autres, et `?da=` ne peut pas élargir le sien. Sans
+ * verrou (null), l'URL décide. Mesuré le 24/10/2026 : un DA qui cliquait « Roster » dans la
+ * barre latérale arrivait sans `?da=` et voyait les 11 artistes quand Pulse en disait 6.
+ */
+export function effectiveScope(urlScope: RosterScope, lockedDaId: string | null): RosterScope {
+  return lockedDaId ? { ...urlScope, daId: lockedDaId } : urlScope;
+}

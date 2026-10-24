@@ -32,7 +32,7 @@ import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
 import { getDa } from "@/lib/demo/data";
-import { isFullScope, parseScope, scopeQuery, scopedArtists, type RosterScope } from "@/lib/demo/scope";
+import { effectiveScope, isFullScope, parseScope, scopeQuery, scopedArtists, type RosterScope } from "@/lib/demo/scope";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur } from "@/lib/format";
 import { useCustomer } from "@/lib/customer-mode";
@@ -54,14 +54,16 @@ function DemoRoster() {
   const t = useTranslations("roster");
   const tc = useTranslations("common");
   const locale = useLocale();
-  const { isLabel, focusedArtistId, setFocusedArtistId, setPersona } = useRole();
+  const { isLabel, focusedArtistId, setFocusedArtistId, setPersona, scopeDaId } = useRole();
   /* Notes ouvertes du fil par artiste : la colonne Notes du tableau (lien vers /fil?artist=). */
   const { byArtist } = useFeed();
 
-  /* Le périmètre vient de l'URL (`?cat=`, `?da=`) : partageable, et un rôle DA
-     arrive déjà filtré. Tout en dessous — lignes, totaux, P&L, alertes — le suit. */
+  /* Le périmètre vient de l'URL (`?cat=`, `?da=`) : partageable. Sous un rôle DA, son
+     périmètre VERROUILLE le DA (scope.ts, effectiveScope) : l'URL ne peut pas l'élargir, et
+     seule la catégorie reste à lui. Tout en dessous — lignes, totaux, P&L, alertes — le suit. */
   const params = useSearchParams();
-  const scope = useMemo(() => parseScope(params), [params]);
+  const urlScope = useMemo(() => parseScope(params), [params]);
+  const scope = useMemo(() => effectiveScope(urlScope, scopeDaId), [urlScope, scopeDaId]);
   const artists = useMemo(() => scopedArtists(scope), [scope]);
   const rows = useMemo(() => rosterRows(artists), [artists]);
   const totals = useMemo(() => labelTotals(artists), [artists]);
@@ -69,10 +71,14 @@ function DemoRoster() {
      « Shallow routing on the client ») : « `pushState` et `replaceState` s'intègrent au routeur
      Next.js et se synchronisent avec `usePathname` et `useSearchParams` » (traduit). Le filtre
      est donc relu par `useSearchParams` ci-dessus, y compris après un `router.push("/roster?da=…")`
-     venu de la barre du haut. Pas de dépendance : `window.history` est stable. */
-  const setScope = useCallback((next: RosterScope) => {
-    window.history.replaceState(null, "", `/roster${scopeQuery(next)}`);
-  }, []);
+     venu de la barre du haut. Sous le verrou DA, l'URL ne porte que la catégorie. */
+  const setScope = useCallback(
+    (next: RosterScope) => {
+      const written = scopeDaId ? { ...next, daId: null } : next;
+      window.history.replaceState(null, "", `/roster${scopeQuery(written)}`);
+    },
+    [scopeDaId],
+  );
   const scopeText = [
     scope.category ? t(`category.${scope.category}`) : null,
     scope.daId ? getDa(scope.daId)?.name : null,
@@ -154,7 +160,7 @@ function DemoRoster() {
       </PageHeader>
 
       <div className="mb-3">
-        <RosterFilters scope={scope} onChange={setScope} />
+        <RosterFilters scope={scope} onChange={setScope} lockedDaId={scopeDaId} />
       </div>
 
       <div className="space-y-3">
