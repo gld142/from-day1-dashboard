@@ -278,9 +278,9 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
 - **Pages internes From Day 1** (`internal` dans nav.ts : /comparatif, /onboardings — le pitch de
   Day 1 À PROPOS d'Universal) : n'existent que si `TENANT.internalPages` (day1). Ailleurs :
   **404 réel posé par le proxy**, avant la porte et la session (`src/proxy.ts`, liste
-  `INTERNAL_ROUTES` dérivée de nav.ts, sous-pages comprises) — réécriture vers `UNMATCHED_PATH`
-  (« _ » : aucune route), où Next rend `app/not-found.tsx` en 404. `notFound()` dans la page ne
-  suffit pas : sous le `loading.tsx` de (dashboard), la réponse part en flux avec un statut 200
+  `INTERNAL_ROUTES` de `src/lib/internal-routes.ts`, sous-pages comprises) — réécriture vers
+  `UNMATCHED_PATH` (« _ » : aucune route), où Next rend `app/not-found.tsx` en 404. `notFound()`
+  dans la page ne suffit pas : sous le `loading.tsx` de (dashboard), la réponse part en flux avec un statut 200
   (doc Next 16, loading.md « Status Codes »). Mesuré le 24/10 (curl sans cookie, 3006) :
   /onboardings et /comparatif 307 → 404 ; 3005 (day1) inchangé, 307 vers /acces. Leur `page.tsx`
   SERVEUR garde `notFound()` avant la vue client (`*-view.tsx`) en seconde ligne,
@@ -290,17 +290,32 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
   `internal` ; mesuré le 24/10 sur /connexion de 3006 : « Onboardings partenaires » et « usage
   interne » 1 → 0). Dans les DEUX maisons, leurs textes ne partent qu'avec leur page
   (`src/i18n/intl-providers.tsx`) : le fournisseur racine reçoit `rootClientMessages` (sans
-  `INTERNAL_NAMESPACES`), chaque page interne enveloppe sa vue dans `InternalPageIntlProvider`
-  (messages racine + SON namespace : un fournisseur imbriqué remplace les messages du parent). Ne
-  jamais rendre `<NextIntlClientProvider>` sans `messages` : next-intl 4 hérite alors de TOUT
-  `getMessages()`. Mesuré le 24/10 : le pitch et le nom de son contact se lisaient dans le HTML
-  de /connexion et /inscription (publiques) de la maison day1 (1 → 0 après correctif).
+  `PAGE_SCOPED_NAMESPACES`), chaque page interne enveloppe sa vue dans `PageIntlProvider`
+  (`pageMessages` : messages racine + SON namespace ; un fournisseur imbriqué remplace les messages
+  du parent). Ne jamais rendre `<NextIntlClientProvider>` sans `messages` : next-intl 4 hérite
+  alors de TOUT `getMessages()`. Seul `intl-providers.tsx` le rend, et le layout racine passe par
+  `<RootIntlProvider>` (`intl-wiring.test.ts`, qui lit le code source). Mesuré le 24/10 : le pitch
+  et le nom de son contact se lisaient dans le HTML de /connexion et /inscription (publiques) de la
+  maison day1 (1 → 0 après correctif).
+- **Proxy léger** : `src/proxy.ts` tourne avant chaque requête et n'importe JAMAIS nav.ts (icônes
+  lucide-react). Les routes internes sont ÉCRITES dans `src/lib/internal-routes.ts` (aucun import
+  de valeur) ; `internal-pages.test.ts` les tient égales aux items `internal` de nav.ts, dans les
+  deux sens — une page marquée `internal` sans sa route fait échouer le test (mesuré).
+  `internal-routes.test.ts` parcourt le graphe d'import du proxy : ni nav.ts ni lucide-react, et
+  ses paquets sont `@supabase/ssr` et `next` (un nouveau se décide là).
+  Mesuré le 24/10 (`next build`, chunk que charge `server/middleware.js`) : maison day1,
+  435 938 o avec `lucide-react/dist/esm/Icon.mjs` et les libellés de nav.ts avant, 421 619 o et
+  0 « lucide » après ; maison universal après : 421 546 o, 0 « lucide ». En `next dev`, les
+  commentaires restent dans le chunk : « lucide » y trouve ceux de proxy.ts et internal-routes.ts.
 - **Namespaces de page** (`PAGE_SCOPED_NAMESPACES`, `src/messages/index.ts`) : comparatif,
   onboardings ET `welcome` (écran co-brandé /welcome?source=…, seul lecteur
   `cobrand-screen.tsx`). Ils ne partent qu'avec leur page, jamais avec la racine : /welcome
   enveloppe sa vue dans `PageIntlProvider` (`pageMessages`). `welcome` n'est pas non plus dans
   `getMessages` (aucun lecteur serveur ; un fournisseur sans `messages` ne peut donc pas
-  l'emporter). Un nouveau namespace lu par une seule page s'ajoute à cette liste. Mesuré le
+  l'emporter). **Fermé par défaut** : `namespace-classification.test.ts` exige que chaque
+  namespace soit classé racine (`ROOT_ALLOWLIST`, écrite dans le test : envoyé sur toutes les
+  pages, publiques comprises) ou page (`PAGE_SCOPED_NAMESPACES`) ; un nouveau namespace le fait
+  échouer tant que personne n'a choisi (sans ce test, il partait avec la racine : mesuré). Mesuré le
   24/10 (curl, fr) : le bloc Believe (contact nommé « Ismaël », « Différenciation Believe vs
   DistroKid ») se lisait dans le HTML de /connexion et /inscription des DEUX maisons (1 → 0 sur
   3005 et 3006 ; « Believe » restant = libellés marché et formats d'import, légitimes).
@@ -309,7 +324,8 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
   (entités Universal Music Group) et direct, universal par défaut — jamais Believe ni un autre
   partenaire : `resolveSource` ne le résout pas, la bascule de canal (`sourceIdsFor`) ne le liste
   pas, `pageMessages` n'envoie pas son bloc. L'écran client n'importe que des TYPES de
-  `sources.ts` (la page lui passe le canal résolu et la liste ouverte).
+  `sources.ts` (la page lui passe le canal résolu et la liste ouverte) : `intl-wiring.test.ts`
+  échoue sur un import de valeur (mesuré).
 - **Aucun nom d'artiste exclu en clair** : `roster-data.test.ts` (tables de la maison) et
   `excluded-artists.test.ts` (messages) cherchent le NOM, pas l'id — un interprète écrit en dur
   passe à travers `inRoster` (mesuré : « Trop loin », interprète Dadju, chez Universal).
@@ -320,5 +336,5 @@ d'auteur 15/55), mesuré en rejouant la sonde sur ses deux parents.
 
 Vérifier :
 
-    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/__tests__/internal-pages.test.ts src/lib/__tests__/welcome-scope.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts src/messages/__tests__/excluded-artists.test.ts
+    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/__tests__/internal-pages.test.ts src/lib/__tests__/internal-routes.test.ts src/lib/__tests__/intl-wiring.test.ts src/messages/__tests__/namespace-classification.test.ts src/lib/__tests__/welcome-scope.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts src/messages/__tests__/excluded-artists.test.ts
     NEXT_PUBLIC_TENANT=universal npx vitest run

@@ -164,6 +164,14 @@ const MESSAGES = {
 type Namespace = keyof (typeof MESSAGES)[Locale];
 
 /**
+ * Les namespaces d'une langue (clés de `MESSAGES`), et rien de leur contenu : le test de classement
+ * (namespace-classification.test.ts) exige que chacun soit classé racine OU page.
+ */
+export function messageNamespaces(locale: Locale): string[] {
+  return Object.keys(MESSAGES[locale]);
+}
+
+/**
  * Namespaces lus SEULEMENT par les pages internes From Day 1 (nav.ts, `internal`) :
  * /comparatif (comparison-table) et /onboardings (partner-board, dont le pitch de Day 1
  * À PROPOS d'Universal). Namespaces « de page » (ci-dessous) ; une maison sans pages internes
