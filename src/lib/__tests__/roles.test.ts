@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { JOB_ROLES, ROLES, isJobRole, roleLanding, roleOverrides, roleScope } from "@/lib/roles";
+import { JOB_ROLES, ROLES, effectiveOverrides, hasUserOverrides, isJobRole, roleLanding, roleOverrides, roleScope } from "@/lib/roles";
 
 const ALL = ["/pulse", "/roster", "/fil", "/streams", "/market", "/revenue", "/audience", "/algo-position", "/finances", "/calculator", "/valuation", "/splits", "/contracts", "/rights", "/placements", "/urssaf", "/audit", "/day1-index", "/copilot", "/ar-watch", "/fans", "/discovery", "/sync", "/tour", "/catalog", "/team", "/import", "/settings"];
 
@@ -36,5 +36,33 @@ describe("roles — la table de la spec (§4)", () => {
     expect(roleScope("da", null)).toEqual({ daId: null });
     expect(roleScope("finance", "da-compos")).toEqual({ daId: null });
     expect(roleScope(null, "da-compos")).toEqual({ daId: null });
+  });
+});
+
+/*
+ * use-modules.ts fusionne le préréglage du rôle et les choix de l'utilisateur. L'ordre de
+ * la fusion n'était pas testé : un relecteur l'a inversé (préréglage PAR-DESSUS les choix)
+ * et les 213 tests sont restés verts. Mesuré le 24/10/2026.
+ */
+describe("effectiveOverrides — le choix de l'utilisateur gagne sur le préréglage du rôle", () => {
+  it("l'utilisateur ré-affiche une page cachée par le rôle, et cache une page que le rôle montre", () => {
+    const eff = effectiveOverrides("finance", ALL, { "/roster": true, "/audit": false });
+    expect(eff["/roster"]).toBe(true); // caché par le rôle, voulu par l'utilisateur
+    expect(eff["/audit"]).toBe(false); // montré par le rôle, caché par l'utilisateur
+    expect(eff["/revenue"]).toBe(true); // le préréglage reste là où l'utilisateur n'a rien dit
+    expect(eff["/pulse"]).toBe(false);
+  });
+  it("sans choix utilisateur : exactement le préréglage du rôle", () => {
+    expect(effectiveOverrides("juridique", ALL, {})).toEqual(roleOverrides("juridique", ALL));
+  });
+  it("sans rôle : exactement les choix de l'utilisateur", () => {
+    const user = { "/tour": false, "/fans": true };
+    expect(effectiveOverrides(null, ALL, user)).toEqual(user);
+    expect(effectiveOverrides("direction", ALL, user)).toEqual(user);
+  });
+  it("hasUserOverrides : seuls les choix de l'utilisateur comptent — un rôle sans choix n'allume pas « Réinitialiser »", () => {
+    expect(hasUserOverrides({})).toBe(false);
+    expect(hasUserOverrides({ "/tour": false })).toBe(true);
+    expect(hasUserOverrides(effectiveOverrides("finance", ALL, {}))).toBe(true); // ce serait l'erreur : passer la fusion
   });
 });

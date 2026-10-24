@@ -6,14 +6,16 @@ import { FULL_SCOPE, isFullScope, parseScope, scopeQuery, scopedArtists } from "
 const ids = (list: { id: string }[]) => list.map((a) => a.id).sort();
 
 describe("scopedArtists", () => {
-  it("sans filtre : tout le roster de la maison", () => {
+  it("sans filtre : tout le roster de la maison — une COPIE, jamais la référence (un tri du périmètre ne doit pas réordonner ARTISTS)", () => {
     expect(scopedArtists()).toEqual(ARTISTS);
     expect(scopedArtists(FULL_SCOPE)).toEqual(ARTISTS);
+    expect(scopedArtists()).not.toBe(ARTISTS);
+    expect(scopedArtists(FULL_SCOPE)).not.toBe(ARTISTS);
   });
   it("par catégorie", () => {
     expect(ids(scopedArtists({ category: "compositeur" }))).toEqual(["brice-davoli", "gustave-rudman", "zeg-p"]);
     expect(ids(scopedArtists({ category: "variete" }))).toEqual(["louane", "wamen"]);
-    expect(scopedArtists({ category: "urbain" })).toHaveLength(6); // day1 : sans Kiko
+    expect(scopedArtists({ category: "urbain" })).toHaveLength(6); // 6 dans les deux maisons (day1 sans Kiko, universal sans Dadju)
   });
   it("par DA : les artistes de sa catégorie, et rien d'autre", () => {
     for (const da of DAS) {
@@ -52,7 +54,11 @@ describe("agrégats label sur une liste", () => {
     expect(t.artists).toBe(3);
     expect(t.revenue12m).toBe(rosterRows(compos).reduce((s, r) => s + r.revenue12m, 0));
   });
-  it("pnlByArtist sur la liste = les mêmes lignes que sur tout le roster (même fenêtre de mois)", () => {
+  /* La fenêtre de mois complets est calée sur ARTISTS[0] (api.ts) et vaut aujourd'hui pour
+     tous les artistes : une seule fenêtre de 12 mois existe (mesuré le 24/10/2026), ce test ne
+     peut donc PAS distinguer `ARTISTS[0]` de `artists[0]` — il vérifie seulement que la liste
+     ne change ni les lignes ni leur contenu. */
+  it("pnlByArtist sur la liste = les mêmes lignes que sur tout le roster (une seule fenêtre de mois aujourd'hui, identique pour tous)", () => {
     const all = pnlByArtist(12);
     for (const p of pnlByArtist(12, compos)) expect(p).toEqual(all.find((x) => x.artistId === p.artistId));
   });

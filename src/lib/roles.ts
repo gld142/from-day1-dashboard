@@ -72,6 +72,25 @@ export function roleOverrides(role: JobRole | null, catalogHrefs: readonly strin
   return Object.fromEntries(catalogHrefs.map((h) => [h, keep.has(h)]));
 }
 
+/**
+ * Modules effectifs : le préréglage du rôle SOUS les choix explicites de l'utilisateur —
+ * un rôle règle la navigation comme Réglages → Modules l'aurait fait, et l'utilisateur garde
+ * le dernier mot. L'ordre de la fusion est la règle : il est testé ici parce qu'un relecteur
+ * l'a inversé dans le hook sans qu'un test bronche (mesuré le 24/10/2026).
+ */
+export function effectiveOverrides(
+  role: JobRole | null,
+  catalogHrefs: readonly string[],
+  user: ModuleOverrides,
+): ModuleOverrides {
+  return { ...roleOverrides(role, catalogHrefs), ...user };
+}
+
+/** Seuls les CHOIX de l'utilisateur comptent : un rôle sans choix n'allume pas « Réinitialiser ». */
+export function hasUserOverrides(user: ModuleOverrides): boolean {
+  return Object.keys(user).length > 0;
+}
+
 /** Périmètre du rôle : les artistes du DA, sinon tout le roster. */
 export function roleScope(role: JobRole | null, daId: string | null): { daId: string | null } {
   return role === "da" && daId ? { daId } : { daId: null };

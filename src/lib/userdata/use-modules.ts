@@ -21,7 +21,7 @@ import {
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
-import { roleOverrides } from "@/lib/roles";
+import { effectiveOverrides, hasUserOverrides } from "@/lib/roles";
 import {
   hydrateModules,
   modulesSnapshot,
@@ -39,14 +39,16 @@ export function useModules() {
   }, []);
   const snap = useSyncExternalStore(subscribeModules, modulesSnapshot, () => SERVER_SNAPSHOT);
   const catalog = useMemo(() => navCatalogForPersona(persona), [persona]);
-  /* Préréglage du rôle (roles.ts) sous les choix explicites de l'utilisateur : un rôle règle la
-     navigation comme Réglages → Modules l'aurait fait, et l'utilisateur garde le dernier mot. */
-  const overrides = useMemo<ModuleOverrides>(() => {
+  /* Préréglage du rôle sous les choix explicites de l'utilisateur (roles.ts, effectiveOverrides —
+     l'ordre de la fusion y est testé). `snap` n'est analysé qu'une fois par rendu : les choix
+     servent à la fusion ET à « Réinitialiser », qui ne compte que les choix de l'utilisateur. */
+  const { overrides, hasOverrides } = useMemo(() => {
     const user = JSON.parse(snap) as ModuleOverrides;
-    return { ...roleOverrides(jobRole, catalog.flatMap((s) => s.items.map((i) => i.href))), ...user };
+    return {
+      overrides: effectiveOverrides(jobRole, catalog.flatMap((s) => s.items.map((i) => i.href)), user),
+      hasOverrides: hasUserOverrides(user),
+    };
   }, [snap, jobRole, catalog]);
-  // Seuls les choix de l'utilisateur comptent : un rôle sans choix ne doit pas allumer « Réinitialiser ».
-  const hasOverrides = snap !== SERVER_SNAPSHOT && Object.keys(JSON.parse(snap) as ModuleOverrides).length > 0;
 
   const customer = useCustomer();
   const sections = useMemo(() => {

@@ -11,7 +11,8 @@ export const FULL_SCOPE: RosterScope = { category: null, daId: null };
 
 export function scopedArtists(scope: Partial<RosterScope> = {}, artists: Artist[] = ARTISTS): Artist[] {
   const { category = null, daId = null } = scope;
-  if (!category && !daId) return artists;
+  // Une copie, jamais la référence : un `.sort()` sur le périmètre réordonnerait ARTISTS.
+  if (!category && !daId) return [...artists];
   return artists.filter((a) => (!category || a.category === category) && (!daId || a.daId === daId));
 }
 
