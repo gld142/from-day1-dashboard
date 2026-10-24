@@ -178,6 +178,25 @@ describe.each(Object.values(TENANTS))("maison $id", (tenant) => {
   });
 });
 
+/* Les inédits simulés ne dépendent que de l'artiste (id, nom, catégorie) — pas de la maison qui
+   l'affiche : les six arrivants du 24/10/2026 ont les mêmes inédits, aux mêmes scores, chez day1
+   et chez universal. */
+describe("discovery : les inédits simulés sont identiques dans les deux maisons", () => {
+  const NEW_SIX = ["leto", "dakeez", "louane", "wamen", "gustave-rudman", "brice-davoli"];
+  it("même sérialisation de demosFor pour les six arrivants, maison day1 et maison universal", async () => {
+    const byHouse: Record<string, string> = {};
+    for (const tenant of Object.values(TENANTS)) {
+      await loadHouse(tenant.id);
+      const { demosFor, hasOwnDemos } = await import("@/components/modules/algo/discovery-data");
+      for (const id of NEW_SIX) expect(hasOwnDemos(id), `${id} a des inédits propres : le test ne compare plus des simulés`).toBe(false);
+      byHouse[tenant.id] = JSON.stringify(NEW_SIX.map((id) => demosFor(id)));
+    }
+    const houses = Object.keys(byHouse);
+    expect(houses.length).toBeGreaterThanOrEqual(2);
+    for (const h of houses.slice(1)) expect(byHouse[h]).toBe(byHouse[houses[0]]);
+  });
+});
+
 describe("scripts/artists.json — le relevé quotidien lit les mêmes identifiants", () => {
   it("chaque artiste du roster complet y figure, avec les mêmes ids", () => {
     for (const a of ALL_ARTISTS) {

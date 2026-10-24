@@ -9,6 +9,7 @@ import { getArtist } from "@/lib/demo/api";
 import { ALL_ARTISTS } from "@/lib/demo/data";
 import { rngFor } from "@/lib/demo/seed";
 import type { Artist, ArtistCategory } from "@/lib/demo/types";
+import { isUserArtist } from "@/lib/userdata/store";
 
 export type DemoDef = {
   title: string;
@@ -101,11 +102,17 @@ export function placeholderDemoDefs(artist: Artist): DemoDef[] {
  * Les inédits d'un artiste : les siens s'il en a, sinon ses simulés. La page
  * discovery lit `demos[0]` sans garde : cette fonction ne rend JAMAIS une liste
  * vide — un id hors du roster complet est un état impossible, et lève.
+ *
+ * Exception : le profil importé (« my-project », role.tsx le sert dès qu'un
+ * import est actif) n'est pas dans ALL_ARTISTS et reçoit ses simulés, bâtis sur
+ * son nom et sa catégorie. Mesuré le 24/10/2026 : depuis f997e92, discovery
+ * plantait sur ce profil.
  */
 function demoDefsFor(artistId: string): DemoDef[] {
   const own = DEMOS[artistId];
   if (own && own.length > 0) return own;
-  const artist = ALL_ARTISTS.find((a) => a.id === artistId);
+  const artist =
+    ALL_ARTISTS.find((a) => a.id === artistId) ?? (isUserArtist(artistId) ? getArtist(artistId) : undefined);
   if (!artist) {
     throw new Error(
       `Inédits demandés pour « ${artistId} », qui n'est pas un artiste du roster complet : état impossible, discovery ne reçoit que des artistes du roster.`,
