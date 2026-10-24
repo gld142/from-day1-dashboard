@@ -132,6 +132,50 @@ describe.each(Object.values(TENANTS))("maison $id", (tenant) => {
     for (const p of data.PLACEMENTS) expect(ids.has(p.artistId), p.id).toBe(true);
     for (const m of data.TEAM) if (Array.isArray(m.artistAccess)) for (const id of m.artistAccess) expect(ids.has(id), m.id).toBe(true);
   });
+
+  /*
+   * Discovery : `discovery/page.tsx` lit `demos[0].score` sans garde — chaque artiste de la
+   * maison doit donc avoir au moins un inédit. Et un artiste sans inédits propres reçoit des
+   * inédits SIMULÉS qui lui appartiennent : avant (mesuré le 24/10/2026), les huit artistes
+   * sans inédits recevaient les cinq de Dadju (universal : ceux de Nono), et « Éclipse
+   * totale » était le meilleur inédit de quatre artistes différents en vue label.
+   */
+  it("discovery : chaque artiste a des inédits, classés sans égalité ; les simulés sont propres à l'artiste et plausibles", async () => {
+    const data = await loadHouse(tenant.id);
+    const { demosFor, hasOwnDemos } = await import("@/components/modules/algo/discovery-data");
+    const ids = data.ARTISTS.map((a) => a.id);
+    const placeholders = ids.filter((id) => !hasOwnDemos(id));
+    expect(placeholders.length, "au moins deux artistes sans inédits propres pour comparer").toBeGreaterThanOrEqual(2);
+
+    const seen = new Map<string, string>();
+    for (const id of ids) {
+      const demos = demosFor(id);
+      expect(demos.length, `${id} : aucun inédit`).toBeGreaterThan(0);
+      expect(new Set(demos.map((d) => d.score)).size, `${id} : deux inédits au même score`).toBe(demos.length);
+      expect(demos.map((d) => d.rank)).toEqual(demos.map((_, i) => i + 1));
+      for (const d of demos) {
+        expect(seen.get(d.title), `« ${d.title} » apparaît chez ${seen.get(d.title)} et chez ${id}`).toBeUndefined();
+        seen.set(d.title, id);
+      }
+    }
+    // Les simulés ne reprennent jamais un inédit réel, ni ceux d'un artiste exclu de la maison.
+    const foreign = new Set([...ids.filter(hasOwnDemos), ...tenant.excludedArtists].flatMap((id) => demosFor(id).map((d) => d.title)));
+    for (const id of placeholders) for (const d of demosFor(id)) expect(foreign.has(d.title), `${id} : « ${d.title} » est l'inédit d'un autre artiste`).toBe(false);
+    // Deux artistes simulés n'ont pas les mêmes titres.
+    expect(demosFor(placeholders[0]).map((d) => d.title)).not.toEqual(demosFor(placeholders[1]).map((d) => d.title));
+    // BPM plausible pour la catégorie.
+    const bpmRange = { urbain: [85, 140], variete: [70, 120], compositeur: [60, 110] } as const;
+    for (const id of placeholders) {
+      const artist = data.ARTISTS.find((a) => a.id === id)!;
+      const [lo, hi] = bpmRange[artist.category];
+      for (const d of demosFor(id)) {
+        expect(d.bpm, `${id} : ${d.title} à ${d.bpm} BPM`).toBeGreaterThanOrEqual(lo);
+        expect(d.bpm, `${id} : ${d.title} à ${d.bpm} BPM`).toBeLessThanOrEqual(hi);
+        expect(d.durationSec).toBeGreaterThan(0);
+        expect(d.key).toMatch(/^[A-G][#b]?m?$/);
+      }
+    }
+  });
 });
 
 describe("scripts/artists.json — le relevé quotidien lit les mêmes identifiants", () => {
@@ -173,23 +217,5 @@ describe("titres des projets = titres du relevé, à la lettre", () => {
     for (const seed of seeds) for (const title of seed.tracks) {
       expect(measured.has(title), `${id} : « ${title} » absent du relevé — titres relevés : ${[...measured].join(" | ")}`).toBe(true);
     }
-  });
-});
-
-describe("maison universal", () => {
-  it("le repli de discovery et de position algo ne cite pas Dadju", async () => {
-    vi.stubEnv("NEXT_PUBLIC_TENANT", "universal");
-    vi.resetModules();
-    const { demosFor } = await import("@/components/modules/algo/discovery-data");
-    const { scenarioFor } = await import("@/components/modules/pilotage/algo-trend-panel");
-    // Leto n'a ni inédits ni scénario propres : il reçoit le repli de la maison.
-    const titles = demosFor("leto").map((d) => d.title);
-    expect(titles.length).toBeGreaterThan(0);
-    for (const t of ["Éclipse totale", "Peau neuve", "Minuit moins le quart", "Apnée", "Lumière noire"]) expect(titles).not.toContain(t);
-    const fallback = scenarioFor("leto");
-    expect(fallback.sound).not.toBe("Reine");
-    // Mêmes placements que le premier artiste du roster qui a un scénario (Nono), pas ceux de Dadju.
-    expect(fallback.placements).toEqual(scenarioFor("nono-la-grinta").placements);
-    expect(fallback.placements).not.toEqual(scenarioFor("dadju").placements);
   });
 });

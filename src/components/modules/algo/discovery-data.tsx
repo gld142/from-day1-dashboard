@@ -5,8 +5,10 @@
  * Les titres/BPM/tonalités sont des CONSTANTES de démo (comme les noms
  * d'artistes) ; les scores sont seedés par (artistId, titre).
  */
-import { ARTISTS, getArtist } from "@/lib/demo/api";
+import { getArtist } from "@/lib/demo/api";
+import { ALL_ARTISTS } from "@/lib/demo/data";
 import { rngFor } from "@/lib/demo/seed";
+import type { Artist, ArtistCategory } from "@/lib/demo/types";
 
 export type DemoDef = {
   title: string;
@@ -32,8 +34,12 @@ export type DemoTrack = DemoDef & {
   rank: number;
 };
 
-/** Inédits de démo — titres crédibles par artiste (constantes produit). */
-const DEMOS: Record<string, DemoDef[]> = {
+/**
+ * Inédits de démo — titres crédibles par artiste (constantes produit).
+ * `Partial` : l'absence d'un artiste est visible au typage ; il reçoit alors
+ * des inédits simulés qui lui sont propres (voir `placeholderDemoDefs`).
+ */
+const DEMOS: Partial<Record<string, DemoDef[]>> = {
   dadju: [
     { title: "Éclipse totale", durationSec: 204, bpm: 96, key: "Am" },
     { title: "Peau neuve", durationSec: 178, bpm: 108, key: "F#m" },
@@ -56,20 +62,66 @@ const DEMOS: Record<string, DemoDef[]> = {
   ],
 };
 
-/**
- * Repli pour un artiste sans inédits propres : ceux du premier artiste DU ROSTER
- * de la maison qui en a (jamais un exclu — Dadju n'existe pas chez Universal).
- * Vide si aucun artiste du roster n'en a.
- */
-export function fallbackDemoDefs(): DemoDef[] {
-  const donor = ARTISTS.find((a) => DEMOS[a.id]);
-  return donor ? DEMOS[donor.id] : [];
+/** L'artiste a-t-il des inédits propres (sinon il reçoit des inédits simulés) ? */
+export function hasOwnDemos(artistId: string): boolean {
+  return (DEMOS[artistId]?.length ?? 0) > 0;
 }
 
-/** Inédits scorés d'un artiste, triés du meilleur au moins bon. */
+/** Plage de BPM plausible par catégorie (bornes incluses). */
+const BPM_RANGE: Record<ArtistCategory, [number, number]> = {
+  urbain: [85, 140],
+  variete: [70, 120],
+  compositeur: [60, 110],
+};
+
+/** Tonalités mineures et majeures courantes — un tirage par titre. */
+const KEYS = ["Am", "Bm", "Cm", "C#m", "Dm", "Ebm", "Em", "Fm", "F#m", "Gm", "G#m", "Bbm", "C", "D", "E", "F", "G", "A", "Bb", "Eb"];
+
+/**
+ * Inédits SIMULÉS d'un artiste sans inédits propres : trois substituts neutres
+ * (« Inédit 1 · Leto »), BPM et tonalité tirés déterministement de son id, dans
+ * la plage plausible de sa catégorie. Ce sont des réservations en attendant de
+ * vrais inédits — jamais les titres d'un autre artiste. Avant (mesuré le
+ * 24/10/2026), les huit artistes sans inédits recevaient les cinq de Dadju
+ * (universal : ceux de Nono) et « Éclipse totale » était le « meilleur inédit »
+ * de quatre artistes différents en vue label.
+ */
+export function placeholderDemoDefs(artist: Artist): DemoDef[] {
+  const rand = rngFor(`${artist.id}:demo:placeholder`);
+  const [lo, hi] = BPM_RANGE[artist.category];
+  return [1, 2, 3].map((n) => ({
+    title: `Inédit ${n} · ${artist.name}`,
+    durationSec: 150 + Math.round(rand() * 90),
+    bpm: lo + Math.round(rand() * (hi - lo)),
+    key: KEYS[Math.floor(rand() * KEYS.length)],
+  }));
+}
+
+/**
+ * Les inédits d'un artiste : les siens s'il en a, sinon ses simulés. La page
+ * discovery lit `demos[0]` sans garde : cette fonction ne rend JAMAIS une liste
+ * vide — un id hors du roster complet est un état impossible, et lève.
+ */
+function demoDefsFor(artistId: string): DemoDef[] {
+  const own = DEMOS[artistId];
+  if (own && own.length > 0) return own;
+  const artist = ALL_ARTISTS.find((a) => a.id === artistId);
+  if (!artist) {
+    throw new Error(
+      `Inédits demandés pour « ${artistId} », qui n'est pas un artiste du roster complet : état impossible, discovery ne reçoit que des artistes du roster.`,
+    );
+  }
+  return placeholderDemoDefs(artist);
+}
+
+/**
+ * Inédits scorés d'un artiste, triés du meilleur au moins bon. Deux inédits au
+ * même score seraient affichés à égalité de rang pour un rang différent : le
+ * second est abaissé d'un point (déterministe, et le badge « simulé » dit déjà
+ * que la décimale ne vaut rien).
+ */
 export function demosFor(artistId: string): DemoTrack[] {
-  const defs = DEMOS[artistId] ?? fallbackDemoDefs();
-  return defs
+  const scored = demoDefsFor(artistId)
     .map((d, i) => {
       const rand = rngFor(`${artistId}:demo:${d.title}`);
       const sub: DemoSub = {
@@ -83,8 +135,11 @@ export function demosFor(artistId: string): DemoTrack[] {
       );
       return { ...d, id: `${artistId}-demo-${i}`, artistId, score, sub, rank: 0 };
     })
-    .sort((a, b) => b.score - a.score)
-    .map((d, i) => ({ ...d, rank: i + 1 }));
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
+  for (let i = 1; i < scored.length; i++) {
+    if (scored[i].score >= scored[i - 1].score) scored[i].score = scored[i - 1].score - 1;
+  }
+  return scored.map((d, i) => ({ ...d, rank: i + 1 }));
 }
 
 export type DemoTier = "priority" | "strong" | "promising" | "development";
