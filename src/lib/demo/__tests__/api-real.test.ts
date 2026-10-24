@@ -17,7 +17,8 @@ import {
   sumStreams,
   topTracks,
 } from "@/lib/demo/api";
-import { latestSnapshot, realStreamSeries } from "@/lib/real";
+import { hasKworbDailyRate, latestSnapshot, playcountRate, realStreamSeries } from "@/lib/real";
+import { SNAPSHOTS } from "@/lib/real/snapshots";
 import { clearShares, saveShares } from "@/lib/userdata/shares-store";
 
 describe("api.ts sur les artistes réels", () => {
@@ -34,9 +35,30 @@ describe("api.ts sur les artistes réels", () => {
        streams/jour, mesurés) l'a mis en échec en entrant au roster.
        On compare donc au relevé lui-même. */
     const kworb = latestSnapshot(id).kworb;
-    if (kworb) {
+    /* Kworb peut lister un artiste sans lui calculer de débit (Dakeez le 24/10/2026 :
+       dailyStreams 0) : il n'y a alors rien à comparer, la couche réelle reconstitue
+       depuis les auditeurs (voir hasKworbDailyRate). */
+    if (hasKworbDailyRate(kworb)) {
       expect(today.streams).toBeGreaterThan(0);
-      expect(today.streams).toBeLessThanOrEqual(kworb.dailyStreams);
+      /* Règle documentée (real-source.ts) : pour un titre public, le delta de play count
+         Spotify entre les deux derniers relevés, moyenné sur les rafraîchissements qu'il
+         couvre, PRIME sur le daily Kworb ; les autres titres gardent leur daily Kworb.
+         Aujourd'hui peut donc dépasser `dailyStreams` d'exactement Σ max(0, delta/jours −
+         daily Kworb) sur les titres publics — MESURÉ au relevé du 24/10/2026, 29 jours
+         après celui du 25/09 : nono-la-grinta 951 961 pour un daily Kworb de 938 810
+         (+13 151 : TERRAIN et J'tavais dit ont streamé plus en moyenne sur le mois
+         qu'aujourd'hui), elgrandetoto 1 290 596 pour 1 289 141 (+1 455). */
+      const snaps = SNAPSHOTS[id];
+      const prev = snaps.length >= 2 ? snaps[snaps.length - 2] : null;
+      const last = snaps[snaps.length - 1];
+      const byName = new Map(kworb.tracks.map((t) => [t.name, t.daily]));
+      let excess = 0;
+      for (const t of last.spotify.topTracks) {
+        const rate = prev ? playcountRate(prev, last, t.name) : null;
+        const daily = byName.get(t.name);
+        if (rate && daily !== undefined && daily !== null) excess += Math.max(0, rate.perDay - daily);
+      }
+      expect(today.streams).toBeLessThanOrEqual(kworb.dailyStreams + excess);
       expect(today.streams / kworb.dailyStreams).toBeGreaterThan(0.5);
     }
   });

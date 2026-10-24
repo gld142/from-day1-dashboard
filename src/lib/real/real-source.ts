@@ -8,8 +8,9 @@
  *   entre deux relevés, un delta > 0 vaut autant de jours de streams qu'il y a
  *   eu de rafraîchissements (≈ heures / 24, au moins 1), un delta nul n'est pas
  *   une mesure. Ce débit mesure les jours couverts — et sert d'ancre quand Kworb
- *   ne donne pas de débit. Sans Kworb (Kiko), on reconstitue à partir des play
- *   counts et des auditeurs mensuels.
+ *   ne donne pas de débit. Sans Kworb (Kiko), ou avec un Kworb sans débit
+ *   (Dakeez : totaux listés, `dailyStreams` 0), on reconstitue à partir des
+ *   play counts et des auditeurs mensuels.
  * - YouTube : les vues avancent en continu ; delta entre relevés normalisé par
  *   les heures écoulées (`capturedAt`), ignoré sous 6 h ou s'il est nul.
  * - Autres DSP : estimés à partir du mix artiste (dsp-mix.ts). TikTok n'est
@@ -317,8 +318,19 @@ function playcountDailyByTrack(ctx: Ctx, days: number): Map<string, Reconstructe
   return out;
 }
 
+/**
+ * Kworb apporte-t-il une ancre de débit ? Kworb peut lister un artiste (totaux par
+ * titre) sans lui calculer de débit quotidien — MESURÉ le 24/10/2026 sur Dakeez :
+ * `dailyStreams` 0 et `daily` null sur les 30 titres. Un tel bloc ne donne rien à
+ * répartir : la branche Kworb produirait une série à 0, pas une mesure.
+ */
+export function hasKworbDailyRate(kworb: Snapshot["kworb"]): kworb is NonNullable<Snapshot["kworb"]> {
+  return kworb !== null && kworb.dailyStreams > 0;
+}
+
+/** Branche Kworb seulement si Kworb donne un débit ; sinon play counts + auditeurs (comme sans Kworb). */
 function dailyByTrack(ctx: Ctx, days: number): Map<string, ReconstructedDay[]> {
-  return ctx.last.kworb ? kworbDailyByTrack(ctx, days, ctx.last.kworb) : playcountDailyByTrack(ctx, days);
+  return hasKworbDailyRate(ctx.last.kworb) ? kworbDailyByTrack(ctx, days, ctx.last.kworb) : playcountDailyByTrack(ctx, days);
 }
 
 /* ─── YouTube ─── */

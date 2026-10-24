@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  CATALOGUE_KEY,
+  hasKworbDailyRate,
   hasRealData,
   playcountRate,
   realCountryBreakdown,
@@ -326,6 +328,52 @@ describe("Spotify : relevés rapprochés ou espacés", () => {
     });
     expect(spotifyDailyByTrack("kiko", 30, TODAY, { kiko: [at("2026-09-14T06:00:00Z"), kiko] }).get("Odjo")![29]).toMatchObject({ streams: 665, provenance: "measured" });
     expect(spotifyDailyByTrack("kiko", 30, TODAY, { kiko: [at("2026-09-15T01:00:00Z"), kiko] }).get("Odjo")![29]).toMatchObject({ streams: 665, provenance: "measured" });
+  });
+});
+
+describe("Kworb présent mais sans débit (Dakeez, relevé du 24/10/2026 : dailyStreams 0, daily null sur les 30 titres)", () => {
+  // Kworb liste les totaux de l'artiste mais ne lui calcule aucun débit quotidien : le bloc
+  // `kworb` n'apporte alors aucune ancre. Sans ce cas, la branche Kworb répartissait un
+  // résidu de 0 → série Spotify entièrement à 0 (MESURÉ avant correctif : sumStreams("dakeez", 30) = 0).
+  const dakeez: Snapshot = {
+    ...kiko,
+    spotify: {
+      monthlyListeners: 295_508,
+      followers: null,
+      topTracks: [
+        { name: "CHAMPAGNE CHERRY", spotifyId: null, playcount: 8_849_205 },
+        { name: "SUPERSTAR", spotifyId: null, playcount: 4_498_673 },
+      ],
+    },
+    kworb: {
+      totalStreams: 15_069_378,
+      dailyStreams: 0,
+      tracks: [
+        { name: "CHAMPAGNE CHERRY", total: 4_292_887, daily: null },
+        { name: "SUPERSTAR", total: 2_196_004, daily: null },
+      ],
+    },
+  };
+  const snaps = { dakeez: [dakeez] };
+
+  it("hasKworbDailyRate : faux sans débit, vrai dès que dailyStreams > 0, faux sans bloc", () => {
+    expect(hasKworbDailyRate(dakeez.kworb)).toBe(false);
+    expect(hasKworbDailyRate(dadju.kworb)).toBe(true);
+    expect(hasKworbDailyRate(null)).toBe(false);
+  });
+
+  it("un seul relevé : même reconstitution que sans Kworb (auditeurs × 2,6 / 30), aujourd'hui « reconstructed », jamais 0", () => {
+    const byTrack = spotifyDailyByTrack("dakeez", 30, TODAY, snaps);
+    // Cible 295 508 × 2,6 / 30 = 25 610 / jour, dont 80 % sur les titres publics au prorata des play counts.
+    const champagne = byTrack.get("CHAMPAGNE CHERRY")!;
+    expect(champagne[29]).toMatchObject({ provenance: "reconstructed", streams: Math.round(25_610.7 * 0.8 * (8_849_205 / 13_347_878)) });
+    expect(byTrack.has(CATALOGUE_KEY)).toBe(true);
+    const today = realStreamSeries("dakeez", 1, TODAY, snaps).find((p) => p.dsp === "spotify")!;
+    expect(today.provenance).toBe("reconstructed");
+    expect(today.streams).toBeGreaterThan(20_000);
+    expect(today.streams).toBeLessThan(30_000);
+    const sum30 = realStreamSeries("dakeez", 30, TODAY, snaps).filter((p) => p.dsp === "spotify").reduce((a, p) => a + p.streams, 0);
+    expect(sum30).toBeGreaterThan(0);
   });
 });
 

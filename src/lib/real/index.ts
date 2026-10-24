@@ -1,6 +1,8 @@
 export {
+  hasKworbDailyRate,
   hasRealData,
   latestSnapshot,
+  playcountRate,
   realCountryBreakdown,
   realTopCities,
   realDailyEstimates,
