@@ -1,11 +1,36 @@
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ALL_ARTISTS, ARTISTS, CONTRACTS, DAS, PROJECTS, TEAM, getDa } from "@/lib/demo/data";
+import {
+  ALL_ARTISTS,
+  ALL_CONTRACTS,
+  ALL_PLACEMENTS,
+  DAS,
+  PROJECT_SEEDS,
+  SPLITS,
+  TRACKS,
+  getDa,
+} from "@/lib/demo/data";
 import { ARTIST_CATEGORIES, isArtistCategory } from "@/lib/demo/types";
-import { TENANTS } from "@/lib/tenant";
+import { SNAPSHOTS } from "@/lib/real/snapshots";
+import { TENANTS, type TenantId } from "@/lib/tenant";
 
 type Seed = { id: string; spotifyId?: string; deezerId?: string; youtubeChannelId?: string };
 const SEEDS: Seed[] = JSON.parse(readFileSync(new URL("../../../../scripts/artists.json", import.meta.url), "utf8"));
+
+/* La maison est lue AU CHARGEMENT de data.ts (NEXT_PUBLIC_TENANT). Pour tester les deux
+   maisons dans un même processus, on stubbe la variable et on recharge le module : les
+   imports statiques ci-dessus restent ceux de la maison du processus, et ne servent
+   qu'aux assertions indépendantes de la maison (roster complet, tables complètes). */
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.resetModules();
+});
+
+async function loadHouse(id: TenantId) {
+  vi.stubEnv("NEXT_PUBLIC_TENANT", id);
+  vi.resetModules();
+  return import("@/lib/demo/data");
+}
 
 describe("catégories et DA", () => {
   it("trois catégories, un DA par catégorie", () => {
@@ -36,22 +61,76 @@ describe("catégories et DA", () => {
   });
 });
 
-describe("le roster complet et la maison", () => {
+describe("le roster complet", () => {
   it("douze artistes, sept urbain, deux variété, trois compositeurs", () => {
     expect(ALL_ARTISTS).toHaveLength(12);
     const count = (c: string) => ALL_ARTISTS.filter((a) => a.category === c).length;
     expect([count("urbain"), count("variete"), count("compositeur")]).toEqual([7, 2, 3]);
   });
-  it("day1 (défaut) : onze artistes, Kiko absent, Dadju présent", () => {
-    expect(ARTISTS).toHaveLength(11);
-    expect(ARTISTS.map((a) => a.id)).not.toContain("kiko");
-    expect(ARTISTS.map((a) => a.id)).toContain("dadju");
+});
+
+/*
+ * Les tables complètes (contrats, placements, graines de projets) sont écrites à la main
+ * avec l'id de l'artiste en clair. Une faute de frappe (« brice-davolli ») ne casse rien
+ * au chargement : `inRoster` ne reconnaît pas l'id, la ligne disparaît silencieusement de
+ * la maison. MESURÉ le 24/10/2026 : avec cette faute dans `c-bd-edition`, les 13 tests
+ * du fichier restaient verts. D'où ce filet : chaque artistId cité est un artiste du
+ * roster complet.
+ */
+describe("intégrité des tables complètes : chaque artistId est un artiste d'ALL_ARTISTS", () => {
+  const ids = new Set(ALL_ARTISTS.map((a) => a.id));
+  it("ALL_CONTRACTS", () => {
+    for (const c of ALL_CONTRACTS) expect(ids.has(c.artistId), `contrat ${c.id} : artistId « ${c.artistId} » inconnu`).toBe(true);
   });
-  it("tout ce qui dérive du roster suit l'exclusion", () => {
-    const ids = new Set(ARTISTS.map((a) => a.id));
-    for (const p of PROJECTS) expect(ids.has(p.artistId), p.id).toBe(true);
-    for (const c of CONTRACTS) expect(ids.has(c.artistId), c.id).toBe(true);
-    for (const m of TEAM) if (Array.isArray(m.artistAccess)) for (const id of m.artistAccess) expect(ids.has(id), m.id).toBe(true);
+  it("ALL_PLACEMENTS", () => {
+    for (const p of ALL_PLACEMENTS) expect(ids.has(p.artistId), `placement ${p.id} : artistId « ${p.artistId} » inconnu`).toBe(true);
+  });
+  it("clés de PROJECT_SEEDS", () => {
+    for (const id of Object.keys(PROJECT_SEEDS)) expect(ids.has(id), `PROJECT_SEEDS : clé « ${id} » inconnue`).toBe(true);
+  });
+  it("TRACKS et SPLITS (via le titre du split)", () => {
+    for (const t of TRACKS) expect(ids.has(t.artistId), `titre ${t.id} : artistId « ${t.artistId} » inconnu`).toBe(true);
+    const artistOfTrack = new Map(TRACKS.map((t) => [t.id, t.artistId]));
+    for (const s of SPLITS) {
+      const artistId = artistOfTrack.get(s.trackId);
+      expect(artistId, `split ${s.trackId} : titre inconnu`).toBeDefined();
+      expect(ids.has(artistId!), `split ${s.trackId} : artistId « ${artistId} » inconnu`).toBe(true);
+    }
+  });
+});
+
+describe.each(Object.values(TENANTS))("maison $id", (tenant) => {
+  const excluded = new Set(tenant.excludedArtists);
+  const keep = <T extends { artistId: string }>(list: T[]) => list.filter((x) => !excluded.has(x.artistId));
+
+  it("le roster complet moins ses exclus ; l'artiste par défaut présent ; LABEL au nom de la maison", async () => {
+    const data = await loadHouse(tenant.id);
+    const ids = data.ARTISTS.map((a) => a.id);
+    expect(ids).toEqual(ALL_ARTISTS.map((a) => a.id).filter((id) => !excluded.has(id)));
+    expect(data.ARTISTS).toHaveLength(ALL_ARTISTS.length - tenant.excludedArtists.length);
+    for (const id of tenant.excludedArtists) expect(ids).not.toContain(id);
+    expect(ids).toContain(tenant.defaultArtistId);
+    expect(data.LABEL.name).toBe(tenant.name);
+  });
+
+  it("CONTRACTS, PLACEMENTS, PROJECTS = la table complète moins les exclus, rien d'autre", async () => {
+    const data = await loadHouse(tenant.id);
+    expect(data.CONTRACTS).toEqual(keep(data.ALL_CONTRACTS));
+    expect(data.PLACEMENTS).toEqual(keep(data.ALL_PLACEMENTS));
+    const seedEntries = Object.entries(data.PROJECT_SEEDS).filter(([id]) => !excluded.has(id));
+    expect(new Set(data.PROJECTS.map((p) => p.artistId))).toEqual(new Set(seedEntries.map(([id]) => id)));
+    expect(data.PROJECTS).toHaveLength(seedEntries.reduce((s, [, seeds]) => s + seeds.length, 0));
+    expect(data.PROJECTS.map((p) => p.id)).toEqual(seedEntries.flatMap(([, seeds]) => seeds.map((s) => s.id)));
+  });
+
+  it("tout ce qui dérive du roster suit l'exclusion", async () => {
+    const data = await loadHouse(tenant.id);
+    const ids = new Set(data.ARTISTS.map((a) => a.id));
+    for (const p of data.PROJECTS) expect(ids.has(p.artistId), p.id).toBe(true);
+    for (const t of data.TRACKS) expect(ids.has(t.artistId), t.id).toBe(true);
+    for (const c of data.CONTRACTS) expect(ids.has(c.artistId), c.id).toBe(true);
+    for (const p of data.PLACEMENTS) expect(ids.has(p.artistId), p.id).toBe(true);
+    for (const m of data.TEAM) if (Array.isArray(m.artistAccess)) for (const id of m.artistAccess) expect(ids.has(id), m.id).toBe(true);
   });
 });
 
@@ -74,18 +153,30 @@ describe("scripts/artists.json — le relevé quotidien lit les mêmes identifia
   });
 });
 
-describe("maison universal", () => {
-  afterEach(() => vi.unstubAllEnvs());
-  it("onze artistes, Dadju absent, Kiko présent, LABEL au nom de la maison", async () => {
-    vi.stubEnv("NEXT_PUBLIC_TENANT", "universal");
-    vi.resetModules();
-    const data = await import("@/lib/demo/data");
-    expect(data.ARTISTS).toHaveLength(11);
-    expect(data.ARTISTS.map((a) => a.id)).not.toContain("dadju");
-    expect(data.ARTISTS.map((a) => a.id)).toContain("kiko");
-    expect(data.LABEL.name).toBe("Day One × Universal");
-    expect(data.CONTRACTS.map((c) => c.artistId)).not.toContain("dadju");
+/*
+ * La couche réelle apparie les titres du relevé aux titres des projets par ÉGALITÉ
+ * STRICTE (real-source.ts : `t.title === title`, dans releaseDateOf et realTopTracks).
+ * Un titre abrégé à la main (« Avenir » pour « Avenir - Radio Edit ») n'est jamais
+ * retrouvé — et chez Louane, Kworb liste aussi un « Avenir » distinct : l'abréviation
+ * lierait la mauvaise version. Pour les six artistes arrivés au relevé du 24/10/2026,
+ * chaque titre de PROJECT_SEEDS doit donc exister tel quel dans les top titres Spotify
+ * d'un de leurs relevés.
+ */
+describe("titres des projets = titres du relevé, à la lettre", () => {
+  const NEW_SIX = ["leto", "dakeez", "louane", "wamen", "gustave-rudman", "brice-davoli"];
+  it.each(NEW_SIX)("%s : chaque titre de PROJECT_SEEDS figure parmi les top titres Spotify relevés", (id) => {
+    const snaps = SNAPSHOTS[id] ?? [];
+    expect(snaps.length, `${id} : aucun relevé`).toBeGreaterThan(0);
+    const measured = new Set(snaps.flatMap((s) => s.spotify.topTracks.map((t) => t.name)));
+    const seeds = PROJECT_SEEDS[id];
+    expect(seeds, `${id} : aucune graine de projet`).toBeDefined();
+    for (const seed of seeds) for (const title of seed.tracks) {
+      expect(measured.has(title), `${id} : « ${title} » absent du relevé — titres relevés : ${[...measured].join(" | ")}`).toBe(true);
+    }
   });
+});
+
+describe("maison universal", () => {
   it("le repli de discovery et de position algo ne cite pas Dadju", async () => {
     vi.stubEnv("NEXT_PUBLIC_TENANT", "universal");
     vi.resetModules();

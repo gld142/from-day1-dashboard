@@ -330,7 +330,13 @@ type ProjectSeed = {
   tracks: string[];
 };
 
-const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
+/**
+ * Graines des projets, par artiste du roster COMPLET (exportées pour que les tests
+ * vérifient que chaque clé est un id d'ALL_ARTISTS). Les titres sont ceux du relevé
+ * Spotify, à la lettre : la couche réelle (real-source.ts, `t.title === title`) les
+ * apparie par égalité stricte — « Avenir » ne retrouverait pas « Avenir - Radio Edit ».
+ */
+export const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
   dadju: [
     { id: "da-cullinan", title: "Cullinan", type: "album", releaseDate: "2024-11-15",
       tracks: ["Dieu merci", "Mon soleil", "Oublie-le", "Django", "Bob Marley", "Meleğim"] },
@@ -388,7 +394,7 @@ const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
   ],
   louane: [
     { id: "lo-releve", title: "Titres les plus écoutés", type: "album", releaseDate: "2025-02-14",
-      tracks: ["Avenir", "Secret", "Jour 1", "Derrière le brouillard", "maman"] },
+      tracks: ["Avenir - Radio Edit", "Secret", "Jour 1", "Derrière le brouillard", "maman"] },
   ],
   wamen: [
     { id: "wa-releve", title: "Titres les plus écoutés", type: "ep", releaseDate: "2025-09-19",
@@ -397,7 +403,11 @@ const PROJECT_SEEDS: Record<string, ProjectSeed[]> = {
   /* Compositeurs : ce qu'ils sortent SOUS LEUR NOM ; l'essentiel est dans PLACEMENTS. */
   "gustave-rudman": [
     { id: "gr-releve", title: "Sous son nom", type: "ep", releaseDate: "2024-05-17",
-      tracks: ["The Lake", "Two Shadows", "Euphoria Funfair"] },
+      tracks: [
+        "The Lake (From \"Euphoria: Season 1\" Soundtrack)",
+        "Two Shadows",
+        "Euphoria Funfair (From \"Euphoria: Season 1\" Soundtrack)",
+      ] },
   ],
   "brice-davoli": [
     { id: "bd-releve", title: "Bandes originales", type: "album", releaseDate: "2024-09-06",
@@ -509,7 +519,7 @@ export const SPLITS: TrackSplit[] = TRACKS.map((t, i) => {
  * la colonne « Territoire » d'une interface anglaise — « World » est le terme
  * employé des deux côtés dans les contrats de musique.
  */
-const ALL_CONTRACTS: Contract[] = [
+export const ALL_CONTRACTS: Contract[] = [
   {
     id: "c-da-artiste",
     artistId: "dadju",
@@ -991,7 +1001,7 @@ export const SYNC_BRIEFS: SyncBrief[] = [
  * SIMULÉES. Sans elles, le carnet de commandes serait vide et la page ne
  * montrerait pas ce qu'elle sert à montrer.
  */
-const ALL_PLACEMENTS: Placement[] = [
+export const ALL_PLACEMENTS: Placement[] = [
   { id: "pl-fadeup", artistId: "zeg-p", title: "FADE UP", performer: "Hamza, SCH",
     roles: ["compositeur", "producteur"], writerSharePct: 25, producerPointsPct: 4,
     status: "released", date: "2020-02-17", declared: true, streams: 148_817_745 },
