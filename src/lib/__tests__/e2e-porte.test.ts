@@ -18,7 +18,7 @@ describe("e2e — cookie de la porte", () => {
     }
   });
 
-  it("dérive le jeton du mot de passe avec la formule de src/lib/gate.ts", async () => {
+  it("câblage : le jeton vient de tokenFor (src/lib/gate.ts), pas d'une copie", async () => {
     delete process.env.E2E_GATE_COOKIE;
     process.env.E2E_GATE_PASSWORD = "mot-de-passe-factice";
     expect(await cookiePorte()).toBe(await tokenFor("mot-de-passe-factice"));
@@ -33,7 +33,7 @@ describe("e2e — cookie de la porte", () => {
     delete process.env.E2E_GATE_PASSWORD;
     await expect(cookiePorte()).rejects.toThrow(/E2E_GATE_COOKIE[\s\S]*E2E_GATE_PASSWORD/);
   });
-  it("la formule importée est bien celle que le proxy contrôle (empreinte GATE_CHECK)", async () => {
+  it("câblage : un mot de passe factice est refusé par le contrôle du proxy", async () => {
     // Un mot de passe factice n'a pas l'empreinte de la prod : le contrôle doit le refuser.
     expect(await isValidToken(await tokenFor("mot-de-passe-factice"))).toBe(false);
     expect(GATE_CHECK).toMatch(/^[0-9a-f]{64}$/);
@@ -67,6 +67,9 @@ describe("e2e — vérification unique de la porte (globalSetup)", () => {
   });
   it("redirection vers /connexion : démo éteinte côté serveur — message distinct", async () => {
     await expect(verifierPorte(BASE, "j", redirection("/connexion"))).rejects.toThrow(/DEMO_MODE/);
+  });
+  it("redirection vers une autre page : la cible est nommée dans l'erreur", async () => {
+    await expect(verifierPorte(BASE, "j", redirection("/espace"))).rejects.toThrow(/vers \/espace/);
   });
   it("réponse inattendue (500) : erreur avec le statut", async () => {
     await expect(verifierPorte(BASE, "j", reponse(500))).rejects.toThrow(/500/);

@@ -102,6 +102,20 @@ Décidé avec Gaël le 28/09/2026 : la démo sert aux présentations et ne bouge
   production (`sendEmail` lève sinon) — à poser sur Vercel dès que Gaël a la clé.
 - Une adresse `*.vercel.app` ajoutée à la main tombe derrière la connexion Vercel
   (protection du compte) : essayé le 28/09, inutilisable pour une présentation.
+- « Day One × Universal » (deuxième rendez-vous Universal) se déploie dans le projet Vercel
+  **`day1-universal`** (créé le 24/10/2026, `prj_1woQe5gizDdd7BYqhem2JxYNHZxK`, adresse
+  https://day1-universal.vercel.app), branche `universal-v2`, `DEMO_MODE=on`,
+  `NEXT_PUBLIC_TENANT=universal`, protection « Vercel Authentication » désactivée, porte `/acces`
+  conservée. Même règle : depuis un worktree PROPRE, jamais depuis un dossier de travail :
+
+      git worktree add --detach /tmp/day1-universal-deploy universal-v2
+      cd /tmp/day1-universal-deploy && vercel link --yes --project day1-universal --scope gld142s-projects
+      vercel --prod --yes --scope gld142s-projects
+      cd - && git worktree remove /tmp/day1-universal-deploy --force
+
+  `/tmp` est vidé au redémarrage du Mac (mesuré le 24/10) : le lien `.vercel` part avec, on le
+  refait à chaque mise en ligne. Le webhook Stripe n'est pas déclaré pour cette adresse : l'achat
+  ne fait pas partie de la démo Universal.
 
 Dans le produit, la démo est ÉTEINTE par défaut (décidé le 28/09 : « plus rien
 de démo ou de simulé pour le client ») : tout visiteur non connecté va sur
@@ -205,3 +219,67 @@ dans le plan, Task 13 Step 4 (déduits du seed). Le 23/10/2026, l'hôte Supabase
 `tzjgcyqlxbczeoeqgolh.supabase.co` ne se résolvait pas (NXDOMAIN depuis le Mac, le reste d'Internet
 répondant) : la mesure avant/après dans le navigateur reste À FAIRE, aucun chiffre de ce paragraphe
 n'a donc été lu à l'écran.
+
+## Universal v2 (23-24/10/2026) — deux maisons, un code
+
+Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
+`docs/superpowers/plans/2026-10-23-universal-v2.md`.
+
+- **Maison** = `NEXT_PUBLIC_TENANT` (`day1` par défaut | `universal`), lue dans `src/lib/tenant.ts`.
+  Elle règle le nom, la co-marque (pastille UNIVERSAL), les exclus du roster (day1 : Kiko ;
+  universal : Dadju), l'artiste par défaut et le sélecteur de rôle. `ARTISTS`
+  (`src/lib/demo/data.ts`) est DÉJÀ filtré ; projets, titres, contrats, splits, accès équipe et
+  placements suivent. Les tables complètes (`ALL_ARTISTS`, `ALL_CONTRACTS`, `ALL_PLACEMENTS`,
+  `PROJECT_SEEDS`) sont testées : un `artistId` mal tapé fait échouer `roster-data.test.ts`
+  (mesuré : avant ce test, une faute retirait un contrat sans bruit). Les deux objets de maison
+  sont dans les deux bundles (sélection à l'exécution) : chercher la marque dans `.next/static`
+  ne prouve rien, lire la page.
+- **Les titres de `PROJECT_SEEDS` sont ceux du relevé, au caractère près** : la couche réelle
+  apparie par égalité stricte (`real-source.ts`). « Avenir » au lieu de « Avenir - Radio Edit »
+  rattachait le projet de Louane à une autre version (mesuré).
+- **Kworb présent mais à zéro** (Dakeez, `dailyStreams: 0`) n'est PAS une ancre : la série est
+  reconstituée depuis les auditeurs (`hasKworbDailyRate`). Mesuré : sinon 0 stream sur 30 jours.
+- **Rôles** (maison universal seulement) : `src/lib/roles.ts` (arrivée, préréglage de navigation
+  posé SOUS les choix de Réglages → Modules, périmètre). L'état vit dans `day1-role`
+  (localStorage) ; la persona reste « structure ». `parseRoleState` ne lève jamais et renvoie la
+  même référence `DEFAULT_ROLE` pour toute entrée invalide (stabilité de `useSyncExternalStore`) ;
+  un DA sans DA connu retombe sur « aucun rôle », jamais sur tout le roster (mesuré : 11/11
+  artistes sous l'étiquette « DA »). Hors maison à rôles, un rôle stocké est neutralisé
+  (`boundRole`).
+- **Périmètre du DA** : `scopedArtists({ daId })` et `effectiveScope(url, scopeDaId)` (l'URL ne peut
+  pas élargir un DA). Pages au périmètre : /pulse, /roster, /revenue, /streams, /audience,
+  /contracts, /fil. Pas encore : copilot, fans, catalogue, tournée (hors navigation du DA).
+- **`role.tsx` n'importe pas `@/lib/demo/data`** mais `@/lib/demo/das` : le fournisseur est monté
+  à la racine, et l'ancien import embarquait la couche démo (~600 Ko, relevés compris) dans
+  /connexion et /inscription (mesuré : 2 051 Ko → 862 Ko de JS client sur /inscription).
+- **Roster** : filtres `?cat=` / `?da=` écrits par `window.history.replaceState` (pas
+  `router.replace` : aller-retour serveur à chaque clic ; la doc Next 16 « Shallow routing »
+  garantit la resynchro de `useSearchParams`). Tableau groupé : `COLS` est testé contre le nombre
+  de `<th>` (`roster-table.test.ts`).
+- **Fil entre services** : `src/lib/userdata/feed-store.ts`, localStorage `day1-feed`, exemples
+  posés une fois. Réservé à la persona structure (navigation ET `LabelGuard`). Rien en base,
+  aucun email (produit, plus tard). L'auteur est figé à la création (« Finance », « DA · Inès M. »),
+  dans la langue de création.
+- **Provenance du profil importé** : chiffre du jour « reconstitué », auditeurs « estimés »
+  (dérivés des streams ÷ 2,6), « simulé » si le dernier mois est vide. Le badge du total roster
+  qualifie la part Spotify (les autres plateformes sont estimées par construction).
+- **`DEMO_TODAY` = `LATEST_DATE`** : un `npm run snapshot` avance « aujourd'hui » pour toute la
+  démo. Relevé du matin : `npm run snapshot` (hors bac à sable : réseau), commit des relevés,
+  puis redéploiement depuis un worktree propre.
+- **Les deux builds doivent passer** : `npm run build` et
+  `NEXT_PUBLIC_TENANT=universal NEXT_DIST_DIR=.next-universal npm run build`. En local, la
+  maison universal tourne sur 3006 avec `NEXT_DIST_DIR=.next-um` (pour ne pas verrouiller `.next`).
+- **e2e et porte** : toute spec passe `/acces` via `passerLaPorte` (`e2e/helpers.ts`), qui lit
+  `E2E_GATE_COOKIE` ou `E2E_GATE_PASSWORD` (jamais écrits dans le dépôt). `e2e/global-setup.ts`
+  vérifie la porte une fois et nomme la cause (mauvais mot de passe, démo éteinte, autre
+  redirection). Sans ces variables, la suite e2e échoue d'emblée avec un message explicite :
+  avant le 24/10, elle ne passait plus la porte depuis le 25/09 (13/13 échecs, mesuré).
+
+Témoin chiffré (24/10, `rosterRows()` des cinq artistes conservés) : identique avant et après les
+tâches 1 à 3 du chantier ; l'écart avec la démo du 25/09 vient du seul commit e468871 (droits
+d'auteur 15/55), mesuré en rejouant la sonde sur ses deux parents.
+
+Vérifier :
+
+    npx vitest run src/lib/__tests__/tenant.test.ts src/lib/__tests__/roles.test.ts src/lib/__tests__/role-state.test.ts src/lib/__tests__/nav.test.ts src/lib/demo/__tests__/roster-data.test.ts src/lib/demo/__tests__/scope.test.ts src/lib/userdata/__tests__/feed-store.test.ts src/components/modules/structure/__tests__/roster-table.test.ts
+    NEXT_PUBLIC_TENANT=universal npx vitest run

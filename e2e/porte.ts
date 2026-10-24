@@ -42,12 +42,16 @@ export async function verifierPorte(baseURL: string, cookie: string, doFetch: ty
           "Vérifier E2E_GATE_PASSWORD (le mot de passe de /acces) ou E2E_GATE_COOKIE.",
       );
     }
-    if (cible.startsWith("/connexion")) {
+    if (cible === "/connexion" || cible.startsWith("/connexion/")) {
       throw new Error(
         `Démo éteinte : ${baseURL}/pulse renvoie vers /connexion. Le serveur testé doit tourner avec DEMO_MODE=on ` +
-          "(c'est le cas du serveur lancé par la config Playwright ; pas d'un E2E_BASE_URL externe).",
+          "(c'est le cas du serveur lancé par la config Playwright ; pas forcément d'un serveur déjà ouvert sur :3100 " +
+          "et réutilisé, ni d'un E2E_BASE_URL externe).",
       );
     }
+    throw new Error(
+      `Porte de la démo : ${baseURL}/pulse redirige (HTTP ${res.status}) vers ${cible}, attendu 200 avec le cookie.`,
+    );
   }
   if (!res.ok) throw new Error(`Porte de la démo : ${baseURL}/pulse répond HTTP ${res.status} (attendu 200 avec le cookie).`);
 }

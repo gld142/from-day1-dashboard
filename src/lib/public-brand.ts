@@ -8,12 +8,12 @@ const PILL_BG = "#000000";
 const PILL_FG = "#ffffff";
 
 /**
- * Garde pour une couleur interpolée dans un `style=` : seul `#hex` (3 à 8
- * chiffres) passe, sinon le repli. Évite qu'une valeur de config casse
+ * Garde pour une couleur interpolée dans un `style=` : seul un `#hex` valide en
+ * CSS (3, 4, 6 ou 8 chiffres) passe, sinon le repli. Évite qu'une valeur de config casse
  * l'attribut ou injecte une autre propriété CSS.
  */
 export function safeColor(value: string, fallback: string): string {
-  return /^#[0-9a-f]{3,8}$/i.test(value) ? value : fallback;
+  return /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value) ? value : fallback;
 }
 
 /**

@@ -48,11 +48,12 @@ describe("pages publiques — échappement et garde-fous", () => {
     const pill = coBrandPillHtml(hostile);
     expect(pill).toContain("background:#000000;color:#ffffff");
   });
-  it("safeColor n'accepte que #hex de 3 à 8 chiffres", () => {
+  it("safeColor n'accepte que #hex valide en CSS (3, 4, 6 ou 8 chiffres)", () => {
     expect(safeColor("#000", "#111")).toBe("#000");
     expect(safeColor("#7B5CF0", "#111")).toBe("#7B5CF0");
     expect(safeColor("#7B5CF0AA", "#111")).toBe("#7B5CF0AA");
-    for (const bad of ["red", "#12", "#123456789", "#zzz", "#000;x:y", 'a"b', "", "url(x)"]) {
+    expect(safeColor("#fff0", "#111")).toBe("#fff0");
+    for (const bad of ["red", "#12", "#12345", "#1234567", "#123456789", "#zzz", "#000;x:y", 'a"b', "", "url(x)"]) {
       expect(safeColor(bad, "#111")).toBe("#111");
     }
   });
