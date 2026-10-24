@@ -1,6 +1,21 @@
 {
   "title": "Roster",
   "subtitle": "Who carries {label}, and who's slipping — all {count} artists compared.",
+  "scopeSubtitle": "{count, plural, one {# artist} other {# artists}} · {scope} — who carries {label}, and who's slipping.",
+  "filters": {
+    "category": "Category",
+    "da": "A&R",
+    "all": "All",
+    "allDa": "All"
+  },
+  "category": {
+    "urbain": "Urban",
+    "variete": "Pop",
+    "compositeur": "Songwriters"
+  },
+  "group": {
+    "summary": "{count, plural, one {# artist} other {# artists}} · {streams} streams 30d · {revenue} over 12 months"
+  },
   "guard": {
     "title": "Label view only",
     "description": "The roster compares every artist on the label side by side. In artist view you only access your own data.",
@@ -30,13 +45,18 @@
     "valuation": "Valuation (mid)",
     "index": "Index",
     "focused": "Focused",
-    "sort": "Sort by {column}"
+    "sort": "Sort by {column}",
+    "category": "Category",
+    "da": "A&R",
+    "notes": "Notes"
   },
   "export": {
     "button": "Export",
     "csv": "Export as CSV",
     "print": "Printable report (PDF)",
-    "genre": "Genre"
+    "genre": "Genre",
+    "category": "Category",
+    "da": "A&R"
   },
   "stage": {
     "emerging": "Emerging",

@@ -1,6 +1,21 @@
 {
   "title": "Roster",
   "subtitle": "Qui porte {label}, et qui décroche — les {count} artistes comparés.",
+  "scopeSubtitle": "{count, plural, one {# artiste} other {# artistes}} · {scope} — qui porte {label}, et qui décroche.",
+  "filters": {
+    "category": "Catégorie",
+    "da": "DA",
+    "all": "Toutes",
+    "allDa": "Tous"
+  },
+  "category": {
+    "urbain": "Urbain",
+    "variete": "Variété",
+    "compositeur": "Compositeurs"
+  },
+  "group": {
+    "summary": "{count, plural, one {# artiste} other {# artistes}} · {streams} streams 30 j · {revenue} sur 12 mois"
+  },
   "guard": {
     "title": "Réservé à la vue structure",
     "description": "Le roster compare l'ensemble des artistes du label entre eux. En vue artiste, vous accédez uniquement à vos propres données.",
@@ -30,13 +45,18 @@
     "valuation": "Valo (méd.)",
     "index": "Index",
     "focused": "Zoom actif",
-    "sort": "Trier par {column}"
+    "sort": "Trier par {column}",
+    "category": "Catégorie",
+    "da": "DA",
+    "notes": "Notes"
   },
   "export": {
     "button": "Exporter",
     "csv": "Exporter en CSV",
     "print": "Rapport imprimable (PDF)",
-    "genre": "Genre"
+    "genre": "Genre",
+    "category": "Catégorie",
+    "da": "DA"
   },
   "stage": {
     "emerging": "Émergent",

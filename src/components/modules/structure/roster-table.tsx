@@ -8,6 +8,7 @@
  * désactivé sous prefers-reduced-motion.
  */
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowDown, ArrowUp, ArrowUpDown, Focus } from "lucide-react";
@@ -23,11 +24,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { RosterRow } from "@/lib/demo/api";
-import type { CareerStage } from "@/lib/demo/types";
+import { DAS } from "@/lib/demo/data";
+import { ARTIST_CATEGORIES, type ArtistCategory, type CareerStage } from "@/lib/demo/types";
 import { fmtCompact, fmtEur, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type SortKey = "streams30d" | "revenue12m" | "day1Index";
+
+/** Colonnes du tableau — le `colSpan` des en-têtes de groupe doit les couvrir toutes. */
+const COLS = 11;
 
 const STAGE_TONE: Record<CareerStage, string> = {
   emerging: "bg-brand/10 text-brand",
@@ -87,12 +92,18 @@ export function RosterTable({
   focusedArtistId,
   onFocus,
   bare = false,
+  grouped = false,
+  notesByArtist = {},
 }: {
   rows: RosterRow[];
   focusedArtistId: string | null;
   onFocus: (id: string | null) => void;
   /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
   bare?: boolean;
+  /** Un en-tête par catégorie (nom, nombre, streams et revenus du groupe), les lignes dessous. */
+  grouped?: boolean;
+  /** Notes ouvertes du fil par artiste (Task 11) ; absent = colonne vide. */
+  notesByArtist?: Record<string, number>;
 }) {
   const t = useTranslations("roster");
   const locale = useLocale();
@@ -107,6 +118,17 @@ export function RosterTable({
       ),
     [rows, sortKey, desc],
   );
+
+  /* Les groupes suivent l'ordre fixe des catégories ; chaque groupe garde le tri
+     courant. Sans `grouped`, un seul groupe anonyme : le tableau d'avant. */
+  const groups = useMemo(() => {
+    if (!grouped) return [{ category: null as ArtistCategory | null, rows: sorted }];
+    return ARTIST_CATEGORIES.map((category) => ({
+      category,
+      rows: sorted.filter((r) => r.category === category),
+    })).filter((g) => g.rows.length > 0);
+  }, [grouped, sorted]);
+  const daName = (id: string) => DAS.find((d) => d.id === id)?.name ?? id;
 
   function toggleSort(key: SortKey) {
     if (key === sortKey) setDesc((d) => !d);
@@ -130,6 +152,7 @@ export function RosterTable({
             <TableRow className="hover:bg-transparent">
               <TableHead className={bare ? undefined : "pl-5"}>{t("table.artist")}</TableHead>
               <TableHead>{t("table.stage")}</TableHead>
+              <TableHead>{t("table.da")}</TableHead>
               <SortHead
                 column="streams30d"
                 label={t("table.streams30d")}
@@ -150,6 +173,7 @@ export function RosterTable({
               <TableHead className="text-right">{t("table.net12m")}</TableHead>
               <TableHead className="text-right">{t("table.margin")}</TableHead>
               <TableHead className="text-right">{t("table.valuation")}</TableHead>
+              <TableHead className="text-right">{t("table.notes")}</TableHead>
               <SortHead
                 column="day1Index"
                 label={t("table.index")}
@@ -163,73 +187,108 @@ export function RosterTable({
           </TableHeader>
           <LayoutGroup>
             <TableBody>
-              {sorted.map((r) => {
-                const focused = focusedArtistId === r.id;
-                return (
-                  <MotionTableRow
-                    key={r.id}
-                    layout={reduceMotion ? false : "position"}
-                    transition={ROW_LAYOUT_TRANSITION}
-                    onClick={() => onFocus(focused ? null : r.id)}
-                    aria-selected={focused}
-                    className={cn(
-                      "cursor-pointer",
-                      focused && "bg-brand/5 hover:bg-brand/10",
-                    )}
-                  >
-                    <TableCell className="pl-5">
-                      <span className="flex items-center gap-2">
-                        <ArtistBadge artist={r} meta={r.genre} />
-                        {focused && (
-                          <Badge variant="outline" className="gap-1 border-brand/40 text-brand">
-                            <Focus aria-hidden />
-                            {t("table.focused")}
-                          </Badge>
-                        )}
+              {groups.flatMap((g) => [
+                g.category && (
+                  <TableRow key={`group-${g.category}`} className="bg-muted/40 hover:bg-muted/40">
+                    <TableCell colSpan={COLS} className="py-1.5 pl-5 text-[11px]">
+                      <span className="font-semibold uppercase tracking-[0.12em]">
+                        {t(`category.${g.category}`)}
+                      </span>
+                      <span className="ml-3 text-muted-foreground">
+                        {t("group.summary", {
+                          count: g.rows.length,
+                          streams: fmtCompact(locale, g.rows.reduce((s, r) => s + r.streams30d, 0)),
+                          revenue: fmtEur(locale, g.rows.reduce((s, r) => s + r.revenue12m, 0), {
+                            compact: true,
+                          }),
+                        })}
                       </span>
                     </TableCell>
-                    <TableCell>
-                      <Badge className={cn("border-transparent", STAGE_TONE[r.careerStage])}>
-                        {t(`stage.${r.careerStage}`)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="num text-right font-medium">
-                      {fmtCompact(locale, r.streams30d)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DeltaChip value={r.delta30d} />
-                    </TableCell>
-                    <TableCell className="num text-right font-medium">
-                      {fmtEur(locale, r.revenue12m, { compact: true })}
-                    </TableCell>
-                    <TableCell
+                  </TableRow>
+                ),
+                ...g.rows.map((r) => {
+                  const focused = focusedArtistId === r.id;
+                  return (
+                    <MotionTableRow
+                      key={r.id}
+                      layout={reduceMotion ? false : "position"}
+                      transition={ROW_LAYOUT_TRANSITION}
+                      onClick={() => onFocus(focused ? null : r.id)}
+                      aria-selected={focused}
                       className={cn(
-                        "num text-right font-semibold",
-                        r.net12m >= 0 ? "text-success" : "text-destructive",
+                        "cursor-pointer",
+                        focused && "bg-brand/5 hover:bg-brand/10",
                       )}
                     >
-                      {fmtEur(locale, r.net12m, { compact: true })}
-                    </TableCell>
-                    <TableCell className="num text-right text-muted-foreground">
-                      {fmtPct(locale, r.margin)}
-                    </TableCell>
-                    <TableCell className="num text-right text-muted-foreground">
-                      {fmtEur(locale, r.valuationMid, { compact: true })}
-                    </TableCell>
-                    <TableCell className="num pr-5 text-right">
-                      <span className="inline-flex items-center gap-2">
-                        <span className="h-1.5 w-10 overflow-hidden rounded-full bg-muted">
-                          <span
-                            className="block h-full rounded-full bg-brand"
-                            style={{ width: `${r.day1Index}%` }}
-                          />
+                      <TableCell className="pl-5">
+                        <span className="flex items-center gap-2">
+                          <ArtistBadge artist={r} meta={`${r.genre} · ${t(`category.${r.category}`)}`} />
+                          {focused && (
+                            <Badge variant="outline" className="gap-1 border-brand/40 text-brand">
+                              <Focus aria-hidden />
+                              {t("table.focused")}
+                            </Badge>
+                          )}
                         </span>
-                        <span className="font-medium">{r.day1Index}</span>
-                      </span>
-                    </TableCell>
-                  </MotionTableRow>
-                );
-              })}
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={cn("border-transparent", STAGE_TONE[r.careerStage])}>
+                          {t(`stage.${r.careerStage}`)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[12px] text-muted-foreground">{daName(r.daId)}</TableCell>
+                      <TableCell className="num text-right font-medium">
+                        {fmtCompact(locale, r.streams30d)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DeltaChip value={r.delta30d} />
+                      </TableCell>
+                      <TableCell className="num text-right font-medium">
+                        {fmtEur(locale, r.revenue12m, { compact: true })}
+                      </TableCell>
+                      <TableCell
+                        className={cn(
+                          "num text-right font-semibold",
+                          r.net12m >= 0 ? "text-success" : "text-destructive",
+                        )}
+                      >
+                        {fmtEur(locale, r.net12m, { compact: true })}
+                      </TableCell>
+                      <TableCell className="num text-right text-muted-foreground">
+                        {fmtPct(locale, r.margin)}
+                      </TableCell>
+                      <TableCell className="num text-right text-muted-foreground">
+                        {fmtEur(locale, r.valuationMid, { compact: true })}
+                      </TableCell>
+                      <TableCell className="num text-right">
+                        {(notesByArtist[r.id] ?? 0) > 0 ? (
+                          <Link
+                            href={`/fil?artist=${encodeURIComponent(r.id)}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex min-w-5 justify-center rounded-full bg-brand/15 px-1.5 text-[11px] font-medium text-brand"
+                            aria-label={`${notesByArtist[r.id]} ${t("table.notes").toLowerCase()} · ${r.name}`}
+                          >
+                            {notesByArtist[r.id]}
+                          </Link>
+                        ) : (
+                          <span className="text-muted-foreground/50">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="num pr-5 text-right">
+                        <span className="inline-flex items-center gap-2">
+                          <span className="h-1.5 w-10 overflow-hidden rounded-full bg-muted">
+                            <span
+                              className="block h-full rounded-full bg-brand"
+                              style={{ width: `${r.day1Index}%` }}
+                            />
+                          </span>
+                          <span className="font-medium">{r.day1Index}</span>
+                        </span>
+                      </TableCell>
+                    </MotionTableRow>
+                  );
+                }),
+              ])}
             </TableBody>
           </LayoutGroup>
         </Table>

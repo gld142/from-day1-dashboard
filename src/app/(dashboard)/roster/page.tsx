@@ -15,12 +15,14 @@
  * Mode client (compte payant) : CustomerRoster, sur les relevés importés de
  * l'espace — la démo ci-dessous reste telle quelle derrière le mot de passe.
  */
-import { useMemo } from "react";
+import { Suspense, useCallback, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { RosterAlerts } from "@/components/modules/structure/roster-alerts";
+import { RosterFilters } from "@/components/modules/structure/roster-filters";
 import { RosterMatrix } from "@/components/modules/structure/roster-matrix";
 import { RosterPnlBars } from "@/components/modules/structure/roster-pnl-bars";
 import { RosterTable } from "@/components/modules/structure/roster-table";
@@ -29,13 +31,22 @@ import { CustomerRoster } from "@/components/modules/structure/customer-roster";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
 import { LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
+import { getDa } from "@/lib/demo/data";
+import { isFullScope, parseScope, scopeQuery, scopedArtists, type RosterScope } from "@/lib/demo/scope";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur } from "@/lib/format";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
 
 export default function RosterPage() {
-  return useCustomer() ? <CustomerRoster /> : <DemoRoster />;
+  const customer = useCustomer();
+  if (customer) return <CustomerRoster />;
+  // `useSearchParams` dans un composant client : frontière Suspense obligatoire (docs Next 16).
+  return (
+    <Suspense fallback={null}>
+      <DemoRoster />
+    </Suspense>
+  );
 }
 
 function DemoRoster() {
@@ -44,8 +55,24 @@ function DemoRoster() {
   const locale = useLocale();
   const { isLabel, focusedArtistId, setFocusedArtistId, setPersona } = useRole();
 
-  const rows = useMemo(() => rosterRows(), []);
-  const totals = useMemo(() => labelTotals(), []);
+  /* Le périmètre vient de l'URL (`?cat=`, `?da=`) : partageable, et un rôle DA
+     arrive déjà filtré. Tout en dessous — lignes, totaux, P&L, alertes — le suit. */
+  const router = useRouter();
+  const params = useSearchParams();
+  const scope = useMemo(() => parseScope(params), [params]);
+  const artists = useMemo(() => scopedArtists(scope), [scope]);
+  const rows = useMemo(() => rosterRows(artists), [artists]);
+  const totals = useMemo(() => labelTotals(artists), [artists]);
+  const setScope = useCallback(
+    (next: RosterScope) => router.replace(`/roster${scopeQuery(next)}`, { scroll: false }),
+    [router],
+  );
+  const scopeText = [
+    scope.category ? t(`category.${scope.category}`) : null,
+    scope.daId ? getDa(scope.daId)?.name : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   /* La part de chacun dans les revenus du roster — le seul chiffre que cette
      page est seule à pouvoir dire. */
@@ -88,6 +115,8 @@ function DemoRoster() {
     downloadCsv<RosterRow>("day1-roster", rows, [
       { header: t("table.artist"), cell: (r) => r.name },
       { header: t("export.genre"), cell: (r) => r.genre },
+      { header: t("export.category"), cell: (r) => t(`category.${r.category}`) },
+      { header: t("export.da"), cell: (r) => getDa(r.daId)?.name ?? r.daId },
       { header: t("table.stage"), cell: (r) => t(`stage.${r.careerStage}`) },
       { header: t("table.streams30d"), cell: (r) => r.streams30d },
       { header: t("table.delta30d"), cell: (r) => round2(r.delta30d) },
@@ -104,7 +133,11 @@ function DemoRoster() {
       <PrintStyles />
       <PageHeader
         title={t("title")}
-        subtitle={t("subtitle", { count: totals.artists, label: LABEL.name })}
+        subtitle={
+          isFullScope(scope)
+            ? t("subtitle", { count: totals.artists, label: LABEL.name })
+            : t("scopeSubtitle", { count: totals.artists, scope: scopeText, label: LABEL.name })
+        }
       >
         <ExportMenu
           label={t("export.button")}
@@ -113,6 +146,10 @@ function DemoRoster() {
           onExportCsv={exportRosterCsv}
         />
       </PageHeader>
+
+      <div className="mb-3">
+        <RosterFilters scope={scope} onChange={setScope} />
+      </div>
 
       <div className="space-y-3">
         {/* À quel point le label tient à un seul nom. */}
@@ -199,6 +236,7 @@ function DemoRoster() {
             focusedArtistId={focusedArtistId}
             onFocus={setFocusedArtistId}
             bare
+            grouped
           />
         </Sheet>
 
@@ -221,7 +259,7 @@ function DemoRoster() {
         {/* Ce que chacun rapporte, coûte et laisse. */}
         <Sheet family="money">
           <SheetHeading>{t("pnl.title")}</SheetHeading>
-          <RosterPnlBars bare />
+          <RosterPnlBars artists={artists} bare />
         </Sheet>
 
         <Doors

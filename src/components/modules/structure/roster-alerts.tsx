@@ -25,15 +25,16 @@ export function RosterAlerts({
   const t = useTranslations("roster");
   const locale = useLocale();
 
-  const contractAlerts = useMemo(
-    () =>
-      CONTRACTS.flatMap((c) =>
-        c.alerts
-          .filter((a) => a.severity === "warning" || a.severity === "danger")
-          .map((a) => ({ contract: c, alert: a })),
-      ),
-    [],
-  );
+  /* Seuls les contrats des artistes affichés : un périmètre « Variété » ne
+     doit pas remonter l'échéance d'un rappeur. */
+  const contractAlerts = useMemo(() => {
+    const ids = new Set(rows.map((r) => r.id));
+    return CONTRACTS.filter((c) => ids.has(c.artistId)).flatMap((c) =>
+      c.alerts
+        .filter((a) => a.severity === "warning" || a.severity === "danger")
+        .map((a) => ({ contract: c, alert: a })),
+    );
+  }, [rows]);
 
   const declining = useMemo(
     () => rows.filter((r) => r.delta30d < 0).sort((a, b) => a.delta30d - b.delta30d),

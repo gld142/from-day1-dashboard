@@ -15,6 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import { ARTISTS, pnlByArtist } from "@/lib/demo/api";
+import type { Artist } from "@/lib/demo/types";
 import { fmtEur } from "@/lib/format";
 
 const SERIES = [
@@ -23,17 +24,24 @@ const SERIES = [
   { key: "net", color: "var(--chart-2)" },
 ] as const;
 
-export function RosterPnlBars({ bare = false }: { bare?: boolean } = {}) {
+export function RosterPnlBars({
+  artists = ARTISTS,
+  bare = false,
+}: {
+  /** Le périmètre du roster (catégorie, DA) ; absent = tout le label. */
+  artists?: Artist[];
+  bare?: boolean;
+} = {}) {
   const t = useTranslations("roster");
   const locale = useLocale();
 
   const data = useMemo(
     () =>
-      pnlByArtist(12).map((p) => ({
+      pnlByArtist(12, artists).map((p) => ({
         ...p,
-        name: ARTISTS.find((a) => a.id === p.artistId)?.name ?? p.artistId,
+        name: artists.find((a) => a.id === p.artistId)?.name ?? p.artistId,
       })),
-    [],
+    [artists],
   );
 
   return (
