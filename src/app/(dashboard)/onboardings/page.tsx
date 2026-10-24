@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { InternalPageIntlProvider } from "@/i18n/intl-providers";
+import { PageIntlProvider } from "@/i18n/intl-providers";
 import { isRouteAllowedForTenant } from "@/lib/internal-routes";
 import { TENANT } from "@/lib/tenant";
 import OnboardingsView from "./onboardings-view";
@@ -16,8 +16,8 @@ export default function OnboardingsPage() {
   // Ses textes partent avec elle, et seulement avec elle : le fournisseur racine ne les envoie
   // plus (rootClientMessages). La page reste synchrone : `notFound()` est levé avant tout rendu.
   return (
-    <InternalPageIntlProvider namespaces={["onboardings"]}>
+    <PageIntlProvider namespaces={["onboardings"]}>
       <OnboardingsView />
-    </InternalPageIntlProvider>
+    </PageIntlProvider>
   );
 }

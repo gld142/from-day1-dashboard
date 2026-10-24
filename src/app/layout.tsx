@@ -40,8 +40,9 @@ export default async function RootLayout({
       className={cn("h-full", geistMono.variable, instrumentSans.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">
-        {/* Messages explicites, sans les namespaces des pages internes : ce fournisseur est
-            sérialisé dans CHAQUE page, /connexion et /inscription comprises (voir intl-providers). */}
+        {/* Messages explicites, sans AUCUN namespace de page (PAGE_SCOPED_NAMESPACES : pages
+            internes et welcome) : ce fournisseur est sérialisé dans CHAQUE page, /connexion et
+            /inscription comprises (voir i18n/intl-providers.tsx). */}
         <RootIntlProvider>
           <Providers>{children}</Providers>
         </RootIntlProvider>

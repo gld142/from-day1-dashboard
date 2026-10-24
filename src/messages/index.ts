@@ -170,7 +170,7 @@ type Namespace = keyof (typeof MESSAGES)[Locale];
  * (`tenant.internalPages`) ne les reçoit pas du tout, même côté serveur.
  */
 export const INTERNAL_NAMESPACES = ["comparatif", "onboardings"] as const satisfies readonly Namespace[];
-export type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
+type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
 
 /**
  * Namespaces « DE PAGE » : ils ne partent vers le navigateur qu'avec la page qui les lit, dans un
@@ -304,13 +304,4 @@ export function pageMessages(
     else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });
   }
   return { ...rootClientMessages(locale, tenant), ...scoped };
-}
-
-/** `pageMessages` restreint aux pages internes (/comparatif, /onboardings). */
-export function internalPageMessages(
-  locale: Locale,
-  namespaces: readonly InternalNamespace[],
-  tenant: Tenant = TENANT,
-): RootClientMessages & Partial<Pick<AllMessages, InternalNamespace>> {
-  return pageMessages(locale, namespaces, tenant);
 }

@@ -26,7 +26,7 @@ import {
   sectionsForTenant,
 } from "@/lib/nav";
 import { INTERNAL_ROUTES, UNMATCHED_PATH, isRouteAllowedForTenant } from "@/lib/internal-routes";
-import { getMessages, internalPageMessages, pageMessages, rootClientMessages } from "@/messages";
+import { getMessages, pageMessages, rootClientMessages } from "@/messages";
 import { TENANTS, type TenantId } from "@/lib/tenant";
 
 /* Les fournisseurs next-intl lisent la langue de la requête (`getLocale`, next-intl/server) :
@@ -144,7 +144,6 @@ describe("getMessages — les textes des pages internes ne partent pas vers le n
        rien n'écrit (le texte anglais est « Universal holds the data ») — en anglais, il ne pouvait
        pas échouer. Il doit trouver le pitch là où il est : la page /onboardings de la maison day1. */
     it(`${locale} : témoin — le marqueur du pitch trouve son texte dans les messages de /onboardings (day1)`, () => {
-      expect(JSON.stringify(internalPageMessages(locale, ["onboardings"], TENANTS.day1))).toMatch(PITCH_TEXT);
       expect(JSON.stringify(pageMessages(locale, ["onboardings"], TENANTS.day1))).toMatch(PITCH_TEXT);
       expect(JSON.stringify(getMessages(locale, TENANTS.day1))).toMatch(PITCH_TEXT);
     });
@@ -207,7 +206,7 @@ describe("libellés des pages internes (nav, Réglages → Modules) : absents de
         getMessages: getMessages(locale, TENANTS.universal),
         rootClientMessages: rootClientMessages(locale, TENANTS.universal),
         "pageMessages(welcome)": pageMessages(locale, ["welcome"], TENANTS.universal),
-        "internalPageMessages(onboardings, comparatif)": internalPageMessages(locale, ["onboardings", "comparatif"], TENANTS.universal),
+        "pageMessages(onboardings, comparatif)": pageMessages(locale, ["onboardings", "comparatif"], TENANTS.universal),
       };
       for (const [name, m] of Object.entries(sent)) {
         const json = JSON.stringify(m);
@@ -360,10 +359,10 @@ describe("rootClientMessages — le fournisseur racine n'envoie aucun texte de p
   }
 });
 
-describe("internalPageMessages — une page interne reçoit les messages racine ET son namespace, pas celui de l'autre", () => {
+describe("pageMessages (pages internes) — une page interne reçoit les messages racine ET son namespace, pas celui de l'autre", () => {
   for (const locale of ["fr", "en"] as const) {
     it(`${locale} · day1 : /onboardings a onboardings (le pitch), pas comparatif`, () => {
-      const m = internalPageMessages(locale, ["onboardings"], TENANTS.day1) as Record<string, unknown>;
+      const m = pageMessages(locale, ["onboardings"], TENANTS.day1) as Record<string, unknown>;
       const all = getMessages(locale, TENANTS.day1) as Record<string, unknown>;
       expect(m.onboardings).toBe(all.onboardings);
       expect(Object.keys(m)).not.toContain("comparatif");
@@ -371,14 +370,14 @@ describe("internalPageMessages — une page interne reçoit les messages racine 
       expect(JSON.stringify(m)).toMatch(PITCH); // témoin : le marqueur trouve bien le pitch quand il y est
     });
     it(`${locale} · day1 : /comparatif a comparatif, pas onboardings (ni le pitch)`, () => {
-      const m = internalPageMessages(locale, ["comparatif"], TENANTS.day1) as Record<string, unknown>;
+      const m = pageMessages(locale, ["comparatif"], TENANTS.day1) as Record<string, unknown>;
       const all = getMessages(locale, TENANTS.day1) as Record<string, unknown>;
       expect(m.comparatif).toBe(all.comparatif);
       expect(Object.keys(m)).not.toContain("onboardings");
       expect(JSON.stringify(m)).not.toMatch(PITCH);
     });
     it(`${locale} · universal : aucune page interne, même demandée (défense en profondeur)`, () => {
-      const m = internalPageMessages(locale, ["onboardings", "comparatif"], TENANTS.universal) as Record<string, unknown>;
+      const m = pageMessages(locale, ["onboardings", "comparatif"], TENANTS.universal) as Record<string, unknown>;
       expect(Object.keys(m)).not.toContain("onboardings");
       expect(Object.keys(m)).not.toContain("comparatif");
       expect(JSON.stringify(m)).not.toMatch(PITCH);
@@ -430,12 +429,12 @@ describe("fournisseurs next-intl : la racine sans pages internes, chaque page in
         route === "comparatif"
           ? (await import("@/app/(dashboard)/comparatif/comparatif-view")).default
           : (await import("@/app/(dashboard)/onboardings/onboardings-view")).default;
-      const { InternalPageIntlProvider } = await import("@/i18n/intl-providers");
+      const { PageIntlProvider } = await import("@/i18n/intl-providers");
       const el = (page.default as () => unknown)() as Provided;
-      expect(el.type).toBe(InternalPageIntlProvider);
+      expect(el.type).toBe(PageIntlProvider);
       expect(el.props.namespaces).toEqual([own]);
       expect((el.props.children as { type?: unknown }).type).toBe(view);
-      const provided = (await InternalPageIntlProvider(el.props as Parameters<typeof InternalPageIntlProvider>[0])) as Provided;
+      const provided = (await PageIntlProvider(el.props as Parameters<typeof PageIntlProvider>[0])) as Provided;
       expect(Object.keys(provided.props.messages!)).toContain(own);
       expect(Object.keys(provided.props.messages!)).toContain("common");
       expect(Object.keys(provided.props.messages!)).not.toContain(other);
