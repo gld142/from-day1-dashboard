@@ -25,6 +25,12 @@ export type Tenant = {
   roles: boolean;
   /** Artiste ouvert par défaut en persona artiste (role.tsx) — jamais un exclu. */
   defaultArtistId: string;
+  /**
+   * Pages internes From Day 1 (`internal` dans nav.ts : comparatif, pipeline partenaires —
+   * dont le pitch de Day 1 À PROPOS d'Universal). false = elles n'existent pas dans cette
+   * maison : 404, absentes des listes, textes non envoyés (`isRouteAllowedForTenant`).
+   */
+  internalPages: boolean;
 };
 
 export const TENANTS: Record<TenantId, Tenant> = {
@@ -38,6 +44,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
     excludedArtists: ["kiko"],
     roles: false,
     defaultArtistId: "dadju",
+    internalPages: true,
   },
   universal: {
     id: "universal",
@@ -49,6 +56,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
     excludedArtists: ["dadju"],
     roles: true,
     defaultArtistId: "nono-la-grinta",
+    internalPages: false,
   },
 };
 

@@ -6,7 +6,8 @@
  *
  * `sections` = navigation rendue pour le persona courant (défauts + choix) ;
  * `catalog` = toutes les pages accessibles au persona, visibles ou non
- * (Réglages → Modules). Côté serveur et pendant l'hydratation, les choix
+ * (Réglages → Modules) — les deux sans les pages que la maison n'ouvre pas
+ * (`sectionsForTenant`). Côté serveur et pendant l'hydratation, les choix
  * valent `{}` : HTML identique, puis la vraie valeur dès l'effet.
  */
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
@@ -16,11 +17,13 @@ import {
   isModuleVisible,
   navCatalogForPersona,
   navForPersona,
+  sectionsForTenant,
   type NavItem,
 } from "@/lib/nav";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
 import { modulesState } from "@/lib/roles";
+import { TENANT } from "@/lib/tenant";
 import {
   hydrateModules,
   modulesSnapshot,
@@ -37,7 +40,9 @@ export function useModules() {
     hydrateModules();
   }, []);
   const snap = useSyncExternalStore(subscribeModules, modulesSnapshot, () => SERVER_SNAPSHOT);
-  const catalog = useMemo(() => navCatalogForPersona(persona), [persona]);
+  /* La maison retire ses pages fermées (Universal : les pages internes From Day 1) du catalogue
+     ET de la navigation : ni Réglages, ni la sidebar, ni la palette ⌘K ne les listent. */
+  const catalog = useMemo(() => sectionsForTenant(navCatalogForPersona(persona), TENANT), [persona]);
   /* Préréglage du rôle sous les choix explicites de l'utilisateur, et « Réinitialiser » qui ne
      compte que ces choix : la paire vient de roles.ts (modulesState), pure et testée. */
   const { overrides, hasOverrides } = useMemo(
@@ -47,7 +52,7 @@ export function useModules() {
 
   const customer = useCustomer();
   const sections = useMemo(() => {
-    const nav = navForPersona(persona, overrides);
+    const nav = sectionsForTenant(navForPersona(persona, overrides), TENANT);
     if (!customer) return nav;
     // Mode client : un menu à part (nav.ts, customerSections) — jamais la démo.
     const importItem = nav.flatMap((s) => s.items).find((i) => i.href === "/import");

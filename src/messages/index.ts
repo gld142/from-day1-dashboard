@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { TENANT, type Tenant } from "@/lib/tenant";
 
 /* ─── Namespaces communs ─── */
 import frCommon from "./fr/common.json";
@@ -155,6 +156,25 @@ const MESSAGES = {
   },
 } as const;
 
-export function getMessages(locale: Locale) {
-  return MESSAGES[locale];
+/**
+ * Namespaces lus SEULEMENT par les pages internes From Day 1 (nav.ts, `internal`) :
+ * /comparatif (comparison-table) et /onboardings (partner-board, dont le pitch de Day 1
+ * À PROPOS d'Universal).
+ */
+const INTERNAL_NAMESPACES: readonly string[] = ["comparatif", "onboardings"];
+
+/**
+ * Les messages de la requête. Le NextIntlClientProvider racine les hérite TOUS (next-intl 4,
+ * `NextIntlClientProviderServer` : `messages` absent → `getMessages()`) : ils sont sérialisés
+ * dans chaque page, /connexion et /inscription comprises. Mesuré le 24/10/2026 : le pitch
+ * « Universal détient la donnée… » se lisait dans le HTML de /connexion des deux maisons.
+ * Une maison sans pages internes (`tenant.internalPages`) ne reçoit donc pas leurs textes.
+ */
+export function getMessages(locale: Locale, tenant: Tenant = TENANT) {
+  const all = MESSAGES[locale];
+  if (tenant.internalPages) return all;
+  return Object.fromEntries(Object.entries(all).filter(([ns]) => !INTERNAL_NAMESPACES.includes(ns))) as Omit<
+    typeof all,
+    "comparatif" | "onboardings"
+  >;
 }

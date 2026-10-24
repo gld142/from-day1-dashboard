@@ -5,7 +5,9 @@
  * `defaultHidden` masque la page par défaut dans la navigation (l'utilisateur
  * peut la réactiver dans Réglages → Modules) ; `internal` marque les pages à
  * usage From Day 1 (pitch, pipeline partenaires), masquées pour tous.
- * Les routes restent accessibles par URL : masquer ne concerne que la navigation.
+ * Les routes restent accessibles par URL : masquer ne concerne que la navigation —
+ * sauf les pages `internal` dans une maison sans `internalPages` (Universal) : là,
+ * elles n'existent pas (`isRouteAllowedForTenant`).
  */
 import type { LucideIcon } from "lucide-react";
 import {
@@ -47,6 +49,7 @@ import {
 import type { CustomerInfo } from "@/lib/customer-mode";
 import type { DashboardView } from "@/lib/accounts/view";
 import type { Persona } from "@/lib/role";
+import type { Tenant } from "@/lib/tenant";
 
 export type NavItem = {
   href: string;
@@ -464,6 +467,33 @@ export function navForPersona(
 export function navItemByHref(href: string): NavItem | null {
   for (const s of NAV_SECTIONS) for (const i of s.items) if (i.href === href) return i;
   return null;
+}
+
+/** Page interne From Day 1 (`internal`), ou une de ses sous-pages ? */
+export function isInternalPath(path: string): boolean {
+  return NAV_SECTIONS.some((s) => s.items.some((i) => i.internal && (path === i.href || path.startsWith(`${i.href}/`))));
+}
+
+/**
+ * La route existe-t-elle dans cette maison ? Les pages internes From Day 1 (comparatif,
+ * pipeline partenaires — dont le pitch de Day 1 À PROPOS d'Universal) n'existent que là où
+ * `tenant.internalPages` : ailleurs, leur page serveur appelle `notFound()`, et
+ * `sectionsForTenant` les retire de la navigation, de la palette ⌘K et de Réglages → Modules.
+ */
+export function isRouteAllowedForTenant(href: string, tenant: Tenant): boolean {
+  return tenant.internalPages || !isInternalPath(href);
+}
+
+/**
+ * Les sections sans les pages que la maison n'ouvre pas ; une section vidée disparaît.
+ * Appliqué par `useModules` (navigation rendue ET catalogue) plutôt que dans
+ * `navForPersona` : un choix utilisateur (`{ "/onboardings": true }`) ne peut pas la rouvrir.
+ */
+export function sectionsForTenant(sections: NavSection[], tenant: Tenant): NavSection[] {
+  if (tenant.internalPages) return sections;
+  return sections
+    .map((s) => ({ ...s, items: s.items.filter((i) => isRouteAllowedForTenant(i.href, tenant)) }))
+    .filter((s) => s.items.length > 0);
 }
 
 // Icônes réexportées pour usage ponctuel dans les pages.
