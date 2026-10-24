@@ -336,28 +336,56 @@ export function provenanceByDsp(artistId: string, days = 30): Partial<Record<DSP
 }
 
 /**
- * Provenance du chiffre DU JOUR : celle du point Spotify d'aujourd'hui dans la série servie.
+ * Provenance du chiffre DU JOUR : celle du point Spotify le plus récent de la série servie.
  * « measured » quand le relevé Kworb du jour porte le chiffre ; « reconstructed » quand la
  * couche réelle l'a reconstitué depuis les auditeurs (Kworb sans débit — mesuré le
  * 24/10/2026 : Dakeez, Wamen, Gustave Rudman, Brice Davoli) ; « simulated » quand la série
  * vient des générateurs (aucune provenance portée). Pure, pour que Pulse en tire son badge
- * au lieu d'un « mesuré » écrit en dur.
+ * au lieu d'un « mesuré » écrit en dur. Le point retenu est celui de la date MAXIMALE, pas le
+ * premier de la liste (mesuré le 24/10/2026 : `find` rendait la provenance du 1er janvier sur
+ * une série de dix mois).
  */
 export function provenanceOfToday(points: StreamPoint[]): Provenance {
-  return points.find((p) => p.dsp === "spotify")?.provenance ?? "simulated";
+  let latest: StreamPoint | undefined;
+  for (const p of points) {
+    if (p.dsp === "spotify" && (!latest || p.date > latest.date)) latest = p;
+  }
+  return latest?.provenance ?? "simulated";
 }
 
+/**
+ * Le profil importé (« my-project ») est servi par le relevé importé : mesuré, comme le dit
+ * l'infobulle common.provenance (« …ou sur un relevé importé »). Régression mesurée le
+ * 24/10/2026 : depuis 7f3bacc, la série importée ne porte pas de provenance et Pulse disait
+ * « simulé » sur les chiffres de l'utilisateur.
+ */
 export function todayProvenance(artistId: string): Provenance {
+  if (isUserArtist(artistId)) return "measured";
   return provenanceOfToday(streamSeries(artistId, 1));
 }
 
 /**
  * Provenance des auditeurs mensuels affichés : « measured » s'ils viennent du dernier relevé
- * (data.ts, listenersFromSnapshot), « simulated » si c'est la valeur de secours.
+ * (data.ts, listenersFromSnapshot) ou du relevé importé, « simulated » si c'est la valeur de secours.
  */
 export function listenersProvenance(artistId: string): Provenance {
+  if (isUserArtist(artistId)) return "measured";
   if (!hasRealData(artistId)) return "simulated";
   return latestSnapshot(artistId).spotify.monthlyListeners === null ? "simulated" : "measured";
+}
+
+/**
+ * Provenance d'une somme sur un roster (Pulse en vue structure) : la plus FAIBLE de ses
+ * parties — un DA dont tous les artistes sont mesurés voit « Mesuré », le roster entier
+ * (avec un Kworb sans débit) « Reconstitué ». Avant (mesuré le 24/10/2026), « mesuré » était
+ * écrit en dur sur le total du jour et sur les auditeurs cumulés.
+ */
+export function rosterTodayProvenance(artists: Artist[]): Provenance {
+  return weakest(artists.map((a) => todayProvenance(a.id)));
+}
+
+export function rosterListenersProvenance(artists: Artist[]): Provenance {
+  return weakest(artists.map((a) => listenersProvenance(a.id)));
 }
 
 /* ─────────────── Signal TikTok (viralité, pas revenu) ─────────────── */

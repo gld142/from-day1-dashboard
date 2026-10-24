@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   ARTISTS,
   auditFindings,
@@ -15,6 +15,8 @@ import {
   revenueSeries,
   rosterDspEstimates,
   rosterEstimateSummary,
+  rosterListenersProvenance,
+  rosterTodayProvenance,
   streamSeries,
   sumStreams,
   todayProvenance,
@@ -24,6 +26,7 @@ import { ALL_ARTISTS } from "@/lib/demo/data";
 import { hasKworbDailyRate, latestSnapshot, playcountRate, realStreamSeries } from "@/lib/real";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
 import { clearShares, saveShares } from "@/lib/userdata/shares-store";
+import { USER_ARTIST_ID, clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
 
 /* La façade ne dépend pas de la maison pour servir la série réelle : roster COMPLET, pour qu'un
    exclu ne sorte pas de la couverture en silence. Seuls les artistes qui ont un relevé : un
@@ -181,12 +184,77 @@ describe("api.ts sur les artistes réels", () => {
     expect(provenanceOfToday([{ date: "2026-10-24", dsp: "spotify", streams: 10 }])).toBe("simulated");
     expect(provenanceOfToday([])).toBe("simulated");
   });
+  it("provenanceOfToday : sur plusieurs jours, c'est le point Spotify le PLUS RÉCENT qui compte, quel que soit l'ordre", () => {
+    /* Mesuré le 24/10/2026 : `find` prenait le PREMIER point Spotify de la liste — « measured » ici. */
+    const asc = [
+      { date: "2026-01-01", dsp: "spotify", streams: 10, provenance: "measured" },
+      { date: "2026-10-24", dsp: "spotify", streams: 10, provenance: "reconstructed" },
+    ] as const;
+    expect(provenanceOfToday([...asc])).toBe("reconstructed");
+    expect(provenanceOfToday([...asc].reverse())).toBe("reconstructed");
+    expect(provenanceOfToday([asc[1], { date: "2026-10-24", dsp: "deezer", streams: 3, provenance: "measured" }])).toBe("reconstructed");
+  });
   it("todayProvenance : Leto (Kworb avec débit) mesuré, Dakeez (Kworb sans débit) reconstitué ; auditeurs mesurés pour les deux", () => {
     expect(todayProvenance("leto")).toBe("measured");
     expect(todayProvenance("dakeez")).toBe("reconstructed");
     expect(listenersProvenance("leto")).toBe("measured");
     expect(listenersProvenance("dakeez")).toBe("measured");
     expect(listenersProvenance("artiste-inconnu")).toBe("simulated");
+  });
+
+  /* Le profil importé : ses chiffres viennent du relevé importé — « mesuré » (l'infobulle
+     common.provenance le dit : « …ou sur un relevé importé »). Régression mesurée le 24/10/2026 :
+     depuis 7f3bacc, Pulse affichait « simulé » sur le profil importé. */
+  describe("provenance du profil importé", () => {
+    const IMPORT: UserData = {
+      version: 1,
+      artistName: "Mon Projet",
+      importedAt: "2026-10-24T00:00:00Z",
+      format: "generic",
+      eurRate: 1,
+      sourceCurrency: "EUR",
+      months: ["2026-08", "2026-09"],
+      streamsByMonth: { "2026-08": { spotify: 12_000 }, "2026-09": { spotify: 15_000 } },
+      revenueByMonth: { "2026-08": 40, "2026-09": 50 },
+      trackStreams: {},
+      countryStreams: {},
+      totalStreams: 27_000,
+      totalRevenueEur: 90,
+      active: true,
+    };
+    afterEach(() => clearCustomerData());
+    it("todayProvenance et listenersProvenance : « measured » dès que l'import est actif", () => {
+      setCustomerDataSilently(IMPORT);
+      expect(todayProvenance(USER_ARTIST_ID)).toBe("measured");
+      expect(listenersProvenance(USER_ARTIST_ID)).toBe("measured");
+    });
+    it("sans import actif, « my-project » n'est personne : simulé", () => {
+      expect(todayProvenance(USER_ARTIST_ID)).toBe("simulated");
+      expect(listenersProvenance(USER_ARTIST_ID)).toBe("simulated");
+    });
+  });
+
+  /* Pulse en vue structure : le total du jour du roster portait « mesuré » en dur. Le badge
+     de la somme est la provenance la plus FAIBLE de ses parties — un DA dont tous les
+     artistes sont mesurés voit « Mesuré », le roster entier (avec Dakeez) « Reconstitué ». */
+  describe("provenance d'un agrégat roster : la plus faible des parties", () => {
+    const measured = ALL_ARTISTS.filter((a) => todayProvenance(a.id) === "measured");
+    it("un roster d'artistes tous mesurés est mesuré", () => {
+      expect(measured.length).toBeGreaterThan(0);
+      expect(rosterTodayProvenance(measured)).toBe("measured");
+    });
+    it("un roster qui contient Dakeez est reconstitué", () => {
+      const dakeez = ALL_ARTISTS.find((a) => a.id === "dakeez")!;
+      expect(rosterTodayProvenance([...measured, dakeez])).toBe("reconstructed");
+      expect(rosterTodayProvenance(ARTISTS)).toBe("reconstructed");
+    });
+    it("un roster vide est simulé (rien de mesuré)", () => {
+      expect(rosterTodayProvenance([])).toBe("simulated");
+    });
+    it("auditeurs : mesurés sur le roster entier (chaque artiste a un relevé), simulés dès qu'un artiste n'en a pas", () => {
+      expect(rosterListenersProvenance(ARTISTS)).toBe("measured");
+      expect(rosterListenersProvenance([...ARTISTS, { ...ARTISTS[0], id: "artiste-inconnu" }])).toBe("simulated");
+    });
   });
 
   it("countryBreakdown et provenanceByDsp répondent", () => {

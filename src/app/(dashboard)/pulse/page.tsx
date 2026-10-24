@@ -65,6 +65,8 @@ import {
   hasReal,
   labelTotals,
   listenersProvenance,
+  rosterListenersProvenance,
+  rosterTodayProvenance,
   isComposer,
   marketRosterTracks,
   marketShares,
@@ -366,6 +368,9 @@ function PulsePage() {
 
     const rosterIds = new Set(roster.map((a) => a.id));
     const totals = labelTotals(roster);
+    /* Badges des sommes : la provenance la plus faible du périmètre, plus « mesuré » en dur. */
+    const provenanceToday = rosterTodayProvenance(roster);
+    const provenanceListeners = rosterListenersProvenance(roster);
     const rows = rosterRows(roster);
     const agg = aggregatedDaily(roster, 365);
     const today = agg[agg.length - 1]?.streams ?? 0;
@@ -441,6 +446,8 @@ function PulsePage() {
       rows,
       agg,
       today,
+      provenanceToday,
+      provenanceListeners,
       deltaToday,
       cur7,
       d7,
@@ -999,7 +1006,7 @@ function PulsePage() {
                   <b className={l.deltaToday >= 0 ? "text-success" : "text-destructive"}>
                     {fmtPct(locale, l.deltaToday)}
                   </b>{" "}
-                  <ProvenanceBadge provenance="measured" className="align-middle" />
+                  <ProvenanceBadge provenance={l.provenanceToday} className="align-middle" />
                 </p>
                 <Link
                   href="/streams"
@@ -1163,7 +1170,7 @@ function PulsePage() {
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("audience.listenersLabel")}{" "}
-                <ProvenanceBadge provenance="measured" className="align-middle" />
+                <ProvenanceBadge provenance={l.provenanceListeners} className="align-middle" />
               </p>
               <AttachedLines
                 lines={[
