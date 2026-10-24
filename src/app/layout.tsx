@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Sans } from "next/font/google";
 import { getLocale } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
 import { Providers } from "@/components/providers";
+import { RootIntlProvider } from "@/i18n/intl-providers";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TENANT } from "@/lib/tenant";
@@ -40,9 +40,11 @@ export default async function RootLayout({
       className={cn("h-full", geistMono.variable, instrumentSans.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>
+        {/* Messages explicites, sans les namespaces des pages internes : ce fournisseur est
+            sérialisé dans CHAQUE page, /connexion et /inscription comprises (voir intl-providers). */}
+        <RootIntlProvider>
           <Providers>{children}</Providers>
-        </NextIntlClientProvider>
+        </RootIntlProvider>
       </body>
     </html>
   );

@@ -159,22 +159,58 @@ const MESSAGES = {
 /**
  * Namespaces lus SEULEMENT par les pages internes From Day 1 (nav.ts, `internal`) :
  * /comparatif (comparison-table) et /onboardings (partner-board, dont le pitch de Day 1
- * À PROPOS d'Universal).
+ * À PROPOS d'Universal). Ils ne partent vers le navigateur qu'avec leur propre page
+ * (`internalPageMessages`), jamais avec le fournisseur racine (`rootClientMessages`).
  */
-const INTERNAL_NAMESPACES: readonly string[] = ["comparatif", "onboardings"];
+export const INTERNAL_NAMESPACES = ["comparatif", "onboardings"] as const;
+export type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
+
+type AllMessages = (typeof MESSAGES)[Locale];
+type RootClientMessages = Omit<AllMessages, InternalNamespace>;
+
+function withoutInternal(messages: AllMessages | RootClientMessages): RootClientMessages {
+  return Object.fromEntries(
+    Object.entries(messages).filter(([ns]) => !(INTERNAL_NAMESPACES as readonly string[]).includes(ns)),
+  ) as RootClientMessages;
+}
 
 /**
- * Les messages de la requête. Le NextIntlClientProvider racine les hérite TOUS (next-intl 4,
- * `NextIntlClientProviderServer` : `messages` absent → `getMessages()`) : ils sont sérialisés
- * dans chaque page, /connexion et /inscription comprises. Mesuré le 24/10/2026 : le pitch
- * « Universal détient la donnée… » se lisait dans le HTML de /connexion des deux maisons.
- * Une maison sans pages internes (`tenant.internalPages`) ne reçoit donc pas leurs textes.
+ * Les messages de la requête (i18n/request.ts) : ce que lisent les composants SERVEUR
+ * (`getTranslations`). Une maison sans pages internes (`tenant.internalPages`) ne reçoit pas
+ * leurs textes, même côté serveur.
  */
 export function getMessages(locale: Locale, tenant: Tenant = TENANT) {
   const all = MESSAGES[locale];
   if (tenant.internalPages) return all;
-  return Object.fromEntries(Object.entries(all).filter(([ns]) => !INTERNAL_NAMESPACES.includes(ns))) as Omit<
-    typeof all,
-    "comparatif" | "onboardings"
-  >;
+  return withoutInternal(all);
+}
+
+/**
+ * Les messages du NextIntlClientProvider RACINE (app/layout.tsx), sérialisés dans CHAQUE page,
+ * /connexion et /inscription comprises (publiques, sans porte). Sans prop `messages`, next-intl 4
+ * (`NextIntlClientProviderServer`) hérite de tout `getMessages()` : mesuré le 24/10/2026, le pitch
+ * « Universal détient la donnée… » et le nom de son contact se lisaient dans le HTML de /connexion
+ * de la maison day1 (et de la maison universal avant f12fb51). Dans les deux maisons, la racine
+ * n'envoie donc AUCUN namespace interne.
+ */
+export function rootClientMessages(locale: Locale, tenant: Tenant = TENANT): RootClientMessages {
+  return withoutInternal(getMessages(locale, tenant));
+}
+
+/**
+ * Les messages d'un fournisseur IMBRIQUÉ autour d'une page interne : les messages racine plus les
+ * namespaces demandés. Il faut les deux : un IntlProvider imbriqué ne fusionne pas avec le parent
+ * (use-intl : `messages` fourni remplace celui du contexte). Une maison sans pages internes n'en
+ * reçoit aucun, même demandé (la page appelle `notFound()` avant ; ceci est la défense en
+ * profondeur).
+ */
+export function internalPageMessages(
+  locale: Locale,
+  namespaces: readonly InternalNamespace[],
+  tenant: Tenant = TENANT,
+): RootClientMessages & Partial<Pick<AllMessages, InternalNamespace>> {
+  const root = rootClientMessages(locale, tenant);
+  if (!tenant.internalPages) return root;
+  const all = MESSAGES[locale];
+  return { ...root, ...Object.fromEntries(namespaces.map((ns) => [ns, all[ns]])) };
 }

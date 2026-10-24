@@ -280,8 +280,13 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
   `page.tsx` SERVEUR appelle `notFound()` avant la vue client (`*-view.tsx`),
   `sectionsForTenant` les retire de la navigation, de la palette ⌘K et de Réglages → Modules
   (un choix `{ "/onboardings": true }` ne les rouvre pas), et `getMessages` n'envoie pas leurs
-  namespaces. Le NextIntlClientProvider racine hérite de TOUS les messages : mesuré le 24/10, le
-  pitch se lisait dans le HTML de /connexion des deux maisons (toujours le cas dans la maison day1).
+  namespaces. Dans les DEUX maisons, leurs textes ne partent qu'avec leur page
+  (`src/i18n/intl-providers.tsx`) : le fournisseur racine reçoit `rootClientMessages` (sans
+  `INTERNAL_NAMESPACES`), chaque page interne enveloppe sa vue dans `InternalPageIntlProvider`
+  (messages racine + SON namespace : un fournisseur imbriqué remplace les messages du parent). Ne
+  jamais rendre `<NextIntlClientProvider>` sans `messages` : next-intl 4 hérite alors de TOUT
+  `getMessages()`. Mesuré le 24/10 : le pitch et le nom de son contact se lisaient dans le HTML
+  de /connexion et /inscription (publiques) de la maison day1 (1 → 0 après correctif).
 - **Aucun nom d'artiste exclu en clair** : `roster-data.test.ts` (tables de la maison) et
   `excluded-artists.test.ts` (messages) cherchent le NOM, pas l'id — un interprète écrit en dur
   passe à travers `inRoster` (mesuré : « Trop loin », interprète Dadju, chez Universal).
