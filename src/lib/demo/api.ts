@@ -93,7 +93,7 @@ import {
   isUserArtist,
   userArtist,
   userCountryBreakdown,
-  userLastMonthStreams,
+  userMonthlyListeners,
   userRevenueSeries,
   userStreamSeries,
   userTopTracks,
@@ -370,10 +370,11 @@ export function todayProvenance(artistId: string): Provenance {
  * (data.ts, listenersFromSnapshot), « simulated » si c'est la valeur de secours. Le profil
  * importé n'a pas d'auditeurs relevés : store.ts les ESTIME (`round(streams du dernier mois /
  * 2,6)`) → « estimated », et pose 1 000 de secours quand cet arrondi vaut 0 (`|| 1000`, donc
- * aussi pour 1 stream) → « simulated » (mesuré le 24/10/2026). Le seuil ici est le MÊME calcul.
+ * aussi pour 1 stream) → « simulated » (mesuré le 24/10/2026). Le seuil est LE MÊME calcul :
+ * `userMonthlyListeners()` du store, source unique.
  */
 export function listenersProvenance(artistId: string): Provenance {
-  if (isUserArtist(artistId)) return Math.round(userLastMonthStreams() / 2.6) === 0 ? "simulated" : "estimated";
+  if (isUserArtist(artistId)) return userMonthlyListeners().derivedFromStreams ? "estimated" : "simulated";
   if (!hasRealData(artistId)) return "simulated";
   return latestSnapshot(artistId).spotify.monthlyListeners === null ? "simulated" : "measured";
 }

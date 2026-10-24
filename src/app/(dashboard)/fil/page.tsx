@@ -31,18 +31,18 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ARTISTS, getArtist, getDa } from "@/lib/demo/data";
+import { getArtist, getDa } from "@/lib/demo/data";
+import { scopedArtists } from "@/lib/demo/scope";
 import { fmtDate } from "@/lib/format";
-import { JOB_ROLES, type JobRole } from "@/lib/roles";
+import { JOB_ROLES, roleScope, type JobRole } from "@/lib/roles";
 import { FEED_TEXT_MAX, URGENCIES, sortNotes, type Urgency } from "@/lib/userdata/feed-store";
 import { useRole } from "@/lib/role";
 import { useFeed } from "@/lib/userdata/use-feed";
 import { cn } from "@/lib/utils";
 
-/** Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et le dialogue. */
-function artistsFor(jobRole: JobRole | null, daId: string | null) {
-  return jobRole === "da" && daId ? ARTISTS.filter((a) => a.daId === daId) : ARTISTS;
-}
+/* Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et
+   le dialogue. Même règle que /roster et Pulse : `roleScope` (roles.ts) + `scopedArtists` (scope.ts). */
+const artistsFor = (jobRole: JobRole | null, daId: string | null) => scopedArtists(roleScope(jobRole, daId));
 
 const URGENCY_TONE: Record<Urgency, string> = {
   urgent: "border-transparent bg-destructive/10 text-destructive",
@@ -178,9 +178,17 @@ function Feed() {
                   </p>
                 </div>
                 {n.artistId ? (
-                  <Link href={`/fil?artist=${encodeURIComponent(n.artistId)}`} className="shrink-0">
-                    <ArtistBadge artist={getArtist(n.artistId)} size="sm" />
-                  </Link>
+                  /* Lien de filtre seulement si l'artiste est dans mon périmètre : la page ignore un
+                     `?artist=` hors périmètre (lien mort), donc en « Tout » le badge reste seul. */
+                  myArtists.some((a) => a.id === n.artistId) ? (
+                    <Link href={`/fil?artist=${encodeURIComponent(n.artistId)}`} className="shrink-0">
+                      <ArtistBadge artist={getArtist(n.artistId)} size="sm" />
+                    </Link>
+                  ) : (
+                    <span className="shrink-0">
+                      <ArtistBadge artist={getArtist(n.artistId)} size="sm" />
+                    </span>
+                  )
                 ) : (
                   <span className="shrink-0 text-[11px] text-muted-foreground">{t("note.noArtist")}</span>
                 )}

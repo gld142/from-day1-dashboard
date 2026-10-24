@@ -26,7 +26,7 @@ import { ALL_ARTISTS } from "@/lib/demo/data";
 import { hasKworbDailyRate, latestSnapshot, playcountRate, realStreamSeries } from "@/lib/real";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
 import { clearShares, saveShares } from "@/lib/userdata/shares-store";
-import { USER_ARTIST_ID, clearCustomerData, setCustomerDataSilently, type UserData } from "@/lib/userdata/store";
+import { USER_ARTIST_ID, clearCustomerData, setCustomerDataSilently, userArtist, userMonthlyListeners, type UserData } from "@/lib/userdata/store";
 
 /* La façade ne dépend pas de la maison pour servir la série réelle : roster COMPLET, pour qu'un
    exclu ne sorte pas de la couverture en silence. Seuls les artistes qui ont un relevé : un
@@ -248,6 +248,16 @@ describe("api.ts sur les artistes réels", () => {
       expect(listenersProvenance(USER_ARTIST_ID)).toBe("simulated");
       setCustomerDataSilently({ ...IMPORT, streamsByMonth: { "2026-08": { spotify: 12_000 }, "2026-09": { spotify: 2 } } });
       expect(listenersProvenance(USER_ARTIST_ID)).toBe("estimated");
+    });
+    it("source unique : userMonthlyListeners() = les auditeurs de la fiche, et son drapeau = la provenance", () => {
+      for (const streams of [0, 1, 2, 12_000]) {
+        setCustomerDataSilently({ ...IMPORT, streamsByMonth: { "2026-08": { spotify: 12_000 }, "2026-09": { spotify: streams } } });
+        const { value, derivedFromStreams } = userMonthlyListeners();
+        expect(value).toBe(userArtist()!.monthlyListeners);
+        expect(listenersProvenance(USER_ARTIST_ID)).toBe(derivedFromStreams ? "estimated" : "simulated");
+      }
+      setCustomerDataSilently({ ...IMPORT, streamsByMonth: { "2026-08": { spotify: 1 }, "2026-09": { spotify: 26_000 } } });
+      expect(userMonthlyListeners()).toEqual({ value: 10_000, derivedFromStreams: true });
     });
     it("sans import actif, « my-project » n'est personne : simulé", () => {
       expect(todayProvenance(USER_ARTIST_ID)).toBe("simulated");

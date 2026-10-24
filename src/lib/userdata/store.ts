@@ -230,11 +230,21 @@ export function userLastMonthStreams(d: UserData | null = getUserData()): number
   return Object.values(d.streamsByMonth[last] ?? {}).reduce((s, v) => s + (v ?? 0), 0);
 }
 
+/**
+ * Auditeurs mensuels du profil importé : source UNIQUE de l'estimation (`round(streams du dernier
+ * mois / 2,6)`), lue par `userArtist` et par la provenance (api.ts, listenersProvenance).
+ * `derivedFromStreams` est faux quand l'arrondi vaut 0 (aucun stream, 1 seul, ou pas d'import) :
+ * `value` est alors la valeur de secours 1 000, qui n'est pas une estimation.
+ */
+export function userMonthlyListeners(d: UserData | null = getUserData()): { value: number; derivedFromStreams: boolean } {
+  const derived = Math.round(userLastMonthStreams(d) / 2.6);
+  return { value: derived || 1000, derivedFromStreams: derived !== 0 };
+}
+
 /** Fiche artiste dérivée des données importées. */
 export function userArtist(): Artist | null {
   const d = getUserData();
   if (!d) return null;
-  const lastStreams = userLastMonthStreams(d);
   // Croissance : moyenne des 3 derniers mois vs 3 précédents.
   const totals = d.months.map((m) =>
     Object.values(d.streamsByMonth[m] ?? {}).reduce((s, v) => s + (v ?? 0), 0),
@@ -243,7 +253,7 @@ export function userArtist(): Artist | null {
   const p3raw = totals.slice(-6, -3);
   const p3 = p3raw.length ? p3raw.reduce((a, b) => a + b, 0) / p3raw.length : l3;
   const growth = p3 === 0 ? 0 : Math.max(-0.3, Math.min(0.5, (l3 - p3) / p3 / 3));
-  const monthlyListeners = Math.round(lastStreams / 2.6) || 1000;
+  const monthlyListeners = userMonthlyListeners(d).value;
   const index = Math.max(
     5,
     Math.min(95, Math.round(22 + Math.log10(Math.max(10, monthlyListeners)) * 9 + growth * 60)),
