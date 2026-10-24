@@ -86,4 +86,19 @@ describe("maison universal", () => {
     expect(data.LABEL.name).toBe("Day One × Universal");
     expect(data.CONTRACTS.map((c) => c.artistId)).not.toContain("dadju");
   });
+  it("le repli de discovery et de position algo ne cite pas Dadju", async () => {
+    vi.stubEnv("NEXT_PUBLIC_TENANT", "universal");
+    vi.resetModules();
+    const { demosFor } = await import("@/components/modules/algo/discovery-data");
+    const { scenarioFor } = await import("@/components/modules/pilotage/algo-trend-panel");
+    // Leto n'a ni inédits ni scénario propres : il reçoit le repli de la maison.
+    const titles = demosFor("leto").map((d) => d.title);
+    expect(titles.length).toBeGreaterThan(0);
+    for (const t of ["Éclipse totale", "Peau neuve", "Minuit moins le quart", "Apnée", "Lumière noire"]) expect(titles).not.toContain(t);
+    const fallback = scenarioFor("leto");
+    expect(fallback.sound).not.toBe("Reine");
+    // Mêmes placements que le premier artiste du roster qui a un scénario (Nono), pas ceux de Dadju.
+    expect(fallback.placements).toEqual(scenarioFor("nono-la-grinta").placements);
+    expect(fallback.placements).not.toEqual(scenarioFor("dadju").placements);
+  });
 });

@@ -719,7 +719,7 @@ const ALL_CONTRACTS: Contract[] = [
     type: "distribution",
     counterparty: "Distro",
     startDate: "2024-06-01",
-    endDate: "2026-12-01",
+    endDate: "2027-02-01",
     royaltyRate: 85,
     advance: 0,
     recoupedPct: 100,
@@ -729,10 +729,10 @@ const ALL_CONTRACTS: Contract[] = [
       {
         kind: "expiry",
         severity: "warning",
-        dueDate: "2026-12-01",
+        dueDate: "2027-02-01",
         message: {
-          fr: "Contrat de distribution à échéance le 01/12 — préavis de 60 jours, soit avant le 02/10",
-          en: "Distribution deal expires on 01/12 — 60-day notice, i.e. before 02/10",
+          fr: "Contrat de distribution à échéance le 01/02/2027 — préavis de 60 jours, soit avant le 03/12/2026",
+          en: "Distribution deal expires on 01/02/2027 — 60-day notice, i.e. before 03/12/2026",
         },
       },
     ],

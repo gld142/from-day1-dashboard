@@ -5,7 +5,7 @@
  * Les titres/BPM/tonalités sont des CONSTANTES de démo (comme les noms
  * d'artistes) ; les scores sont seedés par (artistId, titre).
  */
-import { getArtist } from "@/lib/demo/api";
+import { ARTISTS, getArtist } from "@/lib/demo/api";
 import { rngFor } from "@/lib/demo/seed";
 
 export type DemoDef = {
@@ -56,9 +56,19 @@ const DEMOS: Record<string, DemoDef[]> = {
   ],
 };
 
+/**
+ * Repli pour un artiste sans inédits propres : ceux du premier artiste DU ROSTER
+ * de la maison qui en a (jamais un exclu — Dadju n'existe pas chez Universal).
+ * Vide si aucun artiste du roster n'en a.
+ */
+export function fallbackDemoDefs(): DemoDef[] {
+  const donor = ARTISTS.find((a) => DEMOS[a.id]);
+  return donor ? DEMOS[donor.id] : [];
+}
+
 /** Inédits scorés d'un artiste, triés du meilleur au moins bon. */
 export function demosFor(artistId: string): DemoTrack[] {
-  const defs = DEMOS[artistId] ?? DEMOS["dadju"];
+  const defs = DEMOS[artistId] ?? fallbackDemoDefs();
   return defs
     .map((d, i) => {
       const rand = rngFor(`${artistId}:demo:${d.title}`);

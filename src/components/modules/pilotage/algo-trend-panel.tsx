@@ -12,6 +12,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { Flame, Radar, Sparkles, Users } from "lucide-react";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import { ARTISTS } from "@/lib/demo/api";
 import { fmtCompact, fmtDate, fmtInt, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -118,6 +119,38 @@ const SCENARIOS: Record<string, Scenario> = {
   },
 };
 
+/** Titre neutre (fictif) du repli : le son d'un autre artiste serait faux sous le nom d'un tiers. */
+const FALLBACK_SOUND = "Mirage";
+
+/** Scénario vide, dernier recours si aucun artiste du roster n'en a un. */
+const EMPTY_SCENARIO: Scenario = {
+  sound: FALLBACK_SOUND,
+  brokeOn: "2026-09-01",
+  brokeAt: "12:00",
+  videos: 0,
+  videosDelta: 0,
+  trendRankFr: null,
+  creators: [],
+  streams7: 0,
+  streams14: 0,
+  savesSpotify: 0,
+  savesApple: 0,
+  playlistAdds: 0,
+  placements: [],
+};
+
+/**
+ * Scénario d'un artiste. Sans scénario propre : celui du premier artiste DU
+ * ROSTER de la maison qui en a (jamais un exclu), avec un son neutre — on ne
+ * montre pas « Reine » ou « LOVE YOU » sous le nom d'un autre.
+ */
+export function scenarioFor(artistId: string): Scenario {
+  const own = SCENARIOS[artistId];
+  if (own) return own;
+  const donor = ARTISTS.find((a) => SCENARIOS[a.id]);
+  return { ...(donor ? SCENARIOS[donor.id] : EMPTY_SCENARIO), sound: FALLBACK_SOUND };
+}
+
 function signed(locale: string, n: number): string {
   return new Intl.NumberFormat(locale, { maximumFractionDigits: 0, signDisplay: "always" }).format(n);
 }
@@ -125,7 +158,7 @@ function signed(locale: string, n: number): string {
 export function AlgoTrendPanel({ artistId, artistName, className }: { artistId: string; artistName: string; className?: string }) {
   const t = useTranslations("pulse.algo");
   const locale = useLocale();
-  const s = SCENARIOS[artistId] ?? SCENARIOS.kiko;
+  const s = scenarioFor(artistId);
 
   return (
     <section className={cn("space-y-3", className)}>
