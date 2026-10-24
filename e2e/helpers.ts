@@ -1,6 +1,7 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { expect, type Page } from "@playwright/test";
+import { expect, type BrowserContext, type Page } from "@playwright/test";
 
 /**
  * Outils partagés par l'audit visuel (visual-audit) et le parcours de démo
@@ -13,6 +14,41 @@ export type Theme = (typeof THEMES)[number];
 export type Persona = "artist" | "label";
 
 export const SCREENSHOT_DIR = path.join(__dirname, "screenshots");
+
+/**
+ * Porte à mot de passe de la démo (src/lib/gate.ts, 25/09/2026) : le proxy
+ * n'ouvre le dashboard qu'avec le cookie `d1_gate` valide, et toutes les specs
+ * y passent. Le jeton est sha256("d1-gate|" + mot de passe) — la MÊME formule
+ * que `tokenFor` (vérifié le 24/10/2026 : createHash et tokenFor donnent la même
+ * empreinte sur un mot de passe factice). Ni le mot de passe ni le cookie ne
+ * sont dans le code : ils viennent de l'environnement.
+ *   E2E_GATE_COOKIE   : la valeur du cookie telle quelle (prime) ;
+ *   E2E_GATE_PASSWORD : le mot de passe, dont on dérive le cookie ici.
+ */
+export const GATE_COOKIE = "d1_gate";
+
+export function jetonDePorte(password: string): string {
+  return createHash("sha256").update(`d1-gate|${password}`).digest("hex");
+}
+
+/**
+ * Pose le cookie de la porte sur le contexte, pour le domaine et le chemin `/`
+ * de `baseURL`. Mêmes attributs que ceux posés par POST /acces (httpOnly, Lax,
+ * path /) ; `secure` suit le schéma de baseURL — la route le pose toujours, mais
+ * un cookie Secure fourni via `url` http n'est pas garanti renvoyé par tous les
+ * navigateurs, et le proxy ne lit que la valeur. Lève une erreur explicite si
+ * aucune des deux variables n'est définie.
+ */
+export async function passerLaPorte(context: BrowserContext, baseURL: string) {
+  const value = process.env.E2E_GATE_COOKIE || (process.env.E2E_GATE_PASSWORD ? jetonDePorte(process.env.E2E_GATE_PASSWORD) : null);
+  if (!value) {
+    throw new Error(
+      "Porte de la démo : définir E2E_GATE_COOKIE (valeur du cookie d1_gate) ou E2E_GATE_PASSWORD (mot de passe de /acces) " +
+        "pour que les specs e2e passent le proxy (src/proxy.ts). Ex. : E2E_GATE_PASSWORD=… E2E_SERVER=prod NEXT_DIST_DIR=.next-e2e npx playwright test",
+    );
+  }
+  await context.addCookies([{ name: GATE_COOKIE, value, url: baseURL, httpOnly: true, sameSite: "Lax" }]);
+}
 
 /** Messages fr (source de vérité des libellés cliqués dans le parcours). */
 export function frMessages<T = Record<string, unknown>>(ns: string): T {

@@ -1,5 +1,5 @@
 import { test, expect, type Browser, type Page } from "@playwright/test";
-import { collectConsole, frMessages, ready, seed } from "./helpers";
+import { collectConsole, frMessages, passerLaPorte, ready, seed } from "./helpers";
 
 /**
  * /rights — le KPI « Écarts détectés » doit être RÉCLAMABLE.
@@ -53,10 +53,13 @@ type Ouverte = { page: Page; erreurs: string[]; fermer: () => Promise<void> };
  */
 async function ouvrir(
   browser: Browser,
+  baseURL: string,
   persona: "artist" | "label",
   focus: string | null,
 ): Promise<Ouverte> {
   const context = await browser.newContext();
+  /* Contexte neuf = sans cookie : la porte de la démo se passe ici, pas dans un beforeEach. */
+  await passerLaPorte(context, baseURL);
   const page = await context.newPage();
   await page.addInitScript((cle) => {
     const w = window as unknown as Record<string, number>;
@@ -149,8 +152,9 @@ function erreursReelles(erreurs: string[]): string[] {
 test.describe("/rights — le KPI des écarts est réclamable", () => {
   test("vue structure : KPI = somme de la ventilation = somme des pages zoomées = porte /audit", async ({
     browser,
+    baseURL,
   }) => {
-    const struct = await ouvrir(browser, "label", null);
+    const struct = await ouvrir(browser, baseURL!, "label", null);
 
     // Témoin : sans patch effectif, « Attendu (en cours) » (251 125 €) sortirait
     // en « 251,1 k € » et toute égalité mesurée ensuite ne vaudrait rien.
@@ -180,7 +184,7 @@ test.describe("/rights — le KPI des écarts est réclamable", () => {
     // C · chaque artiste sur sa page zoomée : la même chaîne, caractère pour caractère.
     let sommeZooms = 0;
     for (const { nom, texte } of parArtiste) {
-      const zoom = await ouvrir(browser, "label", nom.toLowerCase().replace(/\s+/g, "-"));
+      const zoom = await ouvrir(browser, baseURL!, "label", nom.toLowerCase().replace(/\s+/g, "-"));
       const vu = await point(zoom.page, rights.kpis.gaps);
       expect(erreursReelles(zoom.erreurs), `erreurs console — zoom ${nom}`).toEqual([]);
       await zoom.fermer();
@@ -190,15 +194,15 @@ test.describe("/rights — le KPI des écarts est réclamable", () => {
     expect(sommeZooms, "les pages zoomées ne reconstituent pas le KPI").toBe(total);
   });
 
-  test("persona artiste : le KPI ne porte que l'écart de cet artiste", async ({ browser }) => {
+  test("persona artiste : le KPI ne porte que l'écart de cet artiste", async ({ browser, baseURL }) => {
     // Référence : le roster et sa ventilation, en vue structure.
-    const struct = await ouvrir(browser, "label", null);
+    const struct = await ouvrir(browser, baseURL!, "label", null);
     const total = euros(await point(struct.page, rights.kpis.gaps), "KPI du roster");
     const attendus = (await ventilation(struct.page)).map((a) => a.texte);
     await struct.fermer();
 
     // La page en persona artiste : c'est son seul écart qu'elle montre.
-    const solo = await ouvrir(browser, "artist", null);
+    const solo = await ouvrir(browser, baseURL!, "artist", null);
     const kpi = await point(solo.page, rights.kpis.gaps);
     expect(
       attendus,

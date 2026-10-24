@@ -4,6 +4,7 @@ import {
   assertIntegrity,
   collectConsole,
   frMessages,
+  passerLaPorte,
   ready,
   seed,
   shot,
@@ -51,6 +52,9 @@ async function switchPersona(page: Page, role: "artist" | "label") {
   await page.getByRole("menuitem", { name: switchTo(common.roles[role]) }).click();
   await expect(page.getByRole("menuitem")).toHaveCount(0);
 }
+
+/* La porte à mot de passe (d1_gate) avant chaque test : sans elle, le proxy renvoie sur /acces. */
+test.beforeEach(async ({ context, baseURL }) => passerLaPorte(context, baseURL!));
 
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900, isMobile: false },

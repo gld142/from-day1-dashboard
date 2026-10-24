@@ -44,8 +44,12 @@ export default defineConfig({
     // distDir par instance de `next dev`, ce qui empêcherait le serveur de
     // test de démarrer si un dev server tourne déjà sur .next (port 3000).
     // Les specs e2e testent la DÉMO : elle est éteinte par défaut dans le produit
-    // (src/lib/demo-mode.ts). NB : elles ne passent pas encore la porte à mot de
-    // passe ajoutée le 25/09 (cookie d1_gate) — à brancher.
+    // (src/lib/demo-mode.ts). Elles passent la porte à mot de passe du 25/09
+    // (cookie d1_gate) via `passerLaPorte` (e2e/helpers.ts), qui lit
+    // E2E_GATE_PASSWORD (le mot de passe de /acces) ou E2E_GATE_COOKIE (la
+    // valeur du cookie). Sans l'une des deux, chaque spec échoue avec un message
+    // explicite. Lancer :
+    //   E2E_GATE_PASSWORD=… E2E_SERVER=prod NEXT_DIST_DIR=.next-e2e npx playwright test
     env: { PORT: String(PORT), NEXT_DIST_DIR: ".next-e2e", DEMO_MODE: "on" },
   },
 });

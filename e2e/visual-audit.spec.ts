@@ -3,6 +3,7 @@ import {
   THEMES,
   assertIntegrity,
   collectConsole,
+  passerLaPorte,
   ready,
   seed,
   shot,
@@ -57,6 +58,9 @@ const ROUTES = [
   "welcome?source=universal",
   "welcome?source=believe",
 ] as const;
+
+/* La porte à mot de passe (d1_gate) avant chaque test : sans elle, le proxy renvoie sur /acces. */
+test.beforeEach(async ({ context, baseURL }) => passerLaPorte(context, baseURL!));
 
 /** Pages du parcours de démo : couvertes aussi en persona artiste. */
 const ARTIST_ROUTES = ["pulse", "revenue", "streams", "market", "audit", "roster"] as const;
