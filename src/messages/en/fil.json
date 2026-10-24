@@ -1,0 +1,39 @@
+{
+  "title": "Cross-team feed",
+  "subtitle": "A fact posted by one team the moment it has it, seen by the team that needs it at the right time — without waiting for the meeting.",
+  "filters": {
+    "mine": "For me to handle",
+    "all": "Everything",
+    "artist": "Artist",
+    "anyArtist": "All artists",
+    "count": "{count, plural, =0 {No notes} one {# note} other {# notes}}"
+  },
+  "note": {
+    "from": "{from} → {to}",
+    "everyone": "all teams",
+    "noArtist": "No artist",
+    "due": "Due {date}",
+    "done": "Handled on {date}",
+    "markDone": "Handled",
+    "created": "{date}"
+  },
+  "urgency": { "urgent": "Urgent", "important": "Important", "info": "Info" },
+  "roles": { "da": "A&R", "finance": "Finance", "juridique": "Legal", "direction": "Management", "presidence": "Chairman's office" },
+  "author": { "structure": "Label", "me": "me" },
+  "empty": { "mine": "Nothing for you to handle.", "all": "The feed is empty." },
+  "new": {
+    "button": "New note",
+    "title": "New note",
+    "description": "What you know now, for the team that needs it.",
+    "text": "Note",
+    "textHint": "{count}/500",
+    "artist": "Artist",
+    "to": "Teams",
+    "urgency": "Urgency",
+    "dueDate": "Due date",
+    "submit": "Post",
+    "cancel": "Cancel",
+    "needTo": "Pick at least one team.",
+    "needText": "Write the note."
+  }
+}

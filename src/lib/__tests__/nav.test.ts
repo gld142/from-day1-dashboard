@@ -147,8 +147,10 @@ describe("navigation d'un rôle métier (préréglage sous les choix utilisateur
     const nav = navForPersona("label", { ...roleOverrides("presidence", hrefsOf("label")), "/team": true });
     expect(flat(nav).sort()).toEqual(["/fil", "/pulse", "/roster", "/settings", "/team", "/valuation"]);
   });
-  it("le Fil est visible pour les deux personas sans rôle", () => {
+  it("le Fil est visible pour la structure sans rôle, jamais pour un artiste (notes internes sur d'autres artistes)", () => {
     expect(flat(navForPersona("label"))).toContain("/fil");
-    expect(flat(navForPersona("artist"))).toContain("/fil");
+    expect(flat(navForPersona("artist"))).not.toContain("/fil");
+    // Même un choix explicite ne l'ouvre pas : la page n'est pas dans le catalogue artiste.
+    expect(flat(navForPersona("artist", { "/fil": true }))).not.toContain("/fil");
   });
 });

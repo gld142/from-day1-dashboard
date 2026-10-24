@@ -1,0 +1,39 @@
+{
+  "title": "Fil entre services",
+  "subtitle": "Une info posée par un service au moment où il l'a, vue par le service concerné au bon moment — sans attendre la réunion.",
+  "filters": {
+    "mine": "À traiter pour moi",
+    "all": "Tout",
+    "artist": "Artiste",
+    "anyArtist": "Tous les artistes",
+    "count": "{count, plural, =0 {Aucune note} one {# note} other {# notes}}"
+  },
+  "note": {
+    "from": "{from} → {to}",
+    "everyone": "tous les services",
+    "noArtist": "Sans artiste",
+    "due": "Échéance {date}",
+    "done": "Traitée le {date}",
+    "markDone": "Traité",
+    "created": "{date}"
+  },
+  "urgency": { "urgent": "Urgent", "important": "Important", "info": "Info" },
+  "roles": { "da": "DA", "finance": "Finance", "juridique": "Juridique", "direction": "Direction", "presidence": "Présidence" },
+  "author": { "structure": "Structure", "me": "moi" },
+  "empty": { "mine": "Rien à traiter pour toi.", "all": "Le fil est vide." },
+  "new": {
+    "button": "Nouvelle note",
+    "title": "Nouvelle note",
+    "description": "Ce que tu sais maintenant, pour le service qui en a besoin.",
+    "text": "Note",
+    "textHint": "{count}/500",
+    "artist": "Artiste concerné",
+    "to": "Services visés",
+    "urgency": "Urgence",
+    "dueDate": "Échéance",
+    "submit": "Publier",
+    "cancel": "Annuler",
+    "needTo": "Choisis au moins un service.",
+    "needText": "Écris la note."
+  }
+}

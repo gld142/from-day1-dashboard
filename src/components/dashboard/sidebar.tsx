@@ -12,6 +12,7 @@ import { TENANT } from "@/lib/tenant";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FeedCount } from "@/components/dashboard/feed-count";
 
 /** Identifiant DOM stable pour `aria-controls` : "sections.daily" → "nav-daily". */
 function sectionDomId(labelKey: string): string {
@@ -117,6 +118,8 @@ export function Sidebar() {
                           aria-hidden
                         />
                         <span className="truncate">{item.label ?? t(item.labelKey)}</span>
+                        {/* Le fil : notes ouvertes à traiter pour mon rôle (rien si 0). */}
+                        {item.href === "/fil" && <FeedCount />}
                         {item.badgeKey && (
                           <Badge
                             variant="outline"

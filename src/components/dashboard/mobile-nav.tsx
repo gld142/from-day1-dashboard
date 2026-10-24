@@ -18,6 +18,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FeedCount } from "@/components/dashboard/feed-count";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -103,6 +104,8 @@ export function MobileNav() {
                             aria-hidden
                           />
                           {item.label ?? t(item.labelKey)}
+                          {/* Le fil : notes ouvertes à traiter pour mon rôle (rien si 0). */}
+                          {item.href === "/fil" && <FeedCount />}
                         </Link>
                       </li>
                     );

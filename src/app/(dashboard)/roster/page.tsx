@@ -37,6 +37,7 @@ import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur } from "@/lib/format";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
+import { useFeed } from "@/lib/userdata/use-feed";
 
 export default function RosterPage() {
   const customer = useCustomer();
@@ -54,6 +55,8 @@ function DemoRoster() {
   const tc = useTranslations("common");
   const locale = useLocale();
   const { isLabel, focusedArtistId, setFocusedArtistId, setPersona } = useRole();
+  /* Notes ouvertes du fil par artiste : la colonne Notes du tableau (lien vers /fil?artist=). */
+  const { byArtist } = useFeed();
 
   /* Le périmètre vient de l'URL (`?cat=`, `?da=`) : partageable, et un rôle DA
      arrive déjà filtré. Tout en dessous — lignes, totaux, P&L, alertes — le suit. */
@@ -240,6 +243,7 @@ function DemoRoster() {
             onFocus={setFocusedArtistId}
             bare
             grouped
+            notesByArtist={byArtist}
           />
         </Sheet>
 

@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
+import { useFeed } from "@/lib/userdata/use-feed";
 import { RankMedal } from "@/components/dashboard/rank-medal";
 import { AudienceGlyph } from "@/components/dashboard/audience-glyph";
 import { StreamGlyph } from "@/components/dashboard/stream-glyph";
@@ -150,6 +151,8 @@ function PulsePage() {
   const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId, scopeDaId } = useRole();
   /* Le périmètre du rôle (DA : ses artistes). Sans rôle : tout le roster de la maison. */
   const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
+  /* Les notes du fil à traiter pour mon rôle : lues dans le JSX de la vue structure, pas dans un useMemo. */
+  const feed = useFeed();
 
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
@@ -1301,6 +1304,15 @@ function PulsePage() {
                         ...tags,
                         count: l.doors.splitsPending,
                       })}
+                      {/* Les notes du fil à traiter pour mon rôle (Task 11) : la phrase mène à /fil. */}
+                      {feed.openForMe > 0 ? (
+                        <>
+                          {" "}
+                          <Link href="/fil" className="underline decoration-dotted underline-offset-2">
+                            {t.rich("night.todo.feed", { ...tags, count: feed.openForMe })}
+                          </Link>
+                        </>
+                      ) : null}
                     </>
                   ),
                 },

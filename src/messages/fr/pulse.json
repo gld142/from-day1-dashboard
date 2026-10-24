@@ -254,6 +254,7 @@
       "splits": "Signer <em>{count}</em> splits.",
       "splitsLabel": "Faire signer <em>{count}</em> splits.",
       "alerts": "Traiter <alert>{count}</alert> alertes contrat sur le roster.",
+      "feed": "<em>{count, plural, one {# note} other {# notes}}</em> à traiter dans le fil.",
       "none": "Rien d'urgent aujourd'hui."
     }
   },

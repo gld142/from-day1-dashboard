@@ -224,9 +224,11 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       {
         // Fil entre services : une info posée par un service, vue par le service concerné (spec Universal v2, §5).
+        // Réservé à la structure : les notes internes parlent d'autres artistes qu'un artiste solo ne doit pas lire.
         href: "/fil",
         labelKey: "items.feed",
         icon: MessagesSquare,
+        personas: ["label"],
       },
     ],
   },

@@ -72,6 +72,8 @@ import frAsk from "./fr/ask.json";
 import enAsk from "./en/ask.json";
 import frWelcome from "./fr/welcome.json";
 import enWelcome from "./en/welcome.json";
+import frFil from "./fr/fil.json";
+import enFil from "./en/fil.json";
 import enSettings from "./en/settings.json";
 
 const MESSAGES = {
@@ -111,6 +113,7 @@ const MESSAGES = {
     brief: frBrief,
     ask: frAsk,
     welcome: frWelcome,
+    fil: frFil,
   },
   en: {
     common: enCommon,
@@ -148,6 +151,7 @@ const MESSAGES = {
     brief: enBrief,
     ask: enAsk,
     welcome: enWelcome,
+    fil: enFil,
   },
 } as const;
 
