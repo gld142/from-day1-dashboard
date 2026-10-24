@@ -84,7 +84,7 @@ Roster complet (12 artistes ; la maison retire le sien) :
 |---|---|---|
 | urbain | Dadju, Nono La Grinta, November Ultra, ElGrandeToto, Kiko, Leto, Dakeez | interprètes |
 | variete | Louane, Wamen | interprètes |
-| compositeur | Zeg P, Gustave Rudman, Brice Davoli | compositeurs (`kind: "composer"`, revenus = œuvres écrites pour d'autres, droits d'auteur ; Brice Davoli : grand catalogue Sacem) |
+| compositeur | Zeg P, Gustave Rudman, Brice Davoli | compositeurs (`kind: "composer"`, revenus = œuvres écrites pour d'autres, droits d'auteur ; Brice Davoli : grand catalogue Sacem selon Gaël, non vérifié) |
 
 Six nouveaux (Leto, Dakeez, Louane, Wamen, Gustave Rudman, Brice Davoli) : entrée dans `ARTISTS`
 (genre, teinte, initiales, stade, type de contrat, `kind`, éditeur), entrée dans
@@ -105,7 +105,7 @@ Identifiants vérifiés le 23/10 (API Deezer, oEmbed Spotify, MusicBrainz, Wikid
 | Louane | `7wjeXCtRND2ZdKfMJFu6JC` | 4453455 | `UCxROfILs1ORiiUWCDdkfqaA` (incertain) | pop / variété |
 | Wamen | `3IrNp8pf0ugwmIEiGJCRse` | 182945357 | — | R&B / soul, Paris |
 | Gustave Rudman | `2yGaqlHUHvNEpdRlmQCMEC` | 4722593 | — | compositeur-producteur (orthographe : Gustave) |
-| Brice Davoli | — (introuvable) | 1570143 | — | compositeur-arrangeur ; streams « simulés » |
+| Brice Davoli | `27kwwOnjG09lmLHv3zle84` (lu dans le navigateur le 23/10) | 1570143 | — | compositeur-arrangeur |
 
 Les auditeurs mensuels n'ont pas pu être lus (pages Spotify rendues en JS) : les valeurs de
 secours sont posées à la main, badge « simulé », et le premier `npm run snapshot` les remplace
