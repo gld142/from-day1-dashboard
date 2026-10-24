@@ -57,6 +57,7 @@ import {
   auditGap,
   calibrationFromUserData,
   hasRealData,
+  latestSnapshot,
   realCountryBreakdown,
   realTopCities,
   realDailyEstimates,
@@ -332,6 +333,31 @@ export function rosterEstimateSummaries(): Record<EstimatePeriod, EstimateSummar
 /** Par DSP, la plus faible provenance sur la fenêtre — vide hors couche réelle. */
 export function provenanceByDsp(artistId: string, days = 30): Partial<Record<DSP, Provenance>> {
   return hasRealData(artistId) ? realProvenanceByDsp(artistId, days) : {};
+}
+
+/**
+ * Provenance du chiffre DU JOUR : celle du point Spotify d'aujourd'hui dans la série servie.
+ * « measured » quand le relevé Kworb du jour porte le chiffre ; « reconstructed » quand la
+ * couche réelle l'a reconstitué depuis les auditeurs (Kworb sans débit — mesuré le
+ * 24/10/2026 : Dakeez, Wamen, Gustave Rudman, Brice Davoli) ; « simulated » quand la série
+ * vient des générateurs (aucune provenance portée). Pure, pour que Pulse en tire son badge
+ * au lieu d'un « mesuré » écrit en dur.
+ */
+export function provenanceOfToday(points: StreamPoint[]): Provenance {
+  return points.find((p) => p.dsp === "spotify")?.provenance ?? "simulated";
+}
+
+export function todayProvenance(artistId: string): Provenance {
+  return provenanceOfToday(streamSeries(artistId, 1));
+}
+
+/**
+ * Provenance des auditeurs mensuels affichés : « measured » s'ils viennent du dernier relevé
+ * (data.ts, listenersFromSnapshot), « simulated » si c'est la valeur de secours.
+ */
+export function listenersProvenance(artistId: string): Provenance {
+  if (!hasRealData(artistId)) return "simulated";
+  return latestSnapshot(artistId).spotify.monthlyListeners === null ? "simulated" : "measured";
 }
 
 /* ─────────────── Signal TikTok (viralité, pas revenu) ─────────────── */

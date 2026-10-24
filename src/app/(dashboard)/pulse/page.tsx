@@ -65,6 +65,7 @@ import {
   getArtist,
   hasReal,
   labelTotals,
+  listenersProvenance,
   isComposer,
   marketRosterTracks,
   marketShares,
@@ -81,6 +82,7 @@ import {
   syncBriefs,
   syncBriefsClosingSoon,
   tiktokSignal,
+  todayProvenance,
   topTracks,
   tourDates,
 } from "@/lib/demo/api";
@@ -237,6 +239,11 @@ function PulsePage() {
     const series = dailyTotals(artistId, 365);
     const today = sumStreams(artistId, 1);
     const deltaToday = streamsDelta(artistId, 1);
+    /* Le badge suit la provenance servie, pas un « mesuré » écrit en dur : un Kworb sans
+       débit (Dakeez, Wamen, Gustave Rudman, Brice Davoli le 24/10/2026) donne un chiffre
+       du jour RECONSTITUÉ depuis les auditeurs ; les auditeurs, eux, viennent du relevé. */
+    const provenanceToday = todayProvenance(artistId);
+    const provenanceListeners = listenersProvenance(artistId);
     const s7 = sumStreams(artistId, 7);
     const d7 = streamsDelta(artistId, 7);
     const s30 = sumStreams(artistId, 30);
@@ -319,6 +326,8 @@ function PulsePage() {
       series,
       today,
       deltaToday,
+      provenanceToday,
+      provenanceListeners,
       s7,
       d7,
       s30,
@@ -510,7 +519,7 @@ function PulsePage() {
                   <b className={v.deltaToday >= 0 ? "text-success" : "text-destructive"}>
                     {fmtPct(locale, v.deltaToday)}
                   </b>{" "}
-                  <ProvenanceBadge provenance="measured" className="align-middle" />
+                  <ProvenanceBadge provenance={v.provenanceToday} className="align-middle" />
                 </>
               }
             />
@@ -665,7 +674,7 @@ function PulsePage() {
               </p>
               <p className="sheet-ink mt-1 text-xs">
                 {t("audience.listeners")}{" "}
-                <ProvenanceBadge provenance="measured" className="align-middle" />
+                <ProvenanceBadge provenance={v.provenanceListeners} className="align-middle" />
               </p>
               <AttachedLines
                 lines={[

@@ -4,7 +4,7 @@
  * et deux rendus successifs doivent être identiques au bit près.
  */
 import { describe, expect, it } from "vitest";
-import { ARTISTS, TRACKS } from "@/lib/demo/data";
+import { ALL_ARTISTS, ARTISTS, PROJECT_SEEDS, TRACKS } from "@/lib/demo/data";
 import {
   dailyTotals,
   expensesFor,
@@ -13,13 +13,30 @@ import {
 } from "@/lib/demo/generators";
 import { hasRealData, realDailyEstimates, realStreamSeries } from "@/lib/real";
 
-const ARTIST_IDS = ARTISTS.map((a) => a.id);
+/* Les générateurs et la couche réelle ne dépendent pas de la maison : on les éprouve sur le
+   roster COMPLET, pour qu'un artiste exclu (Kiko chez day1, Dadju chez Universal) ne sorte
+   pas de la couverture en silence — mesuré le 24/10/2026 : Kiko avait disparu des listes. */
+const ARTIST_IDS = ALL_ARTISTS.map((a) => a.id);
 /* La couche réelle ne répond que pour un artiste qui a un relevé (sinon elle lève, et
-   api.ts retombe sur les générateurs). Les artistes arrivés au roster avant leur premier
-   relevé n'y figurent qu'à partir de celui-ci : le filtre les inclut dès qu'il existe. */
+   api.ts retombe sur les générateurs). Le test de couverture, plus bas, exige que TOUS en aient un. */
 const REAL_IDS = ARTIST_IDS.filter((id) => hasRealData(id));
-/* Idem pour les titres : un artiste sans projet dans PROJECT_SEEDS n'a pas de poids à sommer. */
-const WITH_TRACKS = ARTIST_IDS.filter((id) => TRACKS.some((t) => t.artistId === id));
+/* Les titres, eux, sont filtrés par la maison (TRACKS) : on somme les poids des artistes du roster. */
+const WITH_TRACKS = ARTISTS.map((a) => a.id).filter((id) => TRACKS.some((t) => t.artistId === id));
+
+describe("couverture : relevés et projets", () => {
+  const HISTORICAL = ["dadju", "nono-la-grinta", "november-ultra", "zeg-p", "kiko", "elgrandetoto"];
+  const NEW_SIX = ["leto", "dakeez", "louane", "wamen", "gustave-rudman", "brice-davoli"];
+  it("les six artistes historiques et les six nouveaux ont tous un relevé (snapshots/<id>/, depuis f075a81)", () => {
+    expect([...HISTORICAL, ...NEW_SIX].sort()).toEqual([...ARTIST_IDS].sort());
+    for (const id of [...HISTORICAL, ...NEW_SIX]) expect(hasRealData(id), `${id} : aucun relevé`).toBe(true);
+    expect(REAL_IDS).toHaveLength(ALL_ARTISTS.length);
+  });
+  it("chaque artiste du roster qui a des graines de projet a au moins un titre", () => {
+    expect(WITH_TRACKS.length).toBeGreaterThan(0);
+    for (const [id, seeds] of Object.entries(PROJECT_SEEDS)) expect(seeds.some((s) => s.tracks.length > 0), id).toBe(true);
+    for (const a of ARTISTS) if (PROJECT_SEEDS[a.id]) expect(WITH_TRACKS, `${a.id} a des graines mais aucun titre`).toContain(a.id);
+  });
+});
 
 describe("déterminisme des générateurs", () => {
   it.each(ARTIST_IDS)("streamSeries(%s) : deux appels identiques", (id) => {

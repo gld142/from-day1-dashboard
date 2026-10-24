@@ -9,22 +9,34 @@ import {
   estimateSummary,
   expensesFor,
   hasReal,
+  listenersProvenance,
   provenanceByDsp,
+  provenanceOfToday,
   revenueSeries,
   rosterDspEstimates,
   rosterEstimateSummary,
   streamSeries,
   sumStreams,
+  todayProvenance,
   topTracks,
 } from "@/lib/demo/api";
+import { ALL_ARTISTS } from "@/lib/demo/data";
 import { hasKworbDailyRate, latestSnapshot, playcountRate, realStreamSeries } from "@/lib/real";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
 import { clearShares, saveShares } from "@/lib/userdata/shares-store";
 
+/* La façade ne dépend pas de la maison pour servir la série réelle : roster COMPLET, pour qu'un
+   exclu ne sorte pas de la couverture en silence. Seuls les artistes qui ont un relevé : un
+   arrivant n'en a pas avant son premier passage du script (la façade retombe alors sur les
+   générateurs, `hasReal` = false). */
+const REAL_IDS = ALL_ARTISTS.map((a) => a.id).filter((id) => hasReal(id));
+
 describe("api.ts sur les artistes réels", () => {
-  /* Seuls les artistes qui ont un relevé : les arrivants du roster n'en ont pas avant leur premier
-     passage du script (la façade retombe alors sur les générateurs, `hasReal` = false). */
-  it.each(ARTISTS.map((a) => a.id).filter((id) => hasReal(id)))("%s : la façade sert la série réelle", (id) => {
+  it("la liste des artistes réels n'est pas vide — un it.each([]) n'enregistrerait aucun test", () => {
+    expect(REAL_IDS.length).toBeGreaterThan(0);
+  });
+
+  it.each(REAL_IDS)("%s : la façade sert la série réelle", (id) => {
     expect(hasReal(id)).toBe(true);
     expect(JSON.stringify(streamSeries(id, 7))).toBe(JSON.stringify(realStreamSeries(id, 7)));
     const today = streamSeries(id, 1).find((p) => p.dsp === "spotify")!;
@@ -158,6 +170,23 @@ describe("api.ts sur les artistes réels", () => {
     const t = topTracks("dadju", 30, 3);
     const names = latestSnapshot("dadju").kworb!.tracks.map((x) => x.name);
     expect(names).toContain(t[0].title);
+  });
+
+  /* Pulse affichait « mesuré » en dur sur le chiffre du jour : faux pour un Kworb sans débit,
+     reconstitué depuis les auditeurs (real-source.ts depuis 92c2932). Mesuré le 24/10/2026. */
+  it("provenanceOfToday : celle du point Spotify du jour, « simulated » sans provenance", () => {
+    expect(provenanceOfToday([{ date: "2026-10-24", dsp: "spotify", streams: 10, provenance: "measured" }])).toBe("measured");
+    expect(provenanceOfToday([{ date: "2026-10-24", dsp: "spotify", streams: 10, provenance: "reconstructed" }])).toBe("reconstructed");
+    expect(provenanceOfToday([{ date: "2026-10-24", dsp: "deezer", streams: 10, provenance: "measured" }])).toBe("simulated");
+    expect(provenanceOfToday([{ date: "2026-10-24", dsp: "spotify", streams: 10 }])).toBe("simulated");
+    expect(provenanceOfToday([])).toBe("simulated");
+  });
+  it("todayProvenance : Leto (Kworb avec débit) mesuré, Dakeez (Kworb sans débit) reconstitué ; auditeurs mesurés pour les deux", () => {
+    expect(todayProvenance("leto")).toBe("measured");
+    expect(todayProvenance("dakeez")).toBe("reconstructed");
+    expect(listenersProvenance("leto")).toBe("measured");
+    expect(listenersProvenance("dakeez")).toBe("measured");
+    expect(listenersProvenance("artiste-inconnu")).toBe("simulated");
   });
 
   it("countryBreakdown et provenanceByDsp répondent", () => {
