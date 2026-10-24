@@ -1,4 +1,6 @@
 .next-e2e
+.next-um
+.next-universal
 e2e/screenshots
 test-results
 playwright-report

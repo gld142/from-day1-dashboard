@@ -50,5 +50,6 @@ playwright-report/
 .claude/skills/impeccable/scripts/bin/
 .superpowers/
 
-# Serveur de dev de la maison universal (NEXT_DIST_DIR=.next-um, port 3006)
+# Serveur de dev de la maison universal (NEXT_DIST_DIR=.next-um, port 3006) et son build de prod
 .next-um/
+.next-universal/

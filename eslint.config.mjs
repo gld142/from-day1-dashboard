@@ -27,6 +27,9 @@ const eslintConfig = defineConfig([
     ".next/**",
     // distDir de la QA e2e (build de prod servi par Playwright) : jamais linté.
     ".next-e2e/**",
+    // distDir du serveur de dev de la maison universal (port 3006) et de son build de prod (Task 12).
+    ".next-um/**",
+    ".next-universal/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
