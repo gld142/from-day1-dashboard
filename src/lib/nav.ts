@@ -30,6 +30,7 @@ import {
   LibraryBig,
   MapPin,
   MessageSquareText,
+  MessagesSquare,
   PieChart,
   Radar,
   ReceiptEuro,
@@ -221,6 +222,12 @@ export const NAV_SECTIONS: NavSection[] = [
         icon: UsersRound,
         personas: ["label"],
       },
+      {
+        // Fil entre services : une info posée par un service, vue par le service concerné (spec Universal v2, §5).
+        href: "/fil",
+        labelKey: "items.feed",
+        icon: MessagesSquare,
+      },
     ],
   },
   {
@@ -353,7 +360,7 @@ export const NAV_SECTIONS: NavSection[] = [
  * de section : rien ne disparaît par oubli.
  */
 const LABEL_LAYOUT: ReadonlyArray<{ labelKey: string; hrefs: string[] }> = [
-  { labelKey: "sections.daily", hrefs: ["/roster", "/pulse"] },
+  { labelKey: "sections.daily", hrefs: ["/roster", "/pulse", "/fil"] },
   {
     labelKey: "sections.data",
     hrefs: ["/streams", "/market", "/revenue", "/audience", "/algo-position"],

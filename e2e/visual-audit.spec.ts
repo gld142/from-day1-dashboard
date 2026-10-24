@@ -26,6 +26,7 @@ const ROUTES = [
   "pulse",
   "overview",
   "roster",
+  "fil",
   "streams",
   "market",
   "revenue",

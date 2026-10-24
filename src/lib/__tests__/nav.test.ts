@@ -9,6 +9,7 @@ import {
   navForPersona,
   navItemByHref,
 } from "@/lib/nav";
+import { roleOverrides } from "@/lib/roles";
 
 const hrefs = (sections: ReturnType<typeof navForPersona>) =>
   sections.map((s) => [s.labelKey, s.items.map((i) => i.href)] as const);
@@ -21,7 +22,7 @@ describe("navForPersona — structure (label)", () => {
 
   it("suit le parcours structure : rituel → data → finances → business → intelligence → croissance → compte", () => {
     expect(hrefs(nav)).toEqual([
-      ["sections.daily", ["/roster", "/pulse"]],
+      ["sections.daily", ["/roster", "/pulse", "/fil"]],
       ["sections.data", ["/streams", "/market", "/revenue", "/audience", "/algo-position"]],
       ["sections.finances", ["/finances", "/valuation", "/calculator"]],
       ["sections.rights", ["/contracts", "/splits", "/rights", "/placements", "/urssaf"]],
@@ -129,5 +130,25 @@ describe("navItemByHref", () => {
         }
       }
     }
+  });
+});
+
+describe("navigation d'un rôle métier (préréglage sous les choix utilisateur)", () => {
+  const hrefsOf = (persona: "label" | "artist") => navCatalogForPersona(persona).flatMap((s) => s.items.map((i) => i.href));
+
+  it("finance : ses six pages et Réglages, rien d'autre", () => {
+    const nav = navForPersona("label", roleOverrides("finance", hrefsOf("label")));
+    expect(flat(nav).sort()).toEqual(["/audit", "/fil", "/finances", "/revenue", "/rights", "/settings", "/valuation"]);
+  });
+  it("direction : la navigation structure complète", () => {
+    expect(flat(navForPersona("label", roleOverrides("direction", hrefsOf("label"))))).toEqual(flat(navForPersona("label")));
+  });
+  it("un choix utilisateur passe par-dessus le préréglage", () => {
+    const nav = navForPersona("label", { ...roleOverrides("presidence", hrefsOf("label")), "/team": true });
+    expect(flat(nav).sort()).toEqual(["/fil", "/pulse", "/roster", "/settings", "/team", "/valuation"]);
+  });
+  it("le Fil est visible pour les deux personas sans rôle", () => {
+    expect(flat(navForPersona("label"))).toContain("/fil");
+    expect(flat(navForPersona("artist"))).toContain("/fil");
   });
 });
