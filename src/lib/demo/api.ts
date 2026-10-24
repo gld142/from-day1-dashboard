@@ -289,9 +289,9 @@ export function dspEstimates(artistId: string, period: EstimatePeriod): DspEstim
   return dspEstimatesOf([artistId], PERIOD_DAYS[period]);
 }
 
-/** Par plateforme du roster : somme des artistes réels. */
-export function rosterDspEstimates(period: EstimatePeriod): DspEstimate[] {
-  return dspEstimatesOf(ARTISTS.map((a) => a.id), PERIOD_DAYS[period]);
+/** Par plateforme du roster (ou d'une liste d'artistes) : somme des artistes réels. */
+export function rosterDspEstimates(period: EstimatePeriod, artists: Artist[] = ARTISTS): DspEstimate[] {
+  return dspEstimatesOf(artists.map((a) => a.id), PERIOD_DAYS[period]);
 }
 
 const CONFIDENCE_ORDER: Confidence[] = ["indicative", "medium", "high"];
@@ -303,8 +303,8 @@ const addRange = (a: Range, b: Range): Range => ({ low: a.low + b.low, mid: a.mi
  * part artiste, droits d'auteur) = les plus faibles rencontrées ; calibré
  * seulement si tous le sont ; fenêtre du premier.
  */
-export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
-  const parts = ARTISTS.filter((a) => hasRealData(a.id)).map((a) => estimateSummary(a.id, period));
+export function rosterEstimateSummary(period: EstimatePeriod, artists: Artist[] = ARTISTS): EstimateSummary {
+  const parts = artists.filter((a) => hasRealData(a.id)).map((a) => estimateSummary(a.id, period));
   const first = parts[0];
   return {
     period,
@@ -326,8 +326,8 @@ export function rosterEstimateSummary(period: EstimatePeriod): EstimateSummary {
   };
 }
 
-export function rosterEstimateSummaries(): Record<EstimatePeriod, EstimateSummary> {
-  return summariesOf(rosterEstimateSummary);
+export function rosterEstimateSummaries(artists: Artist[] = ARTISTS): Record<EstimatePeriod, EstimateSummary> {
+  return summariesOf((p) => rosterEstimateSummary(p, artists));
 }
 
 /** Par DSP, la plus faible provenance sur la fenêtre — vide hors couche réelle. */
@@ -975,7 +975,7 @@ export type PnL = {
  * « L'année du roster » de /pulse en annonçait 15,8 M € — deux fenêtres de
  * douze mois décalées d'un mois, sous deux libellés que rien ne distingue.
  */
-export function pnlByArtist(months = 12): PnL[] {
+export function pnlByArtist(months = 12, artists: Artist[] = ARTISTS): PnL[] {
   /* Exactement la fenêtre de `yearWindow` : 25 mois demandés, le dernier
      (partiel) écarté, les `months` précédents retenus. Demander 24 mois ici
      et 25 là-bas suffisait à décaler le total — la série mensuelle dépend,
@@ -984,7 +984,7 @@ export function pnlByArtist(months = 12): PnL[] {
     .map((m) => m.month)
     .slice(0, -1);
   const monthsSet = new Set(complets.slice(-months));
-  return ARTISTS.map((a) => {
+  return artists.map((a) => {
     const rev = monthlyRevenueTotals(a.id, 25)
       .filter((m) => monthsSet.has(m.month))
       .reduce((s, m) => s + m.amount, 0);
@@ -1074,9 +1074,9 @@ export type RosterRow = Artist & {
   valuationMid: number;
 };
 
-export function rosterRows(): RosterRow[] {
-  const pnl = pnlByArtist(12);
-  return ARTISTS.map((a) => {
+export function rosterRows(artists: Artist[] = ARTISTS): RosterRow[] {
+  const pnl = pnlByArtist(12, artists);
+  return artists.map((a) => {
     const p = pnl.find((x) => x.artistId === a.id)!;
     return {
       ...a,
@@ -1090,9 +1090,9 @@ export function rosterRows(): RosterRow[] {
   }).sort((a, b) => b.revenue12m - a.revenue12m);
 }
 
-/** Agrégat label : tous artistes confondus. */
-export function labelTotals() {
-  const rows = rosterRows();
+/** Agrégat label : tous artistes confondus (ou la liste donnée). */
+export function labelTotals(artists: Artist[] = ARTISTS) {
+  const rows = rosterRows(artists);
   return {
     artists: rows.length,
     streams30d: rows.reduce((s, r) => s + r.streams30d, 0),
