@@ -16,7 +16,7 @@
  * l'espace — la démo ci-dessous reste telle quelle derrière le mot de passe.
  */
 import { Suspense, useCallback, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
@@ -57,16 +57,19 @@ function DemoRoster() {
 
   /* Le périmètre vient de l'URL (`?cat=`, `?da=`) : partageable, et un rôle DA
      arrive déjà filtré. Tout en dessous — lignes, totaux, P&L, alertes — le suit. */
-  const router = useRouter();
   const params = useSearchParams();
   const scope = useMemo(() => parseScope(params), [params]);
   const artists = useMemo(() => scopedArtists(scope), [scope]);
   const rows = useMemo(() => rosterRows(artists), [artists]);
   const totals = useMemo(() => labelTotals(artists), [artists]);
-  const setScope = useCallback(
-    (next: RosterScope) => router.replace(`/roster${scopeQuery(next)}`, { scroll: false }),
-    [router],
-  );
+  /* Écriture de l'URL sans aller-retour serveur. Doc Next 16 (guides/single-page-applications,
+     « Shallow routing on the client ») : « `pushState` et `replaceState` s'intègrent au routeur
+     Next.js et se synchronisent avec `usePathname` et `useSearchParams` » (traduit). Le filtre
+     est donc relu par `useSearchParams` ci-dessus, y compris après un `router.push("/roster?da=…")`
+     venu de la barre du haut. Pas de dépendance : `window.history` est stable. */
+  const setScope = useCallback((next: RosterScope) => {
+    window.history.replaceState(null, "", `/roster${scopeQuery(next)}`);
+  }, []);
   const scopeText = [
     scope.category ? t(`category.${scope.category}`) : null,
     scope.daId ? getDa(scope.daId)?.name : null,

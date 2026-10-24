@@ -24,15 +24,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { RosterRow } from "@/lib/demo/api";
-import { DAS } from "@/lib/demo/data";
+import { getDa } from "@/lib/demo/data";
 import { ARTIST_CATEGORIES, type ArtistCategory, type CareerStage } from "@/lib/demo/types";
 import { fmtCompact, fmtEur, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type SortKey = "streams30d" | "revenue12m" | "day1Index";
 
-/** Colonnes du tableau — le `colSpan` des en-têtes de groupe doit les couvrir toutes. */
-const COLS = 11;
+/**
+ * Colonnes du tableau : artiste, stade, DA, streams 30 j, Δ 30 j, revenus 12 m,
+ * net 12 m, marge, valo, notes, index. Le `colSpan` des en-têtes de groupe et de
+ * l'état vide doit les couvrir toutes (test : roster-table.test.ts).
+ */
+export const COLS = 11;
 
 const STAGE_TONE: Record<CareerStage, string> = {
   emerging: "bg-brand/10 text-brand",
@@ -128,7 +132,7 @@ export function RosterTable({
       rows: sorted.filter((r) => r.category === category),
     })).filter((g) => g.rows.length > 0);
   }, [grouped, sorted]);
-  const daName = (id: string) => DAS.find((d) => d.id === id)?.name ?? id;
+  const daName = (id: string) => getDa(id)?.name ?? id;
 
   function toggleSort(key: SortKey) {
     if (key === sortKey) setDesc((d) => !d);
@@ -187,6 +191,14 @@ export function RosterTable({
           </TableHeader>
           <LayoutGroup>
             <TableBody>
+              {/* Périmètre sans artiste (ex. urbain × un DA qui n'en suit aucun) : un message, pas un corps muet. */}
+              {rows.length === 0 && (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={COLS} className="text-muted-foreground py-6 text-center text-[12px]">
+                    {t("table.empty")}
+                  </TableCell>
+                </TableRow>
+              )}
               {groups.flatMap((g) => [
                 g.category && (
                   <TableRow key={`group-${g.category}`} className="bg-muted/40 hover:bg-muted/40">

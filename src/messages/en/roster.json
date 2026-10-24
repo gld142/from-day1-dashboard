@@ -6,7 +6,8 @@
     "category": "Category",
     "da": "A&R",
     "all": "All",
-    "allDa": "All"
+    "allDa": "All",
+    "reset": "Reset"
   },
   "category": {
     "urbain": "Urban",
@@ -48,7 +49,8 @@
     "sort": "Sort by {column}",
     "category": "Category",
     "da": "A&R",
-    "notes": "Notes"
+    "notes": "Notes",
+    "empty": "No artist in this scope."
   },
   "export": {
     "button": "Export",

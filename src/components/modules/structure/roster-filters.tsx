@@ -7,7 +7,7 @@
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { DAS } from "@/lib/demo/data";
-import type { RosterScope } from "@/lib/demo/scope";
+import { isFullScope, type RosterScope } from "@/lib/demo/scope";
 import { ARTIST_CATEGORIES } from "@/lib/demo/types";
 import { cn } from "@/lib/utils";
 
@@ -89,6 +89,16 @@ export function RosterFilters({
           </Pill>
         ))}
       </div>
+      {/* Hors périmètre complet : un seul geste pour revenir à tout le roster. */}
+      {!isFullScope(scope) && (
+        <button
+          type="button"
+          onClick={() => onChange({ category: null, daId: null })}
+          className="text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors"
+        >
+          {t("filters.reset")}
+        </button>
+      )}
     </div>
   );
 }

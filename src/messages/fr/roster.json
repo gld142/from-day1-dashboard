@@ -6,7 +6,8 @@
     "category": "Catégorie",
     "da": "DA",
     "all": "Toutes",
-    "allDa": "Tous"
+    "allDa": "Tous",
+    "reset": "Réinitialiser"
   },
   "category": {
     "urbain": "Urbain",
@@ -48,7 +49,8 @@
     "sort": "Trier par {column}",
     "category": "Catégorie",
     "da": "DA",
-    "notes": "Notes"
+    "notes": "Notes",
+    "empty": "Aucun artiste dans ce périmètre."
   },
   "export": {
     "button": "Exporter",
