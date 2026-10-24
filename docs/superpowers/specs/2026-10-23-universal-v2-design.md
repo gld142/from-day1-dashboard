@@ -45,7 +45,7 @@ export type TenantId = "day1" | "universal";
 export type Tenant = {
   id: TenantId;
   name: string;            // « Day 1 Dashboard Pro » / « Day One × Universal »
-  shortName: string;       // sidebar : « Day 1 » / « Day One × Universal »
+  shortName: string;       // sidebar et titre d'onglet : « From Day 1 » (inchangé) / « Day One × Universal »
   tagline: string;
   logo: { text: string; bg: string; fg: string } | null;   // co-marque (null = Day 1 seul)
   excludedArtists: string[];   // day1 : ["kiko"] ; universal : ["dadju"]
@@ -55,7 +55,9 @@ export const TENANT: Tenant;   // lu depuis process.env.NEXT_PUBLIC_TENANT, déf
 ```
 
 Consommateurs : `LABEL.name` (data.ts) → `TENANT.name` ; marque de la sidebar (`sidebar.tsx`) et du
-menu mobile ; titre des pages (`layout.tsx` racine, metadata) ; `ARTISTS` filtrés par
+menu mobile → `TENANT.shortName` ; titre des pages (`layout.tsx` racine, metadata) →
+`${shortName} — ${tagline}`, soit exactement l'ancien « From Day 1 — Dashboard 360° » pour day1 ;
+`ARTISTS` filtrés par
 `excludedArtists` à la source (`src/lib/demo/data.ts` exporte `ARTISTS` déjà filtrés ; les six
 fichiers de relevés restent, un artiste exclu n'est simplement pas dans la liste). Les textes
 existants qui citent « Day 1 Dashboard Pro » en dur passent par `TENANT.name`.
