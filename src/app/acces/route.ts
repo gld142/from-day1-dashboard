@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { demoEnabled } from "@/lib/demo-mode";
-import { gateBrandHtml, gateTitle } from "@/lib/public-brand";
+import { esc, gateBrandHtml, gateTitleText } from "@/lib/public-brand";
 import { GATE_COOKIE, GATE_PATH, isValidToken, tokenFor } from "@/lib/gate";
 
 /** Seules les adresses internes sont acceptées comme retour (pas de redirection ouverte). */
@@ -8,13 +8,11 @@ function safeNext(value: string | null): string {
   return value && value.startsWith("/") && !value.startsWith("//") ? value : "/";
 }
 
-const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
-
 export function GET(request: NextRequest) {
   if (!demoEnabled()) return NextResponse.redirect(new URL("/connexion", request.url));
   const next = safeNext(request.nextUrl.searchParams.get("next"));
   const error = request.nextUrl.searchParams.has("e");
-  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(gateTitle())}</title>
+  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(gateTitleText())}</title>
 <style>
 body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0B0A12;color:#FAFAFE;font:16px/1.5 system-ui,-apple-system,sans-serif}
 form{width:min(360px,calc(100% - 32px));display:flex;flex-direction:column;gap:14px}

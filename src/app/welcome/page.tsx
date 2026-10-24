@@ -5,9 +5,11 @@ import { CobrandScreen } from "@/components/modules/welcome/cobrand-screen";
 import { resolveSource } from "@/components/modules/welcome/sources";
 import { ARTISTS, auditFindings } from "@/lib/demo/api";
 import { isDspGap } from "@/lib/real/audit-gap";
+import { TENANT } from "@/lib/tenant";
 
 export const metadata: Metadata = {
-  title: "From Day 1 — Bienvenue",
+  // La maison du build : /welcome est l'écran co-brandé de la démo.
+  title: `${TENANT.shortName} — Bienvenue`,
 };
 
 /**

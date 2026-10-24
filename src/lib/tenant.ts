@@ -14,7 +14,7 @@ export type Tenant = {
   name: string;
   /** Marque de la sidebar et du menu mobile. */
   shortName: string;
-  /** Marque des pages publiques (porte /acces, connexion, inscription, espace). */
+  /** Marque de la porte /acces. Les pages produit (connexion, inscription, espace) gardent « Day 1 Pro » dans les deux maisons. */
   publicName: string;
   tagline: string;
   /** Co-marque (null = Day 1 seul). */
@@ -65,11 +65,6 @@ export function tenantFor(raw: string | undefined): Tenant {
  * Next ne remplace la variable côté client que sous cette forme exacte.
  */
 export const TENANT: Tenant = tenantFor(process.env.NEXT_PUBLIC_TENANT);
-
-/** Titre d'une page publique : « <marque publique de la maison> — <page> ». */
-export function publicTitle(page: string, tenant: Tenant = TENANT): string {
-  return `${tenant.publicName} — ${page}`;
-}
 
 /** Retire de `list` les artistes exclus par la maison (ordre conservé). */
 export function excludeArtists<T extends { id: string }>(list: T[], tenant: Tenant = TENANT): T[] {

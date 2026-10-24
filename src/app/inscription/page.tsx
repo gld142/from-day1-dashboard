@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { publicTitle } from "@/lib/tenant";
 import { FlowClient } from "./flow-client";
 
 export const metadata: Metadata = {
-  title: publicTitle("Ouvre ton espace"),
+  title: "Day 1 Pro — Ouvre ton espace",
   robots: { index: false },
 };
 
