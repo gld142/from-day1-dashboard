@@ -7,7 +7,18 @@
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  CUSTOMER_AR_ITEM,
+  CUSTOMER_BUSINESS_ITEMS,
+  CUSTOMER_CATALOG_ITEM,
+  CUSTOMER_FIGURES_ITEMS,
+  CUSTOMER_HOME_ITEM,
+  CUSTOMER_ROSTER_ITEM,
+  CUSTOMER_SIGNALS_ITEMS,
+  NAV_SECTIONS,
+  customerSections,
+  internalPageMessageKeys,
   isRouteAllowedForTenant,
+  moduleDescKey,
   navCatalogForPersona,
   navForPersona,
   sectionsForTenant,
@@ -27,6 +38,26 @@ const PITCH_TEXT = /Universal détient la donnée|Universal holds the data/;
 const PITCH = new RegExp(`${PITCH_TEXT.source}|Bertil`);
 
 const flat = (sections: ReturnType<typeof navForPersona>) => sections.flatMap((s) => s.items.map((i) => i.href));
+
+/** Les libellés des pages internes dans les namespaces COMMUNS (nav, settings), dérivés de nav.ts. */
+const LABEL_KEYS = internalPageMessageKeys();
+const SETTINGS_DESC_PATHS = LABEL_KEYS.settingsDesc.map((k) => `modules.desc.${k}`);
+
+/** Copie de `ns` sans les clés à points données (« items.onboardings ») : calcul indépendant du code testé. */
+function withoutKeys(ns: unknown, dotted: readonly string[]): unknown {
+  const copy = structuredClone(ns) as Record<string, unknown>;
+  for (const key of dotted) {
+    const path = key.split(".");
+    const last = path.pop()!;
+    const parent = path.reduce<Record<string, unknown> | undefined>((o, k) => o?.[k] as Record<string, unknown> | undefined, copy);
+    if (parent) delete parent[last];
+  }
+  return copy;
+}
+
+/** Valeur d'une clé à points dans un namespace. */
+const at = (ns: unknown, key: string): unknown =>
+  key.split(".").reduce<unknown>((o, k) => (o as Record<string, unknown> | undefined)?.[k], ns);
 
 describe("isRouteAllowedForTenant", () => {
   it("maison day1 : les pages internes et leurs sous-pages restent ouvertes", () => {
@@ -88,7 +119,12 @@ describe("getMessages — les textes des pages internes ne partent pas vers le n
       expect(Object.keys(universal).sort()).toEqual(
         Object.keys(day1).filter((k) => k !== "onboardings" && k !== "comparatif").sort(),
       );
-      for (const k of Object.keys(universal)) expect(universal[k], k).toBe(day1[k]);
+      // nav et settings : les mêmes, moins les libellés des pages internes (describe plus bas).
+      for (const k of Object.keys(universal)) {
+        if (k === "nav") expect(universal.nav, k).toEqual(withoutKeys(day1.nav, LABEL_KEYS.nav));
+        else if (k === "settings") expect(universal.settings, k).toEqual(withoutKeys(day1.settings, SETTINGS_DESC_PATHS));
+        else expect(universal[k], k).toBe(day1[k]);
+      }
       expect(JSON.stringify(universal)).not.toMatch(PITCH_TEXT);
     });
     /* Témoin du marqueur ci-dessus : jusqu'au 24/10 il cherchait « Universal owns the data », que
@@ -98,6 +134,84 @@ describe("getMessages — les textes des pages internes ne partent pas vers le n
       expect(JSON.stringify(internalPageMessages(locale, ["onboardings"], TENANTS.day1))).toMatch(PITCH_TEXT);
       expect(JSON.stringify(pageMessages(locale, ["onboardings"], TENANTS.day1))).toMatch(PITCH_TEXT);
       expect(JSON.stringify(getMessages(locale, TENANTS.day1))).toMatch(PITCH_TEXT);
+    });
+  }
+});
+
+/* Les libellés des pages internes vivent aussi dans des namespaces COMMUNS, envoyés par le fournisseur
+   racine sur toutes les pages : nav (navigation, palette ⌘K) et settings (Réglages → Modules).
+   Mesuré le 24/10/2026 (curl, HTML de /connexion sur 3006, maison universal) : « Onboardings
+   partenaires » 1, « usage interne » 1 — alors qu'aucune liste de la maison ne cite ces pages. */
+describe("libellés des pages internes (nav, Réglages → Modules) : absents de la maison universal, intacts dans la maison day1", () => {
+  const internalItems = NAV_SECTIONS.flatMap((s) => s.items).filter((i) => i.internal);
+  const MEASURED = {
+    fr: ["Onboardings partenaires", "usage interne", "vs Concurrents", "Stratégie & pitch", "Pipeline interne des partenariats"],
+    en: ["Partner onboardings", "internal use", "vs Competitors", "Strategy & pitch", "Internal partnership pipeline"],
+  } as const;
+
+  it("internalPageMessageKeys : chaque item `internal` de nav.ts, la section dont toutes les pages le sont, et rien d'une page ouverte", () => {
+    expect(internalItems.length).toBeGreaterThan(0);
+    for (const i of internalItems) {
+      expect(LABEL_KEYS.nav, i.href).toContain(i.labelKey);
+      expect(LABEL_KEYS.settingsDesc, i.href).toContain(moduleDescKey(i));
+    }
+    for (const s of NAV_SECTIONS) {
+      expect(LABEL_KEYS.nav.includes(s.labelKey), s.labelKey).toBe(s.items.every((i) => i.internal));
+    }
+    // Aucune clé retirée ne sert une page ouverte : navigation de la démo ET du mode client.
+    const customer = { view: "label", role: "owner", artistName: "X" } as Parameters<typeof customerSections>[0];
+    const artist = { view: "artist", role: "artist", artistName: "X" } as Parameters<typeof customerSections>[0];
+    const importItem = { href: "/import", labelKey: "items.importer", icon: CUSTOMER_HOME_ITEM.icon };
+    const customerLists = [...customerSections(customer, importItem), ...customerSections(artist, importItem)];
+    const openItems = [
+      ...NAV_SECTIONS.flatMap((s) => s.items).filter((i) => !i.internal),
+      CUSTOMER_HOME_ITEM, CUSTOMER_ROSTER_ITEM, CUSTOMER_CATALOG_ITEM, CUSTOMER_AR_ITEM,
+      ...CUSTOMER_FIGURES_ITEMS, ...CUSTOMER_SIGNALS_ITEMS, ...CUSTOMER_BUSINESS_ITEMS,
+      ...customerLists.flatMap((s) => s.items),
+    ];
+    for (const i of openItems) {
+      expect(LABEL_KEYS.nav, i.href).not.toContain(i.labelKey);
+      expect(LABEL_KEYS.settingsDesc, i.href).not.toContain(moduleDescKey(i));
+    }
+    for (const s of customerLists) expect(LABEL_KEYS.nav, s.labelKey).not.toContain(s.labelKey);
+    // Photo lisible de la dérivation d'aujourd'hui.
+    expect(LABEL_KEYS).toEqual({
+      nav: ["items.comparatif", "items.onboardings", "sections.pitch"],
+      settingsDesc: ["comparatif", "onboardings"],
+    });
+  });
+
+  for (const locale of ["fr", "en"] as const) {
+    it(`${locale} · universal : ni la requête, ni la racine, ni une page ne portent ces libellés ; le reste de nav et settings intact`, () => {
+      const day1 = getMessages(locale, TENANTS.day1) as Record<string, unknown>;
+      // Témoin : chaque clé retirée a bien un texte dans la maison day1.
+      const texts = [
+        ...LABEL_KEYS.nav.map((k) => at(day1.nav, k)),
+        ...SETTINGS_DESC_PATHS.map((k) => at(day1.settings, k)),
+      ];
+      for (const t of texts) expect(typeof t === "string" && t.length > 0, String(t)).toBe(true);
+      const sent = {
+        getMessages: getMessages(locale, TENANTS.universal),
+        rootClientMessages: rootClientMessages(locale, TENANTS.universal),
+        "pageMessages(welcome)": pageMessages(locale, ["welcome"], TENANTS.universal),
+        "internalPageMessages(onboardings, comparatif)": internalPageMessages(locale, ["onboardings", "comparatif"], TENANTS.universal),
+      };
+      for (const [name, m] of Object.entries(sent)) {
+        const json = JSON.stringify(m);
+        for (const t of [...texts, ...MEASURED[locale]]) {
+          expect(json.includes(JSON.stringify(t).slice(1, -1)), `${name} contient « ${String(t)} »`).toBe(false);
+        }
+        const r = m as Record<string, unknown>;
+        expect(r.nav, name).toEqual(withoutKeys(day1.nav, LABEL_KEYS.nav));
+        expect(r.settings, name).toEqual(withoutKeys(day1.settings, SETTINGS_DESC_PATHS));
+      }
+    });
+    it(`${locale} · day1 : les libellés restent (témoin des chaînes mesurées), nav et settings tels quels`, () => {
+      const root = rootClientMessages(locale, TENANTS.day1) as Record<string, unknown>;
+      const json = JSON.stringify(root);
+      for (const t of MEASURED[locale]) expect(json, t).toContain(JSON.stringify(t).slice(1, -1));
+      for (const k of LABEL_KEYS.nav) expect(at(root.nav, k), k).toBeTypeOf("string");
+      for (const k of SETTINGS_DESC_PATHS) expect(at(root.settings, k), k).toBeTypeOf("string");
     });
   }
 });

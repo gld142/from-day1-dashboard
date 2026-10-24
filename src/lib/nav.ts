@@ -469,6 +469,52 @@ export function navItemByHref(href: string): NavItem | null {
   return null;
 }
 
+/** Clé de la description d'une page dans Réglages → Modules : `settings.modules.desc.<clé>`. */
+export function moduleDescKey(item: Pick<NavItem, "labelKey">): string {
+  return item.labelKey.replace(/^items\./, "");
+}
+
+/** Les pages du mode client (hors NAV_SECTIONS) : leurs libellés servent toujours. */
+const CUSTOMER_ITEMS: readonly NavItem[] = [
+  CUSTOMER_HOME_ITEM,
+  CUSTOMER_ROSTER_ITEM,
+  CUSTOMER_CATALOG_ITEM,
+  CUSTOMER_AR_ITEM,
+  ...CUSTOMER_FIGURES_ITEMS,
+  ...CUSTOMER_SIGNALS_ITEMS,
+  ...CUSTOMER_BUSINESS_ITEMS,
+];
+
+/**
+ * Les clés de traduction propres aux pages internes, DÉRIVÉES des items `internal` : leur libellé
+ * (`nav.<labelKey>`), le libellé d'une section dont TOUTES les pages sont internes, et leur
+ * description dans Réglages → Modules (`settings.modules.desc.<clé>`). Une clé qu'une page ouverte
+ * partage (démo ou mode client) n'en fait pas partie. Une maison sans pages internes ne les reçoit
+ * pas (`getMessages`, messages/index.ts) : nav et settings partent avec le fournisseur racine,
+ * sur toutes les pages, /connexion comprise.
+ */
+export function internalPageMessageKeys(sections: readonly NavSection[] = NAV_SECTIONS): {
+  nav: string[];
+  settingsDesc: string[];
+} {
+  const items = sections.flatMap((s) => s.items);
+  const open = [...items.filter((i) => !i.internal), ...CUSTOMER_ITEMS];
+  const openLabels = new Set(open.map((i) => i.labelKey));
+  const openDescs = new Set(open.map(moduleDescKey));
+  const openSections = new Set(sections.filter((s) => s.items.some((i) => !i.internal)).map((s) => s.labelKey));
+  const internal = items.filter((i) => i.internal);
+  const navKeys = [
+    ...internal.map((i) => i.labelKey).filter((k) => !openLabels.has(k)),
+    ...sections
+      .filter((s) => s.items.length > 0 && s.items.every((i) => i.internal) && !openSections.has(s.labelKey))
+      .map((s) => s.labelKey),
+  ];
+  return {
+    nav: [...new Set(navKeys)],
+    settingsDesc: [...new Set(internal.map(moduleDescKey).filter((k) => !openDescs.has(k)))],
+  };
+}
+
 /** Page interne From Day 1 (`internal`), ou une de ses sous-pages ? */
 export function isInternalPath(path: string): boolean {
   return NAV_SECTIONS.some((s) => s.items.some((i) => i.internal && (path === i.href || path.startsWith(`${i.href}/`))));

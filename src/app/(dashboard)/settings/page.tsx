@@ -10,7 +10,7 @@ import { useSyncExternalStore, useTransition } from "react";
 import { Building2, EyeOff, Lock, MicVocal, Moon, RotateCcw, Sun, Sunrise } from "lucide-react";
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
-import { LOCKED_MODULES } from "@/lib/nav";
+import { LOCKED_MODULES, moduleDescKey } from "@/lib/nav";
 import { useRole } from "@/lib/role";
 import { useModules } from "@/lib/userdata/use-modules";
 import { cn } from "@/lib/utils";
@@ -89,7 +89,7 @@ export default function SettingsPage() {
                 {section.items.map((item) => {
                   const locked = LOCKED_MODULES.has(item.href);
                   const visible = isVisible(item);
-                  const key = item.labelKey.replace(/^items\./, "");
+                  const key = moduleDescKey(item);
                   const Icon = item.icon;
                   return (
                     <li

@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/config";
+import { internalPageMessageKeys } from "@/lib/nav";
 import { TENANT, type Tenant } from "@/lib/tenant";
 
 /* ─── Namespaces communs ─── */
@@ -208,15 +209,59 @@ function without<T extends object, K extends string>(messages: T, namespaces: re
   return Object.fromEntries(Object.entries(messages).filter(([ns]) => !drop.includes(ns))) as Omit<T, K>;
 }
 
+/** `obj` sans la clé au bout de `path` ; les branches non touchées gardent leur référence. */
+function omitPath(obj: Record<string, unknown>, [head, ...rest]: readonly string[]): Record<string, unknown> {
+  if (!Object.hasOwn(obj, head)) return obj;
+  if (rest.length === 0) return Object.fromEntries(Object.entries(obj).filter(([k]) => k !== head));
+  const child = obj[head];
+  if (typeof child !== "object" || child === null) return obj;
+  return { ...obj, [head]: omitPath(child as Record<string, unknown>, rest) };
+}
+
+/** Un namespace sans les clés à points données (« items.onboardings », « modules.desc.comparatif »). */
+function omitKeys<T extends object>(ns: T, dotted: readonly string[]): T {
+  let out = ns as Record<string, unknown>;
+  for (const key of dotted) out = omitPath(out, key.split("."));
+  return out as T;
+}
+
+/** nav et settings tels qu'une maison SANS pages internes les reçoit (calculés une fois par langue). */
+type CommonLabels = Pick<AllMessages, "nav" | "settings">;
+const LABELS_WITHOUT_INTERNAL_PAGES = new Map<Locale, CommonLabels>();
+
+/**
+ * Les libellés des pages internes vivent aussi dans des namespaces COMMUNS, partis avec le
+ * fournisseur racine sur toutes les pages : leur nom dans la navigation et la palette (nav) et leur
+ * description dans Réglages → Modules (settings). Mesuré le 24/10/2026 (curl, HTML de /connexion de
+ * la maison universal, 3006) : « Onboardings partenaires » 1, « usage interne » 1. La liste des clés
+ * est DÉRIVÉE de nav.ts (`internalPageMessageKeys` : items `internal`, et la section dont toutes
+ * les pages le sont), jamais écrite ici. Mémorisé : deux appels rendent les mêmes objets (les
+ * messages sont statiques), comme les autres namespaces.
+ */
+function labelsWithoutInternalPages(locale: Locale): CommonLabels {
+  let labels = LABELS_WITHOUT_INTERNAL_PAGES.get(locale);
+  if (!labels) {
+    const keys = internalPageMessageKeys();
+    labels = {
+      nav: omitKeys(MESSAGES[locale].nav, keys.nav),
+      settings: omitKeys(MESSAGES[locale].settings, keys.settingsDesc.map((k) => `modules.desc.${k}`)),
+    };
+    LABELS_WITHOUT_INTERNAL_PAGES.set(locale, labels);
+  }
+  return labels;
+}
+
 /**
  * Les messages de la requête (i18n/request.ts) : ce que lisent les composants SERVEUR
- * (`getTranslations`). Jamais les namespaces de page « seulement » (PAGE_ONLY_NAMESPACES) ; une
- * maison sans pages internes (`tenant.internalPages`) ne reçoit pas non plus leurs textes.
+ * (`getTranslations`), et la base de tous les fournisseurs. Jamais les namespaces de page
+ * « seulement » (PAGE_ONLY_NAMESPACES) ; une maison sans pages internes (`tenant.internalPages`) ne
+ * reçoit pas non plus leurs textes : ni leurs namespaces, ni leurs libellés dans nav et settings
+ * (aucune de ses listes ne cite ces pages, aucun composant serveur ne lit nav).
  */
 export function getMessages(locale: Locale, tenant: Tenant = TENANT) {
   const request = without(MESSAGES[locale], PAGE_ONLY_NAMESPACES);
   if (tenant.internalPages) return request;
-  return without(request, INTERNAL_NAMESPACES);
+  return { ...without(request, INTERNAL_NAMESPACES), ...labelsWithoutInternalPages(locale) };
 }
 
 /**
