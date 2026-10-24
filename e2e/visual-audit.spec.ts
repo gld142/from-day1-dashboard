@@ -1,5 +1,5 @@
 import { test } from "@playwright/test";
-import { isRouteAllowedForTenant } from "../src/lib/nav";
+import { isRouteAllowedForTenant } from "../src/lib/internal-routes";
 import { TENANT } from "../src/lib/tenant";
 import {
   THEMES,

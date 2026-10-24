@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { demoEnabled } from "@/lib/demo-mode";
 import { GATE_COOKIE, GATE_PATH, isValidToken } from "@/lib/gate";
-import { UNMATCHED_PATH, isRouteAllowedForTenant } from "@/lib/nav";
+/* Module léger, jamais nav.ts (icônes lucide-react) : ce bundle tourne avant chaque requête. */
+import { UNMATCHED_PATH, isRouteAllowedForTenant } from "@/lib/internal-routes";
 import { TENANT } from "@/lib/tenant";
 
 /**

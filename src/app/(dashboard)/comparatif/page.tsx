@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { InternalPageIntlProvider } from "@/i18n/intl-providers";
-import { isRouteAllowedForTenant } from "@/lib/nav";
+import { isRouteAllowedForTenant } from "@/lib/internal-routes";
 import { TENANT } from "@/lib/tenant";
 import ComparatifView from "./comparatif-view";
 

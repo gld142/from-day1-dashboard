@@ -7,7 +7,7 @@
  * usage From Day 1 (pitch, pipeline partenaires), masquées pour tous.
  * Les routes restent accessibles par URL : masquer ne concerne que la navigation —
  * sauf les pages `internal` dans une maison sans `internalPages` (Universal) : là,
- * elles n'existent pas (`isRouteAllowedForTenant`).
+ * elles n'existent pas (`isRouteAllowedForTenant`, internal-routes.ts).
  */
 import type { LucideIcon } from "lucide-react";
 import {
@@ -48,6 +48,7 @@ import {
 } from "lucide-react";
 import type { CustomerInfo } from "@/lib/customer-mode";
 import type { DashboardView } from "@/lib/accounts/view";
+import { isRouteAllowedForTenant } from "@/lib/internal-routes";
 import type { Persona } from "@/lib/role";
 import type { Tenant } from "@/lib/tenant";
 
@@ -64,7 +65,11 @@ export type NavItem = {
   badgeKey?: "new" | "beta" | "soon";
   /** Masquée par défaut pour ces personas ("all" = pour tous). */
   defaultHidden?: Persona[] | "all";
-  /** Page à usage interne From Day 1 : masquée pour tous, badge « Interne » dans Réglages. */
+  /**
+   * Page à usage interne From Day 1 : masquée pour tous, badge « Interne » dans Réglages. Sa route
+   * s'écrit AUSSI dans `INTERNAL_ROUTES` (internal-routes.ts, lu par le proxy sans les icônes
+   * d'ici) : internal-pages.test.ts échoue tant que les deux listes diffèrent.
+   */
   internal?: true;
 };
 
@@ -513,36 +518,6 @@ export function internalPageMessageKeys(sections: readonly NavSection[] = NAV_SE
     nav: [...new Set(navKeys)],
     settingsDesc: [...new Set(internal.map(moduleDescKey).filter((k) => !openDescs.has(k)))],
   };
-}
-
-/** Les routes des pages internes From Day 1, DÉRIVÉES des items `internal` (le proxy les ferme). */
-export const INTERNAL_ROUTES: readonly string[] = NAV_SECTIONS.flatMap((s) => s.items)
-  .filter((i) => i.internal)
-  .map((i) => i.href);
-
-/** Page interne From Day 1 (`internal`), ou une de ses sous-pages ? */
-export function isInternalPath(path: string): boolean {
-  return INTERNAL_ROUTES.some((href) => path === href || path.startsWith(`${href}/`));
-}
-
-/**
- * Où le proxy réécrit une route que la maison n'ouvre pas : un chemin qu'aucune route ne sert, pour
- * que Next rende `app/not-found.tsx` (« handles any unmatched URLs », doc Next 16,
- * file-conventions/not-found.md) avec un VRAI statut 404, hors du segment (dashboard) et de son
- * loading.tsx. Préfixe « _ » : un dossier privé n'est jamais une route (doc, project-structure.md
- * « Private folders ») ; un segment dynamique à la racine de app/ l'attraperait (testé).
- */
-export const UNMATCHED_PATH = "/_page-absente";
-
-/**
- * La route existe-t-elle dans cette maison ? Les pages internes From Day 1 (comparatif,
- * pipeline partenaires — dont le pitch de Day 1 À PROPOS d'Universal) n'existent que là où
- * `tenant.internalPages` : ailleurs, le proxy répond 404 avant tout (src/proxy.ts), leur page
- * serveur appelle `notFound()` en seconde ligne, et `sectionsForTenant` les retire de la
- * navigation, de la palette ⌘K et de Réglages → Modules.
- */
-export function isRouteAllowedForTenant(href: string, tenant: Tenant): boolean {
-  return tenant.internalPages || !isInternalPath(href);
 }
 
 /**

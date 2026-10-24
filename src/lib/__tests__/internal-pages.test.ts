@@ -17,17 +17,15 @@ import {
   CUSTOMER_HOME_ITEM,
   CUSTOMER_ROSTER_ITEM,
   CUSTOMER_SIGNALS_ITEMS,
-  INTERNAL_ROUTES,
   NAV_SECTIONS,
-  UNMATCHED_PATH,
   customerSections,
   internalPageMessageKeys,
-  isRouteAllowedForTenant,
   moduleDescKey,
   navCatalogForPersona,
   navForPersona,
   sectionsForTenant,
 } from "@/lib/nav";
+import { INTERNAL_ROUTES, UNMATCHED_PATH, isRouteAllowedForTenant } from "@/lib/internal-routes";
 import { getMessages, internalPageMessages, pageMessages, rootClientMessages } from "@/messages";
 import { TENANTS, type TenantId } from "@/lib/tenant";
 
@@ -234,8 +232,10 @@ describe("libellés des pages internes (nav, Réglages → Modules) : absents de
 /* 404 RÉEL. `notFound()` dans la page ne suffit pas : le segment (dashboard) a un loading.tsx, la
    réponse part en flux avec un statut 200 (doc Next 16, file-conventions/not-found.md et loading.md
    « Status Codes » ; mesuré par la revue du 24/10). La doc recommande de vérifier AVANT, dans le
-   proxy, et de réécrire vers une route introuvable : la liste du proxy est dérivée de nav.ts. */
-describe("INTERNAL_ROUTES — la liste du proxy, dérivée des items `internal` de nav.ts", () => {
+   proxy, et de réécrire vers une route introuvable. La liste du proxy est écrite dans
+   internal-routes.ts (module léger, sans les icônes de nav.ts) : ce test la tient égale aux items
+   `internal` de nav.ts, dans les deux sens. */
+describe("INTERNAL_ROUTES (internal-routes.ts) — la liste du proxy, égale aux items `internal` de nav.ts", () => {
   const items = NAV_SECTIONS.flatMap((s) => s.items);
   it("chaque item `internal` et rien d'autre ; sous-pages fermées, voisines ouvertes", () => {
     const expected = items.filter((i) => i.internal).map((i) => i.href);
