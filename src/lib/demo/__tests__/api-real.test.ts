@@ -202,9 +202,12 @@ describe("api.ts sur les artistes réels", () => {
     expect(listenersProvenance("artiste-inconnu")).toBe("simulated");
   });
 
-  /* Le profil importé : ses chiffres viennent du relevé importé — « mesuré » (l'infobulle
-     common.provenance le dit : « …ou sur un relevé importé »). Régression mesurée le 24/10/2026 :
-     depuis 7f3bacc, Pulse affichait « simulé » sur le profil importé. */
+  /* Le profil importé : ses TOTAUX mensuels viennent du relevé importé, mais ce que Pulse montre
+     n'est pas le relevé tel quel (mesuré le 24/10/2026) : le chiffre du jour est le total
+     mensuel lissé par un coefficient hebdomadaire → « reconstitué » ; les auditeurs mensuels
+     valent `round(streams du dernier mois / 2,6)` → « estimé », et 1 000 de secours quand le
+     dernier mois ne porte aucun stream → « simulé ». Avant : « mesuré » en dur sur les deux
+     (régression inverse mesurée le même jour : depuis 7f3bacc, « simulé » partout). */
   describe("provenance du profil importé", () => {
     const IMPORT: UserData = {
       version: 1,
@@ -223,10 +226,19 @@ describe("api.ts sur les artistes réels", () => {
       active: true,
     };
     afterEach(() => clearCustomerData());
-    it("todayProvenance et listenersProvenance : « measured » dès que l'import est actif", () => {
+    it("import actif : le jour est reconstitué (mensuel lissé), les auditeurs estimés (streams / 2,6)", () => {
       setCustomerDataSilently(IMPORT);
-      expect(todayProvenance(USER_ARTIST_ID)).toBe("measured");
-      expect(listenersProvenance(USER_ARTIST_ID)).toBe("measured");
+      expect(todayProvenance(USER_ARTIST_ID)).toBe("reconstructed");
+      expect(listenersProvenance(USER_ARTIST_ID)).toBe("estimated");
+    });
+    it("dernier mois sans stream : les auditeurs valent la valeur de secours (1 000) — simulés", () => {
+      setCustomerDataSilently({
+        ...IMPORT,
+        months: ["2026-08", "2026-09"],
+        streamsByMonth: { "2026-08": { spotify: 12_000 }, "2026-09": {} },
+      });
+      expect(listenersProvenance(USER_ARTIST_ID)).toBe("simulated");
+      expect(todayProvenance(USER_ARTIST_ID)).toBe("reconstructed");
     });
     it("sans import actif, « my-project » n'est personne : simulé", () => {
       expect(todayProvenance(USER_ARTIST_ID)).toBe("simulated");

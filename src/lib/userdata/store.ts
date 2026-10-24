@@ -220,15 +220,21 @@ export function buildUserData(
 
 /* ─────────── Projections vers le modèle du dashboard ─────────── */
 
+/**
+ * Streams du dernier mois importé, toutes plateformes — la base des auditeurs estimés de
+ * `userArtist` (÷ 2,6) ; 0 sans import ou sans stream ce mois-là (api.ts, listenersProvenance).
+ */
+export function userLastMonthStreams(d: UserData | null = getUserData()): number {
+  if (!d) return 0;
+  const last = d.months[d.months.length - 1];
+  return Object.values(d.streamsByMonth[last] ?? {}).reduce((s, v) => s + (v ?? 0), 0);
+}
+
 /** Fiche artiste dérivée des données importées. */
 export function userArtist(): Artist | null {
   const d = getUserData();
   if (!d) return null;
-  const last = d.months[d.months.length - 1];
-  const lastStreams = Object.values(d.streamsByMonth[last] ?? {}).reduce(
-    (s, v) => s + (v ?? 0),
-    0,
-  );
+  const lastStreams = userLastMonthStreams(d);
   // Croissance : moyenne des 3 derniers mois vs 3 précédents.
   const totals = d.months.map((m) =>
     Object.values(d.streamsByMonth[m] ?? {}).reduce((s, v) => s + (v ?? 0), 0),

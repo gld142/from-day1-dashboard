@@ -93,6 +93,7 @@ import {
   isUserArtist,
   userArtist,
   userCountryBreakdown,
+  userLastMonthStreams,
   userRevenueSeries,
   userStreamSeries,
   userTopTracks,
@@ -354,22 +355,25 @@ export function provenanceOfToday(points: StreamPoint[]): Provenance {
 }
 
 /**
- * Le profil importé (« my-project ») est servi par le relevé importé : mesuré, comme le dit
- * l'infobulle common.provenance (« …ou sur un relevé importé »). Régression mesurée le
- * 24/10/2026 : depuis 7f3bacc, la série importée ne porte pas de provenance et Pulse disait
- * « simulé » sur les chiffres de l'utilisateur.
+ * Le profil importé (« my-project ») : ses TOTAUX mensuels sont ceux du relevé importé, mais
+ * le chiffre du jour n'est pas relevé — c'est le total du mois lissé par un coefficient
+ * hebdomadaire (store.ts, userStreamSeries) : « reconstitué ». Mesuré le 24/10/2026 ; avant,
+ * « mesuré » en dur (et depuis 7f3bacc, « simulé » faute de provenance sur la série).
  */
 export function todayProvenance(artistId: string): Provenance {
-  if (isUserArtist(artistId)) return "measured";
+  if (isUserArtist(artistId)) return "reconstructed";
   return provenanceOfToday(streamSeries(artistId, 1));
 }
 
 /**
  * Provenance des auditeurs mensuels affichés : « measured » s'ils viennent du dernier relevé
- * (data.ts, listenersFromSnapshot) ou du relevé importé, « simulated » si c'est la valeur de secours.
+ * (data.ts, listenersFromSnapshot), « simulated » si c'est la valeur de secours. Le profil
+ * importé n'a pas d'auditeurs relevés : store.ts les ESTIME (`round(streams du dernier mois /
+ * 2,6)`) → « estimated », et pose 1 000 de secours quand le dernier mois est sans stream →
+ * « simulated » (mesuré le 24/10/2026).
  */
 export function listenersProvenance(artistId: string): Provenance {
-  if (isUserArtist(artistId)) return "measured";
+  if (isUserArtist(artistId)) return userLastMonthStreams() > 0 ? "estimated" : "simulated";
   if (!hasRealData(artistId)) return "simulated";
   return latestSnapshot(artistId).spotify.monthlyListeners === null ? "simulated" : "measured";
 }
@@ -379,6 +383,10 @@ export function listenersProvenance(artistId: string): Provenance {
  * parties — un DA dont tous les artistes sont mesurés voit « Mesuré », le roster entier
  * (avec un Kworb sans débit) « Reconstitué ». Avant (mesuré le 24/10/2026), « mesuré » était
  * écrit en dur sur le total du jour et sur les auditeurs cumulés.
+ *
+ * Le badge qualifie la part SPOTIFY du total (provenanceOfToday ne lit que le point Spotify) :
+ * les autres plateformes sont estimées par construction (real-source.ts, parts de marché),
+ * quel que soit le badge.
  */
 export function rosterTodayProvenance(artists: Artist[]): Provenance {
   return weakest(artists.map((a) => todayProvenance(a.id)));
