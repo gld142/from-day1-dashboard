@@ -242,25 +242,6 @@ export function AlgoTrendPanel({ artists, className }: { artists: { id: string; 
       )}
 
       <div className="mt-4 grid gap-6 lg:grid-cols-5">
-        {/* Position algo par plateforme */}
-        <div className="lg:col-span-2">
-          <p className={LABEL}>
-            <Radar className="size-3.5" aria-hidden />
-            {t("platforms")}
-          </p>
-          <ul className="mt-2">
-            {s.placements.map((p) => (
-              <li key={p.platform} className="border-border/30 flex items-center gap-3 border-t py-1.5 text-[12.5px]">
-                <span className="w-24 shrink-0 font-medium">{t(`platform.${p.platform}`)}</span>
-                <span className="sheet-ink min-w-0 flex-1 truncate">{p.surface}</span>
-                <span className="font-semibold tabular-nums">{t("rank", { rank: p.rank })}</span>
-                <span className="text-success w-10 text-right text-[11.5px] tabular-nums">{signed(locale, p.delta)}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="sheet-ink mt-1.5 text-[11px]">{t("deltaNote")}</p>
-        </div>
-
         {/* Le son qui a percé */}
         <div className="lg:col-span-3">
           <p className={LABEL}>
@@ -319,6 +300,25 @@ export function AlgoTrendPanel({ artists, className }: { artists: { id: string; 
             </div>
           </div>
         </div>
+        {/* Position algo par plateforme */}
+        <div className="lg:col-span-2 lg:border-l lg:border-border/30 lg:pl-6">
+          <p className={LABEL}>
+            <Radar className="size-3.5" aria-hidden />
+            {t("platforms")}
+          </p>
+          <ul className="mt-2">
+            {s.placements.map((p) => (
+              <li key={p.platform} className="border-border/30 flex items-center gap-3 border-t py-1.5 text-[12.5px]">
+                <span className="w-24 shrink-0 font-medium">{t(`platform.${p.platform}`)}</span>
+                <span className="sheet-ink min-w-0 flex-1 truncate">{p.surface}</span>
+                <span className="font-semibold tabular-nums">{t("rank", { rank: p.rank })}</span>
+                <span className="text-success w-10 text-right text-[11.5px] tabular-nums">{signed(locale, p.delta)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="sheet-ink mt-1.5 text-[11px]">{t("deltaNote")}</p>
+        </div>
+
       </div>
       <p className="sheet-ink mt-4 text-[11px]">{t("note")}</p>
     </Sheet>

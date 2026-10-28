@@ -595,6 +595,10 @@ function PulsePage() {
             />
           </Sheet>
 
+          {/* TikTok · le son qui a percé, ses créateurs, et la position algo — tout de suite sous les
+              streams : c'est la question qu'on pose en premier sur un artiste (simulation de démo). */}
+          <AlgoTrendPanel artists={[{ id: v.artist.id, name: v.artist.name }]} />
+
           {/* 2 — argent, audience, tendances. */}
           <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr_1fr]">
             <Sheet family="money">
@@ -769,9 +773,6 @@ function PulsePage() {
               />
             </Sheet>
           </div>
-
-          {/* Position algo & tendances : le son qui a percé (simulation de démo). */}
-          <AlgoTrendPanel artists={[{ id: v.artist.id, name: v.artist.name }]} />
 
           {/* 3 — la nuit et la journée qui vient. */}
           <NightStrip
@@ -1073,6 +1074,14 @@ function PulsePage() {
             />
           </Sheet>
 
+          {/* TikTok · le son qui a percé : l'artiste le plus repris d'abord, les autres d'un clic —
+              juste sous le héros, pas en bas de page. */}
+          <AlgoTrendPanel
+            artists={[...roster]
+              .sort((x, y) => (tiktokSignal(y.id)?.videos ?? 0) - (tiktokSignal(x.id)?.videos ?? 0))
+              .map((a) => ({ id: a.id, name: a.name }))}
+          />
+
           <div className="grid gap-3 lg:grid-cols-[1.3fr_1fr_1fr]">
             <Sheet family="money">
               <SheetHeading
@@ -1214,13 +1223,6 @@ function PulsePage() {
               />
             </Sheet>
           </div>
-
-          {/* Position algo & tendances : l'artiste le plus repris sur TikTok d'abord, les autres d'un clic. */}
-          <AlgoTrendPanel
-            artists={[...roster]
-              .sort((x, y) => (tiktokSignal(y.id)?.videos ?? 0) - (tiktokSignal(x.id)?.videos ?? 0))
-              .map((a) => ({ id: a.id, name: a.name }))}
-          />
 
           <NightStrip
             items={

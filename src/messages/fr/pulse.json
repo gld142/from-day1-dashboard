@@ -125,8 +125,8 @@
     "other": "Autres"
   },
   "algo": {
-    "title": "Position algo & tendances",
-    "subtitle": "Où l'algorithme place {name} ce matin — et le son qui a percé.",
+    "title": "TikTok · le son qui a percé",
+    "subtitle": "Le son de {name} qui tourne sur TikTok, les créateurs qui le portent, et où l'algorithme le place ce matin.",
     "platforms": "Position algo par plateforme",
     "platform": {
       "spotify": "Spotify",

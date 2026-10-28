@@ -125,8 +125,8 @@
     "other": "Other"
   },
   "algo": {
-    "title": "Algorithmic position & trends",
-    "subtitle": "Where the algorithm puts {name} this morning — and the sound that broke through.",
+    "title": "TikTok · the sound that broke through",
+    "subtitle": "{name}'s sound taking off on TikTok, the creators behind it, and where the algorithm puts it this morning.",
     "platforms": "Algo position per platform",
     "platform": {
       "spotify": "Spotify",
