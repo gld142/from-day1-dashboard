@@ -44,5 +44,14 @@
     "due": "Due {date}",
     "noDue": "No due date",
     "count": "{count, plural, one {# item} other {# items}}"
-  }
+  },
+  "groups": { "done": "Handled" },
+  "progress": { "today": "{count, plural, =0 {Nothing handled today} one {# note handled today} other {# notes handled today}}" },
+  "undo": { "done": "Note handled", "action": "Undo" },
+  "zero": {
+    "title": "All caught up.",
+    "body": "{count, plural, =0 {Nothing is waiting for you.} one {# note handled today.} other {# notes handled today.}}",
+    "seeAll": "See the whole feed"
+  },
+  "keys": { "hint": "Keyboard: j / k to move between notes · e handled · o open · z undo" }
 }

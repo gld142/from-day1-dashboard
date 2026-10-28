@@ -15,9 +15,9 @@
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { CalendarCheck, CheckCircle2, Plus } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { CalendarCheck, Check, CheckCircle2, ChevronRight, Plus } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
-import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { CommitteeAgenda } from "@/components/modules/structure/feed/committee-agenda";
 import { daLabel, recipientLabel } from "@/components/modules/structure/feed/labels";
 import { NoteCard } from "@/components/modules/structure/feed/note-card";
@@ -47,9 +47,13 @@ import {
   canActOn,
   committeeAgenda,
   mentionEffects,
+  openPlan,
   sortNotes,
+  statusOf,
   type Actor,
   type FeedLink,
+  type FeedNote,
+  type FeedStatus,
   type OpenPlan,
   type Urgency,
 } from "@/lib/userdata/feed-model";
@@ -63,6 +67,9 @@ const artistsFor = (jobRole: JobRole | null, daId: string | null, org: OrgState)
 
 /** Classe posée sur <html> tant que l'ordre du jour est ouvert : la feuille d'impression ne sort que lui. */
 const PRINT_CLASS = "print-fil-agenda";
+
+/** ease-out-quart : la note qui part ralentit en se repliant. */
+const EASE_OUT = [0.25, 1, 0.5, 1] as const;
 
 export default function FeedView() {
   // `useSearchParams` dans un composant client : frontière Suspense obligatoire (docs Next 16).
@@ -135,6 +142,119 @@ function Feed() {
 
   const seesArtist = (artistId: string | null) => !artistId || myArtists.some((a) => a.id === artistId);
 
+  /* ── Triage : sélection au clavier, « Traité » qui se défait, ce qui a été fait aujourd'hui ── */
+  const reduceMotion = useReducedMotion();
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [undo, setUndo] = useState<{ id: string; prev: FeedStatus } | null>(null);
+  const [undoPaused, setUndoPaused] = useState(false);
+  const [showDone, setShowDone] = useState(false);
+  /* Le jour réel du clic : le store date `doneAt` à l'heure de l'action, pas au jour de la démo. */
+  const [today] = useState(() => new Date().toISOString().slice(0, 10));
+
+  const openShown = useMemo(() => shown.filter((n) => n.status !== "done"), [shown]);
+  const doneShown = useMemo(() => shown.filter((n) => n.status === "done"), [shown]);
+  const groups = useMemo(
+    () =>
+      URGENCIES.map((urgency) => ({ urgency, items: openShown.filter((n) => n.urgency === urgency) })).filter(
+        (g) => g.items.length > 0,
+      ),
+    [openShown],
+  );
+  const handledToday = notes.filter((n) => n.doneAt?.slice(0, 10) === today).length;
+  const progress = handledToday + lists.mine.length === 0 ? 0 : handledToday / (handledToday + lists.mine.length);
+
+  const markDone = useCallback(
+    (n: FeedNote) => {
+      setUndo({ id: n.id, prev: statusOf(n) });
+      setUndoPaused(false);
+      done(n.id, me);
+    },
+    [done, me],
+  );
+  /* Annuler rend l'étape d'avant ; l'historique le dit (« Traité → Décidé »). */
+  const undoDone = useCallback(() => {
+    if (!undo) return;
+    status(undo.id, undo.prev, me);
+    setUndo(null);
+  }, [undo, status, me]);
+  useEffect(() => {
+    if (!undo || undoPaused) return;
+    const timer = setTimeout(() => setUndo(null), 6000);
+    return () => clearTimeout(timer);
+  }, [undo, undoPaused]);
+
+  /* j / k : note suivante, précédente · e : traité · o : ouvrir · z : annuler · Échap.
+     Jamais dans un champ, un dialogue, ni avec une touche de modification. */
+  const navigable = useMemo(() => [...openShown, ...(showDone ? doneShown : [])], [openShown, doneShown, showDone]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
+      const target = e.target;
+      if (target instanceof Element && target.closest("input, textarea, select, [contenteditable='true']")) return;
+      if (document.querySelector("[role='dialog']")) return;
+      const i = navigable.findIndex((n) => n.id === activeId);
+      const current = i >= 0 ? navigable[i] : null;
+      const go = (j: number) => {
+        const n = navigable[Math.max(0, Math.min(navigable.length - 1, j))];
+        if (!n) return;
+        setActiveId(n.id);
+        document.querySelector(`[data-note="${n.id}"]`)?.scrollIntoView({ block: "nearest" });
+      };
+      switch (e.key) {
+        case "j":
+          go(i + 1);
+          break;
+        case "k":
+          go(i < 0 ? 0 : i - 1);
+          break;
+        case "e": {
+          if (!current || current.status === "done" || !canActOn(current, jobRole, daId, daOf)) return;
+          const next = navigable[i + 1] ?? navigable[i - 1];
+          markDone(current);
+          setActiveId(next?.id ?? null);
+          break;
+        }
+        case "o": {
+          const plan = current ? openPlan(current, seesArtist(current.artistId)) : null;
+          if (!plan) return;
+          open(plan);
+          break;
+        }
+        case "z":
+          if (!undo) return;
+          undoDone();
+          break;
+        case "Escape":
+          if (!activeId) return;
+          setActiveId(null);
+          break;
+        default:
+          return;
+      }
+      e.preventDefault();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const renderNote = (n: FeedNote) => (
+    <NoteCard
+      note={n}
+      today={FEED_TODAY}
+      canAct={canActOn(n, jobRole, daId, daOf)}
+      canSeeArtist={seesArtist(n.artistId)}
+      artist={n.artistId ? getArtist(n.artistId) : null}
+      daOf={daOf}
+      active={n.id === activeId}
+      onStatus={(s) => status(n.id, s, me)}
+      onDone={() => markDone(n)}
+      onReply={(text) => reply(n.id, text, me)}
+      onAssign={(personId) => assign(n.id, personId, me)}
+      onOpen={open}
+      onFilterArtist={(id) => setArtistFilter(id)}
+    />
+  );
+
   /* Garde persona APRÈS tous les hooks (ordre constant), comme /roster et /ar-watch. */
   if (!isLabel) {
     return (
@@ -179,72 +299,157 @@ function Feed() {
         </div>
       </PageHeader>
 
-      <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]">
-        <div className="flex items-center gap-1.5" role="group" aria-label={t("filters.modeLabel")}>
-          {(["mine", "all"] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              aria-pressed={mode === m}
-              onClick={() => setMode(m)}
+      {/* Une barre : le mode (segments), l'artiste, et ce qui a été traité aujourd'hui. */}
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <div
+            className="bg-muted/70 inline-flex rounded-lg p-0.5 text-[12.5px]"
+            role="group"
+            aria-label={t("filters.modeLabel")}
+          >
+            {(["mine", "all"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={mode === m}
+                onClick={() => setMode(m)}
+                className={cn(
+                  "rounded-md px-3 py-1 font-medium transition-colors",
+                  mode === m ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {t(`filters.${m}`)} <span className="num ml-0.5 font-normal opacity-60">{lists[m].length}</span>
+              </button>
+            ))}
+          </div>
+          <label className="flex items-center gap-1.5 text-[12.5px]">
+            <span className="sr-only">{t("filters.artist")}</span>
+            <select
+              value={artistFilter ?? ""}
+              onChange={(e) => setArtistFilter(e.target.value || null)}
               className={cn(
-                "rounded-full border px-2.5 py-1 transition-colors",
-                mode === m ? "border-brand bg-brand/10 text-brand" : "text-muted-foreground hover:text-foreground",
+                "hover:bg-muted/60 h-8 rounded-md bg-transparent px-2 text-[12.5px] transition-colors",
+                artistFilter ? "text-foreground font-medium" : "text-muted-foreground",
               )}
             >
-              {t(`filters.${m}`)}{" "}
-              <span className="num opacity-70">{lists[m].length}</span>
-            </button>
-          ))}
+              <option value="">{t("filters.anyArtist")}</option>
+              {myArtists.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
-        <label className="flex items-center gap-2">
-          <span className="text-muted-foreground">{t("filters.artist")}</span>
-          <select
-            value={artistFilter ?? ""}
-            onChange={(e) => setArtistFilter(e.target.value || null)}
-            className="h-8 rounded-lg border bg-background px-2 text-[12px]"
-          >
-            <option value="">{t("filters.anyArtist")}</option>
-            {myArtists.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <p className="text-muted-foreground text-[12px]" aria-live="polite">
+          {tp("progress.today", { count: handledToday })}
+        </p>
       </div>
 
-      <Sheet family="catalog">
-        <SheetHeading action={t("filters.count", { count: shown.length })}>
-          {mode === "mine" ? t("filters.mine") : t("filters.all")}
-        </SheetHeading>
-        {shown.length === 0 ? (
-          <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-            <CheckCircle2 className="size-4 text-success" aria-hidden />
+      <div className="bg-card overflow-hidden rounded-xl border">
+        {/* Le filet se remplit à mesure que la pile « pour moi » descend. */}
+        <div className="bg-muted h-0.5" aria-hidden>
+          <div className="bg-brand h-full transition-[width] duration-500" style={{ width: `${progress * 100}%` }} />
+        </div>
+
+        {openShown.length === 0 && mode === "mine" && !artistFilter ? (
+          <div className="flex flex-col items-center gap-2 px-6 py-14 text-center">
+            <motion.span
+              initial={reduceMotion ? false : { scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.35, ease: EASE_OUT }}
+            >
+              <CheckCircle2 className="text-success size-9" aria-hidden />
+            </motion.span>
+            <p className="text-[15px] font-semibold">{tp("zero.title")}</p>
+            <p className="text-muted-foreground text-[12.5px]">{tp("zero.body", { count: handledToday })}</p>
+            <Button size="sm" variant="outline" className="mt-2" onClick={() => setMode("all")}>
+              {tp("zero.seeAll")}
+            </Button>
+          </div>
+        ) : openShown.length === 0 && (mode === "mine" || doneShown.length === 0) ? (
+          <p className="text-muted-foreground flex items-center gap-2 px-5 py-8 text-sm">
+            <CheckCircle2 className="text-success size-4" aria-hidden />
             {t(mode === "mine" ? "empty.mine" : "empty.all")}
           </p>
         ) : (
-          <ul className="mt-2 divide-y">
-            {shown.map((n) => (
-              <NoteCard
-                key={n.id}
-                note={n}
-                today={FEED_TODAY}
-                canAct={canActOn(n, jobRole, daId, daOf)}
-                canSeeArtist={seesArtist(n.artistId)}
-                artist={n.artistId ? getArtist(n.artistId) : null}
-                daOf={daOf}
-                onStatus={(s) => status(n.id, s, me)}
-                onDone={() => done(n.id, me)}
-                onReply={(text) => reply(n.id, text, me)}
-                onAssign={(personId) => assign(n.id, personId, me)}
-                onOpen={open}
-                onFilterArtist={(id) => setArtistFilter(id)}
-              />
+          <div className="p-1.5">
+            {groups.map((g) => (
+              <section key={g.urgency} aria-labelledby={`fil-g-${g.urgency}`}>
+                <h3
+                  id={`fil-g-${g.urgency}`}
+                  className="text-muted-foreground flex items-center gap-2 px-3 pt-3 pb-1 text-[11px] font-semibold tracking-wide uppercase"
+                >
+                  {g.urgency === "urgent" && <span className="bg-destructive size-1.5 rounded-full" aria-hidden />}
+                  {t(`urgency.${g.urgency}`)}
+                  <span className="num font-normal">{g.items.length}</span>
+                </h3>
+                <ul>
+                  <AnimatePresence initial={false}>
+                    {g.items.map((n) => (
+                      <motion.li
+                        key={n.id}
+                        layout="position"
+                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                        transition={{ duration: 0.22, ease: EASE_OUT }}
+                        className="overflow-hidden"
+                        onMouseDown={() => setActiveId(n.id)}
+                      >
+                        {renderNote(n)}
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
+              </section>
             ))}
-          </ul>
+            {doneShown.length > 0 && (
+              <section>
+                <button
+                  type="button"
+                  aria-expanded={showDone}
+                  onClick={() => setShowDone((v) => !v)}
+                  className="text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-3 pt-3 pb-1 text-[11px] font-semibold tracking-wide uppercase"
+                >
+                  <ChevronRight className={cn("size-3.5 transition-transform", showDone && "rotate-90")} aria-hidden />
+                  {tp("groups.done")}
+                  <span className="num font-normal">{doneShown.length}</span>
+                </button>
+                {showDone && <ul>{doneShown.map((n) => <li key={n.id}>{renderNote(n)}</li>)}</ul>}
+              </section>
+            )}
+          </div>
         )}
-      </Sheet>
+        <p className="text-muted-foreground border-t px-4 py-2 text-[11px] [@media(hover:none)]:hidden">
+          {tp("keys.hint")}
+        </p>
+      </div>
+
+      {/* « Traité » se défait sur place pendant six secondes (pause au survol). */}
+      <AnimatePresence>
+        {undo && (
+          <motion.div
+            key={undo.id}
+            role="status"
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: EASE_OUT }}
+            onMouseEnter={() => setUndoPaused(true)}
+            onMouseLeave={() => setUndoPaused(false)}
+            className="bg-foreground text-background fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full py-1.5 pr-1.5 pl-4 text-[12.5px] shadow-lg"
+          >
+            <Check className="size-3.5" aria-hidden />
+            {tp("undo.done")}
+            <button
+              type="button"
+              onClick={undoDone}
+              className="bg-background/15 hover:bg-background/25 rounded-full px-3 py-1 font-medium transition-colors"
+            >
+              {tp("undo.action")} <kbd className="ml-1 font-mono text-[10.5px] opacity-70">Z</kbd>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

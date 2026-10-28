@@ -44,5 +44,14 @@
     "due": "Échéance {date}",
     "noDue": "Sans échéance",
     "count": "{count, plural, one {# point} other {# points}}"
-  }
+  },
+  "groups": { "done": "Traitées" },
+  "progress": { "today": "{count, plural, =0 {Rien de traité aujourd'hui} one {# note traitée aujourd'hui} other {# notes traitées aujourd'hui}}" },
+  "undo": { "done": "Note traitée", "action": "Annuler" },
+  "zero": {
+    "title": "Tout est traité.",
+    "body": "{count, plural, =0 {Rien ne t'attend.} one {# note traitée aujourd'hui.} other {# notes traitées aujourd'hui.}}",
+    "seeAll": "Voir tout le fil"
+  },
+  "keys": { "hint": "Clavier : j / k pour passer d'une note à l'autre · e traité · o ouvrir · z annuler" }
 }
