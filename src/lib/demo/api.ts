@@ -41,6 +41,7 @@ import {
   tourDates as genTourDates,
   type ForecastPoint,
 } from "./generators";
+import { attachToTracks } from "./expense-attribution";
 import { DEMO_TODAY, daysAhead, isoDay, isoMonth, rngFor } from "./seed";
 import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import {
@@ -631,7 +632,8 @@ export function revenueSeries(artistId: string, months = 24): RevenuePoint[] {
 
 export function expensesFor(artistId: string, months = 24): Expense[] {
   if (isUserArtist(artistId)) return [];
-  return genExpensesFor(artistId, months);
+  // Montants inchangés : on dit seulement pour quel titre le marketing a été dépensé.
+  return attachToTracks(artistId, genExpensesFor(artistId, months));
 }
 
 export function countryBreakdown(artistId: string, days = 30): CountryStreams[] {

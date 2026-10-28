@@ -64,6 +64,19 @@
     "topSpend": "Dépenses cumulées",
     "yearNote": "Mêmes mois des deux côtés — {span}. Les séries ne remontent qu'à 24 mois : plus loin, une année n'aurait pas tous ses mois."
   },
+  "breakdown": {
+    "title": "Budget {category} · par artiste et par titre",
+    "explode": "Vue éclatée",
+    "collapse": "Replier",
+    "summary": "en {year} · {count, plural, one {# dépense} other {# dépenses}}",
+    "hint": "ouvre un artiste, puis un titre, pour lire chaque dépense",
+    "share": "{pct} du budget",
+    "lines": "{count, plural, one {# dépense} other {# dépenses}}",
+    "projectOnly": "{project} · projet, sans titre précis",
+    "noRelease": "Hors sortie · image de l'artiste",
+    "by": "saisi par {name}",
+    "empty": "Aucune dépense de cette catégorie en {year}."
+  },
   "register": {
     "title": "Registre des dépenses",
     "count": "{count, plural, =0 {aucune dépense} one {# dépense} other {# dépenses}}",
