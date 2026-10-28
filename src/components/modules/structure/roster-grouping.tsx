@@ -18,22 +18,24 @@ export function RosterGrouping({
 }) {
   const t = useTranslations("organisation");
   return (
-    <div className="flex flex-wrap items-center gap-1.5 text-[12px]" role="group" aria-label={t("grouping.label")}>
-      <span className="mr-1 text-muted-foreground">{t("grouping.label")}</span>
-      {ORG_GROUPINGS.map((g) => (
-        <button
-          key={g}
-          type="button"
-          aria-pressed={value === g}
-          onClick={() => onChange(g)}
-          className={cn(
-            "rounded-full border px-2.5 py-1 transition-colors",
-            value === g ? "border-brand bg-brand/10 text-brand" : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {t(`grouping.${g}`)}
-        </button>
-      ))}
+    <div className="flex items-center gap-2 text-[12px]">
+      <span className="text-muted-foreground">{t("grouping.label")}</span>
+      <div className="bg-muted/70 inline-flex rounded-lg p-0.5" role="group" aria-label={t("grouping.label")}>
+        {ORG_GROUPINGS.map((g) => (
+          <button
+            key={g}
+            type="button"
+            aria-pressed={value === g}
+            onClick={() => onChange(g)}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-[12.5px] font-medium transition-colors",
+              value === g ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {t(`grouping.${g}`)}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

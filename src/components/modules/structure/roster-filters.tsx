@@ -28,10 +28,8 @@ function Pill({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "rounded-full border px-2.5 py-1 text-[12px] transition-colors",
-        active
-          ? "border-brand bg-brand/10 text-brand"
-          : "text-muted-foreground hover:text-foreground",
+        "rounded-md px-2.5 py-1 text-[12.5px] font-medium transition-colors",
+        active ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
       )}
     >
       {children}
@@ -55,13 +53,12 @@ export function RosterFilters({
   const t = useTranslations("roster");
   const canReset = lockedDaId ? scope.category !== null : !isFullScope(scope);
   return (
-    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[12px]">
       <div
-        className="flex flex-wrap items-center gap-1.5"
+        className="bg-muted/70 inline-flex flex-wrap items-center rounded-lg p-0.5"
         role="group"
         aria-label={t("filters.category")}
       >
-        <span className="mr-1 text-muted-foreground">{t("filters.category")}</span>
         <Pill
           active={scope.category === null}
           onClick={() => onChange({ ...scope, category: null })}
@@ -81,11 +78,10 @@ export function RosterFilters({
       </div>
       {!lockedDaId && (
         <div
-          className="flex flex-wrap items-center gap-1.5"
+          className="bg-muted/70 inline-flex flex-wrap items-center rounded-lg p-0.5"
           role="group"
           aria-label={t("filters.da")}
         >
-          <span className="mr-1 text-muted-foreground">{t("filters.da")}</span>
           <Pill active={scope.daId === null} onClick={() => onChange({ ...scope, daId: null })}>
             {t("filters.allDa")}
           </Pill>

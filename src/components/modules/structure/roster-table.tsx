@@ -12,8 +12,7 @@ import Link from "next/link";
 import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowDown, ArrowUp, ArrowUpDown, Focus } from "lucide-react";
-import { ArtistBadge } from "@/components/dashboard/artist-badge";
-import { DeltaChip } from "@/components/dashboard/kpi";
+import { ArtistAvatar } from "@/components/dashboard/artist-badge";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -39,17 +38,20 @@ import { cn } from "@/lib/utils";
 type SortKey = "streams30d" | "revenue12m" | "day1Index";
 
 /**
- * Colonnes du tableau : artiste, stade, équipe (DA et chef de projet), streams 30 j, Δ 30 j, revenus 12 m,
- * net 12 m, marge, valo, notes, index. Le `colSpan` des en-têtes de groupe et de
- * l'état vide doit les couvrir toutes (test : roster-table.test.ts).
+ * Colonnes du tableau : artiste (genre et stade dessous, notes du fil à côté), équipe (DA et
+ * chef de projet), streams 30 j (variation dessous), revenus 12 m, net 12 m (marge dessous),
+ * valo, index. Sept colonnes au lieu de onze : chaque chiffre secondaire vit sous le chiffre
+ * qu'il explique. Le `colSpan` des en-têtes de groupe et de l'état vide doit les couvrir
+ * toutes (test : roster-table.test.ts).
  */
-export const COLS = 11;
+export const COLS = 7;
 
-const STAGE_TONE: Record<CareerStage, string> = {
-  emerging: "bg-brand/10 text-brand",
-  developing: "bg-warning/10 text-warning",
-  established: "bg-success/10 text-success",
-  peak: "bg-muted text-muted-foreground",
+/** Le stade en un point de couleur devant son nom, pas en pastille pleine. */
+const STAGE_DOT: Record<CareerStage, string> = {
+  emerging: "bg-brand",
+  developing: "bg-warning",
+  established: "bg-success",
+  peak: "bg-muted-foreground",
 };
 
 /** TableRow animable : `ref` est une prop ordinaire en React 19, motion la transmet au <tr>. */
@@ -171,11 +173,10 @@ export function RosterTable({
         </div>
       )}
       <div className={cn("min-w-0 overflow-x-auto", bare && "mt-1")}>
-        <Table>
+        <Table className="text-[13px]">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className={bare ? undefined : "pl-5"}>{t("table.artist")}</TableHead>
-              <TableHead>{t("table.stage")}</TableHead>
+              <TableHead className={bare ? "pl-1" : "pl-5"}>{t("table.artist")}</TableHead>
               <TableHead>{to("team.label")}</TableHead>
               <SortHead
                 column="streams30d"
@@ -185,7 +186,6 @@ export function RosterTable({
                 onToggle={toggleSort}
                 sortLabel={t("table.sort", { column: t("table.streams30d") })}
               />
-              <TableHead className="text-right">{t("table.delta30d")}</TableHead>
               <SortHead
                 column="revenue12m"
                 label={t("table.revenue12m")}
@@ -195,13 +195,11 @@ export function RosterTable({
                 sortLabel={t("table.sort", { column: t("table.revenue12m") })}
               />
               <TableHead className="text-right">{t("table.net12m")}</TableHead>
-              <TableHead className="text-right">{t("table.margin")}</TableHead>
-              <TableHead className="text-right">{t("table.valuation")}</TableHead>
-              <TableHead className="text-right">{t("table.notes")}</TableHead>
+              <TableHead className="hidden text-right lg:table-cell">{t("table.valuation")}</TableHead>
               <SortHead
                 column="day1Index"
                 label={t("table.index")}
-                className={bare ? undefined : "pr-5"}
+                className={bare ? "pr-1" : "pr-5"}
                 sortKey={sortKey}
                 desc={desc}
                 onToggle={toggleSort}
@@ -221,12 +219,12 @@ export function RosterTable({
               )}
               {groups.flatMap((g) => [
                 g.key && (
-                  <TableRow key={`group-${groupBy}-${g.key}`} className="bg-muted/40 hover:bg-muted/40">
-                    <TableCell colSpan={COLS} className="py-1.5 pl-5 text-[11px]">
-                      <span className="font-semibold uppercase tracking-[0.12em]">
+                  <TableRow key={`group-${groupBy}-${g.key}`} className="border-b-0 hover:bg-transparent">
+                    <TableCell colSpan={COLS} className={cn("pt-5 pb-1.5 text-[11px]", bare ? "pl-1" : "pl-5")}>
+                      <span className="text-foreground font-semibold tracking-[0.1em] uppercase">
                         {groupLabel(g.key)}
                       </span>
-                      <span className="ml-3 text-muted-foreground">
+                      <span className="text-muted-foreground ml-2.5 tabular-nums">
                         {t("group.summary", {
                           count: g.count,
                           streams: fmtCompact(locale, g.streams30d),
@@ -239,6 +237,7 @@ export function RosterTable({
                 ...g.rows.map((r) => {
                   const focused = focusedArtistId === r.id;
                   const team = resolveAssignment(r, org);
+                  const notes = notesByArtist[r.id] ?? 0;
                   return (
                     <MotionTableRow
                       key={r.id}
@@ -246,29 +245,44 @@ export function RosterTable({
                       transition={ROW_LAYOUT_TRANSITION}
                       onClick={() => onFocus(focused ? null : r.id)}
                       aria-selected={focused}
-                      className={cn(
-                        "cursor-pointer",
-                        focused && "bg-brand/5 hover:bg-brand/10",
-                      )}
+                      className={cn("cursor-pointer", focused && "bg-brand/5 hover:bg-brand/10")}
                     >
-                      <TableCell className="pl-5">
-                        <span className="flex items-center gap-2">
-                          <ArtistBadge artist={r} meta={`${r.genre} · ${t(`category.${r.category}`)}`} />
-                          {focused && (
-                            <Badge variant="outline" className="gap-1 border-brand/40 text-brand">
-                              <Focus aria-hidden />
-                              {t("table.focused")}
-                            </Badge>
-                          )}
+                      {/* Artiste : nom, puis genre et stade en gris ; les notes ouvertes du fil à côté. */}
+                      <TableCell className={cn("py-2.5", bare ? "pl-1" : "pl-5")}>
+                        <span className="flex items-center gap-2.5">
+                          <ArtistAvatar artist={r} size="sm" />
+                          <span className="min-w-0">
+                            <span className="flex items-center gap-1.5">
+                              <span className="truncate font-medium">{r.name}</span>
+                              {notes > 0 && (
+                                <Link
+                                  href={`/fil?artist=${encodeURIComponent(r.id)}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="bg-brand/12 text-brand inline-flex min-w-4 items-center justify-center rounded-full px-1.5 text-[10.5px] leading-4 font-semibold tabular-nums"
+                                  aria-label={`${notes} ${t("table.notes").toLowerCase()} · ${r.name}`}
+                                  title={`${notes} ${t("table.notes").toLowerCase()}`}
+                                >
+                                  {notes}
+                                </Link>
+                              )}
+                              {focused && (
+                                <Badge variant="outline" className="border-brand/40 text-brand gap-1">
+                                  <Focus aria-hidden />
+                                  {t("table.focused")}
+                                </Badge>
+                              )}
+                            </span>
+                            <span className="text-muted-foreground flex items-center gap-1.5 text-[11.5px]">
+                              <span className="truncate">{r.genre}</span>
+                              <span aria-hidden>·</span>
+                              <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", STAGE_DOT[r.careerStage])} />
+                              {t(`stage.${r.careerStage}`)}
+                            </span>
+                          </span>
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <Badge className={cn("border-transparent", STAGE_TONE[r.careerStage])}>
-                          {t(`stage.${r.careerStage}`)}
-                        </Badge>
-                      </TableCell>
                       <TableCell
-                        className="text-[12px] text-muted-foreground"
+                        className="text-muted-foreground text-[12px]"
                         title={to("team.tooltip", {
                           da: nameOf(team.daId),
                           projet: nameOf(team.projectLeadId),
@@ -276,57 +290,41 @@ export function RosterTable({
                           juridique: nameOf(team.legalId),
                         })}
                       >
-                        <span className="block text-foreground/80">{nameOf(team.daId)}</span>
-                        <span className="block text-[11px]">
-                          {to("team.projectLead", { name: nameOf(team.projectLeadId) })}
+                        {/* Le DA se lit ; toute l'équipe (chef de projet, marketing, juriste) au survol. */}
+                        <span className="text-foreground/80 block">{nameOf(team.daId)}</span>
+                        <span className="sr-only">{to("team.projectLead", { name: nameOf(team.projectLeadId) })}</span>
+                      </TableCell>
+                      {/* Streams, et dessous la variation sur 30 jours. */}
+                      <TableCell className="text-right tabular-nums">
+                        <span className="block font-medium">{fmtCompact(locale, r.streams30d)}</span>
+                        <span
+                          className={cn(
+                            "block text-[11.5px]",
+                            r.delta30d >= 0 ? "text-success" : "text-destructive",
+                          )}
+                        >
+                          {fmtPct(locale, r.delta30d)}
                         </span>
                       </TableCell>
-                      <TableCell className="num text-right font-medium">
-                        {fmtCompact(locale, r.streams30d)}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DeltaChip value={r.delta30d} />
-                      </TableCell>
-                      <TableCell className="num text-right font-medium">
+                      <TableCell className="text-right font-medium tabular-nums">
                         {fmtEur(locale, r.revenue12m, { compact: true })}
                       </TableCell>
-                      <TableCell
-                        className={cn(
-                          "num text-right font-semibold",
-                          r.net12m >= 0 ? "text-success" : "text-destructive",
-                        )}
-                      >
-                        {fmtEur(locale, r.net12m, { compact: true })}
+                      {/* Net, et dessous la marge. Rouge seulement quand on perd de l'argent. */}
+                      <TableCell className="text-right tabular-nums">
+                        <span className={cn("block font-semibold", r.net12m < 0 && "text-destructive")}>
+                          {fmtEur(locale, r.net12m, { compact: true })}
+                        </span>
+                        <span className="text-muted-foreground block text-[11.5px]">{fmtPct(locale, r.margin)}</span>
                       </TableCell>
-                      <TableCell className="num text-right text-muted-foreground">
-                        {fmtPct(locale, r.margin)}
-                      </TableCell>
-                      <TableCell className="num text-right text-muted-foreground">
+                      <TableCell className="text-muted-foreground hidden text-right tabular-nums lg:table-cell">
                         {fmtEur(locale, r.valuationMid, { compact: true })}
                       </TableCell>
-                      <TableCell className="num text-right">
-                        {(notesByArtist[r.id] ?? 0) > 0 ? (
-                          <Link
-                            href={`/fil?artist=${encodeURIComponent(r.id)}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex min-w-5 justify-center rounded-full bg-brand/15 px-1.5 text-[11px] font-medium text-brand"
-                            aria-label={`${notesByArtist[r.id]} ${t("table.notes").toLowerCase()} · ${r.name}`}
-                          >
-                            {notesByArtist[r.id]}
-                          </Link>
-                        ) : (
-                          <span className="text-muted-foreground/50">—</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="num pr-5 text-right">
+                      <TableCell className={cn("text-right tabular-nums", bare ? "pr-1" : "pr-5")}>
                         <span className="inline-flex items-center gap-2">
-                          <span className="h-1.5 w-10 overflow-hidden rounded-full bg-muted">
-                            <span
-                              className="block h-full rounded-full bg-brand"
-                              style={{ width: `${r.day1Index}%` }}
-                            />
+                          <span className="bg-foreground/[0.08] h-1 w-10 overflow-hidden rounded-full">
+                            <span className="bg-brand block h-full rounded-full" style={{ width: `${r.day1Index}%` }} />
                           </span>
-                          <span className="font-medium">{r.day1Index}</span>
+                          <span className="w-6 font-medium">{r.day1Index}</span>
                         </span>
                       </TableCell>
                     </MotionTableRow>
