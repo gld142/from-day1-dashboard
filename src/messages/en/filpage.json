@@ -1,0 +1,48 @@
+{
+  "status": { "label": "Status", "todo": "To do", "doing": "In progress", "decided": "Decided", "done": "Handled" },
+  "due": { "overdue": "Overdue", "soon": "This week" },
+  "assign": { "label": "Owner", "taken": "Owned by {name}", "nobody": "Nobody", "unassigned": "Unassigned" },
+  "person": "{name} ({role})",
+  "replies": {
+    "toggle": "{count, plural, =0 {Reply} one {# reply} other {# replies}}",
+    "label": "Your reply",
+    "placeholder": "Reply… @Finance, @Legal, @Management, @Présidence, @DA Inès",
+    "send": "Send",
+    "adds": "Adds to recipients: {list}",
+    "outOfScope": "{names} does not follow this artist: the mention does not send them the note."
+  },
+  "history": {
+    "toggle": "{count, plural, one {History (# event)} other {History (# events)}}",
+    "created": "Created by {by}",
+    "status": "{from} → {to}, by {by}",
+    "statusAnon": "{from} → {to}",
+    "reply": "Reply from {by}",
+    "replyAdds": "Reply from {by} · adds {list}",
+    "assign": "Owned by {name}, set by {by}",
+    "assignAdds": "Owned by {name}, set by {by} · adds {list}",
+    "unassign": "Owner removed by {by}"
+  },
+  "mention": { "title": "Mention: {name} is a recipient", "outOfScope": "Out of scope: {name} does not follow this artist" },
+  "mentionsHint": "@Finance, @Legal, @Management, @Présidence, @DA (or @DA Inès) add the team to the recipients.",
+  "link": {
+    "label": "Link to",
+    "none": "None",
+    "open": { "contract": "Open the contract", "statement": "Open rights statements", "audit": "Open the audit", "artist": "Open the artist page", "page": "Open {page}" },
+    "choice": { "contract": "Artist's contract", "statement": "Rights statements", "audit": "Audit gaps", "artist": "Artist page (Pulse)", "page": "{page} page" }
+  },
+  "readOnly": "Read only: artist outside your scope.",
+  "agenda": {
+    "button": "Committee agenda",
+    "title": "Committee agenda",
+    "subtitle": "Notes not yet handled, by urgency then by owning team (the person who took the note, otherwise the team it is addressed to).",
+    "asOf": "As of {date}",
+    "print": "Print",
+    "empty": "Nothing on the agenda: every note is handled.",
+    "several": "Several teams",
+    "responsible": "Owner: {name}",
+    "unassigned": "Owner: unassigned",
+    "due": "Due {date}",
+    "noDue": "No due date",
+    "count": "{count, plural, one {# item} other {# items}}"
+  }
+}

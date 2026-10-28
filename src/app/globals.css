@@ -525,3 +525,55 @@
 .sheet-rule { border-top: 1.5px solid var(--sheet-line); }
 /* Réserve claire derrière le chiffre posé au centre du graphique. */
 .sheet-reserve { background: color-mix(in oklab, var(--sheet-paper) 94%, transparent); }
+
+/* ─── Ordre du jour du comité (/fil) : impression ───────────────────────────
+   La classe `print-fil-agenda` est posée sur <html> tant que la vue est ouverte
+   (feed-view.tsx). À l'impression, seul le portail qui contient #fil-agenda sort ;
+   la vue quitte son plein écran (fixed, scroll, translate) pour couler sur toutes
+   les pages, en noir sur blanc. Sans la classe, aucune page n'est touchée. */
+@media print {
+  html.print-fil-agenda,
+  html.print-fil-agenda body {
+    background: #fff !important;
+    color: #000 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  html.print-fil-agenda body > *:not(:has(#fil-agenda)),
+  html.print-fil-agenda [data-slot="dialog-overlay"],
+  html.print-fil-agenda #fil-agenda [data-slot="dialog-close"],
+  html.print-fil-agenda #fil-agenda [data-print="hide"] {
+    display: none !important;
+  }
+  html.print-fil-agenda #fil-agenda {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    animation: none !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+  html.print-fil-agenda #fil-agenda * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  html.print-fil-agenda #fil-agenda .agenda-item {
+    border: 1px solid #999 !important;
+    break-inside: avoid;
+  }
+  html.print-fil-agenda #fil-agenda .agenda-pill {
+    border: 1px solid #000 !important;
+  }
+  html.print-fil-agenda #fil-agenda h3,
+  html.print-fil-agenda #fil-agenda h4 {
+    break-after: avoid;
+  }
+}

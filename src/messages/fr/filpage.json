@@ -1,0 +1,48 @@
+{
+  "status": { "label": "Statut", "todo": "À faire", "doing": "En cours", "decided": "Décidé", "done": "Traité" },
+  "due": { "overdue": "En retard", "soon": "Cette semaine" },
+  "assign": { "label": "Pris en charge par", "taken": "Pris en charge par {name}", "nobody": "Personne", "unassigned": "À attribuer" },
+  "person": "{name} ({role})",
+  "replies": {
+    "toggle": "{count, plural, =0 {Répondre} one {# réponse} other {# réponses}}",
+    "label": "Ta réponse",
+    "placeholder": "Répondre… @Finance, @Juridique, @Direction, @Présidence, @DA Inès",
+    "send": "Envoyer",
+    "adds": "Ajoute aux destinataires : {list}",
+    "outOfScope": "{names} ne suit pas cet artiste : la mention ne lui envoie pas la note."
+  },
+  "history": {
+    "toggle": "{count, plural, one {Historique (# événement)} other {Historique (# événements)}}",
+    "created": "Créée par {by}",
+    "status": "{from} → {to}, par {by}",
+    "statusAnon": "{from} → {to}",
+    "reply": "Réponse de {by}",
+    "replyAdds": "Réponse de {by} · ajoute {list}",
+    "assign": "Pris en charge par {name}, par {by}",
+    "assignAdds": "Pris en charge par {name}, par {by} · ajoute {list}",
+    "unassign": "Prise en charge retirée par {by}"
+  },
+  "mention": { "title": "Mention : {name} est destinataire", "outOfScope": "Hors périmètre : {name} ne suit pas cet artiste" },
+  "mentionsHint": "@Finance, @Juridique, @Direction, @Présidence, @DA (ou @DA Inès) ajoutent le service aux destinataires.",
+  "link": {
+    "label": "Lien vers",
+    "none": "Aucun",
+    "open": { "contract": "Ouvrir le contrat", "statement": "Ouvrir les relevés de droits", "audit": "Ouvrir l'audit", "artist": "Ouvrir la fiche artiste", "page": "Ouvrir {page}" },
+    "choice": { "contract": "Contrat de l'artiste", "statement": "Relevés de droits", "audit": "Écarts d'audit", "artist": "Fiche artiste (Pulse)", "page": "Page {page}" }
+  },
+  "readOnly": "Lecture seule : artiste hors de ton périmètre.",
+  "agenda": {
+    "button": "Ordre du jour du comité",
+    "title": "Ordre du jour du comité",
+    "subtitle": "Notes non traitées, par urgence puis par service en charge (la personne qui a pris la note, sinon le service visé).",
+    "asOf": "Au {date}",
+    "print": "Imprimer",
+    "empty": "Rien à l'ordre du jour : toutes les notes sont traitées.",
+    "several": "Plusieurs services",
+    "responsible": "Responsable : {name}",
+    "unassigned": "Responsable : à attribuer",
+    "due": "Échéance {date}",
+    "noDue": "Sans échéance",
+    "count": "{count, plural, one {# point} other {# points}}"
+  }
+}

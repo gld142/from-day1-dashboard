@@ -76,6 +76,8 @@ import frWelcome from "./fr/welcome.json";
 import enWelcome from "./en/welcome.json";
 import frFil from "./fr/fil.json";
 import enFil from "./en/fil.json";
+import frFilPage from "./fr/filpage.json";
+import enFilPage from "./en/filpage.json";
 import enSettings from "./en/settings.json";
 
 const MESSAGES = {
@@ -116,6 +118,7 @@ const MESSAGES = {
     ask: frAsk,
     welcome: frWelcome,
     fil: frFil,
+    filpage: frFilPage,
   },
   en: {
     common: enCommon,
@@ -154,6 +157,7 @@ const MESSAGES = {
     ask: enAsk,
     welcome: enWelcome,
     fil: enFil,
+    filpage: enFilPage,
   },
 } as const;
 
@@ -191,8 +195,11 @@ type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
  *   reçoit que ses canaux (`tenant.welcomeSources`). Mesuré le 24/10/2026 (curl) : tout le
  *   namespace, bloc Believe compris, se lisait dans le HTML de /connexion et /inscription des deux
  *   maisons.
+ * - filpage : les textes de /fil ajoutés le 28/10/2026 (statuts, réponses, mentions, prise en charge,
+ *   ordre du jour du comité). `fil` (titre, rôles, compteur de la navigation) reste à la racine : la
+ *   pastille de la sidebar et Pulse le lisent sur toutes les pages.
  */
-export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome"] as const satisfies readonly Namespace[];
+export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "filpage"] as const satisfies readonly Namespace[];
 export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
 
 /**
@@ -203,14 +210,14 @@ export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
  * autre partenaire, même côté serveur. Un composant serveur qui en aurait besoin passerait par
  * `pageMessages`.
  */
-const PAGE_ONLY_NAMESPACES = ["welcome"] as const satisfies readonly PageScopedNamespace[];
+const PAGE_ONLY_NAMESPACES = ["welcome", "filpage"] as const satisfies readonly PageScopedNamespace[];
 
 type AllMessages = (typeof MESSAGES)[Locale];
 type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
 type WelcomeMessages = AllMessages["welcome"];
 /** welcome tel qu'une maison le reçoit : les seuls canaux qu'elle ouvre. */
 type HouseWelcomeMessages = Omit<WelcomeMessages, "sources"> & { sources: Partial<WelcomeMessages["sources"]> };
-type PageScopedMessages = Pick<AllMessages, InternalNamespace> & { welcome: HouseWelcomeMessages };
+type PageScopedMessages = Pick<AllMessages, InternalNamespace | "filpage"> & { welcome: HouseWelcomeMessages };
 
 function without<T extends object, K extends string>(messages: T, namespaces: readonly K[]): Omit<T, K> {
   const drop: readonly string[] = namespaces;
@@ -299,7 +306,8 @@ function houseWelcome(locale: Locale, tenant: Tenant): HouseWelcomeMessages {
  * contexte).
  * - page interne : rien dans une maison sans pages internes, même demandé (la page appelle
  *   `notFound()` avant ; ceci est la défense en profondeur) ;
- * - welcome : les seuls canaux de la maison (la maison universal ne reçoit pas le bloc Believe).
+ * - welcome : les seuls canaux de la maison (la maison universal ne reçoit pas le bloc Believe) ;
+ * - filpage : tel quel, dans les deux maisons (/fil existe dans les deux).
  */
 export function pageMessages(
   locale: Locale,
@@ -309,6 +317,7 @@ export function pageMessages(
   const scoped: Partial<PageScopedMessages> = {};
   for (const ns of namespaces) {
     if (ns === "welcome") scoped.welcome = houseWelcome(locale, tenant);
+    else if (ns === "filpage") Object.assign(scoped, { filpage: MESSAGES[locale].filpage });
     else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });
   }
   return { ...rootClientMessages(locale, tenant), ...scoped };
