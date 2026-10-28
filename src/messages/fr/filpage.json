@@ -85,5 +85,17 @@
     "advance": "Avance {amount} · recoupée à {pct} %",
     "claim": "{amount} à réclamer",
     "valuation": "Catalogue {amount} en jeu"
+  },
+  "detect": {
+    "title": "Day One a repéré",
+    "hint": "Un clic pour le poser dans le fil, adressé au bon service — rien à recopier.",
+    "post": "Poser dans le fil",
+    "dismiss": "Écarter",
+    "posted": "Posé dans le fil · envoyé à {list}",
+    "prefix": "Repéré par Day One — {text}",
+    "audit": "Écart d'audit sur {artist} : {amount} attendus non versés ({source}, {period}).",
+    "contract": "{artist} : {message}",
+    "clause": "{artist} : {message}",
+    "streams": "{artist} perd {pct} de streams sur 30 jours (≈ {amount} écoutes en moins)."
   }
 }

@@ -12,7 +12,7 @@
  * notes parlent d'autres artistes qu'un artiste solo n'a pas à lire, même en tapant l'URL.
  * Un DA lit tout en « Tout » (comme avant), mais n'agit que sur ses artistes (`canActOn`).
  */
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -20,6 +20,7 @@ import { AlertTriangle, CalendarCheck, Check, CheckCircle2, ChevronRight, Flame,
 import { PageHeader } from "@/components/dashboard/page-header";
 import { CommitteeAgenda } from "@/components/modules/structure/feed/committee-agenda";
 import { daLabel, recipientLabel, roleLabel } from "@/components/modules/structure/feed/labels";
+import { DetectedPanel, useSignalText } from "@/components/modules/structure/feed/detected-panel";
 import { NoteCard } from "@/components/modules/structure/feed/note-card";
 import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ import {
 import { FEED_TODAY, useFeed } from "@/lib/userdata/use-feed";
 import { useFeedSeen } from "@/lib/userdata/use-feed-seen";
 import { stakeFor, waitingFor } from "@/lib/userdata/feed-stakes";
+import { detectSignals, detectedSnapshot, markDetected, subscribeDetected, type Signal } from "@/lib/userdata/feed-detect";
 import { cn } from "@/lib/utils";
 
 /* Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et
@@ -269,6 +271,40 @@ function Feed() {
     setFlash(tp("sent", { list }));
   };
 
+  /* « Day One a repéré » : ce que les données disent déjà, pour les services qui me concernent
+     (Direction, Présidence et la vue maison : tout). Sans doublon avec une note ouverte sur le
+     même artiste et le même sujet ; ce qui a été posé ou écarté ne revient pas. */
+  const signalText = useSignalText();
+  const detectedSnap = useSyncExternalStore(subscribeDetected, detectedSnapshot, () => "[]");
+  const myIds = myArtists.map((a) => a.id).join(",");
+  const signals = useMemo(() => {
+    const gone = new Set(JSON.parse(detectedSnap) as string[]);
+    const covered = new Set(
+      notes.filter((n) => n.status === "open" && n.artistId && n.link).map((n) => `${n.artistId}:${n.link!.kind}`),
+    );
+    const mineToo = (s: Signal) => !jobRole || jobRole === "direction" || jobRole === "presidence" || s.to.includes(jobRole);
+    return detectSignals(myIds ? myIds.split(",") : [], FEED_TODAY, 12)
+      .filter((s) => !gone.has(s.id) && !covered.has(`${s.artistId}:${s.link.kind}`) && mineToo(s))
+      .slice(0, 4);
+  }, [myIds, detectedSnap, notes, jobRole]);
+  const postSignal = (s: Signal) => {
+    // Ce que je pose moi-même n'est jamais « nouveau » pour moi (sans rôle, la note est signée Direction).
+    const posted = add({
+      from: jobRole ?? "direction",
+      fromName: me.name,
+      fromDaId: me.daId,
+      to: s.to,
+      artistId: s.artistId,
+      urgency: s.urgency,
+      dueDate: s.dueDate,
+      text: tp("detect.prefix", { text: signalText(s) }),
+      link: s.link,
+    });
+    see(posted.id);
+    markDetected(s.id);
+    setFlash(tp("detect.posted", { list: s.to.map((r) => roleLabel(t, r)).join(", ") }));
+  };
+
   const renderNote = (n: FeedNote) => (
     <NoteCard
       note={n}
@@ -333,7 +369,18 @@ function Feed() {
               </div>
             </DialogContent>
           </Dialog>
-          <NewNoteDialog onSubmit={add} jobRole={jobRole} daId={daId} me={me} org={org} daOf={daOf} />
+          <NewNoteDialog
+            onSubmit={(input) => {
+              const created = add(input);
+              see(created.id);
+              return created;
+            }}
+            jobRole={jobRole}
+            daId={daId}
+            me={me}
+            org={org}
+            daOf={daOf}
+          />
         </div>
       </PageHeader>
 
@@ -417,6 +464,7 @@ function Feed() {
           </p>
         ) : (
           <div className="space-y-3 p-3">
+            <DetectedPanel signals={signals} onPost={postSignal} onDismiss={(sg) => markDetected(sg.id)} />
             {groups.map((g) => {
               const tone = GROUP_TONE[g.urgency];
               return (

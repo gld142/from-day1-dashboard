@@ -85,5 +85,17 @@
     "advance": "Advance {amount} · {pct}% recouped",
     "claim": "{amount} to claim",
     "valuation": "Catalogue {amount} at stake"
+  },
+  "detect": {
+    "title": "Day One spotted",
+    "hint": "One click posts it to the feed, addressed to the right team — nothing to copy.",
+    "post": "Post to the feed",
+    "dismiss": "Dismiss",
+    "posted": "Posted to the feed · sent to {list}",
+    "prefix": "Spotted by Day One — {text}",
+    "audit": "Audit gap on {artist}: {amount} expected but not paid ({source}, {period}).",
+    "contract": "{artist}: {message}",
+    "clause": "{artist}: {message}",
+    "streams": "{artist} is down {pct} in streams over 30 days (≈ {amount} fewer plays)."
   }
 }
