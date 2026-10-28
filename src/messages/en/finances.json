@@ -64,6 +64,19 @@
     "topSpend": "Cumulative spend",
     "yearNote": "Same months on both sides — {span}. Series only go back 24 months: further back, a year wouldn't have all its months."
   },
+  "breakdown": {
+    "title": "{category} budget · by artist and track",
+    "explode": "Breakdown",
+    "collapse": "Collapse",
+    "summary": "in {year} · {count, plural, one {# expense} other {# expenses}}",
+    "hint": "open an artist, then a track, to read every expense",
+    "share": "{pct} of budget",
+    "lines": "{count, plural, one {# expense} other {# expenses}}",
+    "projectOnly": "{project} · project, no specific track",
+    "noRelease": "Outside a release · artist image",
+    "by": "logged by {name}",
+    "empty": "No expense in this category in {year}."
+  },
   "register": {
     "title": "Expense register",
     "count": "{count, plural, =0 {no expenses} one {# expense} other {# expenses}}",

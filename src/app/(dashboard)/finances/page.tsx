@@ -30,6 +30,7 @@ import {
 } from "@/components/dashboard/sheet";
 import { AddExpenseDialog } from "@/components/modules/finances/add-expense-dialog";
 import { CategoryDonut } from "@/components/modules/finances/category-donut";
+import { SpendBreakdown } from "@/components/modules/finances/spend-breakdown";
 import {
   ExpenseRegister,
   useExpenseLabel,
@@ -550,6 +551,12 @@ export default function FinancesPage() {
             />
           </Sheet>
         </div>
+
+        {/* Le budget marketing éclaté : artiste → titre → chaque dépense. Fermé,
+            il ne montre que le poids de chaque artiste ; le détail se demande. */}
+        <Sheet family="money" testId="spend-breakdown">
+          <SpendBreakdown items={yearExpenses} year={year} />
+        </Sheet>
 
         {/* Le détail, ligne à ligne — le seul bloc que les filtres touchent. */}
         <Sheet family="money">
