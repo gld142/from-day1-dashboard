@@ -158,7 +158,25 @@
       "playlists": "Entrées en playlists éditoriales"
     },
     "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés).",
-    "pick": "Choisir l'artiste"
+    "pick": "Choisir l'artiste",
+    "com": {
+      "launch": "Lancer la com sur « {sound} »",
+      "hint": "Prévient l'équipe dans le fil, avec les créateurs à activer.",
+      "to": "Envoyer à",
+      "daOf": "Le DA de {name}",
+      "message": "Message",
+      "draft": "« {sound} » de {name} perce sur TikTok : {videos} vidéos, {trend}. Les créateurs qui le portent : {creators}. À lancer : les contacter pour une deuxième vague de vidéos, pousser le son auprès des playlists, relayer sur les réseaux de l'artiste.",
+      "send": "Envoyer au fil",
+      "cancel": "Annuler",
+      "sent": "Envoyé au fil entre services : {services}.",
+      "open": "Ouvrir le fil",
+      "empty": "Écris un message avant d'envoyer.",
+      "noRecipient": "Choisis au moins un destinataire.",
+      "brief": "Brief",
+      "briefCopied": "Copié",
+      "briefLabel": "Copier un brief pour {handle}",
+      "briefText": "Bonjour {handle}, ta vidéo sur « {sound} » de {name} fait partie de celles qui portent le son cette semaine. On prépare une deuxième vague autour du titre : partant pour en parler ? L'équipe de {name}"
+    }
   },
   "families": {
     "streams": "Streams",

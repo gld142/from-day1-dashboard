@@ -158,7 +158,25 @@
       "playlists": "Editorial playlist adds"
     },
     "note": "Demo simulation: ranks, creators and saves will be measured in production (Soundcharts, connected accounts).",
-    "pick": "Choose an artist"
+    "pick": "Choose an artist",
+    "com": {
+      "launch": "Launch comms on “{sound}”",
+      "hint": "Alerts the team in the thread, with the creators to activate.",
+      "to": "Send to",
+      "daOf": "{name}'s A&R",
+      "message": "Message",
+      "draft": "“{sound}” by {name} is breaking out on TikTok: {videos} videos, {trend}. Creators carrying it: {creators}. Next: reach out for a second wave of videos, pitch the sound to playlists, share it on the artist's socials.",
+      "send": "Send to the thread",
+      "cancel": "Cancel",
+      "sent": "Sent to the cross-team thread: {services}.",
+      "open": "Open the thread",
+      "empty": "Write a message before sending.",
+      "noRecipient": "Pick at least one recipient.",
+      "brief": "Brief",
+      "briefCopied": "Copied",
+      "briefLabel": "Copy a brief for {handle}",
+      "briefText": "Hi {handle}, your video on “{sound}” by {name} is one of those carrying the sound this week. We're planning a second wave around the track: up for a chat? {name}'s team"
+    }
   },
   "families": {
     "streams": "Streams",

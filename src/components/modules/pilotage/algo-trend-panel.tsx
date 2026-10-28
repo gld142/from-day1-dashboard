@@ -13,16 +13,26 @@
  * `tiktokSignal` (les mêmes que « D'où vient la poussée »), leur titre en tête — pour qu'un
  * artiste n'affiche jamais le son d'un autre. Les surfaces simulées évitent le Top 200,
  * déjà relevé et affiché à côté : pas deux rangs contradictoires pour le même classement.
+ *
+ * Déclencher la com (Gaël, 29/10/2026) : « Lancer la com » envoie au fil entre services une note
+ * préremplie (le son, la percée, les créateurs, ce qu'on propose), au DA de l'artiste et à la
+ * direction par défaut ; chaque créateur a un brief prêt à copier. Réservé à la vue structure,
+ * comme le fil.
  */
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { Flame, Radar, Sparkles, Users } from "lucide-react";
+import { Check, Copy, Flame, Megaphone, Radar, Sparkles, Users } from "lucide-react";
 import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { tiktokSignal, topTracks } from "@/lib/demo/api";
 import { daysAgo, isoDay, rngFor } from "@/lib/demo/seed";
 import { fmtCompact, fmtDate, fmtInt, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { useRole } from "@/lib/role";
+import type { JobRole } from "@/lib/roles";
+import { useFeed } from "@/lib/userdata/use-feed";
+import type { NewNote } from "@/lib/userdata/feed-model";
 
 type PlatformKey = "spotify" | "apple" | "deezer" | "youtube" | "tiktok" | "instagram";
 
@@ -194,6 +204,32 @@ function signed(locale: string, n: number): string {
   return new Intl.NumberFormat(locale, { maximumFractionDigits: 0, signDisplay: "always" }).format(n);
 }
 
+/** Destinataires proposés pour la com d'un son ; le DA de l'artiste et la direction par défaut. */
+export const COM_SERVICES: readonly JobRole[] = ["da", "direction", "finance", "juridique"];
+export const COM_DEFAULT: readonly JobRole[] = ["da", "direction"];
+
+/** La note « Lancer la com », prête pour le fil (pure, testée). */
+export function comNote(input: {
+  artistId: string;
+  text: string;
+  to: readonly JobRole[];
+  from: JobRole | null;
+  fromName: string;
+  fromDaId?: string | null;
+}): NewNote {
+  return {
+    from: input.from ?? "direction",
+    fromName: input.fromName,
+    fromDaId: input.fromDaId ?? null,
+    to: [...new Set(input.to)],
+    artistId: input.artistId,
+    urgency: "important",
+    dueDate: null,
+    text: input.text.trim(),
+    link: { kind: "page", href: "/pulse" },
+  };
+}
+
 const LABEL = "sheet-ink flex items-center gap-1.5 text-[11px] font-semibold tracking-wide uppercase";
 
 /**
@@ -211,6 +247,7 @@ export function AlgoTrendPanel({ artists, className }: { artists: { id: string; 
     [artists],
   );
   const [picked, setPicked] = useState<string | null>(null);
+  const { isLabel } = useRole();
   const current = withScenario.find((a) => a.id === picked) ?? withScenario[0];
   if (!current) return null;
   const { s } = current;
@@ -268,10 +305,11 @@ export function AlgoTrendPanel({ artists, className }: { artists: { id: string; 
               </p>
               <ol className="mt-2">
                 {s.creators.map((c, i) => (
-                  <li key={c.handle} className="border-border/30 grid grid-cols-[0.75rem_minmax(0,1fr)] gap-x-2 border-t py-1.5 text-[12.5px]">
+                  <li key={c.handle} className="border-border/30 grid grid-cols-[0.75rem_minmax(0,1fr)_auto] gap-x-2 border-t py-1.5 text-[12.5px]">
                     <span className="sheet-ink text-[11px] tabular-nums">{i + 1}</span>
                     <span className="truncate font-medium">{c.handle}</span>
-                    <span className="sheet-ink col-start-2 truncate text-[11px] tabular-nums">
+                    <BriefButton handle={c.handle} sound={s.sound} name={current.name} />
+                    <span className="sheet-ink col-start-2 col-end-4 truncate text-[11px] tabular-nums">
                       {t("creators.line", { followers: fmtCompact(locale, c.followers), videos: c.videos, views: fmtCompact(locale, c.views) })}
                     </span>
                   </li>
@@ -299,6 +337,7 @@ export function AlgoTrendPanel({ artists, className }: { artists: { id: string; 
               </dl>
             </div>
           </div>
+          {isLabel && <ComLauncher key={current.id} artistId={current.id} name={current.name} s={s} />}
         </div>
         {/* Position algo par plateforme */}
         <div className="lg:col-span-2 lg:border-l lg:border-border/30 lg:pl-6">
@@ -322,5 +361,150 @@ export function AlgoTrendPanel({ artists, className }: { artists: { id: string; 
       </div>
       <p className="sheet-ink mt-4 text-[11px]">{t("note")}</p>
     </Sheet>
+  );
+}
+
+/** « Lancer la com » : un message prérempli, des destinataires écrits, envoyé au fil. */
+function ComLauncher({ artistId, name, s }: { artistId: string; name: string; s: Scenario }) {
+  const t = useTranslations("pulse.algo");
+  const tf = useTranslations("fil");
+  const locale = useLocale();
+  const ids = useId();
+  const { add, jobRole, daId } = useFeed();
+  const draft = () =>
+    t("com.draft", {
+      sound: s.sound,
+      name,
+      videos: fmtCompact(locale, s.videos),
+      trend: s.trendRankFr !== null ? t("breakout.trend", { rank: s.trendRankFr }) : t("breakout.noTrend"),
+      creators: s.creators.map((c) => c.handle).join(", "),
+    });
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState("");
+  const [to, setTo] = useState<JobRole[]>([...COM_DEFAULT]);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState<string | null>(null);
+  const actor = jobRole ? (jobRole === "da" ? tf("roles.da") : tf(`roles.${jobRole}`)) : tf("roles.direction");
+
+  const start = () => {
+    setText(draft());
+    setTo([...COM_DEFAULT]);
+    setError(null);
+    setSent(null);
+    setOpen(true);
+  };
+  const send = () => {
+    if (!text.trim()) return setError(t("com.empty"));
+    if (to.length === 0) return setError(t("com.noRecipient"));
+    add(comNote({ artistId, text, to, from: jobRole, fromName: actor, fromDaId: jobRole === "da" ? daId : null }));
+    setSent(t("com.sent", { services: to.map((r) => tf(`roles.${r}`)).join(", ") }));
+    setOpen(false);
+  };
+
+  return (
+    <div className="border-border/40 mt-4 border-t pt-3">
+      {!open && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <button
+            type="button"
+            onClick={start}
+            className="bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring/50 inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12.5px] font-medium outline-none focus-visible:ring-2"
+          >
+            <Megaphone className="size-3.5" aria-hidden />
+            {t("com.launch", { sound: s.sound })}
+          </button>
+          {sent ? (
+            <p role="status" className="text-[12.5px]">
+              {sent}{" "}
+              <Link href="/fil" className="font-medium underline-offset-4 hover:underline">
+                {t("com.open")}
+              </Link>
+            </p>
+          ) : (
+            <p className="sheet-ink text-[12px]">{t("com.hint")}</p>
+          )}
+        </div>
+      )}
+      {open && (
+        <div className="bg-background/70 rounded-lg border p-3">
+          <p id={`${ids}-to`} className="text-muted-foreground text-[12px]">{t("com.to")}</p>
+          <div role="group" aria-labelledby={`${ids}-to`} className="mt-1.5 flex flex-wrap gap-1.5">
+            {COM_SERVICES.map((r) => {
+              const on = to.includes(r);
+              return (
+                <button
+                  key={r}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => {
+                    setError(null);
+                    setTo((cur) => (on ? cur.filter((x) => x !== r) : [...cur, r]));
+                  }}
+                  className={cn(
+                    "inline-flex h-7 items-center gap-1 rounded-md border px-2.5 text-[12px] font-medium transition-colors",
+                    on ? "border-foreground/30 bg-background text-foreground" : "text-muted-foreground hover:text-foreground border-transparent",
+                  )}
+                >
+                  {on && <Check className="size-3" aria-hidden />}
+                  {r === "da" ? t("com.daOf", { name }) : tf(`roles.${r}`)}
+                </button>
+              );
+            })}
+          </div>
+          <label htmlFor={`${ids}-m`} className="text-muted-foreground mt-3 block text-[12px]">
+            {t("com.message")}
+          </label>
+          <textarea
+            id={`${ids}-m`}
+            value={text}
+            rows={4}
+            onChange={(e) => {
+              setError(null);
+              setText(e.target.value);
+            }}
+            className="border-input bg-background focus-visible:ring-ring/50 mt-1 w-full resize-y rounded-md border px-2.5 py-2 text-[13px] leading-relaxed outline-none focus-visible:ring-2"
+          />
+          {error && <p className="text-destructive mt-1 text-[12px]">{error}</p>}
+          <div className="mt-2 flex gap-2">
+            <button type="button" onClick={send} className="bg-foreground text-background hover:bg-foreground/90 h-8 rounded-md px-3 text-[12.5px] font-medium">
+              {t("com.send")}
+            </button>
+            <button type="button" onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground h-8 rounded-md px-2 text-[12.5px]">
+              {t("com.cancel")}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Un brief prêt à copier pour un créateur ; s'il ne peut pas être copié, il s'affiche pour une copie à la main. */
+function BriefButton({ handle, sound, name }: { handle: string; sound: string; name: string }) {
+  const t = useTranslations("pulse.algo");
+  const [state, setState] = useState<"idle" | "copied" | "manual">("idle");
+  const text = t("com.briefText", { handle, sound, name });
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setState("copied");
+      window.setTimeout(() => setState("idle"), 2000);
+    } catch {
+      setState("manual");
+    }
+  };
+  return (
+    <>
+      <button
+        type="button"
+        onClick={copy}
+        aria-label={t("com.briefLabel", { handle })}
+        className="sheet-ink hover:text-foreground inline-flex items-center gap-1 rounded px-1 text-[11.5px] font-medium"
+      >
+        {state === "copied" ? <Check className="size-3" aria-hidden /> : <Copy className="size-3" aria-hidden />}
+        {state === "copied" ? t("com.briefCopied") : t("com.brief")}
+      </button>
+      {state === "manual" && <p className="col-span-3 mt-1 rounded border bg-background/70 p-2 text-[12px] select-all">{text}</p>}
+    </>
   );
 }
