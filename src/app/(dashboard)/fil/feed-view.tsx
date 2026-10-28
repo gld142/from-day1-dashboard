@@ -34,7 +34,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { getArtist, getDa } from "@/lib/demo/data";
+import { ARTISTS, getArtist, getDa } from "@/lib/demo/data";
+import type { OrgState } from "@/lib/demo/org";
 import { scopedArtists } from "@/lib/demo/scope";
 import { useRole } from "@/lib/role";
 import { JOB_ROLES, roleScope, type JobRole } from "@/lib/roles";
@@ -52,12 +53,13 @@ import {
   type OpenPlan,
   type Urgency,
 } from "@/lib/userdata/feed-model";
-import { FEED_TODAY, daOf, useFeed } from "@/lib/userdata/use-feed";
+import { FEED_TODAY, useFeed } from "@/lib/userdata/use-feed";
 import { cn } from "@/lib/utils";
 
 /* Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et
    le dialogue. Même règle que /roster et Pulse : `roleScope` (roles.ts) + `scopedArtists` (scope.ts). */
-const artistsFor = (jobRole: JobRole | null, daId: string | null) => scopedArtists(roleScope(jobRole, daId));
+const artistsFor = (jobRole: JobRole | null, daId: string | null, org: OrgState) =>
+  scopedArtists(roleScope(jobRole, daId), ARTISTS, org);
 
 /** Classe posée sur <html> tant que l'ordre du jour est ouvert : la feuille d'impression ne sort que lui. */
 const PRINT_CLASS = "print-fil-agenda";
@@ -88,13 +90,13 @@ function Feed() {
   const tp = useTranslations("filpage");
   const params = useSearchParams();
   const router = useRouter();
-  const { notes, forMe, add, done, status, reply, assign, jobRole, daId } = useFeed();
+  const { notes, forMe, add, done, status, reply, assign, jobRole, daId, org, daOf } = useFeed();
   const { isLabel, setPersona, setFocusedArtistId } = useRole();
   const me = useActor(jobRole, daId);
   const [agendaOpen, setAgendaOpen] = useState(false);
 
   /* Les artistes que je peux filtrer ou citer : les siens pour un DA, tout le roster sinon. */
-  const myArtists = artistsFor(jobRole, daId);
+  const myArtists = artistsFor(jobRole, daId, org);
   /* Le filtre artiste vient de l'URL (`?artist=`) : partageable, et la colonne Notes du roster
      arrive déjà filtrée. Un id inconnu de la maison, ou hors du périmètre du DA = pas de filtre. */
   const artistParam = params.get("artist");
@@ -173,7 +175,7 @@ function Feed() {
               </div>
             </DialogContent>
           </Dialog>
-          <NewNoteDialog onSubmit={add} jobRole={jobRole} daId={daId} me={me} />
+          <NewNoteDialog onSubmit={add} jobRole={jobRole} daId={daId} me={me} org={org} daOf={daOf} />
         </div>
       </PageHeader>
 
@@ -252,11 +254,15 @@ function NewNoteDialog({
   jobRole,
   daId,
   me,
+  org,
+  daOf,
 }: {
   onSubmit: ReturnType<typeof useFeed>["add"];
   jobRole: JobRole | null;
   daId: string | null;
   me: Actor;
+  org: OrgState;
+  daOf: ReturnType<typeof useFeed>["daOf"];
 }) {
   const t = useTranslations("fil");
   const tp = useTranslations("filpage");
@@ -270,7 +276,7 @@ function NewNoteDialog({
   const [linkIndex, setLinkIndex] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const artistsForMe = artistsFor(jobRole, daId);
+  const artistsForMe = artistsFor(jobRole, daId, org);
   /* Ce que les mentions du texte ajouteront (aperçu, mêmes règles que le store). */
   const effects = mentionEffects({ to, toDas: [], artistId: artistId || null }, text, daOf);
   const link: FeedLink | null = linkIndex === "" ? null : (LINK_TARGETS[Number(linkIndex)] ?? null);
