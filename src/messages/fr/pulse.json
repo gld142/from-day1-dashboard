@@ -105,9 +105,15 @@
   },
   "movers": {
     "title": "Qui bouge · 30 derniers jours",
-    "see": "voir le roster →",
     "range": "90 derniers jours",
-    "detail": "voir le détail →"
+    "detail": "voir le détail →",
+    "up": "En hausse",
+    "down": "À surveiller",
+    "none": "Personne ce mois-ci.",
+    "lead": "en tête : « {title} »",
+    "gainHint": "Streams gagnés ou perdus contre les 30 jours précédents",
+    "stable": "{count, plural, one {# artiste stable} other {# artistes stables}} (moins de 1 % d'écart)",
+    "seeAll": "voir les {count} →"
   },
   "dsp": {
     "spotify": "Spotify",
@@ -151,7 +157,8 @@
       "savesApple": "Ajouts Apple Music depuis TikTok",
       "playlists": "Entrées en playlists éditoriales"
     },
-    "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés)."
+    "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés).",
+    "pick": "Choisir l'artiste"
   },
   "families": {
     "streams": "Streams",

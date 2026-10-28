@@ -23,7 +23,6 @@ import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { ArtistTeamLine } from "@/components/modules/structure/artist-team-line";
 import { useFeed } from "@/lib/userdata/use-feed";
-import { RankMedal } from "@/components/dashboard/rank-medal";
 import { AudienceGlyph } from "@/components/dashboard/audience-glyph";
 import { StreamGlyph } from "@/components/dashboard/stream-glyph";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -37,6 +36,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { HeroChart } from "@/components/modules/pilotage/hero-chart";
+import { MoversPanel } from "@/components/modules/pilotage/movers-panel";
+import { AlgoTrendPanel } from "@/components/modules/pilotage/algo-trend-panel";
 import {
   Doors,
   Emph,
@@ -769,6 +770,9 @@ function PulsePage() {
             </Sheet>
           </div>
 
+          {/* Position algo & tendances : le son qui a percé (simulation de démo). */}
+          <AlgoTrendPanel artists={[{ id: v.artist.id, name: v.artist.name }]} />
+
           {/* 3 — la nuit et la journée qui vient. */}
           <NightStrip
             items={
@@ -1020,38 +1024,7 @@ function PulsePage() {
                   {t("movers.range")} · {t("movers.detail")}
                 </Link>
               </div>
-              <div>
-                <SheetHeading action={<Link href="/roster">{t("movers.see")}</Link>}>
-                  {t("movers.title")}
-                </SheetHeading>
-                <div className="mt-1">
-                  {l.movers.map((m, i) => (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => setFocusedArtistId(m.id)}
-                      className={`grid w-full grid-cols-[1fr_auto_auto] items-baseline gap-4 py-1.5 text-left text-[12.5px] ${
-                        i === 0 ? "sheet-rule" : "border-border/30 border-t"
-                      }`}
-                    >
-                      <span className="flex min-w-0 items-center gap-2 font-medium">
-                        <RankMedal rank={i + 1} size="sm" awarded={m.delta30d >= 0} />
-                        <span className="truncate">{m.name}</span>
-                      </span>
-                      <span className="sheet-ink tabular-nums">
-                        {fmtCompact(locale, m.streams30d)}
-                      </span>
-                      <b
-                        className={`w-16 text-right font-semibold tabular-nums ${
-                          m.delta30d >= 0 ? "text-success" : "text-destructive"
-                        }`}
-                      >
-                        {fmtPct(locale, m.delta30d)}
-                      </b>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <MoversPanel rows={l.movers} onFocus={setFocusedArtistId} />
             </div>
             <AffiliatedPoints
               points={[
@@ -1241,6 +1214,13 @@ function PulsePage() {
               />
             </Sheet>
           </div>
+
+          {/* Position algo & tendances : l'artiste le plus repris sur TikTok d'abord, les autres d'un clic. */}
+          <AlgoTrendPanel
+            artists={[...roster]
+              .sort((x, y) => (tiktokSignal(y.id)?.videos ?? 0) - (tiktokSignal(x.id)?.videos ?? 0))
+              .map((a) => ({ id: a.id, name: a.name }))}
+          />
 
           <NightStrip
             items={
