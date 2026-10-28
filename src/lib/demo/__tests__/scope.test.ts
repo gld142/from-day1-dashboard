@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { TENANT } from "@/lib/tenant";
 import { ARTISTS, DAS } from "@/lib/demo/data";
 import { labelTotals, marketRosterTracks, pnlByArtist, rosterDspEstimates, rosterEstimateSummaries, rosterRows, rosterTiktokSignal } from "@/lib/demo/api";
 import { FULL_SCOPE, effectiveScope, isFullScope, parseScope, scopeQuery, scopedArtists } from "@/lib/demo/scope";
@@ -15,7 +16,8 @@ describe("scopedArtists", () => {
   it("par catégorie", () => {
     expect(ids(scopedArtists({ category: "compositeur" }))).toEqual(["brice-davoli", "gustave-rudman", "zeg-p"]);
     expect(ids(scopedArtists({ category: "variete" }))).toEqual(["louane", "wamen"]);
-    expect(scopedArtists({ category: "urbain" })).toHaveLength(6); // 6 dans les deux maisons (day1 sans Kiko, universal sans Dadju)
+    // day1 sans Kiko : 6 ; universal sans Dadju ni Kiko (28/10/2026) : 5
+    expect(scopedArtists({ category: "urbain" })).toHaveLength(TENANT.id === "universal" ? 5 : 6);
   });
   it("par DA : les artistes de sa catégorie, et rien d'autre", () => {
     for (const da of DAS) {

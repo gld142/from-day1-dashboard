@@ -72,7 +72,8 @@ export const TENANTS: Record<TenantId, Tenant> = {
     publicName: "Day One × Universal",
     tagline: "Un dashboard par métier",
     logo: { text: "UNIVERSAL", bg: "#000000", fg: "#ffffff" },
-    excludedArtists: ["dadju"],
+    // Kiko retiré le 28/10/2026 à la demande de Gaël (veille du rendez-vous Universal).
+    excludedArtists: ["dadju", "kiko"],
     roles: true,
     defaultArtistId: "nono-la-grinta",
     internalPages: false,

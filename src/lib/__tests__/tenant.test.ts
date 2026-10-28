@@ -20,9 +20,9 @@ describe("tenantFor — la maison se choisit au build", () => {
     expect(TENANTS.day1.name).toBe("Day 1 Dashboard Pro");
     expect(TENANTS.day1.shortName).toBe("From Day 1");
   });
-  it("chaque maison exclut exactement un artiste, et son artiste par défaut n'est pas exclu", () => {
+  it("chaque maison exclut ses artistes (universal : Dadju et Kiko depuis le 28/10), et son artiste par défaut n'est pas exclu", () => {
     expect(TENANTS.day1.excludedArtists).toEqual(["kiko"]);
-    expect(TENANTS.universal.excludedArtists).toEqual(["dadju"]);
+    expect(TENANTS.universal.excludedArtists).toEqual(["dadju", "kiko"]);
     for (const t of Object.values(TENANTS)) expect(t.excludedArtists).not.toContain(t.defaultArtistId);
   });
   it("isTenantId n'accepte que les deux maisons", () => {
@@ -37,7 +37,7 @@ describe("excludeArtists", () => {
   const roster = [{ id: "dadju" }, { id: "kiko" }, { id: "zeg-p" }];
   it("retire les exclus de la maison, garde l'ordre", () => {
     expect(excludeArtists(roster, TENANTS.day1).map((a) => a.id)).toEqual(["dadju", "zeg-p"]);
-    expect(excludeArtists(roster, TENANTS.universal).map((a) => a.id)).toEqual(["kiko", "zeg-p"]);
+    expect(excludeArtists(roster, TENANTS.universal).map((a) => a.id)).toEqual(["zeg-p"]);
   });
   it("TENANT est la maison de NEXT_PUBLIC_TENANT, et excludeArtists l'utilise par défaut", () => {
     expect(TENANT).toBe(tenantFor(process.env.NEXT_PUBLIC_TENANT));

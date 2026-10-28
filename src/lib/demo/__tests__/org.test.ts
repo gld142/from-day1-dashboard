@@ -4,6 +4,7 @@
  * tolérante du stockage. Tourne dans les deux maisons (ARTISTS déjà filtré).
  */
 import { describe, expect, it } from "vitest";
+import { TENANT } from "@/lib/tenant";
 import { ARTISTS, DAS } from "@/lib/demo/data";
 import { rosterRows } from "@/lib/demo/api";
 import {
@@ -50,11 +51,13 @@ describe("valeurs par défaut = l'état d'avant", () => {
     }
     expect(scopedArtists({}, ARTISTS, DEFAULT_ORG)).toEqual(ARTISTS);
   });
-  it("les comptes mesurés en ligne : urbain 6, variété 2, compositeurs 3 ; un pôle par catégorie", () => {
+  /* Urbain : 6 chez day1 (sans Kiko), 5 chez universal (sans Dadju ni Kiko, 28/10/2026). */
+  const URBAIN = TENANT.id === "universal" ? 5 : 6;
+  it("les comptes : urbain 6 (day1) ou 5 (universal), variété 2, compositeurs 3 ; un pôle par catégorie", () => {
     const by = Object.fromEntries(groupRows(rosterRows(), "categorie", DEFAULT_ORG).map((g) => [g.key, g.count]));
-    expect(by).toEqual({ urbain: 6, variete: 2, compositeur: 3 });
+    expect(by).toEqual({ urbain: URBAIN, variete: 2, compositeur: 3 });
     const poles = Object.fromEntries(groupRows(rosterRows(), "pole", DEFAULT_ORG).map((g) => [g.key, g.count]));
-    expect(poles).toEqual({ "pole-urbain": 6, "pole-pop": 2, "pole-edition": 3 });
+    expect(poles).toEqual({ "pole-urbain": URBAIN, "pole-pop": 2, "pole-edition": 3 });
   });
   it("chaque artiste a une équipe complète (chef de projet, marketing, juriste) qui existe", () => {
     for (const a of ARTISTS) {
@@ -117,7 +120,7 @@ describe("un DA peut gérer plusieurs catégories", () => {
     const org = assignArtist(DEFAULT_ORG, artist("louane"), "daId", "da-urbain");
     expect(daCategories(org, ARTISTS, "da-urbain")).toEqual(["urbain", "variete"]);
     expect(ids(scopedArtists({ daId: "da-urbain", category: "variete" }, ARTISTS, org))).toEqual(["louane"]);
-    expect(scopedArtists({ daId: "da-urbain", category: "urbain" }, ARTISTS, org)).toHaveLength(6);
+    expect(scopedArtists({ daId: "da-urbain", category: "urbain" }, ARTISTS, org)).toHaveLength(TENANT.id === "universal" ? 5 : 6);
   });
   it("changer la catégorie d'un artiste le déplace de groupe (et de catégorie du DA)", () => {
     const org = assignArtist(DEFAULT_ORG, artist("wamen"), "category", "urbain");
@@ -170,7 +173,7 @@ describe("regroupements du roster et sous-totaux", () => {
     const moved = assignArtist(DEFAULT_ORG, artist("louane"), "daId", "da-urbain");
     const movedRows = rosterRows(scopedArtists({}, ARTISTS, moved));
     const ines = groupRows(movedRows, "da", moved).find((g) => g.key === "da-urbain")!;
-    expect(ines.count).toBe(7);
+    expect(ines.count).toBe((TENANT.id === "universal" ? 5 : 6) + 1);
     expect(ines.revenue12m).toBe(sum(movedRows.filter((r) => r.daId === "da-urbain"), "revenue12m"));
   });
   it("?groupe= : da, pole ; tout le reste = par catégorie ; aller-retour avec les filtres", () => {

@@ -54,6 +54,17 @@ const STAGE_DOT: Record<CareerStage, string> = {
   peak: "bg-muted-foreground",
 };
 
+/* Chaque groupe a sa couleur (tokens du thème, donc juste dans les trois thèmes) : un bandeau
+   teinté, une pastille, et un liseré à gauche de chacune de ses lignes — la segmentation se voit
+   avant de lire. Par catégorie : couleur fixe ; par DA ou par pôle : dans l'ordre des groupes. */
+const CATEGORY_COLOR: Record<string, string> = {
+  urbain: "var(--chart-1)",
+  variete: "var(--chart-4)",
+  compositeur: "var(--chart-5)",
+};
+const GROUP_PALETTE = ["var(--chart-1)", "var(--chart-4)", "var(--chart-5)", "var(--chart-2)", "var(--chart-3)"];
+const tint = (color: string, pct: number) => `color-mix(in oklab, ${color} ${pct}%, transparent)`;
+
 /** TableRow animable : `ref` est une prop ordinaire en React 19, motion la transmet au <tr>. */
 const MotionTableRow = motion.create(TableRow);
 const ROW_LAYOUT_TRANSITION = { layout: { duration: 0.25, ease: "easeOut" } } as const;
@@ -217,20 +228,35 @@ export function RosterTable({
                   </TableCell>
                 </TableRow>
               )}
-              {groups.flatMap((g) => [
-                g.key && (
+              {groups.flatMap((g, gi) => {
+                const color = g.key
+                  ? groupBy === "categorie"
+                    ? (CATEGORY_COLOR[g.key] ?? GROUP_PALETTE[gi % GROUP_PALETTE.length])
+                    : GROUP_PALETTE[gi % GROUP_PALETTE.length]
+                  : null;
+                return [
+                g.key && color && (
                   <TableRow key={`group-${groupBy}-${g.key}`} className="border-b-0 hover:bg-transparent">
-                    <TableCell colSpan={COLS} className={cn("pt-5 pb-1.5 text-[11px]", bare ? "pl-1" : "pl-5")}>
-                      <span className="text-foreground font-semibold tracking-[0.1em] uppercase">
-                        {groupLabel(g.key)}
-                      </span>
-                      <span className="text-muted-foreground ml-2.5 tabular-nums">
-                        {t("group.summary", {
-                          count: g.count,
-                          streams: fmtCompact(locale, g.streams30d),
-                          revenue: fmtEur(locale, g.revenue12m, { compact: true }),
-                        })}
-                      </span>
+                    <TableCell colSpan={COLS} className={cn("pt-6 pb-2", bare ? "px-0" : "px-4")}>
+                      <div
+                        className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border px-3 py-2"
+                        style={{ background: tint(color, 9), borderColor: tint(color, 30) }}
+                      >
+                        <span
+                          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11.5px] font-bold tracking-[0.08em] uppercase"
+                          style={{ background: tint(color, 20), color }}
+                        >
+                          <span aria-hidden className="size-2 rounded-full" style={{ background: color }} />
+                          {groupLabel(g.key)}
+                        </span>
+                        <span className="text-foreground/75 text-[12px] font-medium tabular-nums">
+                          {t("group.summary", {
+                            count: g.count,
+                            streams: fmtCompact(locale, g.streams30d),
+                            revenue: fmtEur(locale, g.revenue12m, { compact: true }),
+                          })}
+                        </span>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ),
@@ -248,7 +274,10 @@ export function RosterTable({
                       className={cn("cursor-pointer", focused && "bg-brand/5 hover:bg-brand/10")}
                     >
                       {/* Artiste : nom, puis genre et stade en gris ; les notes ouvertes du fil à côté. */}
-                      <TableCell className={cn("py-2.5", bare ? "pl-1" : "pl-5")}>
+                      <TableCell
+                        className={cn("py-2.5", bare ? "pl-3" : "pl-5")}
+                        style={color ? { boxShadow: `inset 3px 0 0 ${color}` } : undefined}
+                      >
                         <span className="flex items-center gap-2.5">
                           <ArtistAvatar artist={r} size="sm" />
                           <span className="min-w-0">
@@ -330,7 +359,8 @@ export function RosterTable({
                     </MotionTableRow>
                   );
                 }),
-              ])}
+                ];
+              })}
             </TableBody>
           </LayoutGroup>
         </Table>
