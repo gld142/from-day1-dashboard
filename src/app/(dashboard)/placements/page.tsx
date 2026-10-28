@@ -12,13 +12,20 @@
  *   · le carnet de commandes (œuvres signées, pas encore sorties) ;
  *   · les œuvres non déclarées, et l'argent qu'elles ne vont pas chercher ;
  *   · le partage entre droits d'édition et points de production.
+ *
+ * Dans une maison où tout le roster est signé en édition (`TENANT.writersRoster`),
+ * l'interprète est AUSSI auteur : ses œuvres sont ses propres titres, et ses droits
+ * d'auteur suivent ses streams (vue `OwnWorks`). Le compositeur non interprète garde
+ * la vue des placements : ses streams dépendent des disques des autres.
  */
 import { CustomerPlacements } from "@/components/modules/customer/customer-placements";
 import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { ARTISTS, isComposer, placementFacts, placementMoney } from "@/lib/demo/api";
+import { ARTISTS, isComposer, isWriter, ownWorksFacts, placementFacts, placementMoney } from "@/lib/demo/api";
+import { getShares } from "@/lib/userdata/shares-store";
+import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { fmtCompact, fmtDate, fmtEur } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -47,6 +54,11 @@ function DemoPlacementsPage() {
 
   const facts = useMemo(() => (composer ? placementFacts(composer) : null), [composer]);
   const lignes = useMemo(() => (composer ? placementMoney(composer) : []), [composer]);
+
+  /* Auteur-interprète (maison d'édition) : ses œuvres sont ses propres titres. */
+  if (!composer && isWriter(artistId)) {
+    return <OwnWorks artistId={artistId} composers={composers} onOpen={setFocusedArtistId} />;
+  }
 
   /* Ni l'artiste courant ni le zoom ne portent d'œuvres : on le dit, et on
      donne le chemin plutôt qu'une page vide. */
@@ -153,7 +165,8 @@ function DemoPlacementsPage() {
         {undeclared.length > 0 && (
           <Sheet family="money">
             <SheetHeading action={t("undeclared.caption")}>
-              {t("undeclared.title")}
+              {t("undeclared.title")}{" "}
+              <ProvenanceBadge provenance="simulated" className="align-middle" />
             </SheetHeading>
             <p className="text-warning text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
               {eur(facts.undeclaredAtStake)}
@@ -184,7 +197,8 @@ function DemoPlacementsPage() {
         {pipeline.length > 0 && (
           <Sheet family="catalog">
             <SheetHeading action={t("pipeline.caption")}>
-              {t("pipeline.title")}
+              {t("pipeline.title")}{" "}
+              <ProvenanceBadge provenance="simulated" className="align-middle" />
             </SheetHeading>
             <ul className="mt-2 space-y-2.5">
               {pipeline.map((l) => (
@@ -217,7 +231,7 @@ function DemoPlacementsPage() {
               ))}
             </ul>
             <p className="text-muted-foreground mt-3 text-[11.5px]">
-              {t("pipeline.legend")}
+              {t("pipeline.simulated")} {t("pipeline.legend")}
             </p>
           </Sheet>
         )}
@@ -241,8 +255,11 @@ function DemoPlacementsPage() {
               <tbody>
                 {lignes.map((l) => (
                   <tr key={l.placement.id} className="border-line/40 border-t">
-                    <td className="max-w-[180px] truncate py-2 font-medium">
-                      {l.placement.title}
+                    <td className="max-w-[220px] py-2 font-medium">
+                      <span className="inline-block max-w-[150px] truncate align-middle">{l.placement.title}</span>
+                      {l.placement.status !== "released" && (
+                        <ProvenanceBadge provenance="simulated" className="ml-1.5 align-middle" />
+                      )}
                     </td>
                     <td className="text-muted-foreground max-w-[140px] truncate py-2">
                       {l.placement.performer}
@@ -282,7 +299,7 @@ function DemoPlacementsPage() {
             </table>
           </div>
           <p className="text-muted-foreground mt-3 text-[11.5px] leading-relaxed">
-            {t("table.method")}
+            {t("table.provenance")} {t("table.method")}
           </p>
         </Sheet>
 
@@ -325,6 +342,144 @@ function DemoPlacementsPage() {
             {tc("blocks.legend")}
           </Link>
         </p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Auteur-interprète : ses œuvres sont ses propres titres. Les droits d'auteur sont ceux de la
+ * page Revenus (`ownWorksFacts`, un seul calcul), répartis titre par titre au prorata des streams.
+ * En bas, les compositeurs non interprètes du roster : l'autre économie, celle des placements.
+ */
+function OwnWorks({
+  artistId,
+  composers,
+  onOpen,
+}: {
+  artistId: string;
+  composers: typeof ARTISTS;
+  onOpen: (id: string) => void;
+}) {
+  const t = useTranslations("placements");
+  const tc = useTranslations("common");
+  const locale = useLocale();
+  const { isLabel, focusedArtistId } = useRole();
+  /* Une part d'auteur renseignée dans Revenus change le calcul : le snapshot relance le memo. */
+  const sharesKey = useSharesSnapshot();
+  const facts = useMemo(() => {
+    void sharesKey;
+    return ownWorksFacts(artistId);
+  }, [artistId, sharesKey]);
+  const declaredPct = useMemo(() => {
+    void sharesKey;
+    return getShares(artistId)?.authorSharePct ?? null;
+  }, [artistId, sharesKey]);
+  const artist = ARTISTS.find((a) => a.id === artistId);
+  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
+
+  return (
+    <div className="rise-in">
+      <PageHeader title={t("title")} subtitle={t("own.subtitle")}>
+        {isLabel && focusedArtistId && artist && <ArtistBadge artist={artist} size="sm" />}
+      </PageHeader>
+
+      <div className="space-y-3">
+        <Sheet family="money">
+          <SheetHeading action={t("own.hero.caption")}>{t("own.hero.title")}</SheetHeading>
+          <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
+            {eur(facts.publishing)}
+          </p>
+          <p className="sheet-ink mt-1.5 text-[13px]">
+            {t("own.hero.sub", { streams: fmtCompact(locale, facts.streams) })}{" "}
+            <ProvenanceBadge provenance={facts.provenance} className="align-middle" />
+          </p>
+          <AffiliatedPoints
+            points={[
+              {
+                key: "works",
+                value: String(facts.works.length),
+                label: t("own.points.works"),
+                note: t("own.points.worksNote"),
+              },
+              {
+                key: "share",
+                value: declaredPct !== null ? `${declaredPct} %` : t("own.points.shareHypothesis"),
+                label: t("own.points.share"),
+                note: declaredPct !== null ? t("own.points.shareDeclared") : t("own.points.shareHypothesisNote"),
+              },
+              {
+                key: "others",
+                value: eur(facts.others),
+                label: t("own.points.others"),
+                note: t("own.points.othersNote"),
+              },
+            ]}
+          />
+        </Sheet>
+
+        <Sheet family="money">
+          <SheetHeading action={t("own.table.caption")}>{t("own.table.title")}</SheetHeading>
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full min-w-[560px] text-[12.5px]">
+              <thead className="sheet-ink">
+                <tr className="sheet-rule text-left">
+                  <th className="pb-2 font-medium">{t("own.table.work")}</th>
+                  <th className="pb-2 font-medium">{t("own.table.performer")}</th>
+                  <th className="pb-2 font-medium">{t("own.table.role")}</th>
+                  <th className="pb-2 text-right font-medium">{t("own.table.streams")}</th>
+                  <th className="pb-2 text-right font-medium">{t("own.table.rights")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {facts.works.map((w) => (
+                  <tr key={w.id} className="border-line/40 border-t">
+                    <td className="max-w-[220px] truncate py-2 font-medium">{w.title}</td>
+                    <td className="text-muted-foreground max-w-[140px] truncate py-2">{artist?.name}</td>
+                    <td className="text-muted-foreground py-2">{t("own.table.roleValue")}</td>
+                    <td className="num py-2 text-right tabular-nums">
+                      {w.streams > 0 ? fmtCompact(locale, w.streams) : "—"}
+                    </td>
+                    <td className="num py-2 text-right font-medium tabular-nums">
+                      {w.publishing > 0 ? eur(w.publishing) : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-muted-foreground mt-3 text-[11.5px] leading-relaxed">{t("own.table.method")}</p>
+        </Sheet>
+
+        {composers.length > 0 && (
+          <Sheet family="catalog">
+            <SheetHeading>{t("own.composers.title")}</SheetHeading>
+            <p className="sheet-ink mt-1 text-[13px]">{t("own.composers.body")}</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {composers.map((a) => (
+                <li key={a.id}>
+                  <button
+                    type="button"
+                    onClick={() => onOpen(a.id)}
+                    className="border-border hover:border-ring rounded-lg border px-3 py-1.5 text-[12.5px] font-medium transition-colors"
+                  >
+                    {t("own.composers.open", { name: a.name })}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </Sheet>
+        )}
+
+        <Doors
+          title={tc("blocks.doors")}
+          doors={[
+            { key: "rights", family: "money", href: "/rights", label: t("doors.rights"), value: t("doors.rightsValue") },
+            { key: "splits", family: "money", href: "/splits", label: t("doors.splits"), value: t("doors.splitsValue") },
+            { key: "catalog", family: "catalog", href: "/catalog", label: t("doors.catalog"), value: t("doors.catalogValue") },
+            { key: "sync", family: "money", href: "/sync", label: t("doors.sync"), value: t("doors.syncValue") },
+          ]}
+        />
       </div>
     </div>
   );

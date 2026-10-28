@@ -19,10 +19,10 @@
     "producer": "Points de production",
     "producerNote": "part du master, pas de l'édition",
     "pipeline": "Œuvres en cours",
-    "pipelineNote": "prochaine : « {title} », {date}",
+    "pipelineNote": "prochaine : « {title} », {date} (simulée)",
     "pipelineNone": "rien de signé à sortir",
     "pitched": "Propositions",
-    "pitchedNote": "envoyées, pas encore retenues"
+    "pitchedNote": "envoyées, pas encore retenues (simulées)"
   },
   "undeclared": {
     "title": "Non déclaré à la SACEM",
@@ -32,7 +32,8 @@
   "pipeline": {
     "title": "Le carnet de commandes",
     "caption": "signé ou proposé — pas encore un euro",
-    "legend": "Une œuvre signée a une date ; une proposition n'a qu'une intention. On ne les additionne pas : la seconde n'est pas un revenu à venir."
+    "legend": "Une œuvre signée a une date ; une proposition n'a qu'une intention. On ne les additionne pas : la seconde n'est pas un revenu à venir.",
+    "simulated": "Œuvres de démonstration : titres, interprètes, dates et parts sont inventés."
   },
   "status": {
     "released": "Sortie",
@@ -56,7 +57,8 @@
     "declared": "Déclarée",
     "yes": "oui",
     "no": "non",
-    "method": "Brut master = streams × taux mixé France × coefficient de territoire. Édition = brut × 27,3 % (droits d'auteur : 15 pour 55 versés au master, GESAC 2022) × sa part d'écriture × la part des créateurs selon les règles de la Sacem : un tiers chacun pour l'auteur, le compositeur et l'éditeur sur l'exécution publique, le phono selon son contrat d'édition (58,3 % pour le streaming d'une œuvre éditée à 50/50). Production = brut × ses points. Le territoire est le sien, faute de relever l'audience de chaque interprète : d'où la provenance « estimé »."
+    "method": "Brut master = streams × taux mixé France × coefficient de territoire. Édition = brut × 27,3 % (droits d'auteur : 15 pour 55 versés au master, GESAC 2022) × sa part d'écriture × la part des créateurs selon les règles de la Sacem : un tiers chacun pour l'auteur, le compositeur et l'éditeur sur l'exécution publique, le phono selon son contrat d'édition (58,3 % pour le streaming d'une œuvre éditée à 50/50). Production = brut × ses points. Le territoire est le sien, faute de relever l'audience de chaque interprète : d'où la provenance « estimé ».",
+    "provenance": "Ce qui est réel : les titres et les streams des œuvres sorties (relevé Spotify du 25/09/2026). Ce qui est simulé : les parts d'écriture, les points de production, les déclarations SACEM et toutes les œuvres non sorties."
   },
   "doors": {
     "rights": "Ce que la SACEM lui doit",
@@ -67,5 +69,39 @@
     "catalogValue": "son propre catalogue",
     "sync": "Placer ses œuvres",
     "syncValue": "les briefs ouverts"
+  },
+  "own": {
+    "subtitle": "Ses œuvres, ce sont ses propres titres : il les écrit et les interprète, ses droits d'auteur suivent ses streams.",
+    "hero": {
+      "title": "Droits d'auteur sur ses titres",
+      "caption": "12 derniers mois, même calcul que Revenus",
+      "sub": "auteur-interprète signé en édition · {streams} streams en 12 mois"
+    },
+    "points": {
+      "works": "Titres suivis",
+      "worksNote": "ses titres les plus écoutés",
+      "share": "Sa part d'auteur",
+      "shareDeclared": "renseignée dans Revenus",
+      "shareHypothesis": "seul auteur",
+      "shareHypothesisNote": "hypothèse, à préciser dans Revenus",
+      "others": "Reste du catalogue",
+      "othersNote": "titres moins écoutés"
+    },
+    "table": {
+      "title": "Titre par titre",
+      "caption": "réparti au prorata des streams",
+      "work": "Titre",
+      "performer": "Interprète",
+      "role": "Rôle",
+      "roleValue": "Auteur-interprète",
+      "streams": "Streams 12 mois",
+      "rights": "Droits d'auteur",
+      "method": "Même calcul que la page Revenus : brut master × 27,3 % (droits d'auteur, 15 pour 55 versés au master, GESAC 2022) × la part des créateurs selon les règles de la Sacem. Tant que sa part n'est pas renseignée, on le compte seul auteur de ses titres."
+    },
+    "composers": {
+      "title": "Les compositeurs non interprètes du roster",
+      "body": "Eux n'écrivent pas pour leurs propres disques : leurs streams dépendent des placements chez d'autres artistes.",
+      "open": "Voir les œuvres de {name}"
+    }
   }
 }

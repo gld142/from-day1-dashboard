@@ -48,6 +48,13 @@ export type Tenant = {
   welcomeSources: readonly WelcomeSourceId[];
   /** Canal d'un `?source=` absent, inconnu ou fermé dans cette maison (fait partie de `welcomeSources`). */
   welcomeDefaultSource: WelcomeSourceId;
+  /**
+   * Tout le roster est signé en édition : chaque artiste est AUSSI auteur ou compositeur de ce
+   * qu'il interprète (Gaël, 28/10/2026 : être au roster d'Universal Music Publishing, c'est avoir
+   * été signé comme auteur ou compositeur). La différence qui reste : le compositeur non
+   * interprète (`kind: "composer"`) vit des placements sur les disques des AUTRES.
+   */
+  writersRoster: boolean;
 };
 
 export const TENANTS: Record<TenantId, Tenant> = {
@@ -64,6 +71,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
     internalPages: true,
     welcomeSources: ["capitol", "umpg", "universal", "believe", "direct"],
     welcomeDefaultSource: "direct",
+    writersRoster: false,
   },
   universal: {
     id: "universal",
@@ -79,6 +87,7 @@ export const TENANTS: Record<TenantId, Tenant> = {
     internalPages: false,
     welcomeSources: ["capitol", "umpg", "universal", "direct"],
     welcomeDefaultSource: "universal",
+    writersRoster: true,
   },
 };
 

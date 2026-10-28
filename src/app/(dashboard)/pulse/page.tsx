@@ -926,7 +926,13 @@ function PulsePage() {
                   key: "works",
                   family: "money",
                   href: "/placements",
-                  label: t("collect.works", { count: worksLead.works }),
+                  /* « Non déposée » est une hypothèse de démonstration (aucune source publique). */
+                  label: (
+                    <>
+                      {t("collect.works", { count: worksLead.works })}{" "}
+                      <ProvenanceBadge provenance="simulated" className="align-middle" />
+                    </>
+                  ),
                   amount: eur(worksLead.atStake),
                   urgent: true,
                 },
@@ -1354,7 +1360,13 @@ function PulsePage() {
                   key: "works",
                   family: "money",
                   href: "/placements",
-                  label: t("collect.works", { count: worksLead.works }),
+                  /* « Non déposée » est une hypothèse de démonstration (aucune source publique). */
+                  label: (
+                    <>
+                      {t("collect.works", { count: worksLead.works })}{" "}
+                      <ProvenanceBadge provenance="simulated" className="align-middle" />
+                    </>
+                  ),
                   amount: eur(worksLead.atStake),
                   urgent: true,
                 },

@@ -42,6 +42,7 @@ import {
   type ForecastPoint,
 } from "./generators";
 import { attachToTracks } from "./expense-attribution";
+import { TENANT } from "@/lib/tenant";
 import { DEMO_TODAY, daysAhead, isoDay, isoMonth, rngFor } from "./seed";
 import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import {
@@ -506,6 +507,42 @@ export function syncBriefsClosingSoon(days = 7): number {
 /** Vrai si cet artiste vit d'abord des œuvres qu'il écrit pour d'autres. */
 export function isComposer(artistId: string): boolean {
   return getArtist(artistId).kind === "composer";
+}
+
+/**
+ * Auteur ou compositeur signé en édition. Un compositeur l'est toujours ; dans une maison où tout
+ * le roster est signé en édition (`TENANT.writersRoster`), l'interprète l'est aussi : il écrit ce
+ * qu'il chante, et ses œuvres vivent de SES streams. `isComposer` garde l'autre économie : le
+ * compositeur non interprète, dont les œuvres vivent des disques des autres (`placementsFor`).
+ */
+export function isWriter(artistId: string): boolean {
+  return isComposer(artistId) || TENANT.writersRoster;
+}
+
+/**
+ * Les œuvres d'un auteur-interprète : ses propres titres, et les droits d'auteur que leurs streams
+ * génèrent. MÊME calcul que la ligne « Droits d'auteur (édition) » de /revenue (`estimateSummary`,
+ * 12 mois) — un seul chiffre dans tout le dashboard —, réparti entre les titres au prorata de leurs
+ * streams. Ce qui ne tombe pas dans les titres affichés reste dans `others`.
+ */
+export function ownWorksFacts(artistId: string) {
+  const est = estimateSummary(artistId, "year");
+  const tracks = topTracks(artistId, 365, 8);
+  const shown = tracks.reduce((s, t) => s + t.streams, 0);
+  const base = Math.max(est.streams, shown, 1);
+  const works = tracks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    streams: t.streams,
+    publishing: est.publishing.mid * (t.streams / base),
+  }));
+  return {
+    streams: est.streams,
+    publishing: est.publishing.mid,
+    provenance: est.publishingProvenance,
+    works,
+    others: Math.max(0, est.publishing.mid - works.reduce((s, w) => s + w.publishing, 0)),
+  };
 }
 
 export function placementsFor(artistId: string): Placement[] {

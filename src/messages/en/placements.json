@@ -19,10 +19,10 @@
     "producer": "Production points",
     "producerNote": "master share, not publishing",
     "pipeline": "Works in progress",
-    "pipelineNote": "next: “{title}”, {date}",
+    "pipelineNote": "next: “{title}”, {date} (simulated)",
     "pipelineNone": "nothing signed to ship",
     "pitched": "Pitches",
-    "pitchedNote": "sent, not picked up yet"
+    "pitchedNote": "sent, not picked up yet (simulated)"
   },
   "undeclared": {
     "title": "Not registered with SACEM",
@@ -32,7 +32,8 @@
   "pipeline": {
     "title": "The order book",
     "caption": "signed or pitched — not a euro yet",
-    "legend": "A signed work has a date; a pitch has an intention. We don't add them up: the second is not future income."
+    "legend": "A signed work has a date; a pitch has an intention. We don't add them up: the second is not future income.",
+    "simulated": "Demo works: titles, performers, dates and shares are made up."
   },
   "status": {
     "released": "Released",
@@ -56,7 +57,8 @@
     "declared": "Registered",
     "yes": "yes",
     "no": "no",
-    "method": "Gross master = streams × blended French rate × territory coefficient. Publishing = gross × 27.3 % (authors' rights: 15 for every 55 paid to the master, GESAC 2022) × their writer share × the creators' share under Sacem rules: one third each to author, composer and publisher on performance rights, mechanicals per their publishing deal (58.3 % for streaming of a work published 50/50). Production = gross × their points. The territory is theirs, for lack of per-performer audience data: hence the “estimated” provenance."
+    "method": "Gross master = streams × blended French rate × territory coefficient. Publishing = gross × 27.3 % (authors' rights: 15 for every 55 paid to the master, GESAC 2022) × their writer share × the creators' share under Sacem rules: one third each to author, composer and publisher on performance rights, mechanicals per their publishing deal (58.3 % for streaming of a work published 50/50). Production = gross × their points. The territory is theirs, for lack of per-performer audience data: hence the “estimated” provenance.",
+    "provenance": "Real: the titles and streams of released works (Spotify reading of 25/09/2026). Simulated: writer shares, production points, SACEM registrations and every unreleased work."
   },
   "doors": {
     "rights": "What SACEM owes them",
@@ -67,5 +69,39 @@
     "catalogValue": "their own catalogue",
     "sync": "Place their works",
     "syncValue": "open briefs"
+  },
+  "own": {
+    "subtitle": "Their works are their own songs: they write and perform them, so their author royalties follow their streams.",
+    "hero": {
+      "title": "Author royalties on their songs",
+      "caption": "last 12 months, same calculation as Revenue",
+      "sub": "performing songwriter signed in publishing · {streams} streams in 12 months"
+    },
+    "points": {
+      "works": "Songs tracked",
+      "worksNote": "their most-streamed songs",
+      "share": "Their writer share",
+      "shareDeclared": "entered in Revenue",
+      "shareHypothesis": "sole writer",
+      "shareHypothesisNote": "assumption, set it in Revenue",
+      "others": "Rest of the catalogue",
+      "othersNote": "less-streamed songs"
+    },
+    "table": {
+      "title": "Song by song",
+      "caption": "split pro rata to streams",
+      "work": "Song",
+      "performer": "Performer",
+      "role": "Role",
+      "roleValue": "Performing songwriter",
+      "streams": "Streams, 12 months",
+      "rights": "Author royalties",
+      "method": "Same calculation as the Revenue page: gross master × 27.3% (author rights, 15 for every 55 paid to the master, GESAC 2022) × the creators' share under Sacem rules. Until their share is entered, they count as the sole writer of their songs."
+    },
+    "composers": {
+      "title": "The roster's non-performing composers",
+      "body": "They don't write for their own records: their streams depend on placements with other artists.",
+      "open": "See {name}'s works"
+    }
   }
 }

@@ -37,6 +37,7 @@ import { DEAL_SHARE } from "@/lib/real/params";
 import { useRole } from "@/lib/role";
 import { getShares, saveShares, type ArtistShares } from "@/lib/userdata/shares-store";
 import { useSharesSnapshot } from "@/lib/userdata/use-shares";
+import { TENANT } from "@/lib/tenant";
 import { cn } from "@/lib/utils";
 
 /** Ancre du panneau : cible du bouton « Renseigner ma part » de Pulse. */
@@ -234,7 +235,8 @@ function SharesEditor({
   const ids = useId();
   const [tab, setTab] = useState<Tab>(stored?.contractFileName ? "upload" : "percent");
   const [master, setMaster] = useState(stored?.masterSharePct == null ? "" : String(stored.masterSharePct));
-  const [isAuthor, setIsAuthor] = useState(stored?.isAuthor ?? false);
+  /* Dans une maison d'édition, tout le roster est auteur : c'est la valeur par défaut. */
+  const [isAuthor, setIsAuthor] = useState(stored?.isAuthor ?? TENANT.writersRoster);
   const [author, setAuthor] = useState(stored?.authorSharePct == null ? "" : String(stored.authorSharePct));
   const [fileName, setFileName] = useState<string | null>(stored?.contractFileName ?? null);
   const [copied, setCopied] = useState(false);
@@ -266,7 +268,7 @@ function SharesEditor({
     saveShares({
       artistId,
       masterSharePct: stored?.masterSharePct ?? null,
-      isAuthor: stored?.isAuthor ?? false,
+      isAuthor: stored?.isAuthor ?? TENANT.writersRoster,
       authorSharePct: stored?.authorSharePct ?? null,
       contractFileName: file.name,
     });
