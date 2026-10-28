@@ -15,7 +15,7 @@
  * Le statut et la prise en charge restent des <select> natifs posés sur leur pastille : clavier,
  * lecteur d'écran et rendu serveur testé (feed-components.test.ts) gardent le vrai contrôle.
  */
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
   ArrowUpRight,
@@ -24,7 +24,7 @@ import {
   CircleCheck,
   CircleDashed,
   CircleDot,
-  CornerUpRight,
+  ChevronDown,
   Hand,
   History,
   MessageSquare,
@@ -32,17 +32,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import type { Artist } from "@/lib/demo/types";
 import { fmtDate, fmtEur } from "@/lib/format";
-import { JOB_ROLES, type JobRole } from "@/lib/roles";
+import type { JobRole } from "@/lib/roles";
 import {
   FEED_STATUSES,
-  FEED_TEXT_MAX,
   assignableFor,
   dueState,
   getPerson,
-  mentionEffects,
   openPlan,
   statusOf,
   type DaOf,
@@ -55,8 +52,9 @@ import {
 import type { FeedAttachment } from "@/lib/userdata/feed-attachment";
 import type { Stake, Waiting } from "@/lib/userdata/feed-stakes";
 import { cn } from "@/lib/utils";
-import { daLabel, personLabel, recipientLabel, roleLabel, toLabel } from "./labels";
-import { AttachmentCard, AttachmentPicker, type AttachmentCtxInput } from "./attachment-card";
+import { personLabel, recipientLabel, toLabel } from "./labels";
+import { AttachmentCard, type AttachmentCtxInput } from "./attachment-card";
+import { FeedComposer } from "./composer";
 import { MentionText } from "./mention-text";
 
 /* Pastilles de l'ordre du jour imprimable (committee-agenda.tsx). */
@@ -124,6 +122,11 @@ export type NoteCardProps = {
   onAttach?: (a: FeedAttachment) => void;
   /** Auteur, artiste et jour de la démo pour la traduction. */
   attachCtx?: AttachmentCtxInput;
+  /** Ouvre la conversation dans le panneau de droite ; absent : réponses dépliées sous la note. */
+  onOpenThread?: () => void;
+  /** Première visite : une bulle montre où changer le statut. */
+  statusTip?: boolean;
+  onDismissTip?: () => void;
   /** Panneau ouvert au premier rendu (tests). */
   defaultPanel?: "replies" | "history" | null;
 };
@@ -149,6 +152,7 @@ export function NoteCard(props: NoteCardProps) {
   const canTakeIt = canAct && status !== "done" && !!props.myPersonId && note.assigneeId !== props.myPersonId;
 
   const openPanel = (p: "replies" | "history") => {
+    if (props.onOpenThread) return props.onOpenThread();
     const next = panel === p ? null : p;
     setPanel(next);
     if (next === "replies") props.onSeen?.();
@@ -186,30 +190,9 @@ export function NoteCard(props: NoteCardProps) {
       )}
     >
       <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-x-3 px-3.5 py-3">
-        {/* Statut : la forme dit l'étape ; le vrai <select> est posé dessus. */}
-        <span
-          className="has-[select:focus-visible]:ring-ring relative mt-px flex size-5 items-center justify-center rounded-full has-[select:focus-visible]:ring-2"
-          title={tp(`status.${status}`)}
-        >
+        {/* L'étape se lit à la forme ; on la change dans la pastille « Statut » ci-dessous. */}
+        <span className="mt-px flex size-5 items-center justify-center" title={tp(`status.${status}`)}>
           <Icon className={cn("size-[18px]", tone)} aria-hidden />
-          {canAct ? (
-            <select
-              aria-label={tp("status.label")}
-              value={status}
-              onChange={(e) => props.onStatus(e.target.value as FeedStatus)}
-              className="absolute inset-0 cursor-pointer appearance-none opacity-0"
-            >
-              {FEED_STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {tp(`status.${s}`)}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <span data-status={status} className="sr-only">
-              {tp(`status.${status}`)}
-            </span>
-          )}
         </span>
 
         <div className="min-w-0">
@@ -283,6 +266,13 @@ export function NoteCard(props: NoteCardProps) {
             </button>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[12px]">
+            <StatusPill
+              status={status}
+              canAct={canAct}
+              onStatus={props.onStatus}
+              tip={!!props.statusTip}
+              onDismissTip={props.onDismissTip}
+            />
             <Button
               size="sm"
               variant={panel === "replies" ? "secondary" : "outline"}
@@ -427,7 +417,7 @@ export function NoteCard(props: NoteCardProps) {
   );
 }
 
-function EventLine({ event: e }: { event: FeedEvent }) {
+export function EventLine({ event: e }: { event: FeedEvent }) {
   const tf = useTranslations("fil");
   const tp = useTranslations("filpage");
   const list = (rs: Extract<FeedEvent, { added: unknown }>["added"]) => rs.map((r) => recipientLabel(tf, r)).join(", ");
@@ -450,19 +440,8 @@ function EventLine({ event: e }: { event: FeedEvent }) {
 }
 
 function Replies({ note, artist, canAct, daOf, onReply, onStatus, myRole = null, onAttach, attachCtx }: NoteCardProps) {
-  const tf = useTranslations("fil");
   const tp = useTranslations("filpage");
   const locale = useLocale();
-  const [text, setText] = useState("");
-  const effects = mentionEffects(note, text, daOf);
-  const status = statusOf(note);
-  const send = () => {
-    if (!text.trim()) return;
-    onReply(text);
-    setText("");
-  };
-  /* Les services à qui transmettre : ceux qui ne l'ont pas déjà, sauf le mien. */
-  const forwardTo = JOB_ROLES.filter((r) => r !== myRole && !note.to.includes(r));
   return (
     <div className="mx-3.5 mb-3.5 ml-11 space-y-2.5">
       {note.replies.length > 0 && (
@@ -480,66 +459,16 @@ function Replies({ note, artist, canAct, daOf, onReply, onStatus, myRole = null,
         </ul>
       )}
       {canAct ? (
-        <div className="bg-muted/50 rounded-lg p-2.5">
-          {/* En un clic : une réponse toute faite, ou la note transmise à un service. */}
-          <div className="mb-2 flex flex-wrap items-center gap-1.5">
-            <span className="text-muted-foreground mr-0.5 text-[11px] font-semibold tracking-wide uppercase">{tp("quick.title")}</span>
-            <QuickChip
-              onClick={() => {
-                if (status !== "done") onStatus("decided");
-                onReply(tp("quick.okText"));
-              }}
-            >
-              <Check className="size-3" aria-hidden />
-              {tp("quick.ok")}
-            </QuickChip>
-            <QuickChip onClick={() => onReply(tp("quick.infoText"))}>{tp("quick.info")}</QuickChip>
-            <QuickChip onClick={() => onReply(tp("quick.chaseText"))}>{tp("quick.chase")}</QuickChip>
-            <span className="text-muted-foreground ml-1.5 inline-flex items-center gap-1 text-[11.5px]">
-              <CornerUpRight className="size-3" aria-hidden />
-              {tp("quick.forward")}
-            </span>
-            {forwardTo.map((r) => (
-              <QuickChip key={r} tone="brand" onClick={() => onReply(tp("quick.forwardText", { service: roleLabel(tf, r) }))}>
-                {roleLabel(tf, r)}
-              </QuickChip>
-            ))}
-          </div>
-          {onAttach && attachCtx && (
-            <AttachmentPicker
-              onAttach={onAttach}
-              ctx={attachCtx}
-              artistId={note.artistId}
-              artistName={artist?.name ?? null}
-              className="mb-2"
-            />
-          )}
-          <Textarea
-            aria-label={tp("replies.label")}
-            value={text}
-            maxLength={FEED_TEXT_MAX}
-            rows={2}
-            placeholder={tp("replies.placeholder")}
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) send();
-            }}
-            className="bg-background text-[12.5px]"
-          />
-          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-            {effects.added.length > 0 && (
-              <span className="text-brand">{tp("replies.adds", { list: effects.added.map((r) => recipientLabel(tf, r)).join(", ") })}</span>
-            )}
-            {effects.outOfScope.length > 0 && (
-              <span className="text-warning">
-                {tp("replies.outOfScope", { names: effects.outOfScope.map((d) => daLabel(tf, d)).join(", ") })}
-              </span>
-            )}
-            <Button size="sm" className="ml-auto" disabled={!text.trim()} onClick={send}>
-              {tp("replies.send")}
-            </Button>
-          </div>
-        </div>
+        <FeedComposer
+          note={note}
+          artistName={artist?.name ?? null}
+          daOf={daOf}
+          myRole={myRole}
+          onReply={onReply}
+          onStatus={onStatus}
+          onAttach={onAttach}
+          attachCtx={attachCtx}
+        />
       ) : (
         <p className="text-[11px] text-muted-foreground">{tp("readOnly")}</p>
       )}
@@ -547,27 +476,71 @@ function Replies({ note, artist, canAct, daOf, onReply, onStatus, myRole = null,
   );
 }
 
-function QuickChip({
-  onClick,
-  children,
-  tone = "neutral",
+/**
+ * Le statut, visible et explicite : « ● Décidé ▾ ». Le vrai <select> natif est posé dessus
+ * (clavier, lecteur d'écran, rendu serveur testé). Sans droit d'agir : la pastille seule.
+ */
+export function StatusPill({
+  status,
+  canAct,
+  onStatus,
+  tip = false,
+  onDismissTip,
+  size = "sm",
 }: {
-  onClick: () => void;
-  children: ReactNode;
-  tone?: "neutral" | "brand";
+  status: FeedStatus;
+  canAct: boolean;
+  onStatus: (s: FeedStatus) => void;
+  tip?: boolean;
+  onDismissTip?: () => void;
+  size?: "sm" | "md";
 }) {
+  const tp = useTranslations("filpage");
+  const { Icon } = STATUS_GLYPH[status];
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[12px] font-medium transition-colors",
-        tone === "brand"
-          ? "border-brand/30 bg-brand/10 text-brand hover:bg-brand/20"
-          : "bg-background hover:border-foreground/25",
+    <span className="relative inline-flex">
+      <span
+        className={cn(
+          "has-[select:focus-visible]:ring-ring relative inline-flex items-center gap-1.5 rounded-full border font-semibold has-[select:focus-visible]:ring-2",
+          size === "md" ? "h-8 px-3 text-[12.5px]" : "h-7 px-2.5 text-[12px]",
+          STATUS_TONE[status],
+        )}
+        title={canAct ? tp("status.label") : undefined}
+      >
+        <Icon className="size-3.5" aria-hidden />
+        {canAct ? <span aria-hidden>{tp(`status.${status}`)}</span> : <span data-status={status}>{tp(`status.${status}`)}</span>}
+        {canAct && <ChevronDown className="size-3 opacity-70" aria-hidden />}
+        {canAct && (
+          <select
+            aria-label={tp("status.label")}
+            value={status}
+            onChange={(e) => {
+              onStatus(e.target.value as FeedStatus);
+              onDismissTip?.();
+            }}
+            className="absolute inset-0 cursor-pointer appearance-none rounded-full opacity-0"
+          >
+            {FEED_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {tp(`status.${s}`)}
+              </option>
+            ))}
+          </select>
+        )}
+      </span>
+      {/* Première visite : on montre où se change le statut, une fois. */}
+      {tip && canAct && (
+        <span
+          role="note"
+          className="bg-foreground text-background absolute bottom-full left-0 z-20 mb-2 flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[11.5px] font-medium whitespace-nowrap shadow-lg"
+        >
+          {tp("tip.status")}
+          <button type="button" onClick={onDismissTip} className="bg-background/15 hover:bg-background/25 rounded px-1.5 py-0.5 text-[11px]">
+            {tp("tip.ok")}
+          </button>
+          <span aria-hidden className="bg-foreground absolute top-full left-4 size-2 -translate-y-1 rotate-45" />
+        </span>
       )}
-    >
-      {children}
-    </button>
+    </span>
   );
 }

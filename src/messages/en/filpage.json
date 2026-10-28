@@ -89,6 +89,9 @@
   "detect": {
     "title": "Day One spotted",
     "hint": "One click posts it to the feed, addressed to the right team — nothing to copy.",
+    "show": "Show",
+    "hide": "Hide",
+    "summary": "{count, plural, one {# item to post} other {# items to post}}",
     "post": "Post to the feed",
     "dismiss": "Dismiss",
     "posted": "Posted to the feed · sent to {list}",
@@ -101,5 +104,17 @@
   "attach": {
     "button": "Attach a file",
     "posted": "Attached “{name}” — translated by Day One for every team."
+  },
+  "tip": { "status": "Click here to change the status", "ok": "Got it" },
+  "conv": {
+    "title": "Conversation",
+    "close": "Close the conversation",
+    "open": "Open the conversation",
+    "note": "posted the note",
+    "you": "You",
+    "seen": "Seen by {list}",
+    "notSeen": "Not seen by the other teams yet",
+    "react": "React",
+    "adds": "adds {list}"
   }
 }

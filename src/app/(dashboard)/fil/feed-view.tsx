@@ -13,6 +13,7 @@
  * Un DA lit tout en « Tout » (comme avant), mais n'agit que sur ses artistes (`canActOn`).
  */
 import { Suspense, useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -21,6 +22,7 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { CommitteeAgenda } from "@/components/modules/structure/feed/committee-agenda";
 import { daLabel, recipientLabel, roleLabel } from "@/components/modules/structure/feed/labels";
 import { DetectedPanel, useSignalText } from "@/components/modules/structure/feed/detected-panel";
+import { ConversationPanel } from "@/components/modules/structure/feed/conversation-panel";
 import { NoteCard } from "@/components/modules/structure/feed/note-card";
 import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { Button } from "@/components/ui/button";
@@ -61,6 +63,8 @@ import {
 } from "@/lib/userdata/feed-model";
 import { FEED_TODAY, useFeed } from "@/lib/userdata/use-feed";
 import { useFeedSeen } from "@/lib/userdata/use-feed-seen";
+import { seenSnapshot, subscribeSeen, viewerKey } from "@/lib/userdata/feed-seen";
+import { react, reactionsSnapshot, subscribeReactions, type Reaction } from "@/lib/userdata/feed-reactions";
 import { stakeFor, waitingFor } from "@/lib/userdata/feed-stakes";
 import { detectSignals, detectedSnapshot, markDetected, subscribeDetected, type Signal } from "@/lib/userdata/feed-detect";
 import { addAttachment, attachmentsSnapshot, subscribeAttachments } from "@/lib/userdata/feed-attachments-store";
@@ -82,6 +86,16 @@ const GROUP_TONE: Record<Urgency, { box: string; pill: string; Icon: typeof Flam
   important: { box: "border-warning/35 bg-warning/[0.08]", pill: "bg-warning text-[oklch(0.24_0.05_70)]", Icon: AlertTriangle },
   info: { box: "border-brand/20 bg-brand/[0.05]", pill: "bg-brand text-brand-foreground", Icon: Info },
 };
+
+/* Grand écran (≥ lg) : la conversation à droite du fil. En dessous : plein écran, rendu sous <body>
+   — l'animation d'entrée de la page pose un transform qui ferait d'un `fixed` un simple `absolute`. */
+const WIDE = "(min-width: 1024px)";
+const subscribeWide = (fn: () => void) => {
+  const mq = window.matchMedia(WIDE);
+  mq.addEventListener("change", fn);
+  return () => mq.removeEventListener("change", fn);
+};
+const wideNow = () => window.matchMedia(WIDE).matches;
 
 /** ease-out-quart : la note qui part ralentit en se repliant. */
 const EASE_OUT = [0.25, 1, 0.5, 1] as const;
@@ -160,6 +174,26 @@ function Feed() {
   /* ── Triage : sélection au clavier, « Traité » qui se défait, ce qui a été fait aujourd'hui ── */
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = useState<string | null>(null);
+  /** La note dont la conversation est ouverte à droite. */
+  const [openId, setOpenId] = useState<string | null>(null);
+  /** Bulle « Clique ici pour changer le statut » : une fois par navigateur. */
+  /* Lu à l'initialisation : côté serveur aucune note n'est rendue, donc pas de bulle à hydrater. */
+  const [tipDismissed, setTipDismissed] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      return window.localStorage.getItem("day1-fil-tip-status") === "1";
+    } catch {
+      return true; // navigation privée : pas de bulle
+    }
+  });
+  const dismissTip = () => {
+    setTipDismissed(true);
+    try {
+      window.localStorage.setItem("day1-fil-tip-status", "1");
+    } catch {
+      /* navigation privée */
+    }
+  };
   const [undo, setUndo] = useState<{ id: string; prev: FeedStatus } | null>(null);
   const [undoPaused, setUndoPaused] = useState(false);
   const [showDone, setShowDone] = useState(false);
@@ -239,7 +273,15 @@ function Feed() {
           if (!undo) return;
           undoDone();
           break;
+        case "Enter":
+          if (!current) return;
+          setOpenId(current.id);
+          break;
         case "Escape":
+          if (openId) {
+            setOpenId(null);
+            break;
+          }
           if (!activeId) return;
           setActiveId(null);
           break;
@@ -254,6 +296,23 @@ function Feed() {
 
   /* Nouveau pour moi (« +1 »), et ma fiche pour « Je m'en occupe » (un DA est sa propre fiche). */
   const { unread, see } = useFeedSeen(notes);
+  const reactionsSnap = useSyncExternalStore(subscribeReactions, reactionsSnapshot, () => "{}");
+  const reactions = useMemo(() => JSON.parse(reactionsSnap) as Record<string, Partial<Record<Reaction, string[]>>>, [reactionsSnap]);
+  const seenSnap = useSyncExternalStore(subscribeSeen, seenSnapshot, () => "{}");
+  const seenState = useMemo(() => JSON.parse(seenSnap) as Record<string, Record<string, string>>, [seenSnap]);
+  const myViewer = viewerKey(jobRole, daId);
+  const isWide = useSyncExternalStore(subscribeWide, wideNow, () => true);
+  const openNote = openId ? (notes.find((n) => n.id === openId) ?? null) : null;
+  const openThread = (id: string) => {
+    setOpenId(id);
+    setActiveId(id);
+    see(id);
+  };
+  /* Conversation ouverte : ce qui y arrive est vu aussitôt. */
+  const openReplies = openNote?.replies.length ?? 0;
+  useEffect(() => {
+    if (openId) see(openId);
+  }, [openId, openReplies, see]);
   const newForMe = useMemo(() => lists.mine.reduce((s, n) => s + unread(n), 0), [lists.mine, unread]);
   const myPersonId = jobRole === "da" ? daId : (FEED_PEOPLE.find((p) => p.role === jobRole && p.daId === null)?.id ?? null);
   const [now] = useState(() => Date.now());
@@ -315,6 +374,7 @@ function Feed() {
     sendReply(n, tp("attach.posted", { name: a.name }));
   };
 
+  const firstNoteId = groups[0]?.items[0]?.id ?? null;
   const renderNote = (n: FeedNote) => (
     <NoteCard
       note={n}
@@ -339,6 +399,9 @@ function Feed() {
       onAssign={(personId) => assign(n.id, personId, me)}
       onOpen={open}
       onFilterArtist={(id) => setArtistFilter(id)}
+      onOpenThread={() => openThread(n.id)}
+      statusTip={!tipDismissed && n.id === firstNoteId}
+      onDismissTip={dismissTip}
     />
   );
 
@@ -449,7 +512,8 @@ function Feed() {
         </p>
       </div>
 
-      <div className="bg-card overflow-hidden rounded-xl border">
+      <div className={cn(openNote && isWide && "grid grid-cols-[minmax(0,1fr)_minmax(22rem,30rem)] items-start gap-4")}>
+      <div className="bg-card min-w-0 overflow-hidden rounded-xl border">
         {/* Le filet se remplit à mesure que la pile « pour moi » descend. */}
         <div className="bg-muted h-0.5" aria-hidden>
           <div className="bg-brand h-full transition-[width] duration-500" style={{ width: `${progress * 100}%` }} />
@@ -536,6 +600,46 @@ function Feed() {
         <p className="text-muted-foreground border-t px-4 py-2 text-[11px] [@media(hover:none)]:hidden">
           {tp("keys.hint")}
         </p>
+      </div>
+
+      {/* La conversation de la note ouverte : à droite sur grand écran, plein écran sinon. */}
+      {openNote && (() => {
+        const panel = (
+        <ConversationPanel
+          key={openNote.id}
+          note={openNote}
+          artist={openNote.artistId ? getArtist(openNote.artistId) : null}
+          today={FEED_TODAY}
+          canAct={canActOn(openNote, jobRole, daId, daOf)}
+          canSeeArtist={seesArtist(openNote.artistId)}
+          daOf={daOf}
+          myRole={jobRole}
+          myDaId={daId}
+          myViewer={myViewer}
+          myPersonId={myPersonId}
+          attachments={attachments[openNote.id] ?? []}
+          reactions={reactions}
+          seenState={seenState}
+          stake={stakeFor(openNote)}
+          waiting={waitingFor(openNote, now)}
+          onClose={() => setOpenId(null)}
+          onStatus={(st) => status(openNote.id, st, me)}
+          onDone={() => markDone(openNote)}
+          onAssign={(personId) => {
+            assign(openNote.id, personId, me);
+            if (personId && statusOf(openNote) === "todo") status(openNote.id, "doing", me);
+            if (personId) sendReply(openNote, tp("quick.mineText"));
+          }}
+          onReply={(text) => sendReply(openNote, text)}
+          onOpen={open}
+          onAttach={(a) => attach(openNote, a)}
+          onReact={(messageId, r) => react(messageId, r, myViewer)}
+          attachCtx={{ by: { role: jobRole, name: me.name }, artistId: openNote.artistId, today: FEED_TODAY }}
+          className={isWide ? "sticky top-20 h-[calc(100dvh-6.5rem)]" : "fixed inset-0 z-50 h-dvh rounded-none"}
+        />
+        );
+        return isWide ? panel : createPortal(panel, document.body);
+      })()}
       </div>
 
       {/* « Envoyé à … » : la réponse est partie, et on voit à qui. */}

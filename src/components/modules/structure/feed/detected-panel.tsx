@@ -5,8 +5,9 @@
  * de contrat, chute de streams), rédigé, adressé, daté, lié. Un clic le pose dans le fil ; un
  * autre l'écarte. Logique : feed-detect.ts.
  */
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, BadgeEuro, FileSignature, Sparkles, TrendingDown, X } from "lucide-react";
+import { ArrowRight, BadgeEuro, ChevronDown, FileSignature, Sparkles, TrendingDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getArtist } from "@/lib/demo/data";
 import { fmtCompact, fmtDate, fmtEur, fmtPct } from "@/lib/format";
@@ -47,17 +48,31 @@ export function DetectedPanel({
   const tf = useTranslations("fil");
   const locale = useLocale();
   const text = useSignalText();
+  /* Replié par défaut : une ligne, pour laisser la place aux urgences ; un clic déplie. */
+  const [open, setOpen] = useState(false);
   if (signals.length === 0) return null;
   return (
     <section aria-labelledby="fil-detect" className="border-brand/30 bg-brand/[0.04] rounded-xl border border-dashed p-2.5">
-      <h3 id="fil-detect" className="mb-2 flex flex-wrap items-center gap-2 px-0.5">
-        <span className="bg-foreground text-background inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase">
-          <Sparkles className="size-3" aria-hidden />
-          {tp("detect.title")}
-          <span className="tabular-nums">{signals.length}</span>
-        </span>
-        <span className="text-muted-foreground text-[12px]">{tp("detect.hint")}</span>
+      <h3 id="fil-detect" className={cn("flex flex-wrap items-center gap-2 px-0.5", open && "mb-2")}>
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="flex flex-1 flex-wrap items-center gap-2 text-left"
+        >
+          <span className="bg-foreground text-background inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase">
+            <Sparkles className="size-3" aria-hidden />
+            {tp("detect.title")}
+            <span className="tabular-nums">{signals.length}</span>
+          </span>
+          <span className="text-muted-foreground text-[12px]">{open ? tp("detect.hint") : tp("detect.summary", { count: signals.length })}</span>
+          <span className="text-brand ml-auto inline-flex items-center gap-1 text-[12px] font-semibold">
+            {open ? tp("detect.hide") : tp("detect.show")}
+            <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} aria-hidden />
+          </span>
+        </button>
       </h3>
+      {open && (
       <ul className="space-y-1.5">
         {signals.map((s) => {
           const Icon = KIND_ICON[s.kind];
@@ -99,6 +114,7 @@ export function DetectedPanel({
           );
         })}
       </ul>
+      )}
     </section>
   );
 }

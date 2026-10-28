@@ -89,6 +89,9 @@
   "detect": {
     "title": "Day One a repéré",
     "hint": "Un clic pour le poser dans le fil, adressé au bon service — rien à recopier.",
+    "show": "Voir",
+    "hide": "Masquer",
+    "summary": "{count, plural, one {# point à poser dans le fil} other {# points à poser dans le fil}}",
     "post": "Poser dans le fil",
     "dismiss": "Écarter",
     "posted": "Posé dans le fil · envoyé à {list}",
@@ -101,5 +104,17 @@
   "attach": {
     "button": "Joindre un fichier",
     "posted": "A joint « {name} » — traduit par Day One pour chaque service."
+  },
+  "tip": { "status": "Clique ici pour changer le statut", "ok": "Compris" },
+  "conv": {
+    "title": "Conversation",
+    "close": "Fermer la conversation",
+    "open": "Ouvrir la conversation",
+    "note": "a posé la note",
+    "you": "Toi",
+    "seen": "Vu par {list}",
+    "notSeen": "Pas encore vu par les autres services",
+    "react": "Réagir",
+    "adds": "ajoute {list}"
   }
 }
