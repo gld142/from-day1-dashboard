@@ -63,6 +63,8 @@
     "start": "Lancer la discussion"
   },
   "quick": {
+    "label": "Répondre en un clic",
+    "sends": "Envoie : « {text} »",
     "title": "En un clic",
     "mine": "Je m'en occupe",
     "mineText": "Je m'en occupe.",

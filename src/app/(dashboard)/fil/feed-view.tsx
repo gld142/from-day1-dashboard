@@ -87,6 +87,18 @@ const GROUP_DOT: Record<Urgency, string> = {
   info: "bg-muted-foreground/60",
 };
 
+/* Une teinte TRÈS légère par section (fond à 3 %, bordure à 16 %) : assez pour séparer d'un coup
+   d'œil Urgent / Important / Info, pas assez pour refaire des blocs colorés. */
+const GROUP_COLOR: Record<Urgency, string> = {
+  urgent: "var(--destructive)",
+  important: "var(--warning)",
+  info: "var(--muted-foreground)",
+};
+const sectionSurface = (u: Urgency) => ({
+  background: `color-mix(in oklab, ${GROUP_COLOR[u]} 3%, var(--card))`,
+  borderColor: `color-mix(in oklab, ${GROUP_COLOR[u]} 16%, var(--border))`,
+});
+
 /* Grand écran (≥ lg) : la conversation à droite du fil. En dessous : plein écran, rendu sous <body>
    — l'animation d'entrée de la page pose un transform qui ferait d'un `fixed` un simple `absolute`. */
 const WIDE = "(min-width: 1024px)";
@@ -550,7 +562,7 @@ function Feed() {
                   {t(`urgency.${g.urgency}`)}
                   <span className="text-muted-foreground font-normal tabular-nums">{g.items.length}</span>
                 </h3>
-                <ul className="bg-card divide-border/70 overflow-hidden rounded-lg border divide-y">
+                <ul className="divide-border/70 overflow-hidden rounded-lg border divide-y" style={sectionSurface(g.urgency)}>
                   <AnimatePresence initial={false}>
                     {g.items.map((n) => (
                       <motion.li

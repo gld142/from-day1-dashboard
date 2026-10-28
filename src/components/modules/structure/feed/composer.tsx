@@ -73,7 +73,44 @@ export function FeedComposer({
           artistName={artistName}
         />
       )}
-      {/* Un seul bloc : le texte, puis sa barre d'outils (réponses en un clic, transmettre, joindre, envoyer). */}
+      {/* Deux rangées nommées : on voit que chaque bouton ENVOIE (l'infobulle montre le message exact). */}
+      <div className="space-y-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-muted-foreground w-[8.5rem] shrink-0 text-[11.5px]">{tp("quick.label")}</span>
+          <QuickChip
+            title={tp("quick.sends", { text: tp("quick.okText") })}
+            onClick={() => {
+              if (status !== "done") onStatus("decided");
+              onReply(tp("quick.okText"));
+            }}
+          >
+            <Check className="size-3.5" aria-hidden />
+            {tp("quick.ok")}
+          </QuickChip>
+          <QuickChip title={tp("quick.sends", { text: tp("quick.infoText") })} onClick={() => onReply(tp("quick.infoText"))}>
+            {tp("quick.info")}
+          </QuickChip>
+          <QuickChip title={tp("quick.sends", { text: tp("quick.chaseText") })} onClick={() => onReply(tp("quick.chaseText"))}>
+            {tp("quick.chase")}
+          </QuickChip>
+        </div>
+        {forwardTo.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-muted-foreground w-[8.5rem] shrink-0 text-[11.5px]">{tp("quick.forward")}</span>
+            {forwardTo.map((r) => {
+              const text = tp("quick.forwardText", { service: roleLabel(tf, r) });
+              return (
+                <QuickChip key={r} title={tp("quick.sends", { text })} onClick={() => onReply(text)}>
+                  <CornerUpRight className="text-muted-foreground size-3.5" aria-hidden />
+                  {roleLabel(tf, r)}
+                </QuickChip>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Le texte libre et sa barre : joindre, envoyer. */}
       <div className="bg-background focus-within:border-foreground/30 rounded-lg border transition-colors">
         <Textarea
           aria-label={tp("replies.label")}
@@ -88,49 +125,24 @@ export function FeedComposer({
           }}
           className="min-h-14 resize-none border-0 bg-transparent px-3 py-2.5 text-[13px] shadow-none focus-visible:ring-0 dark:bg-transparent"
         />
-        <div className="flex flex-wrap items-center gap-x-0.5 gap-y-1 border-t px-1.5 py-1.5">
-          <QuickChip
-            onClick={() => {
-              if (status !== "done") onStatus("decided");
-              onReply(tp("quick.okText"));
-            }}
-          >
-            <Check className="size-3.5" aria-hidden />
-            {tp("quick.ok")}
-          </QuickChip>
-          <QuickChip onClick={() => onReply(tp("quick.infoText"))}>{tp("quick.info")}</QuickChip>
-          <QuickChip onClick={() => onReply(tp("quick.chaseText"))}>{tp("quick.chase")}</QuickChip>
-          {forwardTo.length > 0 && (
-            <span className="text-muted-foreground ml-1 inline-flex items-center gap-1 border-l pl-2 text-[12px]">
-              <CornerUpRight className="size-3.5" aria-hidden />
-              {tp("quick.forward")}
-            </span>
-          )}
-          {forwardTo.map((r) => (
-            <QuickChip key={r} tone="link" onClick={() => onReply(tp("quick.forwardText", { service: roleLabel(tf, r) }))}>
-              {roleLabel(tf, r)}
-            </QuickChip>
-          ))}
-          <span className="ml-auto flex items-center gap-1">
-            {onAttach && attachCtx && (
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                aria-pressed={showAttach}
-                aria-label={tp("attach.button")}
-                title={tp("attach.button")}
-                onClick={() => setShowAttach((v) => !v)}
-                className={cn("text-muted-foreground h-7 px-2", showAttach && "bg-muted text-foreground")}
-              >
-                <Paperclip className="size-3.5" aria-hidden />
-              </Button>
-            )}
-            <Button size="sm" className="h-7 gap-1.5 px-2.5 text-[12px]" disabled={!text.trim()} onClick={send}>
-              <Send className="size-3.5" aria-hidden />
-              {tp("replies.send")}
+        <div className="flex items-center gap-1 border-t px-1.5 py-1.5">
+          {onAttach && attachCtx && (
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              aria-pressed={showAttach}
+              onClick={() => setShowAttach((v) => !v)}
+              className={cn("text-muted-foreground h-7 gap-1.5 px-2 text-[12px]", showAttach && "bg-muted text-foreground")}
+            >
+              <Paperclip className="size-3.5" aria-hidden />
+              {tp("attach.button")}
             </Button>
-          </span>
+          )}
+          <Button size="sm" className="ml-auto h-7 gap-1.5 px-2.5 text-[12px]" disabled={!text.trim()} onClick={send}>
+            <Send className="size-3.5" aria-hidden />
+            {tp("replies.send")}
+          </Button>
         </div>
       </div>
       {(effects.added.length > 0 || effects.outOfScope.length > 0) && (
@@ -152,23 +164,22 @@ export function FeedComposer({
 export function QuickChip({
   onClick,
   children,
-  tone = "neutral",
+  title,
   pressed,
 }: {
   onClick: () => void;
   children: ReactNode;
-  tone?: "neutral" | "link";
+  /** Le message exact que le bouton envoie. */
+  title?: string;
   pressed?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      title={title}
       aria-pressed={pressed}
-      className={cn(
-        "hover:bg-muted inline-flex h-7 items-center gap-1 rounded-md px-2 text-[12px] font-medium transition-colors",
-        tone === "link" ? "text-foreground/80 hover:text-foreground" : "text-foreground/85",
-      )}
+      className="bg-background hover:bg-muted hover:border-foreground/25 text-foreground/90 inline-flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[12px] font-medium transition-colors"
     >
       {children}
     </button>

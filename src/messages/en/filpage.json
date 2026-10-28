@@ -63,6 +63,8 @@
     "start": "Start the discussion"
   },
   "quick": {
+    "label": "One-click reply",
+    "sends": "Sends: “{text}”",
     "title": "One click",
     "mine": "I'm on it",
     "mineText": "I'm on it.",
