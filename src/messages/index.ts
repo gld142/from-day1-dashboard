@@ -107,6 +107,7 @@ const MESSAGES = {
     catalog: frCatalog,
     team: frTeam,
     settings: frSettings,
+    organisation: frOrganisation,
     algoposition: frAlgoPosition,
     discovery: frDiscovery,
     sync: frSync,
@@ -118,7 +119,6 @@ const MESSAGES = {
     ask: frAsk,
     welcome: frWelcome,
     fil: frFil,
-    organisation: frOrganisation,
   },
   en: {
     common: enCommon,
@@ -146,6 +146,7 @@ const MESSAGES = {
     catalog: enCatalog,
     team: enTeam,
     settings: enSettings,
+    organisation: enOrganisation,
     algoposition: enAlgoPosition,
     discovery: enDiscovery,
     sync: enSync,
@@ -157,7 +158,6 @@ const MESSAGES = {
     ask: enAsk,
     welcome: enWelcome,
     fil: enFil,
-    organisation: enOrganisation,
   },
 } as const;
 
@@ -196,14 +196,14 @@ type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
  *   namespace, bloc Believe compris, se lisait dans le HTML de /connexion et /inscription des deux
  *   maisons.
  */
-/*
- * - organisation : l'organisation de la maison (pôles, équipes, regroupements du roster, Réglages
- *   → Organisation, ligne « Équipe » de l'artiste). Envoyé par le layout (dashboard), derrière la
- *   porte, à toutes les pages du dashboard — jamais à /connexion, /inscription ni /acces (hors du
- *   groupe (dashboard)).
- */
 export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "organisation"] as const satisfies readonly Namespace[];
 export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
+/*
+ * organisation (namespace de page) : l'organisation de la maison — pôles, équipes, regroupements
+ * du roster, Réglages → Organisation, ligne « Équipe » de l'artiste. Envoyé par le layout
+ * (dashboard), derrière la porte, à toutes les pages du dashboard ; jamais à /connexion,
+ * /inscription ni /acces (hors du groupe (dashboard)). Test : organisation-scope.test.ts.
+ */
 
 /**
  * Namespaces de page absents des messages de la REQUÊTE (`getMessages`) dans toutes les maisons :
@@ -220,7 +220,7 @@ type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
 type WelcomeMessages = AllMessages["welcome"];
 /** welcome tel qu'une maison le reçoit : les seuls canaux qu'elle ouvre. */
 type HouseWelcomeMessages = Omit<WelcomeMessages, "sources"> & { sources: Partial<WelcomeMessages["sources"]> };
-type PageScopedMessages = Pick<AllMessages, InternalNamespace | "organisation"> & { welcome: HouseWelcomeMessages };
+type PageScopedMessages = Pick<AllMessages, InternalNamespace> & { welcome: HouseWelcomeMessages };
 
 function without<T extends object, K extends string>(messages: T, namespaces: readonly K[]): Omit<T, K> {
   const drop: readonly string[] = namespaces;
@@ -318,8 +318,12 @@ export function pageMessages(
 ): RootClientMessages & Partial<PageScopedMessages> {
   const scoped: Partial<PageScopedMessages> = {};
   for (const ns of namespaces) {
+    /* organisation : tel quel, dans les deux maisons (le dashboard existe dans les deux). */
+    if (ns === "organisation") {
+      Object.assign(scoped, { organisation: MESSAGES[locale].organisation });
+      continue;
+    }
     if (ns === "welcome") scoped.welcome = houseWelcome(locale, tenant);
-    else if (ns === "organisation") Object.assign(scoped, { organisation: MESSAGES[locale].organisation });
     else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });
   }
   return { ...rootClientMessages(locale, tenant), ...scoped };
