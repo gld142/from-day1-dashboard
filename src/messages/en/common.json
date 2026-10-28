@@ -8,6 +8,7 @@
     "artist": "Artist",
     "label": "Label",
     "switchTo": "{role} view",
+    "universal": "Day One × Universal",
     "viewingAs": "Viewing the dashboard as: {name}"
   },
   "themes": {

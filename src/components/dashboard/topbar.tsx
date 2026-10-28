@@ -4,12 +4,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore, useTransition } from "react";
 import {
+  ArrowUpRight,
   Building2,
   Check,
   ChevronsUpDown,
   Languages,
   MicVocal,
   Moon,
+  Network,
   Sun,
   Sunrise,
 } from "lucide-react";
@@ -41,6 +43,9 @@ const THEME_META = [
 
 /** Aucune source externe à écouter : l'abonnement est un no-op stable. */
 const subscribeNever = () => () => {};
+
+/** Le dashboard Day One × Universal (projet Vercel `day1-universal`). */
+const UNIVERSAL_URL = "https://day1-universal.vercel.app";
 
 export function Topbar() {
   const t = useTranslations("common");
@@ -103,6 +108,15 @@ export function Topbar() {
             <Building2 className="size-4" aria-hidden />
             <span className="flex-1">{t("roles.switchTo", { role: t("roles.label") })}</span>
             {persona === "label" && <Check className="size-4 text-brand" aria-hidden />}
+          </DropdownMenuItem>
+          {/* Le dashboard Day One × Universal (autre déploiement, derrière sa porte) :
+              un seul point d'entrée depuis ce menu plutôt qu'une URL de plus à retenir. */}
+          <DropdownMenuItem asChild className="gap-2">
+            <a href={UNIVERSAL_URL}>
+              <Network className="size-4" aria-hidden />
+              <span className="flex-1">{t("roles.universal")}</span>
+              <ArrowUpRight className="size-4 text-muted-foreground" aria-hidden />
+            </a>
           </DropdownMenuItem>
           {isLabel && (
             <>
