@@ -146,9 +146,5 @@
     "calculatorValue": "tester avant de signer",
     "valuation": "Valorisation",
     "valuationValue": "ce que vaut le catalogue"
-  },
-  "panel": {
-    "collapse": "Replier",
-    "expand": "Déplier"
   }
 }

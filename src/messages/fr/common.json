@@ -118,5 +118,9 @@
     "legend": "Chaque chiffre porte sa provenance.",
     "detail": "voir le détail →",
     "seeAll": "tout voir →"
+  },
+  "panel": {
+    "collapse": "Replier",
+    "expand": "Déplier"
   }
 }

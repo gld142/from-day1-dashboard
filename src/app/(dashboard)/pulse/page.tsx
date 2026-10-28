@@ -35,6 +35,7 @@ import {
 } from "@/components/dashboard/sheet";
 import { Button } from "@/components/ui/button";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import { usePlacementsSnapshot } from "@/lib/userdata/use-placements";
 import { HeroChart } from "@/components/modules/pilotage/hero-chart";
 import { MoversPanel } from "@/components/modules/pilotage/movers-panel";
 import { AlgoTrendPanel } from "@/components/modules/pilotage/algo-trend-panel";
@@ -158,12 +159,15 @@ function PulsePage() {
   const showArtist = persona === "artist" || focusedArtistId !== null;
   /* Parts renseignées : les cascades des estimations en dépendent. */
   const sharesKey = useSharesSnapshot();
+  /* Le suivi des placements (Œuvres) : une œuvre déclarée à la main sort de « non déposées ». */
+  const placementsKey = usePlacementsSnapshot();
   /* Les briefs de synchro sont les mêmes pour tout le roster : on les compte
      une fois, et les deux personas lisent le même nombre. */
   /* Les œuvres non déposées d'un auteur-compositeur : de l'argent qui ne
      rentrera jamais tant que c'est le cas, et qu'aucune autre page ne
      signale. Côté structure, on additionne tous les compositeurs du roster. */
   const worksLead = useMemo(() => {
+    void placementsKey;
     const ids = showArtist ? [artistId] : roster.map((a) => a.id);
     const composers = ids.filter(isComposer);
     if (composers.length === 0) return null;
@@ -175,7 +179,7 @@ function PulsePage() {
       .filter((x): x is NonNullable<typeof x> => x !== null)
       .sort((a, b) => a.date.localeCompare(b.date))[0];
     return works > 0 ? { atStake, works, next } : null;
-  }, [showArtist, artistId, roster]);
+  }, [showArtist, artistId, roster, placementsKey]);
   const syncOpen = useMemo(() => syncBriefs().length, []);
   const syncSoon = useMemo(() => syncBriefsClosingSoon(), []);
 

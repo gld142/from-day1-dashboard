@@ -22,7 +22,9 @@
     "pipelineNote": "prochaine : « {title} », {date} (simulée)",
     "pipelineNone": "rien de signé à sortir",
     "pitched": "Propositions",
-    "pitchedNote": "envoyées, pas encore retenues (simulées)"
+    "pitchedNote": "envoyées, pas encore retenues (simulées)",
+    "undeclared": "À déclarer",
+    "undeclaredNote": "{count, plural, =0 {tout est déclaré} one {# œuvre sortie non déclarée} other {# œuvres sorties non déclarées}}"
   },
   "undeclared": {
     "title": "Non déclaré à la SACEM",
@@ -70,38 +72,89 @@
     "sync": "Placer ses œuvres",
     "syncValue": "les briefs ouverts"
   },
-  "own": {
-    "subtitle": "Ses œuvres, ce sont ses propres titres : il les écrit et les interprète, ses droits d'auteur suivent ses streams.",
-    "hero": {
-      "title": "Droits d'auteur sur ses titres",
-      "caption": "12 derniers mois, même calcul que Revenus",
-      "sub": "auteur-interprète signé en édition · {streams} streams en 12 mois"
+  "subtitleTracker": "L'activité d'édition du roster : qui a placé quoi, chez qui, et où ça en est.",
+  "stages": {
+    "proposee": "Proposée",
+    "discussion": "En discussion",
+    "signee": "Signée",
+    "sortie": "Sortie",
+    "declaree": "Déclarée SACEM"
+  },
+  "views": {
+    "label": "Vues du suivi",
+    "all": "Tout",
+    "recent": "Nouveautés 7 j",
+    "progress": "En cours",
+    "signee": "Signées",
+    "released": "Sorties",
+    "todeclare": "À déclarer"
+  },
+  "tracker": {
+    "title": "Suivi des placements",
+    "count": "{shown, plural, one {# placement} other {# placements}} sur {total}",
+    "searchLabel": "Rechercher un placement",
+    "search": "Œuvre, auteur, interprète…",
+    "year": "Année",
+    "allYears": "Toutes",
+    "reset": "Effacer",
+    "sortLabel": "Trier les placements",
+    "sort": {
+      "changed": "Dernière étape",
+      "title": "Œuvre A → Z",
+      "author": "Auteur A → Z",
+      "date": "Date de sortie"
     },
-    "points": {
-      "works": "Titres suivis",
-      "worksNote": "ses titres les plus écoutés",
-      "share": "Sa part d'auteur",
-      "shareDeclared": "renseignée dans Revenus",
-      "shareHypothesis": "seul auteur",
-      "shareHypothesisNote": "hypothèse, à préciser dans Revenus",
-      "others": "Reste du catalogue",
-      "othersNote": "titres moins écoutés"
-    },
-    "table": {
-      "title": "Titre par titre",
-      "caption": "réparti au prorata des streams",
-      "work": "Titre",
+    "notify": "Prévenir le fil",
+    "notified": "Étape enregistrée, et envoyée au fil entre services : {services}.",
+    "saved": "« {title} » : {stage}, enregistré.",
+    "dismiss": "Fermer",
+    "none": "Aucun placement suivi pour l'instant.",
+    "noMatch": "Aucun placement ne correspond à cette vue ou à cette recherche.",
+    "cols": {
+      "work": "Œuvre",
+      "author": "Auteur",
       "performer": "Interprète",
-      "role": "Rôle",
-      "roleValue": "Auteur-interprète",
-      "streams": "Streams 12 mois",
-      "rights": "Droits d'auteur",
-      "method": "Même calcul que la page Revenus : brut master × 27,3 % (droits d'auteur, 15 pour 55 versés au master, GESAC 2022) × la part des créateurs selon les règles de la Sacem. Tant que sa part n'est pas renseignée, on le compte seul auteur de ses titres."
+      "stage": "Étape",
+      "changed": "Mis à jour",
+      "date": "Sortie",
+      "share": "Part",
+      "streams": "Streams",
+      "sacem": "SACEM"
     },
-    "composers": {
-      "title": "Les compositeurs non interprètes du roster",
-      "body": "Eux n'écrivent pas pour leurs propres disques : leurs streams dépendent des placements chez d'autres artistes.",
-      "open": "Voir les œuvres de {name}"
-    }
-  }
+    "stageOf": "Étape de « {title} »",
+    "today": "aujourd'hui",
+    "daysAgo": "{days, plural, one {il y a # jour} other {il y a # jours}}",
+    "byDemo": "exemple de démo",
+    "deposited": "déposée",
+    "toDeclare": "à déclarer",
+    "note": "Placement « {title} » ({performer}), écrit par {author} : {stage}.",
+    "services": {
+      "da": "DA",
+      "finance": "Finance",
+      "juridique": "Juridique",
+      "direction": "Direction",
+      "presidence": "Présidence"
+    },
+    "saveNote": "Ce que l'équipe change ou ajoute ici est enregistré dans ce navigateur, comme le fil entre services."
+  },
+  "add": {
+    "open": "Ajouter un placement",
+    "title": "Œuvre",
+    "author": "Auteur du roster",
+    "performer": "Interprète",
+    "stage": "Étape",
+    "date": "Date de sortie ou visée",
+    "share": "Part (%)",
+    "submit": "Ajouter",
+    "cancel": "Annuler",
+    "done": "« {title} » ajoutée au suivi."
+  },
+  "activity": {
+    "title": "Activité récente",
+    "meta": "{count, plural, one {# changement} other {# derniers changements}}",
+    "none": "Aucun changement pour l'instant."
+  },
+  "ownLine": "Ses droits d'auteur sur ses propres titres ({name}) sont sur Revenus : {amount} sur 12 mois, le même chiffre.",
+  "ownLink": "Voir dans Revenus",
+  "noneFor": "{name} n'a pas encore de placement chez d'autres artistes. Ajoute-le ici dès qu'une œuvre est proposée."
 }

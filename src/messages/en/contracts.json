@@ -146,9 +146,5 @@
     "calculatorValue": "test before signing",
     "valuation": "Valuation",
     "valuationValue": "what the catalog is worth"
-  },
-  "panel": {
-    "collapse": "Collapse",
-    "expand": "Expand"
   }
 }

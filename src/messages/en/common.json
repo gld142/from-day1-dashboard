@@ -118,5 +118,9 @@
     "legend": "Every number carries its provenance.",
     "detail": "see details →",
     "seeAll": "see all →"
+  },
+  "panel": {
+    "collapse": "Collapse",
+    "expand": "Expand"
   }
 }

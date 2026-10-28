@@ -3,37 +3,35 @@
 /**
  * /placements — Œuvres & placements.
  *
- * La page d'un auteur-compositeur. Tout le reste du dashboard raconte ce que
- * rapportent LES STREAMS D'UN ARTISTE ; ici on raconte ce que rapportent LES
- * ŒUVRES QU'IL A ÉCRITES POUR D'AUTRES — ce n'est pas la même économie, et
- * ça ne se lit nulle part ailleurs.
+ * Pour une maison d'édition, la page dit l'ACTIVITÉ du roster : qui a placé quoi, chez qui, et où
+ * ça en est (Gaël, 28/10/2026). Un seul suivi pour tout le roster (`PlacementsTracker`) : vues
+ * écrites (nouveautés, en cours, signées, sorties, à déclarer), recherche, année, tri ; l'étape se
+ * pose à la main, chaque changement est daté et signé, et peut prévenir le fil entre services.
+ * L'état suivi alimente les montants : déclarer une œuvre la retire de « Non déclaré » ici et sur Pulse.
  *
- * Trois choses qu'aucune autre page ne dit :
- *   · le carnet de commandes (œuvres signées, pas encore sorties) ;
- *   · les œuvres non déclarées, et l'argent qu'elles ne vont pas chercher ;
- *   · le partage entre droits d'édition et points de production.
- *
- * Dans une maison où tout le roster est signé en édition (`TENANT.writersRoster`),
- * l'interprète est AUSSI auteur : ses œuvres sont ses propres titres, et ses droits
- * d'auteur suivent ses streams (vue `OwnWorks`). Le compositeur non interprète garde
- * la vue des placements : ses streams dépendent des disques des autres.
+ * Zoom sur un compositeur : ce que ses œuvres placées lui rapportent (estimé), puis ses placements.
+ * Zoom sur un auteur-interprète : ses placements chez d'autres ; ses droits d'auteur sur SES titres
+ * restent sur Revenus (un lien, pas un second chiffre).
  */
 import { CustomerPlacements } from "@/components/modules/customer/customer-placements";
 import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { ARTISTS, isComposer, isWriter, ownWorksFacts, placementFacts, placementMoney } from "@/lib/demo/api";
-import { getShares } from "@/lib/userdata/shares-store";
-import { useSharesSnapshot } from "@/lib/userdata/use-shares";
-import { fmtCompact, fmtDate, fmtEur } from "@/lib/format";
+import { ARTISTS, getArtist, isComposer, isWriter, ownWorksFacts, placementFacts } from "@/lib/demo/api";
+import { getDa } from "@/lib/demo/das";
+import { fmtCompact, fmtEur } from "@/lib/format";
 import { useRole } from "@/lib/role";
+import { getActivity, getTrackedPlacements } from "@/lib/userdata/placements-store";
+import { useScopedRoster } from "@/lib/userdata/use-org";
+import { usePlacementsSnapshot } from "@/lib/userdata/use-placements";
+import { useSharesSnapshot } from "@/lib/userdata/use-shares";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
-import { Badge } from "@/components/ui/badge";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
+import { PlacementsActivity, PlacementsTracker } from "@/components/modules/structure/placements-tracker";
 
 /** Mode client : le registre saisi dans l'espace ; sinon la démo, intacte. */
 export default function PlacementsPage() {
@@ -43,26 +41,61 @@ export default function PlacementsPage() {
 function DemoPlacementsPage() {
   const t = useTranslations("placements");
   const tc = useTranslations("common");
+  const tf = useTranslations("fil");
   const locale = useLocale();
-  const { artistId, isLabel, focusedArtistId, setFocusedArtistId } = useRole();
+  const { artistId, isLabel, focusedArtistId, setFocusedArtistId, jobRole, daId, scopeDaId } = useRole();
+  const roster = useScopedRoster(scopeDaId);
+  const placementsKey = usePlacementsSnapshot();
+  const sharesKey = useSharesSnapshot();
 
-  /* Les auteurs-compositeurs du roster : la page n'a de sens que pour eux. */
+  const grouped = isLabel && !focusedArtistId;
+  const focus = grouped ? null : artistId;
+  const focusArtist = focus ? getArtist(focus) : null;
+
+  /* Qui agit, figé dans l'historique et dans le fil (comme l'auteur d'une note). */
+  const actor = jobRole
+    ? jobRole === "da" && daId
+      ? `${tf("roles.da")} · ${getDa(daId)?.name ?? ""}`.trim()
+      : tf(`roles.${jobRole}`)
+    : tf("roles.direction");
+
+  const all = useMemo(() => {
+    void placementsKey;
+    return getTrackedPlacements();
+  }, [placementsKey]);
+  const events = useMemo(() => {
+    void placementsKey;
+    return getActivity();
+  }, [placementsKey]);
+
+  const inScope = useMemo(() => {
+    if (focus) return all.filter((p) => p.artistId === focus);
+    const ids = new Set(roster.map((a) => a.id));
+    return all.filter((p) => ids.has(p.artistId));
+  }, [all, focus, roster]);
+  const byId = useMemo(() => new Map(inScope.map((p) => [p.id, p])), [inScope]);
+
+  const writers = useMemo(
+    () => (focusArtist ? [focusArtist] : roster.filter((a) => isWriter(a.id))),
+    [focusArtist, roster],
+  );
   const composers = useMemo(() => ARTISTS.filter((a) => isComposer(a.id)), []);
-  const composer = isComposer(artistId) ? artistId : null;
+
+  /* Zoom compositeur : ce que ses œuvres placées lui rapportent (suit les étapes posées à la main). */
+  const facts = useMemo(() => {
+    void placementsKey;
+    return focus && isComposer(focus) ? placementFacts(focus) : null;
+  }, [focus, placementsKey]);
+  /* Zoom auteur-interprète : le chiffre de Revenus, en une ligne et un lien. */
+  const own = useMemo(() => {
+    void sharesKey;
+    return focus && !isComposer(focus) && isWriter(focus) ? ownWorksFacts(focus) : null;
+  }, [focus, sharesKey]);
 
   const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
 
-  const facts = useMemo(() => (composer ? placementFacts(composer) : null), [composer]);
-  const lignes = useMemo(() => (composer ? placementMoney(composer) : []), [composer]);
-
-  /* Auteur-interprète (maison d'édition) : ses œuvres sont ses propres titres. */
-  if (!composer && isWriter(artistId)) {
-    return <OwnWorks artistId={artistId} composers={composers} onOpen={setFocusedArtistId} />;
-  }
-
-  /* Ni l'artiste courant ni le zoom ne portent d'œuvres : on le dit, et on
-     donne le chemin plutôt qu'une page vide. */
-  if (!composer || !facts) {
+  /* Maison sans édition (day1) : un interprète n'a pas d'œuvres à suivre ici. */
+  if (focus && !isWriter(focus)) {
     return (
       <div className="rise-in">
         <PageHeader title={t("title")} subtitle={t("subtitleEmpty")} />
@@ -89,387 +122,69 @@ function DemoPlacementsPage() {
     );
   }
 
-  const released = lignes.filter((l) => l.placement.status === "released");
-  const pipeline = lignes
-    .filter((l) => l.placement.status !== "released")
-    .sort((a, b) => a.placement.date.localeCompare(b.placement.date));
-  const undeclared = released.filter((l) => !l.placement.declared);
-
   return (
     <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("subtitle")}>
-        {isLabel && focusedArtistId && (
-          <ArtistBadge artist={ARTISTS.find((a) => a.id === composer)!} size="sm" />
-        )}
+      <PageHeader title={t("title")} subtitle={t("subtitleTracker")}>
+        {isLabel && focusArtist && <ArtistBadge artist={focusArtist} size="sm" />}
       </PageHeader>
 
       <div className="space-y-3">
-        {/* Ce que les œuvres rapportent, et d'où ça vient. */}
-        <Sheet family="money">
-          <SheetHeading action={t("hero.caption")}>{t("hero.title")}</SheetHeading>
-          <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
-            {eur(facts.earned)}
-          </p>
-          <p className="sheet-ink mt-1.5 text-[13px]">
-            {t("hero.sub", {
-              works: facts.released,
-              streams: fmtCompact(locale, facts.streams),
-            })}{" "}
-            <ProvenanceBadge provenance="estimated" className="align-middle" />
-          </p>
-          <AffiliatedPoints
-            points={[
-              {
-                key: "publishing",
-                value: eur(facts.publishing),
-                label: t("points.publishing"),
-                note: facts.publisher
-                  ? t("points.publishingNote", {
-                      name: facts.publisher.name,
-                      pct: facts.publisher.sharePct,
-                    })
-                  : t("points.publishingSelf"),
-              },
-              {
-                key: "producer",
-                value: eur(facts.producer),
-                label: t("points.producer"),
-                note: t("points.producerNote"),
-              },
-              {
-                key: "pipeline",
-                value: String(facts.unreleased),
-                label: t("points.pipeline"),
-                note: facts.next
-                  ? t("points.pipelineNote", {
-                      title: facts.next.title,
-                      date: fmtDate(locale, facts.next.date, {
-                        day: "numeric",
-                        month: "short",
-                      }),
-                    })
-                  : t("points.pipelineNone"),
-              },
-              {
-                key: "pitched",
-                value: String(facts.pitched),
-                label: t("points.pitched"),
-                note: t("points.pitchedNote"),
-              },
-            ]}
-          />
-        </Sheet>
-
-        {/* L'argent qu'on laisse par terre : une œuvre non déposée ne peut pas
-            être payée, et rien d'autre dans le dashboard ne le signale. */}
-        {undeclared.length > 0 && (
+        {facts && (
           <Sheet family="money">
-            <SheetHeading action={t("undeclared.caption")}>
-              {t("undeclared.title")}{" "}
-              <ProvenanceBadge provenance="simulated" className="align-middle" />
-            </SheetHeading>
-            <p className="text-warning text-3xl leading-none font-semibold tracking-[-0.03em] tabular-nums">
-              {eur(facts.undeclaredAtStake)}
-            </p>
+            <SheetHeading action={t("hero.caption")}>{t("hero.title")}</SheetHeading>
+            <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">{eur(facts.earned)}</p>
             <p className="sheet-ink mt-1.5 text-[13px]">
-              {t("undeclared.sub", { count: undeclared.length })}
+              {t("hero.sub", { works: facts.released, streams: fmtCompact(locale, facts.streams) })}{" "}
+              <ProvenanceBadge provenance="estimated" className="align-middle" />
             </p>
-            <ul className="sheet-rule mt-3 space-y-1.5 pt-2.5 text-[12.5px]">
-              {undeclared.map((l) => (
-                <li
-                  key={l.placement.id}
-                  className="flex items-baseline justify-between gap-3"
-                >
-                  <span className="min-w-0 truncate">
-                    <b className="font-medium">{l.placement.title}</b>{" "}
-                    <span className="text-muted-foreground">
-                      · {l.placement.performer}
-                    </span>
-                  </span>
-                  <span className="num shrink-0 tabular-nums">{eur(l.publishing)}</span>
-                </li>
-              ))}
-            </ul>
+            <AffiliatedPoints
+              points={[
+                {
+                  key: "publishing",
+                  value: eur(facts.publishing),
+                  label: t("points.publishing"),
+                  note: facts.publisher
+                    ? t("points.publishingNote", { name: facts.publisher.name, pct: facts.publisher.sharePct })
+                    : t("points.publishingSelf"),
+                },
+                { key: "producer", value: eur(facts.producer), label: t("points.producer"), note: t("points.producerNote") },
+                {
+                  key: "undeclared",
+                  value: eur(facts.undeclaredAtStake),
+                  label: t("points.undeclared"),
+                  note: t("points.undeclaredNote", { count: facts.undeclared }),
+                },
+              ]}
+            />
           </Sheet>
         )}
 
-        {/* Le carnet de commandes : signé mais pas sorti. */}
-        {pipeline.length > 0 && (
-          <Sheet family="catalog">
-            <SheetHeading action={t("pipeline.caption")}>
-              {t("pipeline.title")}{" "}
-              <ProvenanceBadge provenance="simulated" className="align-middle" />
-            </SheetHeading>
-            <ul className="mt-2 space-y-2.5">
-              {pipeline.map((l) => (
-                <li
-                  key={l.placement.id}
-                  className="flex min-w-0 items-baseline justify-between gap-3 text-[13px]"
-                >
-                  <span className="min-w-0">
-                    <b className="font-medium">{l.placement.title}</b>{" "}
-                    <span className="text-muted-foreground">
-                      · {l.placement.performer}
-                    </span>
-                  </span>
-                  <span className="flex shrink-0 items-center gap-2.5">
-                    <span className="sheet-ink num tabular-nums">
-                      {fmtDate(locale, l.placement.date, {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="h-5 border-transparent bg-[color-mix(in_oklab,var(--sheet-line)_22%,transparent)] text-[10px] uppercase"
-                    >
-                      {t(`status.${l.placement.status}`)}
-                    </Badge>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-muted-foreground mt-3 text-[11.5px]">
-              {t("pipeline.simulated")} {t("pipeline.legend")}
-            </p>
-          </Sheet>
-        )}
-
-        {/* Le détail, œuvre par œuvre. */}
-        <Sheet family="money">
-          <SheetHeading action={t("table.caption")}>{t("table.title")}</SheetHeading>
-          <div className="mt-2 overflow-x-auto">
-            <table className="w-full min-w-[640px] text-[12.5px]">
-              <thead className="sheet-ink">
-                <tr className="sheet-rule text-left">
-                  <th className="pb-2 font-medium">{t("table.work")}</th>
-                  <th className="pb-2 font-medium">{t("table.performer")}</th>
-                  <th className="pb-2 font-medium">{t("table.roles")}</th>
-                  <th className="pb-2 text-right font-medium">{t("table.share")}</th>
-                  <th className="pb-2 text-right font-medium">{t("table.streams")}</th>
-                  <th className="pb-2 text-right font-medium">{t("table.net")}</th>
-                  <th className="pb-2 text-right font-medium">{t("table.declared")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lignes.map((l) => (
-                  <tr key={l.placement.id} className="border-line/40 border-t">
-                    <td className="max-w-[220px] py-2 font-medium">
-                      <span className="inline-block max-w-[150px] truncate align-middle">{l.placement.title}</span>
-                      {l.placement.status !== "released" && (
-                        <ProvenanceBadge provenance="simulated" className="ml-1.5 align-middle" />
-                      )}
-                    </td>
-                    <td className="text-muted-foreground max-w-[140px] truncate py-2">
-                      {l.placement.performer}
-                    </td>
-                    <td className="text-muted-foreground py-2">
-                      {l.placement.roles.map((r) => t(`roles.${r}`)).join(" · ")}
-                    </td>
-                    <td className="num py-2 text-right tabular-nums">
-                      {l.placement.writerSharePct} %
-                      {l.placement.producerPointsPct > 0 && (
-                        <span className="text-muted-foreground">
-                          {" "}
-                          + {l.placement.producerPointsPct} pts
-                        </span>
-                      )}
-                    </td>
-                    <td className="num py-2 text-right tabular-nums">
-                      {l.placement.streams > 0
-                        ? fmtCompact(locale, l.placement.streams)
-                        : "—"}
-                    </td>
-                    <td className="num py-2 text-right font-medium tabular-nums">
-                      {l.net > 0 ? eur(l.net) : "—"}
-                    </td>
-                    <td className="py-2 text-right">
-                      {l.placement.status !== "released" ? (
-                        <span className="text-muted-foreground">—</span>
-                      ) : l.placement.declared ? (
-                        <span className="text-success">{t("table.yes")}</span>
-                      ) : (
-                        <span className="text-warning">{t("table.no")}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-muted-foreground mt-3 text-[11.5px] leading-relaxed">
-            {t("table.provenance")} {t("table.method")}
+        {own && focusArtist && (
+          <p className="text-muted-foreground text-[13px]">
+            {t("ownLine", { name: focusArtist.name, amount: eur(own.publishing) })}{" "}
+            <ProvenanceBadge provenance={own.provenance} className="align-middle" />{" "}
+            <Link href="/revenue" className="text-foreground font-medium underline-offset-4 hover:underline">
+              {t("ownLink")}
+            </Link>
           </p>
-        </Sheet>
+        )}
 
-        <Doors
-          title={tc("blocks.doors")}
-          doors={[
-            {
-              key: "rights",
-              family: "money",
-              href: "/rights",
-              label: t("doors.rights"),
-              value: t("doors.rightsValue"),
-            },
-            {
-              key: "splits",
-              family: "money",
-              href: "/splits",
-              label: t("doors.splits"),
-              value: t("doors.splitsValue"),
-            },
-            {
-              key: "catalog",
-              family: "catalog",
-              href: "/catalog",
-              label: t("doors.catalog"),
-              value: t("doors.catalogValue"),
-            },
-            {
-              key: "sync",
-              family: "money",
-              href: "/sync",
-              label: t("doors.sync"),
-              value: t("doors.syncValue"),
-            },
-          ]}
+        <PlacementsTracker
+          placements={inScope}
+          artistOf={getArtist}
+          writers={writers}
+          showAuthor={!focus}
+          actor={actor}
+          jobRole={jobRole}
+          footer={
+            <>
+              {focusArtist && inScope.length === 0 && <span className="text-foreground/80 block">{t("noneFor", { name: focusArtist.name })}</span>}
+              {t("table.provenance")} {t("tracker.saveNote")}
+            </>
+          }
         />
 
-        <p className="text-muted-foreground mt-2 text-[11.5px]">
-          <Link href="/audit" className="text-brand hover:underline">
-            {tc("blocks.legend")}
-          </Link>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Auteur-interprète : ses œuvres sont ses propres titres. Les droits d'auteur sont ceux de la
- * page Revenus (`ownWorksFacts`, un seul calcul), répartis titre par titre au prorata des streams.
- * En bas, les compositeurs non interprètes du roster : l'autre économie, celle des placements.
- */
-function OwnWorks({
-  artistId,
-  composers,
-  onOpen,
-}: {
-  artistId: string;
-  composers: typeof ARTISTS;
-  onOpen: (id: string) => void;
-}) {
-  const t = useTranslations("placements");
-  const tc = useTranslations("common");
-  const locale = useLocale();
-  const { isLabel, focusedArtistId } = useRole();
-  /* Une part d'auteur renseignée dans Revenus change le calcul : le snapshot relance le memo. */
-  const sharesKey = useSharesSnapshot();
-  const facts = useMemo(() => {
-    void sharesKey;
-    return ownWorksFacts(artistId);
-  }, [artistId, sharesKey]);
-  const declaredPct = useMemo(() => {
-    void sharesKey;
-    return getShares(artistId)?.authorSharePct ?? null;
-  }, [artistId, sharesKey]);
-  const artist = ARTISTS.find((a) => a.id === artistId);
-  const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
-
-  return (
-    <div className="rise-in">
-      <PageHeader title={t("title")} subtitle={t("own.subtitle")}>
-        {isLabel && focusedArtistId && artist && <ArtistBadge artist={artist} size="sm" />}
-      </PageHeader>
-
-      <div className="space-y-3">
-        <Sheet family="money">
-          <SheetHeading action={t("own.hero.caption")}>{t("own.hero.title")}</SheetHeading>
-          <p className="text-4xl leading-none font-semibold tracking-[-0.035em] tabular-nums sm:text-5xl">
-            {eur(facts.publishing)}
-          </p>
-          <p className="sheet-ink mt-1.5 text-[13px]">
-            {t("own.hero.sub", { streams: fmtCompact(locale, facts.streams) })}{" "}
-            <ProvenanceBadge provenance={facts.provenance} className="align-middle" />
-          </p>
-          <AffiliatedPoints
-            points={[
-              {
-                key: "works",
-                value: String(facts.works.length),
-                label: t("own.points.works"),
-                note: t("own.points.worksNote"),
-              },
-              {
-                key: "share",
-                value: declaredPct !== null ? `${declaredPct} %` : t("own.points.shareHypothesis"),
-                label: t("own.points.share"),
-                note: declaredPct !== null ? t("own.points.shareDeclared") : t("own.points.shareHypothesisNote"),
-              },
-              {
-                key: "others",
-                value: eur(facts.others),
-                label: t("own.points.others"),
-                note: t("own.points.othersNote"),
-              },
-            ]}
-          />
-        </Sheet>
-
-        <Sheet family="money">
-          <SheetHeading action={t("own.table.caption")}>{t("own.table.title")}</SheetHeading>
-          <div className="mt-2 overflow-x-auto">
-            <table className="w-full min-w-[560px] text-[12.5px]">
-              <thead className="sheet-ink">
-                <tr className="sheet-rule text-left">
-                  <th className="pb-2 font-medium">{t("own.table.work")}</th>
-                  <th className="pb-2 font-medium">{t("own.table.performer")}</th>
-                  <th className="pb-2 font-medium">{t("own.table.role")}</th>
-                  <th className="pb-2 text-right font-medium">{t("own.table.streams")}</th>
-                  <th className="pb-2 text-right font-medium">{t("own.table.rights")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {facts.works.map((w) => (
-                  <tr key={w.id} className="border-line/40 border-t">
-                    <td className="max-w-[220px] truncate py-2 font-medium">{w.title}</td>
-                    <td className="text-muted-foreground max-w-[140px] truncate py-2">{artist?.name}</td>
-                    <td className="text-muted-foreground py-2">{t("own.table.roleValue")}</td>
-                    <td className="num py-2 text-right tabular-nums">
-                      {w.streams > 0 ? fmtCompact(locale, w.streams) : "—"}
-                    </td>
-                    <td className="num py-2 text-right font-medium tabular-nums">
-                      {w.publishing > 0 ? eur(w.publishing) : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-muted-foreground mt-3 text-[11.5px] leading-relaxed">{t("own.table.method")}</p>
-        </Sheet>
-
-        {composers.length > 0 && (
-          <Sheet family="catalog">
-            <SheetHeading>{t("own.composers.title")}</SheetHeading>
-            <p className="sheet-ink mt-1 text-[13px]">{t("own.composers.body")}</p>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {composers.map((a) => (
-                <li key={a.id}>
-                  <button
-                    type="button"
-                    onClick={() => onOpen(a.id)}
-                    className="border-border hover:border-ring rounded-lg border px-3 py-1.5 text-[12.5px] font-medium transition-colors"
-                  >
-                    {t("own.composers.open", { name: a.name })}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </Sheet>
-        )}
+        <PlacementsActivity events={events} byId={byId} artistOf={getArtist} />
 
         <Doors
           title={tc("blocks.doors")}

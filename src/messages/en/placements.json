@@ -22,7 +22,9 @@
     "pipelineNote": "next: “{title}”, {date} (simulated)",
     "pipelineNone": "nothing signed to ship",
     "pitched": "Pitches",
-    "pitchedNote": "sent, not picked up yet (simulated)"
+    "pitchedNote": "sent, not picked up yet (simulated)",
+    "undeclared": "To register",
+    "undeclaredNote": "{count, plural, =0 {everything is registered} one {# released work not registered} other {# released works not registered}}"
   },
   "undeclared": {
     "title": "Not registered with SACEM",
@@ -70,38 +72,89 @@
     "sync": "Place their works",
     "syncValue": "open briefs"
   },
-  "own": {
-    "subtitle": "Their works are their own songs: they write and perform them, so their author royalties follow their streams.",
-    "hero": {
-      "title": "Author royalties on their songs",
-      "caption": "last 12 months, same calculation as Revenue",
-      "sub": "performing songwriter signed in publishing · {streams} streams in 12 months"
+  "subtitleTracker": "The roster's publishing activity: who placed what, with whom, and where it stands.",
+  "stages": {
+    "proposee": "Pitched",
+    "discussion": "In discussion",
+    "signee": "Signed",
+    "sortie": "Released",
+    "declaree": "Registered with SACEM"
+  },
+  "views": {
+    "label": "Tracker views",
+    "all": "All",
+    "recent": "New, 7 days",
+    "progress": "In progress",
+    "signee": "Signed",
+    "released": "Released",
+    "todeclare": "To register"
+  },
+  "tracker": {
+    "title": "Placement tracker",
+    "count": "{shown, plural, one {# placement} other {# placements}} of {total}",
+    "searchLabel": "Search placements",
+    "search": "Work, writer, performer…",
+    "year": "Year",
+    "allYears": "All",
+    "reset": "Clear",
+    "sortLabel": "Sort placements",
+    "sort": {
+      "changed": "Latest step",
+      "title": "Work A → Z",
+      "author": "Writer A → Z",
+      "date": "Release date"
     },
-    "points": {
-      "works": "Songs tracked",
-      "worksNote": "their most-streamed songs",
-      "share": "Their writer share",
-      "shareDeclared": "entered in Revenue",
-      "shareHypothesis": "sole writer",
-      "shareHypothesisNote": "assumption, set it in Revenue",
-      "others": "Rest of the catalogue",
-      "othersNote": "less-streamed songs"
-    },
-    "table": {
-      "title": "Song by song",
-      "caption": "split pro rata to streams",
-      "work": "Song",
+    "notify": "Notify the thread",
+    "notified": "Step saved and sent to the cross-team thread: {services}.",
+    "saved": "“{title}”: {stage}, saved.",
+    "dismiss": "Close",
+    "none": "No placement tracked yet.",
+    "noMatch": "No placement matches this view or search.",
+    "cols": {
+      "work": "Work",
+      "author": "Writer",
       "performer": "Performer",
-      "role": "Role",
-      "roleValue": "Performing songwriter",
-      "streams": "Streams, 12 months",
-      "rights": "Author royalties",
-      "method": "Same calculation as the Revenue page: gross master × 27.3% (author rights, 15 for every 55 paid to the master, GESAC 2022) × the creators' share under Sacem rules. Until their share is entered, they count as the sole writer of their songs."
+      "stage": "Step",
+      "changed": "Updated",
+      "date": "Release",
+      "share": "Share",
+      "streams": "Streams",
+      "sacem": "SACEM"
     },
-    "composers": {
-      "title": "The roster's non-performing composers",
-      "body": "They don't write for their own records: their streams depend on placements with other artists.",
-      "open": "See {name}'s works"
-    }
-  }
+    "stageOf": "Step of “{title}”",
+    "today": "today",
+    "daysAgo": "{days, plural, one {# day ago} other {# days ago}}",
+    "byDemo": "demo example",
+    "deposited": "registered",
+    "toDeclare": "to register",
+    "note": "Placement “{title}” ({performer}), written by {author}: {stage}.",
+    "services": {
+      "da": "A&R",
+      "finance": "Finance",
+      "juridique": "Legal",
+      "direction": "Management",
+      "presidence": "Presidency"
+    },
+    "saveNote": "What the team changes or adds here is saved in this browser, like the cross-team thread."
+  },
+  "add": {
+    "open": "Add a placement",
+    "title": "Work",
+    "author": "Roster writer",
+    "performer": "Performer",
+    "stage": "Step",
+    "date": "Release or target date",
+    "share": "Share (%)",
+    "submit": "Add",
+    "cancel": "Cancel",
+    "done": "“{title}” added to the tracker."
+  },
+  "activity": {
+    "title": "Recent activity",
+    "meta": "{count, plural, one {# change} other {# latest changes}}",
+    "none": "No change yet."
+  },
+  "ownLine": "Author royalties on their own songs ({name}) live on Revenue: {amount} over 12 months, the same figure.",
+  "ownLink": "See it in Revenue",
+  "noneFor": "{name} has no placement with other artists yet. Add it here as soon as a work is pitched."
 }

@@ -15,7 +15,6 @@ import {
   EMERGING,
   LABEL,
   PROJECTS,
-  PLACEMENTS,
   SPLITS,
   SYNC_BRIEFS,
   TEAM,
@@ -43,6 +42,7 @@ import {
 } from "./generators";
 import { attachToTracks } from "./expense-attribution";
 import { TENANT } from "@/lib/tenant";
+import { getTrackedPlacements } from "@/lib/userdata/placements-store";
 import { DEMO_TODAY, daysAhead, isoDay, isoMonth, rngFor } from "./seed";
 import { DEFAULT_PUBLISHING, creatorsShare } from "@/lib/rights/sacem";
 import {
@@ -545,8 +545,12 @@ export function ownWorksFacts(artistId: string) {
   };
 }
 
+/**
+ * Les placements d'un auteur TELS QUE L'ÉQUIPE LES SUIT (placements-store) : une étape changée à la
+ * main (signée, sortie, déclarée) change les montants, « Non déclaré » et la ligne de Pulse.
+ */
 export function placementsFor(artistId: string): Placement[] {
-  return PLACEMENTS.filter((p) => p.artistId === artistId);
+  return getTrackedPlacements().filter((p) => p.artistId === artistId);
 }
 
 export type PlacementMoney = {
