@@ -1,0 +1,264 @@
+{
+  "date": "2026-10-28",
+  "capturedAt": "2026-10-28T19:05:51.859Z",
+  "spotify": {
+    "monthlyListeners": 295545,
+    "followers": 36179,
+    "topTracks": [
+      {
+        "name": "CHAMPAGNE CHERRY",
+        "spotifyId": "5ZQqPXn56H7CLDpqIb1jDl",
+        "playcount": 8879777
+      },
+      {
+        "name": "AMOUR & SACRIFICE PART.II",
+        "spotifyId": "6ptAjfB1A5qMT3H0JX8k0o",
+        "playcount": 204281
+      },
+      {
+        "name": "SUPERSTAR",
+        "spotifyId": "7Dwx8YXmRaOykdvYHFJeE2",
+        "playcount": 4515472
+      },
+      {
+        "name": "AU BON ENDROIT",
+        "spotifyId": "2Q58DIt0N9CdbI0PJhtW3S",
+        "playcount": 1292611
+      },
+      {
+        "name": "J'OUBLIERAI",
+        "spotifyId": "4pDeWODXFzJgpc0RgyRtZQ",
+        "playcount": 852444
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 15069378,
+    "dailyStreams": 0,
+    "tracks": [
+      {
+        "name": "CHAMPAGNE CHERRY",
+        "total": 4292887,
+        "daily": null
+      },
+      {
+        "name": "SUPERSTAR",
+        "total": 2196004,
+        "daily": null
+      },
+      {
+        "name": "Aléatoire",
+        "total": 941352,
+        "daily": null
+      },
+      {
+        "name": "SHINE",
+        "total": 834239,
+        "daily": null
+      },
+      {
+        "name": "PARFUM",
+        "total": 669053,
+        "daily": null
+      },
+      {
+        "name": "ENCORE",
+        "total": 582477,
+        "daily": null
+      },
+      {
+        "name": "ROCKSTAR",
+        "total": 533665,
+        "daily": null
+      },
+      {
+        "name": "FEELINGS",
+        "total": 367767,
+        "daily": null
+      },
+      {
+        "name": "PRENDS SUR MOI (feat. DAKEEZ)",
+        "total": 348758,
+        "daily": null
+      },
+      {
+        "name": "SHOWTIME",
+        "total": 347529,
+        "daily": null
+      },
+      {
+        "name": "CHAGRIN DE PLUS",
+        "total": 303079,
+        "daily": null
+      },
+      {
+        "name": "ÇA NE CHANGERA RIEN",
+        "total": 280590,
+        "daily": null
+      },
+      {
+        "name": "LE MAL EST FAIT...",
+        "total": 275119,
+        "daily": null
+      },
+      {
+        "name": "BLOOD DROP",
+        "total": 271581,
+        "daily": null
+      },
+      {
+        "name": "ÉTAT SECOND",
+        "total": 270119,
+        "daily": null
+      },
+      {
+        "name": "BRUTAL",
+        "total": 255362,
+        "daily": null
+      },
+      {
+        "name": "POUR LA LIFE",
+        "total": 244543,
+        "daily": null
+      },
+      {
+        "name": "FATALE",
+        "total": 227885,
+        "daily": null
+      },
+      {
+        "name": "AMOUR & SACRIFICE",
+        "total": 218957,
+        "daily": null
+      },
+      {
+        "name": "C'EST PAS MA FAUTE",
+        "total": 204424,
+        "daily": null
+      },
+      {
+        "name": "ANORMAL",
+        "total": 174855,
+        "daily": null
+      },
+      {
+        "name": "Mène La Danse",
+        "total": 173463,
+        "daily": null
+      },
+      {
+        "name": "J'VOULAIS JUSTE",
+        "total": 156318,
+        "daily": null
+      },
+      {
+        "name": "INCENDIE",
+        "total": 143522,
+        "daily": null
+      },
+      {
+        "name": "T'EN VEUX ENCORE ?",
+        "total": 140653,
+        "daily": null
+      },
+      {
+        "name": "PROUVE-MOI",
+        "total": 137389,
+        "daily": null
+      },
+      {
+        "name": "LOVE & AFFECTION",
+        "total": 136261,
+        "daily": null
+      },
+      {
+        "name": "ARTISAN SOLITAIRE",
+        "total": 119226,
+        "daily": null
+      },
+      {
+        "name": "NIRVANA",
+        "total": 112456,
+        "daily": null
+      },
+      {
+        "name": "JUSTE UN REVE, L'INTERLUDE",
+        "total": 109845,
+        "daily": null
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 14098,
+    "topTracks": [
+      {
+        "title": "CHAMPAGNE CHERRY",
+        "rank": 699755
+      },
+      {
+        "title": "AMOUR & SACRIFICE PART.II",
+        "rank": 664021
+      },
+      {
+        "title": "RIHANNA",
+        "rank": 644387
+      },
+      {
+        "title": "Aléatoire",
+        "rank": 636899
+      },
+      {
+        "title": "AU BON ENDROIT",
+        "rank": 603605
+      },
+      {
+        "title": "SUPERSTAR",
+        "rank": 617744
+      },
+      {
+        "title": "J'OUBLIERAI",
+        "rank": 608413
+      },
+      {
+        "title": "SHINE",
+        "rank": 609547
+      },
+      {
+        "title": "Talons, Pt. 2",
+        "rank": 534531
+      },
+      {
+        "title": "C'est comment",
+        "rank": 556037
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 21625
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 7731
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 7443
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 5413
+    },
+    {
+      "city": "Toulouse",
+      "country": "FR",
+      "listeners": 3394
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-28",
+  "capturedAt": "2026-10-28T19:06:25.466Z",
+  "spotify": {
+    "monthlyListeners": 52687,
+    "followers": 2874,
+    "topTracks": [
+      {
+        "name": "The Lake (From \"Euphoria: Season 1\" Soundtrack)",
+        "spotifyId": "2cyUIoPzLmFVLN6hw1Kk84",
+        "playcount": 8055868
+      },
+      {
+        "name": "Two Shadows",
+        "spotifyId": "1MjC7zRFh6IDX7nts5Qa9x",
+        "playcount": 602337
+      },
+      {
+        "name": "Euphoria Funfair (From \"Euphoria: Season 1\" Soundtrack)",
+        "spotifyId": "2GGhs1MVvDKTDM9eWVU0WX",
+        "playcount": 7484765
+      },
+      {
+        "name": "Avion",
+        "spotifyId": "3fpkyYPugTYjovVCSC0MfM",
+        "playcount": 1149811
+      },
+      {
+        "name": "River (Composed for the CHANEL Spring-Summer 2025 Haute Couture Show)",
+        "spotifyId": "73O1pOfjTLbP8RQKpAnXsU",
+        "playcount": 156341
+      }
+    ]
+  },
+  "kworb": null,
+  "deezer": {
+    "fans": 182,
+    "topTracks": [
+      {
+        "title": "Avion",
+        "rank": 332157
+      },
+      {
+        "title": "River (Composed for the CHANEL Spring-Summer 2025 Haute Couture Show)",
+        "rank": 182411
+      },
+      {
+        "title": "Love in E Minor",
+        "rank": 189935
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 884
+    },
+    {
+      "city": "London",
+      "country": "GB",
+      "listeners": 868
+    },
+    {
+      "city": "Istanbul",
+      "country": "TR",
+      "listeners": 788
+    },
+    {
+      "city": "Mexico City",
+      "country": "MX",
+      "listeners": 743
+    },
+    {
+      "city": "Berlin",
+      "country": "DE",
+      "listeners": 575
+    }
+  ]
+}

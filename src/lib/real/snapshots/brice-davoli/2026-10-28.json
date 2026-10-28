@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-28",
+  "capturedAt": "2026-10-28T19:06:33.644Z",
+  "spotify": {
+    "monthlyListeners": 253574,
+    "followers": 9613,
+    "topTracks": [
+      {
+        "name": "Castle In The Sky",
+        "spotifyId": "5Wbd9DlFbclvsWIOqOyQFj",
+        "playcount": 2849256
+      },
+      {
+        "name": "Amore addio",
+        "spotifyId": "1mlY0pxOOzpZ5GEtT3GAVE",
+        "playcount": 920323
+      },
+      {
+        "name": "Love Stream",
+        "spotifyId": "3byX1QDmDs6PjddQwWZFy4",
+        "playcount": 7657057
+      },
+      {
+        "name": "Amarti ancora",
+        "spotifyId": "6vvAGqqEBS4er9wH2bAMUD",
+        "playcount": 521139
+      },
+      {
+        "name": "Je t'attendrai",
+        "spotifyId": "1QhKkwMWlFNrLOiBHUUVjJ",
+        "playcount": 500855
+      }
+    ]
+  },
+  "kworb": null,
+  "deezer": {
+    "fans": 1687,
+    "topTracks": [
+      {
+        "title": "Castle In The Sky",
+        "rank": 499198
+      },
+      {
+        "title": "Swedish Garden",
+        "rank": 476898
+      },
+      {
+        "title": "Love Stream",
+        "rank": 381785
+      },
+      {
+        "title": "Amore Mio",
+        "rank": 371003
+      },
+      {
+        "title": "Stay With Me",
+        "rank": 298706
+      },
+      {
+        "title": "Je t'attendrai",
+        "rank": 326320
+      },
+      {
+        "title": "Tender Is The Night",
+        "rank": 279238
+      },
+      {
+        "title": "Sainte Marie",
+        "rank": 246436
+      },
+      {
+        "title": "Amore addio",
+        "rank": 270235
+      },
+      {
+        "title": "Migrating Birds",
+        "rank": 286056
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Istanbul",
+      "country": "TR",
+      "listeners": 9037
+    },
+    {
+      "city": "Mexico City",
+      "country": "MX",
+      "listeners": 2900
+    },
+    {
+      "city": "Izmir",
+      "country": "TR",
+      "listeners": 2587
+    },
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 2488
+    },
+    {
+      "city": "Athens",
+      "country": "GR",
+      "listeners": 2421
+    }
+  ]
+}

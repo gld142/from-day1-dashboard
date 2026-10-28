@@ -1,0 +1,149 @@
+{
+  "date": "2026-10-28",
+  "capturedAt": "2026-10-28T19:04:42.821Z",
+  "spotify": {
+    "monthlyListeners": 23583,
+    "followers": 23090,
+    "topTracks": [
+      {
+        "name": "Odjo",
+        "spotifyId": "7mdQBTYooLfkpVuI41efuN",
+        "playcount": 218819
+      },
+      {
+        "name": "Business class",
+        "spotifyId": "2knf3OaX4adOi2OhE10yvL",
+        "playcount": 135032
+      },
+      {
+        "name": "Rayon de soleil",
+        "spotifyId": "0jaCOkFpwUIDjKjzJ8ZijL",
+        "playcount": 79057
+      },
+      {
+        "name": "One in a million",
+        "spotifyId": "7aNwUVanTfC4twYXfMNMbW",
+        "playcount": 132034
+      },
+      {
+        "name": "Ago",
+        "spotifyId": "2SAFKwDhH40gKKrt4iO6b6",
+        "playcount": 103897
+      }
+    ]
+  },
+  "kworb": null,
+  "deezer": {
+    "fans": 1395,
+    "topTracks": [
+      {
+        "title": "Money",
+        "rank": 296651
+      },
+      {
+        "title": "Ago",
+        "rank": 243641
+      },
+      {
+        "title": "Odjo",
+        "rank": 172409
+      },
+      {
+        "title": "Business class",
+        "rank": 169135
+      },
+      {
+        "title": "Ding Deng Dong",
+        "rank": 159035
+      },
+      {
+        "title": "Abena",
+        "rank": 184982
+      },
+      {
+        "title": "Agama",
+        "rank": 177628
+      },
+      {
+        "title": "Cette Vie",
+        "rank": 97314
+      },
+      {
+        "title": "One in a million",
+        "rank": 181776
+      },
+      {
+        "title": "Odjo",
+        "rank": 155205
+      }
+    ]
+  },
+  "youtube": {
+    "subscribers": null,
+    "videos": [
+      {
+        "videoId": "kAZemdOXMwc",
+        "title": "Kiko - Odjo (Clip Officiel)",
+        "channel": "official",
+        "views": 1537570
+      },
+      {
+        "videoId": "6MEhlDvRi1Y",
+        "title": "Kiko - Business Class (Clip Officiel)",
+        "channel": "official",
+        "views": 551568
+      },
+      {
+        "videoId": "SuYvD4b5-0A",
+        "title": "Kiko - One in a Million (Performance Video)",
+        "channel": "official",
+        "views": 570823
+      },
+      {
+        "videoId": "01OPuODYWdc",
+        "title": "Kiko - Ding Deng Dong (Clip Officiel)",
+        "channel": "official",
+        "views": 282105
+      },
+      {
+        "videoId": "iLd3rKsMUcY",
+        "title": "NIKANOR feat. KIKO - Rayon de soleil (Clip Officiel)",
+        "channel": "official",
+        "views": 1148657
+      },
+      {
+        "videoId": "DPoGSe392z4",
+        "title": "Kiko - Agama feat. Folidjanta & Conii Gangster (Clip Officiel)",
+        "channel": "official",
+        "views": 4560874
+      }
+    ]
+  },
+  "topCities": [
+    {
+      "city": "Lomé",
+      "country": "TG",
+      "listeners": 3683
+    },
+    {
+      "city": "Abidjan",
+      "country": "CI",
+      "listeners": 2396
+    },
+    {
+      "city": "Cotonou",
+      "country": "BJ",
+      "listeners": 1232
+    },
+    {
+      "city": "Kinshasa",
+      "country": "CD",
+      "listeners": 934
+    },
+    {
+      "city": "Conakry",
+      "country": "GN",
+      "listeners": 870
+    }
+  ]
+}
