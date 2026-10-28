@@ -229,16 +229,17 @@ export function Doors({
   doors: readonly Door[];
 }) {
   return (
-    <section className="mt-4">
-      <h2 className="text-muted-foreground mb-1.5 text-[11px] font-semibold tracking-[0.08em] uppercase">
+    <section className="mt-6">
+      {/* Plus gros et en couleur du texte (Gaël, 28/10) : c'est la suite du parcours, pas une note de bas de page. */}
+      <h2 className="text-foreground mb-2 text-[15px] font-semibold tracking-[-0.01em]">
         {title}
       </h2>
-      <div className="grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
         {doors.map((d) => (
           <Link
             key={d.key}
             href={d.href}
-            className="group border-border/60 flex items-baseline justify-between gap-3 border-t py-2 text-[12.5px]"
+            className="group border-border/70 hover:bg-muted/40 -mx-2 flex items-baseline justify-between gap-3 rounded-md border-t px-2 py-3 text-[14px] transition-colors"
           >
             <span
               className={cn(
@@ -250,13 +251,13 @@ export function Doors({
             </span>
             <b
               className={cn(
-                "font-semibold whitespace-nowrap tabular-nums group-hover:underline",
+                "text-foreground/80 text-[13px] font-medium whitespace-nowrap tabular-nums group-hover:text-foreground",
                 d.urgent && "text-destructive",
               )}
             >
               {d.value}
               <ArrowRight
-                className="text-muted-foreground ml-1 inline size-3"
+                className="text-muted-foreground ml-1.5 inline size-3.5 transition-transform duration-150 group-hover:translate-x-0.5"
                 aria-hidden
               />
             </b>

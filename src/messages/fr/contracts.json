@@ -24,7 +24,27 @@
       "audit-window": "Fenêtre d'audit",
       "unusual-clause": "Clause inhabituelle"
     },
-    "none": "Aucune alerte : rien n'arrive à échéance."
+    "none": "Aucune alerte : rien n'arrive à échéance.",
+    "count": "{count, plural, =0 {aucune échéance} one {# échéance} other {# échéances}}",
+    "today": "aujourd'hui",
+    "inDays": "{days, plural, one {dans # jour} other {dans # jours}}",
+    "lateDays": "{days, plural, one {dépassée de # jour} other {dépassée de # jours}}",
+    "noDate": "Sans date",
+    "filters": {
+      "label": "Filtrer par nature d'échéance",
+      "all": "Tout",
+      "option": "Options",
+      "expiry": "Fins de contrat",
+      "audit-window": "Audits",
+      "unusual-clause": "Clauses"
+    },
+    "horizons": {
+      "undated": "À traiter",
+      "overdue": "Dépassées",
+      "soon": "Dans les 30 jours",
+      "quarter": "D'ici 3 mois",
+      "later": "Plus tard"
+    }
   },
   "table": {
     "heading": "Tous les contrats",
@@ -35,7 +55,32 @@
     "advance": "Avance",
     "recoupment": "Recoupement",
     "territory": "Territoire",
-    "exclusivity": "Exclusivité"
+    "exclusivity": "Exclusivité",
+    "count": "{shown, plural, one {# contrat} other {# contrats}} sur {total}",
+    "sortLabel": "Trier les contrats",
+    "sort": {
+      "artist": "A → Z",
+      "next": "Échéance",
+      "remaining": "Reste à recouper"
+    },
+    "searchLabel": "Rechercher dans les contrats",
+    "search": "Artiste, contrepartie, type…",
+    "searchSelf": "Contrepartie, type…",
+    "year": "Année",
+    "allYears": "Toutes",
+    "activeIn": "En cours en {year}",
+    "reset": "Effacer",
+    "noMatch": "Aucun contrat ne correspond à cette recherche.",
+    "details": "Détail",
+    "showDetails": "Afficher le détail du contrat",
+    "hideDetails": "Masquer le détail du contrat",
+    "artist": "Artiste",
+    "remaining": "Reste",
+    "next": "Prochaine échéance",
+    "recoupedDone": "soldée",
+    "remainingOf": "{remaining} sur {advance}",
+    "events": "Échéances",
+    "noAlerts": "Rien à signaler sur ce contrat."
   },
   "types": {
     "licence": "Licence",
@@ -101,5 +146,9 @@
     "calculatorValue": "tester avant de signer",
     "valuation": "Valorisation",
     "valuationValue": "ce que vaut le catalogue"
+  },
+  "panel": {
+    "collapse": "Replier",
+    "expand": "Déplier"
   }
 }

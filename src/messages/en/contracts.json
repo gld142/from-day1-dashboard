@@ -24,7 +24,27 @@
       "audit-window": "Audit window",
       "unusual-clause": "Unusual clause"
     },
-    "none": "No alerts: nothing is coming due."
+    "none": "No alerts: nothing is coming due.",
+    "count": "{count, plural, =0 {no deadlines} one {# deadline} other {# deadlines}}",
+    "today": "today",
+    "inDays": "{days, plural, one {in # day} other {in # days}}",
+    "lateDays": "{days, plural, one {# day overdue} other {# days overdue}}",
+    "noDate": "No date",
+    "filters": {
+      "label": "Filter by kind of deadline",
+      "all": "All",
+      "option": "Options",
+      "expiry": "Contract ends",
+      "audit-window": "Audits",
+      "unusual-clause": "Clauses"
+    },
+    "horizons": {
+      "undated": "To handle",
+      "overdue": "Overdue",
+      "soon": "Next 30 days",
+      "quarter": "Within 3 months",
+      "later": "Later"
+    }
   },
   "table": {
     "heading": "All contracts",
@@ -35,7 +55,32 @@
     "advance": "Advance",
     "recoupment": "Recoupment",
     "territory": "Territory",
-    "exclusivity": "Exclusivity"
+    "exclusivity": "Exclusivity",
+    "count": "{shown, plural, one {# contract} other {# contracts}} of {total}",
+    "sortLabel": "Sort contracts",
+    "sort": {
+      "artist": "A → Z",
+      "next": "Deadline",
+      "remaining": "Left to recoup"
+    },
+    "searchLabel": "Search contracts",
+    "search": "Artist, counterparty, type…",
+    "searchSelf": "Counterparty, type…",
+    "year": "Year",
+    "allYears": "All",
+    "activeIn": "Running in {year}",
+    "reset": "Clear",
+    "noMatch": "No contract matches this search.",
+    "details": "Details",
+    "showDetails": "Show contract details",
+    "hideDetails": "Hide contract details",
+    "artist": "Artist",
+    "remaining": "Left",
+    "next": "Next deadline",
+    "recoupedDone": "recouped",
+    "remainingOf": "{remaining} of {advance}",
+    "events": "Deadlines",
+    "noAlerts": "Nothing to flag on this contract."
   },
   "types": {
     "licence": "License",
@@ -101,5 +146,9 @@
     "calculatorValue": "test before signing",
     "valuation": "Valuation",
     "valuationValue": "what the catalog is worth"
+  },
+  "panel": {
+    "collapse": "Collapse",
+    "expand": "Expand"
   }
 }

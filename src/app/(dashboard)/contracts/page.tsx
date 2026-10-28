@@ -11,6 +11,11 @@
  * L'ancien bloc « Comprendre le recoupement » répétait avance, recoupé et reste
  * pour un seul contrat — les mêmes chiffres que le héros, et le même tracé. Il
  * n'en reste que les trois étapes, repliées : on ne les lit qu'une fois.
+ *
+ * 28/10/2026 (Gaël) : une feuille teintée par artiste ne tient pas à 150 artistes.
+ * Le chiffre clé garde sa feuille « argent » ; « Ce qui arrive » et « Tous les
+ * contrats » sont des sections neutres repliables, en colonnes alignées : un seul
+ * tableau trié, cherchable par artiste et par année.
  */
 import { CustomerContracts } from "@/components/modules/customer/customer-contracts";
 import { useCustomer } from "@/lib/customer-mode";
@@ -26,10 +31,12 @@ import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import {
-  AlertRow,
-  ContractsTable,
+  ContractsLedger,
   RecoupmentSteps,
+  UpcomingPanel,
+  typeKey,
 } from "@/components/modules/droits/contract-widgets";
+import { toRows } from "@/lib/demo/contract-view";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 
 const TODAY_ISO = DEMO_TODAY.toISOString().slice(0, 10);
@@ -123,13 +130,10 @@ function DemoContractsPage() {
     [contracts],
   );
 
-  const groups = useMemo(() => {
-    if (!grouped) return [{ artist: null, contracts }];
-    return roster.map((a) => ({
-      artist: a,
-      contracts: contracts.filter((c) => c.artistId === a.id),
-    })).filter((g) => g.contracts.length > 0);
-  }, [grouped, contracts, roster]);
+  const rows = useMemo(
+    () => toRows(contracts, TODAY_ISO, (id) => getArtist(id).name, (c) => t(`types.${typeKey(c)}`)),
+    [contracts, t],
+  );
 
   const eur = (n: number) => fmtEur(locale, n, { compact: Math.abs(n) >= 100_000 });
   const recoupedPct =
@@ -225,58 +229,26 @@ function DemoContractsPage() {
           />
         </Sheet>
 
-        {/* Ce qui arrive : une ligne par alerte, la plus grave en tête. */}
-        <Sheet family="money">
-          <SheetHeading>{t("alerts.heading")}</SheetHeading>
-          {alerts.length === 0 ? (
-            <p className="sheet-ink mt-1 text-[13px]">{t("alerts.none")}</p>
-          ) : (
-            <div className="mt-1">
-              {alerts.map(({ alert, contract }, i) => (
-                <AlertRow
-                  key={`${contract.id}-${alert.kind}-${i}`}
-                  alert={alert}
-                  contract={contract}
-                  artist={grouped ? getArtist(contract.artistId) : undefined}
-                />
-              ))}
-            </div>
-          )}
-        </Sheet>
+        {/* Ce qui arrive : rangé par horizon, en colonnes alignées. */}
+        <UpcomingPanel items={alerts} todayIso={TODAY_ISO} artistOf={grouped ? getArtist : undefined} />
 
-        {/* Tous les contrats, et la règle de l'avance repliée dessous. */}
-        <Sheet family="money">
-          <SheetHeading>{t("table.heading")}</SheetHeading>
-          {contracts.length === 0 ? (
-            <p className="sheet-ink mt-1 text-[13px]">{t("empty")}</p>
-          ) : (
-            <div className="flex flex-col gap-5">
-              {groups.map(({ artist, contracts: rows }) => (
-                <div key={artist?.id ?? "self"} className="min-w-0">
-                  {artist && (
-                    <div className="mb-1.5">
-                      <ArtistBadge
-                        artist={artist}
-                        size="sm"
-                        meta={t("labelView.contractsOf", { count: rows.length })}
-                      />
-                    </div>
-                  )}
-                  <ContractsTable contracts={rows} todayIso={TODAY_ISO} bare />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {mainContract && (
-            <details className="sheet-rule mt-3 pt-2.5 text-[11.5px] leading-relaxed">
-              <summary className="sheet-ink cursor-pointer font-medium">
-                {t("recoup.heading")}
-              </summary>
-              <RecoupmentSteps contract={mainContract} />
-            </details>
-          )}
-        </Sheet>
+        {/* Tous les contrats : un seul tableau, et la règle de l'avance repliée dessous. */}
+        <ContractsLedger
+          rows={rows}
+          todayIso={TODAY_ISO}
+          showArtist={grouped}
+          artistOf={getArtist}
+          footer={
+            mainContract && (
+              <details className="text-[12px] leading-relaxed">
+                <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-medium">
+                  {t("recoup.heading")}
+                </summary>
+                <RecoupmentSteps contract={mainContract} />
+              </details>
+            )
+          }
+        />
 
         <Doors
           title={tc("blocks.doors")}
