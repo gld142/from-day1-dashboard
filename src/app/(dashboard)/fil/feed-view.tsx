@@ -16,10 +16,10 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CalendarCheck, Check, CheckCircle2, ChevronRight, Plus } from "lucide-react";
+import { AlertTriangle, CalendarCheck, Check, CheckCircle2, ChevronRight, Flame, Info, Plus, Send } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { CommitteeAgenda } from "@/components/modules/structure/feed/committee-agenda";
-import { daLabel, recipientLabel } from "@/components/modules/structure/feed/labels";
+import { daLabel, recipientLabel, roleLabel } from "@/components/modules/structure/feed/labels";
 import { NoteCard } from "@/components/modules/structure/feed/note-card";
 import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,7 @@ import { useRole } from "@/lib/role";
 import { JOB_ROLES, roleScope, type JobRole } from "@/lib/roles";
 import { TENANT } from "@/lib/tenant";
 import {
+  FEED_PEOPLE,
   FEED_TEXT_MAX,
   LINK_TARGETS,
   URGENCIES,
@@ -58,6 +59,8 @@ import {
   type Urgency,
 } from "@/lib/userdata/feed-model";
 import { FEED_TODAY, useFeed } from "@/lib/userdata/use-feed";
+import { useFeedSeen } from "@/lib/userdata/use-feed-seen";
+import { stakeFor, waitingFor } from "@/lib/userdata/feed-stakes";
 import { cn } from "@/lib/utils";
 
 /* Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et
@@ -67,6 +70,14 @@ const artistsFor = (jobRole: JobRole | null, daId: string | null, org: OrgState)
 
 /** Classe posée sur <html> tant que l'ordre du jour est ouvert : la feuille d'impression ne sort que lui. */
 const PRINT_CLASS = "print-fil-agenda";
+
+/* Chaque urgence a son bloc : un fond teinté, une pastille pleine. Rouge = à faire aujourd'hui,
+   ambre = cette semaine, bleu = pour info. Sur l'ambre, un texte foncé (lisible dans les trois thèmes). */
+const GROUP_TONE: Record<Urgency, { box: string; pill: string; Icon: typeof Flame }> = {
+  urgent: { box: "border-destructive/25 bg-destructive/[0.06]", pill: "bg-destructive text-white", Icon: Flame },
+  important: { box: "border-warning/35 bg-warning/[0.08]", pill: "bg-warning text-[oklch(0.24_0.05_70)]", Icon: AlertTriangle },
+  info: { box: "border-brand/20 bg-brand/[0.05]", pill: "bg-brand text-brand-foreground", Icon: Info },
+};
 
 /** ease-out-quart : la note qui part ralentit en se repliant. */
 const EASE_OUT = [0.25, 1, 0.5, 1] as const;
@@ -237,6 +248,27 @@ function Feed() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
+  /* Nouveau pour moi (« +1 »), et ma fiche pour « Je m'en occupe » (un DA est sa propre fiche). */
+  const { unread, see } = useFeedSeen(notes);
+  const newForMe = useMemo(() => lists.mine.reduce((s, n) => s + unread(n), 0), [lists.mine, unread]);
+  const myPersonId = jobRole === "da" ? daId : (FEED_PEOPLE.find((p) => p.role === jobRole && p.daId === null)?.id ?? null);
+  const [now] = useState(() => Date.now());
+
+  /* « Envoyé à … » : la confirmation de chaque réponse, avec ceux qui la reçoivent. */
+  const [flash, setFlash] = useState<string | null>(null);
+  useEffect(() => {
+    if (!flash) return;
+    const timer = setTimeout(() => setFlash(null), 3500);
+    return () => clearTimeout(timer);
+  }, [flash]);
+  const sendReply = (n: FeedNote, text: string) => {
+    const added = mentionEffects(n, text, daOf).added.map((r) => recipientLabel(t, r));
+    const list = [...new Set([...n.to.map((r) => roleLabel(t, r)), ...added])].join(", ");
+    reply(n.id, text, me);
+    see(n.id);
+    setFlash(tp("sent", { list }));
+  };
+
   const renderNote = (n: FeedNote) => (
     <NoteCard
       note={n}
@@ -246,9 +278,15 @@ function Feed() {
       artist={n.artistId ? getArtist(n.artistId) : null}
       daOf={daOf}
       active={n.id === activeId}
+      unread={unread(n)}
+      onSeen={() => see(n.id)}
+      myPersonId={myPersonId}
+      myRole={jobRole}
+      stake={stakeFor(n)}
+      waiting={waitingFor(n, now)}
       onStatus={(s) => status(n.id, s, me)}
       onDone={() => markDone(n)}
-      onReply={(text) => reply(n.id, text, me)}
+      onReply={(text) => sendReply(n, text)}
       onAssign={(personId) => assign(n.id, personId, me)}
       onOpen={open}
       onFilterArtist={(id) => setArtistFilter(id)}
@@ -341,8 +379,13 @@ function Feed() {
             </select>
           </label>
         </div>
-        <p className="text-muted-foreground text-[12px]" aria-live="polite">
-          {tp("progress.today", { count: handledToday })}
+        <p className="flex items-center gap-3 text-[12px]" aria-live="polite">
+          {newForMe > 0 && (
+            <span className="bg-destructive inline-flex items-center rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold text-white tabular-nums">
+              {tp("newMessages", { count: newForMe })}
+            </span>
+          )}
+          <span className="text-muted-foreground">{tp("progress.today", { count: handledToday })}</span>
         </p>
       </div>
 
@@ -373,35 +416,45 @@ function Feed() {
             {t(mode === "mine" ? "empty.mine" : "empty.all")}
           </p>
         ) : (
-          <div className="p-1.5">
-            {groups.map((g) => (
-              <section key={g.urgency} aria-labelledby={`fil-g-${g.urgency}`}>
-                <h3
-                  id={`fil-g-${g.urgency}`}
-                  className="text-muted-foreground flex items-center gap-2 px-3 pt-3 pb-1 text-[11px] font-semibold tracking-wide uppercase"
+          <div className="space-y-3 p-3">
+            {groups.map((g) => {
+              const tone = GROUP_TONE[g.urgency];
+              return (
+                <section
+                  key={g.urgency}
+                  aria-labelledby={`fil-g-${g.urgency}`}
+                  className={cn("rounded-xl border p-2.5", tone.box)}
                 >
-                  {g.urgency === "urgent" && <span className="bg-destructive size-1.5 rounded-full" aria-hidden />}
-                  {t(`urgency.${g.urgency}`)}
-                  <span className="num font-normal">{g.items.length}</span>
-                </h3>
-                <ul>
-                  <AnimatePresence initial={false}>
-                    {g.items.map((n) => (
-                      <motion.li
-                        key={n.id}
-                        layout="position"
-                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                        transition={{ duration: 0.22, ease: EASE_OUT }}
-                        className="overflow-hidden"
-                        onMouseDown={() => setActiveId(n.id)}
-                      >
-                        {renderNote(n)}
-                      </motion.li>
-                    ))}
-                  </AnimatePresence>
-                </ul>
-              </section>
-            ))}
+                  <h3 id={`fil-g-${g.urgency}`} className="mb-2 flex items-center gap-2 px-0.5">
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase",
+                        tone.pill,
+                      )}
+                    >
+                      <tone.Icon className="size-3" aria-hidden />
+                      {t(`urgency.${g.urgency}`)}
+                      <span className="tabular-nums">{g.items.length}</span>
+                    </span>
+                  </h3>
+                  <ul className="space-y-2">
+                    <AnimatePresence initial={false}>
+                      {g.items.map((n) => (
+                        <motion.li
+                          key={n.id}
+                          layout="position"
+                          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                          transition={{ duration: 0.22, ease: EASE_OUT }}
+                          onMouseDown={() => setActiveId(n.id)}
+                        >
+                          {renderNote(n)}
+                        </motion.li>
+                      ))}
+                    </AnimatePresence>
+                  </ul>
+                </section>
+              );
+            })}
             {doneShown.length > 0 && (
               <section>
                 <button
@@ -423,6 +476,24 @@ function Feed() {
           {tp("keys.hint")}
         </p>
       </div>
+
+      {/* « Envoyé à … » : la réponse est partie, et on voit à qui. */}
+      <AnimatePresence>
+        {flash && !undo && (
+          <motion.div
+            key={flash}
+            role="status"
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: EASE_OUT }}
+            className="bg-brand text-brand-foreground fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-2 text-[12.5px] font-medium shadow-lg"
+          >
+            <Send className="size-3.5" aria-hidden />
+            {flash}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* « Traité » se défait sur place pendant six secondes (pause au survol). */}
       <AnimatePresence>

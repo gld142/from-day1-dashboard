@@ -2,18 +2,34 @@
 
 import { useTranslations } from "next-intl";
 import { useFeed } from "@/lib/userdata/use-feed";
+import { useFeedSeen } from "@/lib/userdata/use-feed-seen";
 
-/** Notes ouvertes à traiter pour mon rôle — rien tant qu'il n'y en a pas (et rien côté serveur). */
+/**
+ * Barre latérale, « Fil entre services » : les notes ouvertes à traiter pour mon rôle, et en
+ * rouge ce qu'un autre service a écrit depuis mon dernier passage (« +2 »). Rien tant qu'il n'y
+ * a rien (et rien côté serveur).
+ */
 export function FeedCount() {
   const t = useTranslations("fil");
-  const { openForMe } = useFeed();
-  if (openForMe === 0) return null;
+  const { notes, forMe, openForMe } = useFeed();
+  const { unread } = useFeedSeen(notes);
+  const fresh = forMe.reduce((s, n) => s + unread(n), 0);
+  if (openForMe === 0 && fresh === 0) return null;
   return (
-    <span
-      className="num ml-auto shrink-0 rounded-full bg-brand/15 px-1.5 text-[10px] font-medium leading-4 text-brand"
-      aria-label={t("filters.count", { count: openForMe })}
-    >
-      {openForMe}
+    <span className="ml-auto flex shrink-0 items-center gap-1">
+      {fresh > 0 && (
+        <span className="bg-destructive rounded-full px-1.5 text-[10px] leading-4 font-semibold text-white tabular-nums">
+          +{fresh}
+        </span>
+      )}
+      {openForMe > 0 && (
+        <span
+          className="num bg-brand/15 text-brand rounded-full px-1.5 text-[10px] leading-4 font-medium"
+          aria-label={t("filters.count", { count: openForMe })}
+        >
+          {openForMe}
+        </span>
+      )}
     </span>
   );
 }

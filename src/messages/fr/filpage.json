@@ -53,5 +53,37 @@
     "body": "{count, plural, =0 {Rien ne t'attend.} one {# note traitée aujourd'hui.} other {# notes traitées aujourd'hui.}}",
     "seeAll": "Voir tout le fil"
   },
-  "keys": { "hint": "Clavier : j / k pour passer d'une note à l'autre · e traité · o ouvrir · z annuler" }
+  "keys": { "hint": "Clavier : j / k pour passer d'une note à l'autre · e traité · o ouvrir · z annuler" },
+  "unread": "{count, plural, one {+# nouveau} other {+# nouveaux}}",
+  "newMessages": "{count, plural, one {# nouveau message pour toi} other {# nouveaux messages pour toi}}",
+  "thread": {
+    "last": "Dernière réponse",
+    "reply": "Répondre",
+    "see": "{count, plural, one {Voir la réponse} other {Voir les # réponses}}",
+    "start": "Lancer la discussion"
+  },
+  "quick": {
+    "title": "En un clic",
+    "mine": "Je m'en occupe",
+    "mineText": "Je m'en occupe.",
+    "ok": "Validé",
+    "okText": "Validé de mon côté.",
+    "info": "Besoin d'infos",
+    "infoText": "Il me manque des éléments pour avancer, tu peux compléter ?",
+    "chase": "Relancé",
+    "chaseText": "Relance envoyée, je reviens vers vous dès que j'ai la réponse.",
+    "forward": "Transmettre à",
+    "forwardText": "@{service} — à toi pour la suite."
+  },
+  "sent": "Envoyé à {list}",
+  "waiting": {
+    "with": "Chez {name}",
+    "nobody": "À attribuer",
+    "since": "{days, plural, =0 {aujourd'hui} one {depuis # j} other {depuis # j}}"
+  },
+  "stake": {
+    "advance": "Avance {amount} · recoupée à {pct} %",
+    "claim": "{amount} à réclamer",
+    "valuation": "Catalogue {amount} en jeu"
+  }
 }

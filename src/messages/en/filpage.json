@@ -53,5 +53,37 @@
     "body": "{count, plural, =0 {Nothing is waiting for you.} one {# note handled today.} other {# notes handled today.}}",
     "seeAll": "See the whole feed"
   },
-  "keys": { "hint": "Keyboard: j / k to move between notes · e handled · o open · z undo" }
+  "keys": { "hint": "Keyboard: j / k to move between notes · e handled · o open · z undo" },
+  "unread": "{count, plural, one {+# new} other {+# new}}",
+  "newMessages": "{count, plural, one {# new message for you} other {# new messages for you}}",
+  "thread": {
+    "last": "Latest reply",
+    "reply": "Reply",
+    "see": "{count, plural, one {See the reply} other {See all # replies}}",
+    "start": "Start the discussion"
+  },
+  "quick": {
+    "title": "One click",
+    "mine": "I'm on it",
+    "mineText": "I'm on it.",
+    "ok": "Approved",
+    "okText": "Approved on my side.",
+    "info": "Need info",
+    "infoText": "I'm missing a few things to move forward, can you fill me in?",
+    "chase": "Chased",
+    "chaseText": "Reminder sent, I'll come back to you as soon as I hear back.",
+    "forward": "Hand over to",
+    "forwardText": "@{service} — over to you."
+  },
+  "sent": "Sent to {list}",
+  "waiting": {
+    "with": "With {name}",
+    "nobody": "Unassigned",
+    "since": "{days, plural, =0 {today} one {for # day} other {for # days}}"
+  },
+  "stake": {
+    "advance": "Advance {amount} · {pct}% recouped",
+    "claim": "{amount} to claim",
+    "valuation": "Catalogue {amount} at stake"
+  }
 }
