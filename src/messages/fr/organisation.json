@@ -1,0 +1,79 @@
+{
+  "poles": {
+    "pole-urbain": "Pôle Urbain",
+    "pole-pop": "Pôle Pop & Variété",
+    "pole-edition": "Pôle Édition & Compositeurs"
+  },
+  "kinds": {
+    "da": "DA",
+    "projet": "Chef de projet",
+    "marketing": "Marketing",
+    "juridique": "Juriste référent"
+  },
+  "fields": {
+    "poleId": "Pôle",
+    "category": "Catégorie",
+    "daId": "DA principal",
+    "projectLeadId": "Chef de projet",
+    "marketingId": "Marketing",
+    "legalId": "Juriste"
+  },
+  "grouping": {
+    "label": "Regrouper",
+    "categorie": "Par catégorie",
+    "da": "Par DA",
+    "pole": "Par pôle"
+  },
+  "team": {
+    "label": "Équipe",
+    "heading": "Équipe :",
+    "line": "{da} (DA) · {projet} (chef de projet) · {marketing} (marketing) · {juridique} (juriste)",
+    "projectLead": "CP · {name}",
+    "tooltip": "DA : {da} · chef de projet : {projet} · marketing : {marketing} · juriste : {juridique}"
+  },
+  "settings": {
+    "title": "Organisation de la maison",
+    "subtitle": "Pôles, DA et équipes : qui suit quel artiste. Réattribuer un artiste à un autre DA le place aussitôt dans son périmètre — roster, Pulse, revenus, streams, audience, contrats. Démo : enregistré dans ce navigateur.",
+    "reset": "Réinitialiser",
+    "people": {
+      "title": "Personnes",
+      "name": "Nom",
+      "kind": "Métier",
+      "artists": "Artistes",
+      "categories": "Catégories suivies",
+      "count": "{count, plural, =0 {aucun} one {# artiste} other {# artistes}}",
+      "rename": "Renommer {name}",
+      "none": "—"
+    },
+    "addPerson": {
+      "title": "Ajouter une personne",
+      "kind": "Métier de la personne à ajouter",
+      "name": "Nom de la personne à ajouter",
+      "placeholder": "Prénom + initiale, ex. Nadia P.",
+      "submit": "Ajouter"
+    },
+    "poles": {
+      "title": "Pôles",
+      "name": "Pôle",
+      "artists": "Artistes"
+    },
+    "addPole": {
+      "title": "Ajouter un pôle",
+      "name": "Nom du pôle à ajouter",
+      "placeholder": "Ex. Pôle Nouveaux talents",
+      "submit": "Ajouter"
+    },
+    "assignments": {
+      "title": "Attribution des artistes",
+      "hint": "Chaque liste se règle au clavier (Tab, flèches). Le changement s'applique tout de suite.",
+      "artist": "Artiste",
+      "select": "{field} de {artist}"
+    }
+  },
+  "export": {
+    "pole": "Pôle",
+    "projectLead": "Chef de projet",
+    "marketing": "Marketing",
+    "legal": "Juriste"
+  }
+}

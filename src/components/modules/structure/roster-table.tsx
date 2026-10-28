@@ -24,15 +24,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { RosterRow } from "@/lib/demo/api";
-import { getDa } from "@/lib/demo/data";
-import { ARTIST_CATEGORIES, type ArtistCategory, type CareerStage } from "@/lib/demo/types";
+import {
+  DEFAULT_ORG,
+  groupRows,
+  personName,
+  resolveAssignment,
+  type OrgGrouping,
+  type OrgState,
+} from "@/lib/demo/org";
+import { isArtistCategory, type CareerStage } from "@/lib/demo/types";
 import { fmtCompact, fmtEur, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type SortKey = "streams30d" | "revenue12m" | "day1Index";
 
 /**
- * Colonnes du tableau : artiste, stade, DA, streams 30 j, Δ 30 j, revenus 12 m,
+ * Colonnes du tableau : artiste, stade, équipe (DA et chef de projet), streams 30 j, Δ 30 j, revenus 12 m,
  * net 12 m, marge, valo, notes, index. Le `colSpan` des en-têtes de groupe et de
  * l'état vide doit les couvrir toutes (test : roster-table.test.ts).
  */
@@ -98,18 +105,25 @@ export function RosterTable({
   bare = false,
   grouped = false,
   notesByArtist = {},
+  groupBy = "categorie",
+  org = DEFAULT_ORG,
 }: {
   rows: RosterRow[];
   focusedArtistId: string | null;
   onFocus: (id: string | null) => void;
   /** Dans une feuille teintée : le titre vient du `SheetHeading`. */
   bare?: boolean;
-  /** Un en-tête par catégorie (nom, nombre, streams et revenus du groupe), les lignes dessous. */
+  /** Un en-tête par groupe (nom, nombre, streams et revenus du groupe), les lignes dessous. */
   grouped?: boolean;
   /** Notes ouvertes du fil par artiste (Task 11) ; absent = colonne vide. */
   notesByArtist?: Record<string, number>;
+  /** Clé des groupes quand `grouped` : catégorie (défaut), DA ou pôle (org.ts). */
+  groupBy?: OrgGrouping;
+  /** Organisation de la maison : noms des DA et de l'équipe, pôles. Défaut = celle de data.ts. */
+  org?: OrgState;
 }) {
   const t = useTranslations("roster");
+  const to = useTranslations("organisation");
   const locale = useLocale();
   const [sortKey, setSortKey] = useState<SortKey>("revenue12m");
   const [desc, setDesc] = useState(true);
@@ -123,16 +137,22 @@ export function RosterTable({
     [rows, sortKey, desc],
   );
 
-  /* Les groupes suivent l'ordre fixe des catégories ; chaque groupe garde le tri
-     courant. Sans `grouped`, un seul groupe anonyme : le tableau d'avant. */
+  /* Les groupes suivent un ordre fixe (catégories ; DA et pôles dans l'ordre de l'organisation) ;
+     chaque groupe garde le tri courant et porte ses sous-totaux (org.ts, groupRows — testé).
+     Sans `grouped`, un seul groupe anonyme : le tableau d'avant. */
   const groups = useMemo(() => {
-    if (!grouped) return [{ category: null as ArtistCategory | null, rows: sorted }];
-    return ARTIST_CATEGORIES.map((category) => ({
-      category,
-      rows: sorted.filter((r) => r.category === category),
-    })).filter((g) => g.rows.length > 0);
-  }, [grouped, sorted]);
-  const daName = (id: string) => getDa(id)?.name ?? id;
+    if (!grouped) return [{ key: null as string | null, rows: sorted, count: 0, streams30d: 0, revenue12m: 0 }];
+    return groupRows(sorted, groupBy, org);
+  }, [grouped, sorted, groupBy, org]);
+  const nameOf = (id: string) => personName(org, id) ?? id;
+  const groupLabel = (key: string) => {
+    if (groupBy === "da") return nameOf(key);
+    if (groupBy === "pole") {
+      const pole = org.poles.find((p) => p.id === key);
+      return pole?.name ?? (pole && to.has(`poles.${key}`) ? to(`poles.${key}`) : key);
+    }
+    return isArtistCategory(key) ? t(`category.${key}`) : key;
+  };
 
   function toggleSort(key: SortKey) {
     if (key === sortKey) setDesc((d) => !d);
@@ -156,7 +176,7 @@ export function RosterTable({
             <TableRow className="hover:bg-transparent">
               <TableHead className={bare ? undefined : "pl-5"}>{t("table.artist")}</TableHead>
               <TableHead>{t("table.stage")}</TableHead>
-              <TableHead>{t("table.da")}</TableHead>
+              <TableHead>{to("team.label")}</TableHead>
               <SortHead
                 column="streams30d"
                 label={t("table.streams30d")}
@@ -200,19 +220,17 @@ export function RosterTable({
                 </TableRow>
               )}
               {groups.flatMap((g) => [
-                g.category && (
-                  <TableRow key={`group-${g.category}`} className="bg-muted/40 hover:bg-muted/40">
+                g.key && (
+                  <TableRow key={`group-${groupBy}-${g.key}`} className="bg-muted/40 hover:bg-muted/40">
                     <TableCell colSpan={COLS} className="py-1.5 pl-5 text-[11px]">
                       <span className="font-semibold uppercase tracking-[0.12em]">
-                        {t(`category.${g.category}`)}
+                        {groupLabel(g.key)}
                       </span>
                       <span className="ml-3 text-muted-foreground">
                         {t("group.summary", {
-                          count: g.rows.length,
-                          streams: fmtCompact(locale, g.rows.reduce((s, r) => s + r.streams30d, 0)),
-                          revenue: fmtEur(locale, g.rows.reduce((s, r) => s + r.revenue12m, 0), {
-                            compact: true,
-                          }),
+                          count: g.count,
+                          streams: fmtCompact(locale, g.streams30d),
+                          revenue: fmtEur(locale, g.revenue12m, { compact: true }),
                         })}
                       </span>
                     </TableCell>
@@ -220,6 +238,7 @@ export function RosterTable({
                 ),
                 ...g.rows.map((r) => {
                   const focused = focusedArtistId === r.id;
+                  const team = resolveAssignment(r, org);
                   return (
                     <MotionTableRow
                       key={r.id}
@@ -248,7 +267,20 @@ export function RosterTable({
                           {t(`stage.${r.careerStage}`)}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-[12px] text-muted-foreground">{daName(r.daId)}</TableCell>
+                      <TableCell
+                        className="text-[12px] text-muted-foreground"
+                        title={to("team.tooltip", {
+                          da: nameOf(team.daId),
+                          projet: nameOf(team.projectLeadId),
+                          marketing: nameOf(team.marketingId),
+                          juridique: nameOf(team.legalId),
+                        })}
+                      >
+                        <span className="block text-foreground/80">{nameOf(team.daId)}</span>
+                        <span className="block text-[11px]">
+                          {to("team.projectLead", { name: nameOf(team.projectLeadId) })}
+                        </span>
+                      </TableCell>
                       <TableCell className="num text-right font-medium">
                         {fmtCompact(locale, r.streams30d)}
                       </TableCell>

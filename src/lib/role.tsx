@@ -29,6 +29,7 @@ import {
   USER_ARTIST_ID,
 } from "@/lib/userdata/store";
 import { getDa } from "@/lib/demo/das";
+import { isOrgDa } from "@/lib/userdata/org-store";
 import { isJobRole, roleScope, type JobRole } from "@/lib/roles";
 import { TENANT } from "@/lib/tenant";
 
@@ -184,7 +185,8 @@ export function parseRoleState(raw: string | null): RoleState {
  * unique pour la lecture du stockage (parseRoleState) et l'écriture (setJobRole).
  */
 export function withDa(jobRole: JobRole | null, daId: string | null): Pick<RoleState, "jobRole" | "daId"> {
-  if (jobRole === "da") return daId && getDa(daId) ? { jobRole: "da", daId } : { jobRole: null, daId: null };
+  /* Connu = un DA de das.ts, ou un DA ajouté dans Réglages → Organisation (org-store, module léger). */
+  if (jobRole === "da") return daId && (getDa(daId) || isOrgDa(daId)) ? { jobRole: "da", daId } : { jobRole: null, daId: null };
   return { jobRole, daId: null };
 }
 

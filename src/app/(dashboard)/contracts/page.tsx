@@ -17,7 +17,7 @@ import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CONTRACTS, getArtist } from "@/lib/demo/api";
-import { scopedArtists } from "@/lib/demo/scope";
+import { useScopedRoster } from "@/lib/userdata/use-org";
 import { DEMO_TODAY } from "@/lib/demo/seed";
 import type { Contract } from "@/lib/demo/types";
 import { fmtDate, fmtEur, fmtInt } from "@/lib/format";
@@ -53,7 +53,7 @@ function DemoContractsPage() {
   const grouped = isLabel && !focusedArtistId;
   const focusedArtist = isLabel && focusedArtistId ? getArtist(focusedArtistId) : null;
   /* Le périmètre du rôle (le DA : ses artistes) — les contrats groupés le suivent. */
-  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
+  const roster = useScopedRoster(scopeDaId);
 
   const contracts = useMemo<Contract[]>(() => {
     if (!grouped) return CONTRACTS.filter((c) => c.artistId === artistId);

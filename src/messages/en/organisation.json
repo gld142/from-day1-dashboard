@@ -1,0 +1,79 @@
+{
+  "poles": {
+    "pole-urbain": "Urban division",
+    "pole-pop": "Pop & Variety division",
+    "pole-edition": "Publishing & Songwriters division"
+  },
+  "kinds": {
+    "da": "A&R",
+    "projet": "Project manager",
+    "marketing": "Marketing",
+    "juridique": "Legal counsel"
+  },
+  "fields": {
+    "poleId": "Division",
+    "category": "Category",
+    "daId": "Lead A&R",
+    "projectLeadId": "Project manager",
+    "marketingId": "Marketing",
+    "legalId": "Legal"
+  },
+  "grouping": {
+    "label": "Group",
+    "categorie": "By category",
+    "da": "By A&R",
+    "pole": "By division"
+  },
+  "team": {
+    "label": "Team",
+    "heading": "Team:",
+    "line": "{da} (A&R) · {projet} (project manager) · {marketing} (marketing) · {juridique} (legal)",
+    "projectLead": "PM · {name}",
+    "tooltip": "A&R: {da} · project manager: {projet} · marketing: {marketing} · legal: {juridique}"
+  },
+  "settings": {
+    "title": "Label organisation",
+    "subtitle": "Divisions, A&Rs and teams: who looks after which artist. Reassigning an artist to another A&R moves them into that A&R's scope right away — roster, Pulse, revenue, streams, audience, contracts. Demo: saved in this browser.",
+    "reset": "Reset",
+    "people": {
+      "title": "People",
+      "name": "Name",
+      "kind": "Role",
+      "artists": "Artists",
+      "categories": "Categories covered",
+      "count": "{count, plural, =0 {none} one {# artist} other {# artists}}",
+      "rename": "Rename {name}",
+      "none": "—"
+    },
+    "addPerson": {
+      "title": "Add a person",
+      "kind": "Role of the person to add",
+      "name": "Name of the person to add",
+      "placeholder": "First name + initial, e.g. Nadia P.",
+      "submit": "Add"
+    },
+    "poles": {
+      "title": "Divisions",
+      "name": "Division",
+      "artists": "Artists"
+    },
+    "addPole": {
+      "title": "Add a division",
+      "name": "Name of the division to add",
+      "placeholder": "e.g. New talent division",
+      "submit": "Add"
+    },
+    "assignments": {
+      "title": "Artist assignments",
+      "hint": "Every list works with the keyboard (Tab, arrow keys). Changes apply immediately.",
+      "artist": "Artist",
+      "select": "{field} for {artist}"
+    }
+  },
+  "export": {
+    "pole": "Division",
+    "projectLead": "Project manager",
+    "marketing": "Marketing",
+    "legal": "Legal"
+  }
+}

@@ -79,6 +79,8 @@ import enFil from "./en/fil.json";
 import frFilPage from "./fr/filpage.json";
 import enFilPage from "./en/filpage.json";
 import enSettings from "./en/settings.json";
+import frOrganisation from "./fr/organisation.json";
+import enOrganisation from "./en/organisation.json";
 
 const MESSAGES = {
   fr: {
@@ -107,6 +109,7 @@ const MESSAGES = {
     catalog: frCatalog,
     team: frTeam,
     settings: frSettings,
+    organisation: frOrganisation,
     algoposition: frAlgoPosition,
     discovery: frDiscovery,
     sync: frSync,
@@ -146,6 +149,7 @@ const MESSAGES = {
     catalog: enCatalog,
     team: enTeam,
     settings: enSettings,
+    organisation: enOrganisation,
     algoposition: enAlgoPosition,
     discovery: enDiscovery,
     sync: enSync,
@@ -199,8 +203,16 @@ type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
  *   ordre du jour du comité). `fil` (titre, rôles, compteur de la navigation) reste à la racine : la
  *   pastille de la sidebar et Pulse le lisent sur toutes les pages.
  */
-export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "filpage"] as const satisfies readonly Namespace[];
+export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "filpage", "organisation"] as const satisfies readonly Namespace[];
 export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
+/*
+ * organisation (namespace de page) : l'organisation de la maison — pôles, équipes, regroupements
+ * du roster, Réglages → Organisation, ligne « Équipe » de l'artiste. Envoyé par le layout
+ * (dashboard), derrière la porte, à toutes les pages du dashboard ; jamais à /connexion,
+ * /inscription ni /acces (hors du groupe (dashboard)). Aucun composant serveur ne le lit : il
+ * est aussi « page seulement » (PAGE_ONLY_NAMESPACES, absent de getMessages). Test :
+ * organisation-scope.test.ts.
+ */
 
 /**
  * Namespaces de page absents des messages de la REQUÊTE (`getMessages`) dans toutes les maisons :
@@ -210,7 +222,7 @@ export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
  * autre partenaire, même côté serveur. Un composant serveur qui en aurait besoin passerait par
  * `pageMessages`.
  */
-const PAGE_ONLY_NAMESPACES = ["welcome", "filpage"] as const satisfies readonly PageScopedNamespace[];
+const PAGE_ONLY_NAMESPACES = ["welcome", "filpage", "organisation"] as const satisfies readonly PageScopedNamespace[];
 
 type AllMessages = (typeof MESSAGES)[Locale];
 type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
@@ -316,6 +328,11 @@ export function pageMessages(
 ): RootClientMessages & Partial<PageScopedMessages> {
   const scoped: Partial<PageScopedMessages> = {};
   for (const ns of namespaces) {
+    /* organisation : tel quel, dans les deux maisons (le dashboard existe dans les deux). */
+    if (ns === "organisation") {
+      Object.assign(scoped, { organisation: MESSAGES[locale].organisation });
+      continue;
+    }
     if (ns === "welcome") scoped.welcome = houseWelcome(locale, tenant);
     else if (ns === "filpage") Object.assign(scoped, { filpage: MESSAGES[locale].filpage });
     else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });

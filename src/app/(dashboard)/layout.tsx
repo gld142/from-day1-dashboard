@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
+import { PageIntlProvider } from "@/i18n/intl-providers";
 import {
   customerContracts,
   customerFinances,
@@ -84,14 +85,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return <Shell>{children}</Shell>;
 }
 
+/* `organisation` (namespace de page) : les textes de l'organisation de la maison — roster,
+   Réglages, barre du haut, en-tête d'artiste — partent avec le dashboard, jamais avec /connexion,
+   /inscription ni /acces (hors de ce groupe). Une page interne qui enveloppe sa vue dans son
+   propre PageIntlProvider le remplace sous sa vue seulement (la barre du haut reste ici). */
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <DashboardShell>
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar />
-        <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 md:px-8">{children}</main>
-      </div>
-    </DashboardShell>
+    <PageIntlProvider namespaces={["organisation"]}>
+      <DashboardShell>
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Topbar />
+          <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 md:px-8">{children}</main>
+        </div>
+      </DashboardShell>
+    </PageIntlProvider>
   );
 }

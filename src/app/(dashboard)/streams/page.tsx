@@ -19,7 +19,7 @@ import {
 } from "@/lib/demo/api";
 import type { DSP } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtPct } from "@/lib/format";
-import { scopedArtists } from "@/lib/demo/scope";
+import { useScopedRoster } from "@/lib/userdata/use-org";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
 import { PageHeader } from "@/components/dashboard/page-header";
@@ -75,7 +75,7 @@ function DemoStreamsPage() {
 
   const aggregate = isLabel && !focusedArtistId;
   /* Le périmètre du rôle (le DA : ses artistes) — l'agrégat et le comparateur le suivent. */
-  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
+  const roster = useScopedRoster(scopeDaId);
   const ids = useMemo(
     () => (aggregate ? roster.map((a) => a.id) : [artistId]),
     [aggregate, artistId, roster],

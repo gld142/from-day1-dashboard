@@ -25,7 +25,7 @@ import { useCustomer as useCustomerMode } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { getArtist } from "@/lib/demo/api";
-import { scopedArtists } from "@/lib/demo/scope";
+import { useScopedRoster } from "@/lib/userdata/use-org";
 import { fmtCompact, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
@@ -54,7 +54,7 @@ function AudiencePage() {
 
   const aggregate = isLabel && !focusedArtistId;
   /* Le périmètre du rôle (le DA : ses artistes) — l'agrégat et le comparatif le suivent. */
-  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
+  const roster = useScopedRoster(scopeDaId);
   const ids = useMemo(
     () => (aggregate ? roster.map((a) => a.id) : [artistId]),
     [aggregate, artistId, roster],

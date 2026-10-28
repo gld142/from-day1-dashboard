@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft } from "lucide-react";
 import { ArtistBadge } from "@/components/dashboard/artist-badge";
+import { ArtistTeamLine } from "@/components/modules/structure/artist-team-line";
 import { useFeed } from "@/lib/userdata/use-feed";
 import { RankMedal } from "@/components/dashboard/rank-medal";
 import { AudienceGlyph } from "@/components/dashboard/audience-glyph";
@@ -88,7 +89,7 @@ import {
   tourDates,
 } from "@/lib/demo/api";
 import { DEMO_TODAY } from "@/lib/demo/seed";
-import { scopedArtists } from "@/lib/demo/scope";
+import { useScopedRoster } from "@/lib/userdata/use-org";
 import type { Artist } from "@/lib/demo/types";
 import { fmtCompact, fmtDate, fmtEur, fmtInt, fmtPct } from "@/lib/format";
 import { useRole } from "@/lib/role";
@@ -149,7 +150,7 @@ function PulsePage() {
   const locale = useLocale();
   const { persona, artistId, focusedArtistId, isLabel, setFocusedArtistId, scopeDaId } = useRole();
   /* Le périmètre du rôle (DA : ses artistes). Sans rôle : tout le roster de la maison. */
-  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
+  const roster = useScopedRoster(scopeDaId);
   /* Les notes du fil à traiter pour mon rôle : lues dans le JSX de la vue structure, pas dans un useMemo. */
   const feed = useFeed();
 
@@ -506,6 +507,8 @@ function PulsePage() {
             <span className="bg-success mr-1.5 inline-block size-1.5 rounded-full align-[1px] shadow-[0_0_0_3px_color-mix(in_oklab,var(--success)_22%,transparent)]" />
             {dateChip} · {t("hero.reading")}
           </p>
+          {/* Zoom de la structure sur un artiste : son équipe (Réglages → Organisation). */}
+          {isLabel && v && <ArtistTeamLine artistId={v.artist.id} />}
         </div>
         <Link
           href="/copilot"

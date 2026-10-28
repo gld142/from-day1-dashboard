@@ -20,8 +20,8 @@ import {
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
 import { ARTISTS, LABEL, getArtist } from "@/lib/demo/api";
-import { DAS, getDa } from "@/lib/demo/data";
-import { scopedArtists } from "@/lib/demo/scope";
+import { daCategories, orgDas, personName } from "@/lib/demo/org";
+import { useOrg, useScopedRoster } from "@/lib/userdata/use-org";
 import Link from "next/link";
 import { useCustomer } from "@/lib/customer-mode";
 import { initialsOf, rosterHue } from "@/lib/format";
@@ -77,12 +77,17 @@ export function Topbar() {
     setJobRole(role, nextDaId);
     router.push(roleLanding(role, nextDaId));
   };
-  const da = daId ? getDa(daId) : null;
+  /* Organisation de la maison (Réglages → Organisation) : noms des DA, DA ajoutés, et les
+     catégories que chacun suit d'après SES artistes (un DA peut en suivre plusieurs). */
+  const org = useOrg();
+  const daName = personName(org, daId);
   const roleTitle = jobRole
-    ? `${t(`roles.job.${jobRole}`)}${jobRole === "da" && da ? ` · ${da.name}` : ""}`
+    ? `${t(`roles.job.${jobRole}`)}${jobRole === "da" && daName ? ` · ${daName}` : ""}`
     : null;
-  /* En vue structure, la liste d'artistes du menu suit le périmètre du rôle (le DA ne voit que les siens). */
-  const menuArtists = scopeDaId ? scopedArtists({ daId: scopeDaId }) : ARTISTS;
+  /* En vue structure, la liste d'artistes du menu suit le périmètre du rôle (le DA ne voit que
+     les siens, selon l'attribution réelle). */
+  const scopedMenu = useScopedRoster(scopeDaId);
+  const menuArtists = scopeDaId ? scopedMenu : ARTISTS;
   const [, startTransition] = useTransition();
   const customer = useCustomer();
   const pathname = usePathname();
@@ -200,13 +205,16 @@ export function Topbar() {
                 <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-muted-foreground">
                   {t("roles.chooseDa")}
                 </DropdownMenuLabel>
-                {DAS.map((d) => (
+                {orgDas(org).map((d) => (
                   <DropdownMenuItem key={d.id} onClick={() => pickRole("da", d.id)} className="gap-2">
                     <span className="flex size-5 items-center justify-center rounded bg-brand/15 text-[10px] font-semibold text-brand">
                       {d.name[0]}
                     </span>
                     <span className="flex-1 text-sm">
-                      {d.name} <span className="text-muted-foreground">· {tr(`category.${d.category}`)}</span>
+                      {d.name}{" "}
+                      <span className="text-muted-foreground">
+                        · {daCategories(org, ARTISTS, d.id).map((c) => tr(`category.${c}`)).join(", ") || "—"}
+                      </span>
                     </span>
                     {jobRole === "da" && daId === d.id && <Check className="size-4 text-brand" aria-hidden />}
                   </DropdownMenuItem>

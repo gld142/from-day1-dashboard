@@ -43,11 +43,14 @@ export function RosterFilters({
   scope,
   onChange,
   lockedDaId = null,
+  das = DAS,
 }: {
   scope: RosterScope;
   onChange: (next: RosterScope) => void;
   /** Le DA du rôle : son groupe de pastilles est caché, et « Réinitialiser » ne touche que la catégorie. */
   lockedDaId?: string | null;
+  /** Les DA proposés : ceux de l'organisation de la maison (renommés, ajoutés) ; défaut das.ts. */
+  das?: readonly { id: string; name: string }[];
 }) {
   const t = useTranslations("roster");
   const canReset = lockedDaId ? scope.category !== null : !isFullScope(scope);
@@ -86,7 +89,7 @@ export function RosterFilters({
           <Pill active={scope.daId === null} onClick={() => onChange({ ...scope, daId: null })}>
             {t("filters.allDa")}
           </Pill>
-          {DAS.map((d) => (
+          {das.map((d) => (
             <Pill
               key={d.id}
               active={scope.daId === d.id}

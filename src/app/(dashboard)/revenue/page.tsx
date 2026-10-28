@@ -42,7 +42,7 @@ import type { RevenueSource } from "@/lib/demo/types";
 import { REVENUE_SOURCES } from "@/lib/demo/types";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur, fmtMonth, fmtPct } from "@/lib/format";
-import { scopedArtists } from "@/lib/demo/scope";
+import { useScopedRoster } from "@/lib/userdata/use-org";
 import { useRole } from "@/lib/role";
 import { yearWindow } from "@/lib/year-window";
 import { useUrlParam } from "@/lib/url-param";
@@ -113,7 +113,7 @@ function DemoRevenuePage() {
     useRole();
   const aggregated = isLabel && !focusedArtistId;
   /* Le périmètre du rôle (le DA : ses artistes) — tous les agrégats structure le suivent. */
-  const roster = useMemo(() => scopedArtists({ daId: scopeDaId }), [scopeDaId]);
+  const roster = useScopedRoster(scopeDaId);
 
   /* Période de l'estimation, portée par l'URL (?period=) : le lien « Voir le
    * détail » de Pulse et un rechargement retombent sur la même vue. */
