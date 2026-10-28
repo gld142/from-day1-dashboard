@@ -63,6 +63,8 @@ import { FEED_TODAY, useFeed } from "@/lib/userdata/use-feed";
 import { useFeedSeen } from "@/lib/userdata/use-feed-seen";
 import { stakeFor, waitingFor } from "@/lib/userdata/feed-stakes";
 import { detectSignals, detectedSnapshot, markDetected, subscribeDetected, type Signal } from "@/lib/userdata/feed-detect";
+import { addAttachment, attachmentsSnapshot, subscribeAttachments } from "@/lib/userdata/feed-attachments-store";
+import type { FeedAttachment } from "@/lib/userdata/feed-attachment";
 import { cn } from "@/lib/utils";
 
 /* Les artistes du rôle : ceux du DA, sinon tout le roster. Partagé par le filtre de la page et
@@ -305,6 +307,14 @@ function Feed() {
     setFlash(tp("detect.posted", { list: s.to.map((r) => roleLabel(t, r)).join(", ") }));
   };
 
+  /* Pièces jointes traduites par Day One, gardées à part ; joindre prévient les services. */
+  const attachSnap = useSyncExternalStore(subscribeAttachments, attachmentsSnapshot, () => "{}");
+  const attachments = useMemo(() => JSON.parse(attachSnap) as Record<string, FeedAttachment[]>, [attachSnap]);
+  const attach = (n: FeedNote, a: FeedAttachment) => {
+    addAttachment(n.id, a);
+    sendReply(n, tp("attach.posted", { name: a.name }));
+  };
+
   const renderNote = (n: FeedNote) => (
     <NoteCard
       note={n}
@@ -320,6 +330,9 @@ function Feed() {
       myRole={jobRole}
       stake={stakeFor(n)}
       waiting={waitingFor(n, now)}
+      attachments={attachments[n.id]}
+      onAttach={(a) => attach(n, a)}
+      attachCtx={{ by: { role: jobRole, name: me.name }, artistId: n.artistId, today: FEED_TODAY }}
       onStatus={(s) => status(n.id, s, me)}
       onDone={() => markDone(n)}
       onReply={(text) => sendReply(n, text)}

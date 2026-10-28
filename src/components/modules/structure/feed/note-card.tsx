@@ -28,6 +28,7 @@ import {
   Hand,
   History,
   MessageSquare,
+  Paperclip,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,9 +52,11 @@ import {
   type OpenPlan,
   type Urgency,
 } from "@/lib/userdata/feed-model";
+import type { FeedAttachment } from "@/lib/userdata/feed-attachment";
 import type { Stake, Waiting } from "@/lib/userdata/feed-stakes";
 import { cn } from "@/lib/utils";
 import { daLabel, personLabel, recipientLabel, roleLabel, toLabel } from "./labels";
+import { AttachmentCard, AttachmentPicker, type AttachmentCtxInput } from "./attachment-card";
 import { MentionText } from "./mention-text";
 
 /* Pastilles de l'ordre du jour imprimable (committee-agenda.tsx). */
@@ -115,6 +118,12 @@ export type NoteCardProps = {
   myRole?: JobRole | null;
   stake?: Stake | null;
   waiting?: Waiting | null;
+  /** Pièces jointes traduites par Day One (Excel, relevé, contrat). */
+  attachments?: FeedAttachment[];
+  /** Joindre : la traduction est gardée et une réponse prévient les services. */
+  onAttach?: (a: FeedAttachment) => void;
+  /** Auteur, artiste et jour de la démo pour la traduction. */
+  attachCtx?: AttachmentCtxInput;
   /** Panneau ouvert au premier rendu (tests). */
   defaultPanel?: "replies" | "history" | null;
 };
@@ -250,6 +259,12 @@ export function NoteCard(props: NoteCardProps) {
             )}
           </p>
 
+          {/* Les pièces jointes, traduites par Day One : la ligne de mon service mise en avant (vue
+              maison : celle de la Direction), les autres services repliés. */}
+          {(props.attachments ?? []).map((a) => (
+            <AttachmentCard key={a.id} attachment={a} role={props.myRole ?? "direction"} className="mt-2 max-w-[72ch]" />
+          ))}
+
           {/* La discussion, visible sans rien ouvrir : la dernière réponse, puis Répondre. */}
           {last && panel !== "replies" && (
             <button
@@ -282,6 +297,19 @@ export function NoteCard(props: NoteCardProps) {
                 <span className="sr-only">{tp("replies.toggle", { count: note.replies.length })}</span>
               </span>
             </Button>
+            {canAct && props.onAttach && (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-muted-foreground h-7 gap-1 px-2 text-[12px]"
+                onClick={() => {
+                  if (panel !== "replies") openPanel("replies");
+                }}
+              >
+                <Paperclip className="size-3.5" aria-hidden />
+                {tp("attach.button")}
+              </Button>
+            )}
             <Button
               size="sm"
               variant="ghost"
@@ -421,7 +449,7 @@ function EventLine({ event: e }: { event: FeedEvent }) {
   }
 }
 
-function Replies({ note, canAct, daOf, onReply, onStatus, myRole = null }: NoteCardProps) {
+function Replies({ note, artist, canAct, daOf, onReply, onStatus, myRole = null, onAttach, attachCtx }: NoteCardProps) {
   const tf = useTranslations("fil");
   const tp = useTranslations("filpage");
   const locale = useLocale();
@@ -477,6 +505,15 @@ function Replies({ note, canAct, daOf, onReply, onStatus, myRole = null }: NoteC
               </QuickChip>
             ))}
           </div>
+          {onAttach && attachCtx && (
+            <AttachmentPicker
+              onAttach={onAttach}
+              ctx={attachCtx}
+              artistId={note.artistId}
+              artistName={artist?.name ?? null}
+              className="mb-2"
+            />
+          )}
           <Textarea
             aria-label={tp("replies.label")}
             value={text}

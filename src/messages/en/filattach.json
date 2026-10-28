@@ -1,0 +1,205 @@
+{
+  "badge": "Translated by Day One",
+  "kinds": {
+    "statement": "Statement",
+    "sheet": "Spreadsheet",
+    "contract": "Contract"
+  },
+  "roles": {
+    "da": "A&R",
+    "finance": "Finance",
+    "juridique": "Legal",
+    "direction": "Management",
+    "presidence": "Chairman’s office"
+  },
+  "card": {
+    "label": "Attachment translated by Day One: {name}",
+    "by": "Attached by {name}",
+    "figures": "Key figures",
+    "forMe": "For you ({role})",
+    "nothingForYou": "Nothing specific for your team in this attachment.",
+    "others": "For the other teams",
+    "byService": "What it changes, team by team",
+    "untitled": "Untitled"
+  },
+  "picker": {
+    "attach": "Attach a spreadsheet or statement",
+    "drop": "or drop it here: CSV or Excel (.xlsx), 5 MB max",
+    "dropActive": "Drop the file: Day One reads and translates it",
+    "contract": "Translate {artist}’s contract",
+    "reading": "Day One is reading the file…",
+    "translating": "Day One is translating the contract…",
+    "hint": "The file stays in your browser: Day One only keeps the summary."
+  },
+  "errors": {
+    "tooBig": "File too large ({size}): 5 MB max. Export only the period you need.",
+    "empty": "The file is empty: no rows to read.",
+    "unreadable": "Day One can’t read “{name}”. Try again with a CSV or Excel (.xlsx) export.",
+    "pdf": "PDFs can’t be read yet: export the statement as CSV or Excel (.xlsx), then attach it.",
+    "word": "Word documents can’t be read yet: attach the table as CSV or Excel (.xlsx), or paste the text into the note.",
+    "xls": ".{ext} format: save the file as Excel (.xlsx) or CSV, then attach it.",
+    "unsupported": ".{ext} files aren’t supported: attach a CSV or an Excel (.xlsx) file.",
+    "encrypted": "Password-protected Excel file: save an unprotected copy, then attach it.",
+    "noContract": "No contract for {artist} in Day One: nothing to translate.",
+    "noArtist": "Pick the note’s artist first."
+  },
+  "dsp": {
+    "spotify": "Spotify",
+    "apple": "Apple Music",
+    "youtube": "YouTube",
+    "deezer": "Deezer",
+    "tiktok": "TikTok",
+    "amazon": "Amazon Music",
+    "other": "other platforms"
+  },
+  "formats": {
+    "distrokid": "DistroKid",
+    "tunecore": "TuneCore",
+    "believe": "Believe",
+    "generic": "distributor"
+  },
+  "statement": {
+    "headline": "{format} statement for {artist}: {total} received over {period}",
+    "headlineNoArtist": "{format} statement: {total} received over {period}",
+    "headlineGap": "{format} statement for {artist}: {total} received, {pct} vs expected",
+    "headlineGapNoArtist": "{format} statement: {total} received, {pct} vs expected",
+    "figures": {
+      "received": "Received",
+      "period": "Period",
+      "gap": "Gap vs expected",
+      "topDsp": "Top platform",
+      "streams": "Streams"
+    },
+    "gapValue": "{amount} ({pct})",
+    "topDspValue": "{dsp} · {pct}",
+    "item": "{name} ({value})",
+    "title": "“{title}”",
+    "points": {
+      "gapSource": "The gap comes mostly from {dsp}: {amount} ({pct}) against Day One’s estimate.",
+      "gapOk": "In line with Day One’s estimate ({pct}): nothing to claim.",
+      "gapOver": "Received above Day One’s estimate ({pct}): check it, an adjustment may follow.",
+      "scale": "The statement is {ratio} of Day One’s estimate: it probably covers only part of the catalogue or of the rights. Gap not interpreted.",
+      "currency": "Statement in {currency}: no comparison with the expected amount without the month’s ECB rate.",
+      "currencyUnknown": "No currency in the file: amounts read as euros.",
+      "multiArtist": "Statement for {count} artists: no comparison with a single artist’s expected amount.",
+      "tracks": "Top tracks: {list}.",
+      "platforms": "Platforms: {list}.",
+      "countries": "Countries: {list}.",
+      "withheld": "Withholding tax: {amount}.",
+      "rows": "{rows, plural, one {# row read} other {# rows read}} over {months, plural, one {# month} other {# months}}.",
+      "commission": "Received {pct} of Day One’s estimate across every platform: that looks like a distributor’s commission. Check before claiming."
+    },
+    "roles": {
+      "financeClaim": "Claim {amount} from {dsp}: the largest shortfall in the statement.",
+      "financeClaimBy": "Claim {amount} from {dsp} before {date}, when the contract’s audit window closes.",
+      "financeShare": "{artist}’s share at the contract rate ({rate}): {amount}, to pay with this statement.",
+      "financeShareRecouping": "{artist}’s share at the contract rate ({rate}): {amount}, to set against the advance ({remaining} still to recoup).",
+      "financeCheck": "Match the {total} against the {format} payment: nothing to claim.",
+      "financeNoExpected": "Match the {total} against the {format} payment: no Day One estimate to compare with.",
+      "da": "“{title}” brings in {pct} of the statement’s revenue, ahead of {next}.",
+      "daSingle": "“{title}” brings in {pct} of the statement’s revenue.",
+      "daGap": "“{title}” brings in {pct} of revenue; the gap comes mostly from {dsp}.",
+      "daGapOnly": "The gap comes mostly from {dsp}: nothing changes on the tracks’ side.",
+      "juridiqueAudit": "The contract’s audit window is open until {date}: grounds to dispute the missing {amount}.",
+      "juridiqueWithheld": "Withholding tax of {amount}: check that the contract provides for it.",
+      "directionGap": "{pct} vs expected over {period} ({amount}): your call, claim or let it go.",
+      "directionClaim": "Total at {pct} vs expected, but {dsp} underpaid {amount}: Finance is claiming it.",
+      "directionOver": "{pct} above expected over {period}: check before counting on it.",
+      "directionOk": "{total} over {period}, in line with expected ({pct}): nothing to decide.",
+      "direction": "{total} over {period}, {dsp} on top ({pct}).",
+      "presidenceGap": "In one line: {total} received over {period}, {pct} vs expected.",
+      "presidence": "In one line: {total} received over {period}."
+    }
+  },
+  "sheet": {
+    "headline": "Spreadsheet “{name}”: {total} of {column} across {rows, plural, one {# row} other {# rows}}",
+    "headlinePlain": "Spreadsheet “{name}”: {rows, plural, one {# row} other {# rows}}, {cols, plural, one {# column} other {# columns}}",
+    "column": "Column {n}",
+    "row": "Row {n}",
+    "item": "{name} ({value})",
+    "others": "{count, plural, one {# other} other {# others}}",
+    "figures": {
+      "rows": "Rows",
+      "cols": "Columns",
+      "total": "Total {column}"
+    },
+    "points": {
+      "top": "Top on {column}: {list}.",
+      "numeric": "Number columns: {list}.",
+      "noNumeric": "No number columns: a text table, to read as is.",
+      "first": "First rows: {list}.",
+      "columns": "Columns: {list}.",
+      "totalRow": "The file’s “{label}” row is left out of the sums.",
+      "totalMismatch": "The file’s “{label}” row says {stated} for {column}, the rows add up to {computed}: a {diff} gap."
+    },
+    "roles": {
+      "finance": "Check the {column} total: {total}, the sum of {rows, plural, one {# row} other {# rows}}.",
+      "financeMismatch": "Fix the file: the “{label}” row is {diff} off the sum of the rows ({column}).",
+      "da": "{label} accounts for {pct} of {column}: the largest row in the table.",
+      "direction": "{total} of {column} across {rows, plural, one {# row} other {# rows}}; {label} on top ({pct}).",
+      "directionTotal": "{total} of {column} across {rows, plural, one {# row} other {# rows}}.",
+      "directionPlain": "A {rows, plural, one {# row} other {# rows}} table with no number column: to read as is.",
+      "presidence": "In one line: {total} of {column}, {label} on top."
+    }
+  },
+  "contract": {
+    "fileName": "{artist}’s contract",
+    "types": {
+      "licence": "licence",
+      "distribution": "distribution",
+      "edition": "publishing",
+      "management": "management",
+      "booking": "booking"
+    },
+    "kinds": {
+      "option": "option to exercise",
+      "expiry": "termination notice",
+      "audit-window": "audit window closes",
+      "unusual-clause": "unusual clause"
+    },
+    "headline": "{artist}’s {type} deal with {counterparty}, until {end}",
+    "noAdvance": "None",
+    "figures": {
+      "advance": "Advance",
+      "rate": "Rate",
+      "remaining": "Left to recoup",
+      "next": "Next deadline"
+    },
+    "points": {
+      "rateLicence": "On every euro the tracks bring in, {artist} gets {rate} (royalties); {counterparty} keeps the rest.",
+      "rateDistribution": "{artist} keeps {rate} of what the tracks bring in; {counterparty} takes {fee} for distribution.",
+      "rateEdition": "On publishing income, {artist} keeps {rate}; the publisher {counterparty} keeps {fee}.",
+      "rateOther": "Rate set in the contract: {rate}.",
+      "noAdvance": "No advance: royalties are paid from the first euro, nothing to pay back first.",
+      "recouped": "The {advance} advance is fully paid back by royalties: they are now paid out.",
+      "recouping": "{advance} advance: {recouped} already paid back by royalties ({pct}). Until the remaining {remaining} is, {artist} gets nothing more.",
+      "next": "Next deadline on {date}: {what}.",
+      "nextEnd": "Next deadline: the contract ends on {date}.",
+      "risk": "Watch out: {what}.",
+      "riskRecoup": "Watch out: {remaining} of advance still to recoup before the contract ends ({date}).",
+      "noRisk": "Nothing flagged in the contract."
+    },
+    "roles": {
+      "juridiqueOption": "Exercise the option or not before {date}: prepare the label’s position.",
+      "juridiqueExpiry": "Send notice or not before {date} (the contract ends on {end}).",
+      "juridiqueAudit": "Audit window open until {date}: request the statements in time.",
+      "juridiqueClause": "Clause to remove at the next amendment: {what}.",
+      "juridiqueNone": "Nothing to prepare before the contract ends on {end}.",
+      "financeRecouping": "{remaining} of advance still to recoup: {artist}’s royalties go against it, nothing to pay until then.",
+      "financeRecouped": "Advance recouped: pay {artist} their {rate} with every statement.",
+      "financeNoAdvance": "No advance: pay {artist} their {rate} with every statement.",
+      "daNext": "Before starting a project with {artist}: {what} on {date}.",
+      "daEnd": "Before starting a project with {artist}: the contract runs until {end}.",
+      "directionExposed": "{remaining} still exposed on {artist} ({pct} recouped); next deadline on {date}.",
+      "directionClear": "Nothing exposed on {artist}; next deadline on {date}.",
+      "presidence": "In one line: {type} deal with {counterparty} until {end}, advance {status}.",
+      "statusNone": "none",
+      "statusRecouped": "recouped",
+      "statusRecouping": "{pct} recouped"
+    },
+    "counterparty": {
+      "label": "the label",
+      "distributor": "the distributor"
+    }
+  }
+}

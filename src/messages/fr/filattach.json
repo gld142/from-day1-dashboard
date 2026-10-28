@@ -1,0 +1,205 @@
+{
+  "badge": "Traduit par Day One",
+  "kinds": {
+    "statement": "Relevé",
+    "sheet": "Tableau",
+    "contract": "Contrat"
+  },
+  "roles": {
+    "da": "DA",
+    "finance": "Finance",
+    "juridique": "Juridique",
+    "direction": "Direction",
+    "presidence": "Présidence"
+  },
+  "card": {
+    "label": "Pièce jointe traduite par Day One : {name}",
+    "by": "Jointe par {name}",
+    "figures": "Chiffres clés",
+    "forMe": "Pour toi ({role})",
+    "nothingForYou": "Rien de particulier pour ton service dans cette pièce.",
+    "others": "Pour les autres services",
+    "byService": "Ce que ça change, service par service",
+    "untitled": "Sans titre"
+  },
+  "picker": {
+    "attach": "Joindre un Excel ou un relevé",
+    "drop": "ou glisse-le ici : CSV ou Excel (.xlsx), 5 Mo maximum",
+    "dropActive": "Lâche le fichier : Day One le lit et le traduit",
+    "contract": "Traduire le contrat de {artist}",
+    "reading": "Day One lit le fichier…",
+    "translating": "Day One traduit le contrat…",
+    "hint": "Le fichier reste dans ton navigateur : Day One n’en garde que le résumé."
+  },
+  "errors": {
+    "tooBig": "Fichier trop lourd ({size}) : 5 Mo maximum. Exporte seulement la période utile.",
+    "empty": "Le fichier est vide : aucune ligne à lire.",
+    "unreadable": "Day One n’arrive pas à lire « {name} ». Réessaie avec un export CSV ou Excel (.xlsx).",
+    "pdf": "Les PDF ne se lisent pas encore : exporte le relevé en CSV ou en Excel (.xlsx), puis joins-le.",
+    "word": "Un document Word ne se lit pas encore : joins le tableau en CSV ou en Excel (.xlsx), ou colle le texte dans la note.",
+    "xls": "Format .{ext} : enregistre le fichier en Excel (.xlsx) ou en CSV, puis joins-le.",
+    "unsupported": "Format .{ext} non pris en charge : joins un CSV ou un Excel (.xlsx).",
+    "encrypted": "Fichier Excel protégé par mot de passe : enregistre une copie sans protection, puis joins-la.",
+    "noContract": "Aucun contrat de {artist} dans Day One : rien à traduire.",
+    "noArtist": "Choisis d’abord l’artiste de la note."
+  },
+  "dsp": {
+    "spotify": "Spotify",
+    "apple": "Apple Music",
+    "youtube": "YouTube",
+    "deezer": "Deezer",
+    "tiktok": "TikTok",
+    "amazon": "Amazon Music",
+    "other": "autres plateformes"
+  },
+  "formats": {
+    "distrokid": "DistroKid",
+    "tunecore": "TuneCore",
+    "believe": "Believe",
+    "generic": "distributeur"
+  },
+  "statement": {
+    "headline": "Relevé {format} de {artist} : {total} reçus sur {period}",
+    "headlineNoArtist": "Relevé {format} : {total} reçus sur {period}",
+    "headlineGap": "Relevé {format} de {artist} : {total} reçus, {pct} par rapport à l’attendu",
+    "headlineGapNoArtist": "Relevé {format} : {total} reçus, {pct} par rapport à l’attendu",
+    "figures": {
+      "received": "Reçu",
+      "period": "Période",
+      "gap": "Écart vs attendu",
+      "topDsp": "1re plateforme",
+      "streams": "Streams"
+    },
+    "gapValue": "{amount} ({pct})",
+    "topDspValue": "{dsp} · {pct}",
+    "item": "{name} ({value})",
+    "title": "« {title} »",
+    "points": {
+      "gapSource": "L’écart vient surtout de {dsp} : {amount} ({pct}) par rapport à l’estimation Day One.",
+      "gapOk": "Conforme à l’estimation Day One ({pct}) : rien à réclamer.",
+      "gapOver": "Reçu au-dessus de l’estimation Day One ({pct}) : à vérifier, une régularisation peut suivre.",
+      "scale": "Le relevé fait {ratio} de l’estimation Day One : il ne couvre sans doute qu’une partie du catalogue ou des droits. Écart non interprété.",
+      "currency": "Relevé en {currency} : pas de comparaison à l’attendu sans le taux BCE du mois.",
+      "currencyUnknown": "Devise non précisée dans le fichier : montants lus en euros.",
+      "multiArtist": "Relevé de {count} artistes : pas de comparaison à l’attendu d’un seul artiste.",
+      "tracks": "Titres en tête : {list}.",
+      "platforms": "Plateformes : {list}.",
+      "countries": "Pays : {list}.",
+      "withheld": "Retenues à la source : {amount}.",
+      "rows": "{rows, plural, one {# ligne lue} other {# lignes lues}} sur {months, plural, one {# mois} other {# mois}}.",
+      "commission": "Reçu à {pct} de l’estimation Day One sur toutes les plateformes : c’est l’ordre d’une commission de distributeur. À vérifier avant de réclamer."
+    },
+    "roles": {
+      "financeClaim": "Réclamer {amount} à {dsp} : c’est le plus gros manque du relevé.",
+      "financeClaimBy": "Réclamer {amount} à {dsp} avant le {date}, fin de la fenêtre d’audit du contrat.",
+      "financeShare": "Part de {artist} au taux du contrat ({rate}) : {amount}, à verser avec ce relevé.",
+      "financeShareRecouping": "Part de {artist} au taux du contrat ({rate}) : {amount}, à imputer sur l’avance (il reste {remaining} à recouper).",
+      "financeCheck": "Pointer les {total} avec le virement {format} : rien à réclamer.",
+      "financeNoExpected": "Pointer les {total} avec le virement {format} : pas d’attendu Day One pour comparer.",
+      "da": "« {title} » porte {pct} des revenus du relevé, devant {next}.",
+      "daSingle": "« {title} » porte {pct} des revenus du relevé.",
+      "daGap": "« {title} » porte {pct} des revenus ; l’écart vient surtout de {dsp}.",
+      "daGapOnly": "L’écart vient surtout de {dsp} : rien ne change côté titres.",
+      "juridiqueAudit": "Fenêtre d’audit du contrat ouverte jusqu’au {date} : de quoi contester les {amount} manquants.",
+      "juridiqueWithheld": "Retenues à la source de {amount} : vérifier qu’elles sont prévues au contrat.",
+      "directionGap": "{pct} par rapport à l’attendu sur {period} ({amount}) : à arbitrer, réclamer ou passer.",
+      "directionClaim": "Total à {pct} de l’attendu, mais {dsp} a sous-payé {amount} : la Finance réclame.",
+      "directionOver": "{pct} au-dessus de l’attendu sur {period} : à vérifier avant d’y compter.",
+      "directionOk": "{total} sur {period}, conforme à l’attendu ({pct}) : rien à arbitrer.",
+      "direction": "{total} sur {period}, {dsp} en tête ({pct}).",
+      "presidenceGap": "En une ligne : {total} reçus sur {period}, {pct} par rapport à l’attendu.",
+      "presidence": "En une ligne : {total} reçus sur {period}."
+    }
+  },
+  "sheet": {
+    "headline": "Tableau « {name} » : {total} de {column} sur {rows, plural, one {# ligne} other {# lignes}}",
+    "headlinePlain": "Tableau « {name} » : {rows, plural, one {# ligne} other {# lignes}}, {cols, plural, one {# colonne} other {# colonnes}}",
+    "column": "Colonne {n}",
+    "row": "Ligne {n}",
+    "item": "{name} ({value})",
+    "others": "{count, plural, one {# autre} other {# autres}}",
+    "figures": {
+      "rows": "Lignes",
+      "cols": "Colonnes",
+      "total": "Total {column}"
+    },
+    "points": {
+      "top": "En tête sur {column} : {list}.",
+      "numeric": "Colonnes chiffrées : {list}.",
+      "noNumeric": "Aucune colonne chiffrée : un tableau de texte, à lire tel quel.",
+      "first": "Premières lignes : {list}.",
+      "columns": "Colonnes : {list}.",
+      "totalRow": "Ligne « {label} » du fichier écartée des sommes.",
+      "totalMismatch": "La ligne « {label} » du fichier dit {stated} pour {column}, la somme des lignes donne {computed} : écart de {diff}."
+    },
+    "roles": {
+      "finance": "Contrôler le total {column} : {total}, somme des {rows, plural, one {# ligne} other {# lignes}}.",
+      "financeMismatch": "Corriger le fichier : la ligne « {label} » s’écarte de {diff} de la somme des lignes ({column}).",
+      "da": "{label} pèse {pct} de {column} : la plus grosse ligne du tableau.",
+      "direction": "{total} de {column} sur {rows, plural, one {# ligne} other {# lignes}} ; {label} en tête ({pct}).",
+      "directionTotal": "{total} de {column} sur {rows, plural, one {# ligne} other {# lignes}}.",
+      "directionPlain": "Tableau de {rows, plural, one {# ligne} other {# lignes}} sans colonne chiffrée : à lire tel quel.",
+      "presidence": "En une ligne : {total} de {column}, {label} en tête."
+    }
+  },
+  "contract": {
+    "fileName": "Contrat de {artist}",
+    "types": {
+      "licence": "licence",
+      "distribution": "distribution",
+      "edition": "édition",
+      "management": "management",
+      "booking": "booking"
+    },
+    "kinds": {
+      "option": "option à lever",
+      "expiry": "préavis de fin de contrat",
+      "audit-window": "fin de la fenêtre d’audit",
+      "unusual-clause": "clause inhabituelle"
+    },
+    "headline": "Contrat de {type} de {artist} avec {counterparty}, jusqu’au {end}",
+    "noAdvance": "Aucune",
+    "figures": {
+      "advance": "Avance",
+      "rate": "Taux",
+      "remaining": "Reste à recouper",
+      "next": "Prochaine échéance"
+    },
+    "points": {
+      "rateLicence": "Sur chaque euro que ses titres rapportent, {artist} touche {rate} (ses royalties) ; {counterparty} garde le reste.",
+      "rateDistribution": "{artist} garde {rate} de ce que rapportent ses titres ; {counterparty} prend {fee} pour les distribuer.",
+      "rateEdition": "Sur ses droits d’édition, {artist} garde {rate} ; l’éditeur {counterparty} en garde {fee}.",
+      "rateOther": "Taux prévu au contrat : {rate}.",
+      "noAdvance": "Aucune avance : les royalties sont versées dès le premier euro, rien à rembourser d’abord.",
+      "recouped": "Avance de {advance} entièrement remboursée par les royalties : elles sont désormais versées.",
+      "recouping": "Avance de {advance} : {recouped} déjà remboursés par les royalties ({pct}). Tant que les {remaining} restants ne le sont pas, {artist} ne touche rien de plus.",
+      "next": "Prochaine échéance le {date} : {what}.",
+      "nextEnd": "Prochaine échéance : fin du contrat le {date}.",
+      "risk": "Point de vigilance : {what}.",
+      "riskRecoup": "Point de vigilance : {remaining} d’avance encore à recouper avant la fin du contrat ({date}).",
+      "noRisk": "Aucun point de vigilance relevé dans le contrat."
+    },
+    "roles": {
+      "juridiqueOption": "Lever ou non l’option avant le {date} : préparer la position de la maison.",
+      "juridiqueExpiry": "Préavis à envoyer ou non avant le {date} (fin du contrat le {end}).",
+      "juridiqueAudit": "Fenêtre d’audit jusqu’au {date} : demander les relevés à temps.",
+      "juridiqueClause": "Clause à faire retirer au prochain avenant : {what}.",
+      "juridiqueNone": "Rien à préparer avant la fin du contrat, le {end}.",
+      "financeRecouping": "Il reste {remaining} d’avance à recouper : les royalties de {artist} s’imputent dessus, rien à lui verser d’ici là.",
+      "financeRecouped": "Avance recoupée : verser à {artist} ses {rate} à chaque relevé.",
+      "financeNoAdvance": "Pas d’avance : verser à {artist} ses {rate} à chaque relevé.",
+      "daNext": "Avant de lancer un projet avec {artist} : {what} le {date}.",
+      "daEnd": "Avant de lancer un projet avec {artist} : le contrat court jusqu’au {end}.",
+      "directionExposed": "{remaining} encore exposés sur {artist} ({pct} recoupé) ; prochaine échéance le {date}.",
+      "directionClear": "Rien d’exposé sur {artist} ; prochaine échéance le {date}.",
+      "presidence": "En une ligne : {type} avec {counterparty} jusqu’au {end}, avance {status}.",
+      "statusNone": "nulle",
+      "statusRecouped": "recoupée",
+      "statusRecouping": "recoupée à {pct}"
+    },
+    "counterparty": {
+      "label": "le label",
+      "distributor": "le distributeur"
+    }
+  }
+}

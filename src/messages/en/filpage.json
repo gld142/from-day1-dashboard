@@ -97,5 +97,9 @@
     "contract": "{artist}: {message}",
     "clause": "{artist}: {message}",
     "streams": "{artist} is down {pct} in streams over 30 days (≈ {amount} fewer plays)."
+  },
+  "attach": {
+    "button": "Attach a file",
+    "posted": "Attached “{name}” — translated by Day One for every team."
   }
 }

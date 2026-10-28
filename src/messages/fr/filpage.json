@@ -97,5 +97,9 @@
     "contract": "{artist} : {message}",
     "clause": "{artist} : {message}",
     "streams": "{artist} perd {pct} de streams sur 30 jours (≈ {amount} écoutes en moins)."
+  },
+  "attach": {
+    "button": "Joindre un fichier",
+    "posted": "A joint « {name} » — traduit par Day One pour chaque service."
   }
 }

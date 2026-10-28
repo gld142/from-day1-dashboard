@@ -78,6 +78,8 @@ import frFil from "./fr/fil.json";
 import enFil from "./en/fil.json";
 import frFilPage from "./fr/filpage.json";
 import enFilPage from "./en/filpage.json";
+import frFilAttach from "./fr/filattach.json";
+import enFilAttach from "./en/filattach.json";
 import enSettings from "./en/settings.json";
 import frOrganisation from "./fr/organisation.json";
 import enOrganisation from "./en/organisation.json";
@@ -122,6 +124,7 @@ const MESSAGES = {
     welcome: frWelcome,
     fil: frFil,
     filpage: frFilPage,
+    filattach: frFilAttach,
   },
   en: {
     common: enCommon,
@@ -162,6 +165,7 @@ const MESSAGES = {
     welcome: enWelcome,
     fil: enFil,
     filpage: enFilPage,
+    filattach: enFilAttach,
   },
 } as const;
 
@@ -202,8 +206,12 @@ type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
  * - filpage : les textes de /fil ajoutés le 28/10/2026 (statuts, réponses, mentions, prise en charge,
  *   ordre du jour du comité). `fil` (titre, rôles, compteur de la navigation) reste à la racine : la
  *   pastille de la sidebar et Pulse le lisent sur toutes les pages.
+ * - filattach : les pièces jointes « traduites par Day One » du fil (relevé, tableau, contrat ;
+ *   lib/userdata/feed-attachment.ts, feed/attachment-card.tsx). Mêmes lecteurs que filpage (/fil
+ *   seulement) : `pageMessages` l'envoie avec filpage, sans toucher à fil/page.tsx (le test
+ *   feed-components.test.ts y lit `namespaces={["filpage"]}` à la lettre).
  */
-export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "filpage", "organisation"] as const satisfies readonly Namespace[];
+export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "filpage", "filattach", "organisation"] as const satisfies readonly Namespace[];
 export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
 /*
  * organisation (namespace de page) : l'organisation de la maison — pôles, équipes, regroupements
@@ -222,14 +230,14 @@ export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
  * autre partenaire, même côté serveur. Un composant serveur qui en aurait besoin passerait par
  * `pageMessages`.
  */
-const PAGE_ONLY_NAMESPACES = ["welcome", "filpage", "organisation"] as const satisfies readonly PageScopedNamespace[];
+const PAGE_ONLY_NAMESPACES = ["welcome", "filpage", "filattach", "organisation"] as const satisfies readonly PageScopedNamespace[];
 
 type AllMessages = (typeof MESSAGES)[Locale];
 type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
 type WelcomeMessages = AllMessages["welcome"];
 /** welcome tel qu'une maison le reçoit : les seuls canaux qu'elle ouvre. */
 type HouseWelcomeMessages = Omit<WelcomeMessages, "sources"> & { sources: Partial<WelcomeMessages["sources"]> };
-type PageScopedMessages = Pick<AllMessages, InternalNamespace | "filpage"> & { welcome: HouseWelcomeMessages };
+type PageScopedMessages = Pick<AllMessages, InternalNamespace | "filpage" | "filattach"> & { welcome: HouseWelcomeMessages };
 
 function without<T extends object, K extends string>(messages: T, namespaces: readonly K[]): Omit<T, K> {
   const drop: readonly string[] = namespaces;
@@ -319,7 +327,9 @@ function houseWelcome(locale: Locale, tenant: Tenant): HouseWelcomeMessages {
  * - page interne : rien dans une maison sans pages internes, même demandé (la page appelle
  *   `notFound()` avant ; ceci est la défense en profondeur) ;
  * - welcome : les seuls canaux de la maison (la maison universal ne reçoit pas le bloc Believe) ;
- * - filpage : tel quel, dans les deux maisons (/fil existe dans les deux).
+ * - filpage : tel quel, dans les deux maisons (/fil existe dans les deux), AVEC filattach (les
+ *   pièces jointes traduites, lues par les mêmes composants de /fil) ;
+ * - filattach : tel quel, dans les deux maisons, s'il est demandé seul.
  */
 export function pageMessages(
   locale: Locale,
@@ -334,7 +344,8 @@ export function pageMessages(
       continue;
     }
     if (ns === "welcome") scoped.welcome = houseWelcome(locale, tenant);
-    else if (ns === "filpage") Object.assign(scoped, { filpage: MESSAGES[locale].filpage });
+    else if (ns === "filpage") Object.assign(scoped, { filpage: MESSAGES[locale].filpage, filattach: MESSAGES[locale].filattach });
+    else if (ns === "filattach") Object.assign(scoped, { filattach: MESSAGES[locale].filattach });
     else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });
   }
   return { ...rootClientMessages(locale, tenant), ...scoped };
