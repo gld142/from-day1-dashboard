@@ -202,7 +202,9 @@ export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
  * organisation (namespace de page) : l'organisation de la maison — pôles, équipes, regroupements
  * du roster, Réglages → Organisation, ligne « Équipe » de l'artiste. Envoyé par le layout
  * (dashboard), derrière la porte, à toutes les pages du dashboard ; jamais à /connexion,
- * /inscription ni /acces (hors du groupe (dashboard)). Test : organisation-scope.test.ts.
+ * /inscription ni /acces (hors du groupe (dashboard)). Aucun composant serveur ne le lit : il
+ * est aussi « page seulement » (PAGE_ONLY_NAMESPACES, absent de getMessages). Test :
+ * organisation-scope.test.ts.
  */
 
 /**
@@ -213,7 +215,7 @@ export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
  * autre partenaire, même côté serveur. Un composant serveur qui en aurait besoin passerait par
  * `pageMessages`.
  */
-const PAGE_ONLY_NAMESPACES = ["welcome"] as const satisfies readonly PageScopedNamespace[];
+const PAGE_ONLY_NAMESPACES = ["welcome", "organisation"] as const satisfies readonly PageScopedNamespace[];
 
 type AllMessages = (typeof MESSAGES)[Locale];
 type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
