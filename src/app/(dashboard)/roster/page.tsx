@@ -23,6 +23,7 @@ import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sh
 import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { RosterAlerts } from "@/components/modules/structure/roster-alerts";
 import { RosterFilters } from "@/components/modules/structure/roster-filters";
+import { RosterGrouping } from "@/components/modules/structure/roster-grouping";
 import { RosterMatrix } from "@/components/modules/structure/roster-matrix";
 import { RosterPnlBars } from "@/components/modules/structure/roster-pnl-bars";
 import { RosterTable } from "@/components/modules/structure/roster-table";
@@ -30,14 +31,15 @@ import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { CustomerRoster } from "@/components/modules/structure/customer-roster";
 import { ExportMenu } from "@/components/modules/exports/export-menu";
 import { PrintStyles } from "@/components/modules/exports/print-styles";
-import { LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
-import { getDa } from "@/lib/demo/data";
+import { ARTISTS, LABEL, labelTotals, rosterRows, type RosterRow } from "@/lib/demo/api";
+import { orgDas, parseGrouping, personName, resolveAssignment, type OrgGrouping } from "@/lib/demo/org";
 import { effectiveScope, isFullScope, parseScope, scopeQuery, scopedArtists, type RosterScope } from "@/lib/demo/scope";
 import { downloadCsv, round2 } from "@/lib/export";
 import { artistColor, fmtCompact, fmtEur } from "@/lib/format";
 import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
 import { useFeed } from "@/lib/userdata/use-feed";
+import { useOrg } from "@/lib/userdata/use-org";
 
 export default function RosterPage() {
   const customer = useCustomer();
@@ -53,6 +55,7 @@ export default function RosterPage() {
 function DemoRoster() {
   const t = useTranslations("roster");
   const tc = useTranslations("common");
+  const to = useTranslations("organisation");
   const locale = useLocale();
   const { isLabel, focusedArtistId, setFocusedArtistId, setPersona, scopeDaId } = useRole();
   /* Notes ouvertes du fil par artiste : la colonne Notes du tableau (lien vers /fil?artist=). */
@@ -62,9 +65,14 @@ function DemoRoster() {
      périmètre VERROUILLE le DA (scope.ts, effectiveScope) : l'URL ne peut pas l'élargir, et
      seule la catégorie reste à lui. Tout en dessous — lignes, totaux, P&L, alertes — le suit. */
   const params = useSearchParams();
-  const urlScope = useMemo(() => parseScope(params), [params]);
+  /* Organisation de la maison (Réglages → Organisation) : DA ajoutés ou renommés, attribution
+     réelle des artistes — le périmètre d'un DA suit ses artistes, plus sa catégorie. */
+  const org = useOrg();
+  const das = useMemo(() => orgDas(org), [org]);
+  const urlScope = useMemo(() => parseScope(params, das.map((d) => d.id)), [params, das]);
+  const grouping = useMemo(() => parseGrouping(params), [params]);
   const scope = useMemo(() => effectiveScope(urlScope, scopeDaId), [urlScope, scopeDaId]);
-  const artists = useMemo(() => scopedArtists(scope), [scope]);
+  const artists = useMemo(() => scopedArtists(scope, ARTISTS, org), [scope, org]);
   const rows = useMemo(() => rosterRows(artists), [artists]);
   const totals = useMemo(() => labelTotals(artists), [artists]);
   /* Écriture de l'URL sans aller-retour serveur. Doc Next 16 (guides/single-page-applications,
@@ -72,16 +80,19 @@ function DemoRoster() {
      Next.js et se synchronisent avec `usePathname` et `useSearchParams` » (traduit). Le filtre
      est donc relu par `useSearchParams` ci-dessus, y compris après un `router.push("/roster?da=…")`
      venu de la barre du haut. Sous le verrou DA, l'URL ne porte que la catégorie. */
-  const setScope = useCallback(
-    (next: RosterScope) => {
+  const writeUrl = useCallback(
+    (next: RosterScope, nextGrouping: OrgGrouping) => {
       const written = scopeDaId ? { ...next, daId: null } : next;
-      window.history.replaceState(null, "", `/roster${scopeQuery(written)}`);
+      window.history.replaceState(null, "", `/roster${scopeQuery(written, nextGrouping)}`);
     },
     [scopeDaId],
   );
+  const setScope = useCallback((next: RosterScope) => writeUrl(next, grouping), [writeUrl, grouping]);
+  /* Le regroupement (`?groupe=`) se change sans toucher aux filtres. */
+  const setGrouping = useCallback((next: OrgGrouping) => writeUrl(scope, next), [writeUrl, scope]);
   const scopeText = [
     scope.category ? t(`category.${scope.category}`) : null,
-    scope.daId ? getDa(scope.daId)?.name : null,
+    scope.daId ? personName(org, scope.daId) : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -128,7 +139,17 @@ function DemoRoster() {
       { header: t("table.artist"), cell: (r) => r.name },
       { header: t("export.genre"), cell: (r) => r.genre },
       { header: t("export.category"), cell: (r) => t(`category.${r.category}`) },
-      { header: t("export.da"), cell: (r) => getDa(r.daId)?.name ?? r.daId },
+      { header: t("export.da"), cell: (r) => personName(org, r.daId) ?? r.daId },
+      {
+        header: to("export.pole"),
+        cell: (r) => {
+          const pole = org.poles.find((p) => p.id === resolveAssignment(r, org).poleId);
+          return pole ? (pole.name ?? to(`poles.${pole.id}`)) : "";
+        },
+      },
+      { header: to("export.projectLead"), cell: (r) => personName(org, resolveAssignment(r, org).projectLeadId) ?? "" },
+      { header: to("export.marketing"), cell: (r) => personName(org, resolveAssignment(r, org).marketingId) ?? "" },
+      { header: to("export.legal"), cell: (r) => personName(org, resolveAssignment(r, org).legalId) ?? "" },
       { header: t("table.stage"), cell: (r) => t(`stage.${r.careerStage}`) },
       { header: t("table.streams30d"), cell: (r) => r.streams30d },
       { header: t("table.delta30d"), cell: (r) => round2(r.delta30d) },
@@ -159,8 +180,9 @@ function DemoRoster() {
         />
       </PageHeader>
 
-      <div className="mb-3">
-        <RosterFilters scope={scope} onChange={setScope} lockedDaId={scopeDaId} />
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-5 gap-y-2">
+        <RosterFilters scope={scope} onChange={setScope} lockedDaId={scopeDaId} das={das} />
+        <RosterGrouping value={grouping} onChange={setGrouping} />
       </div>
 
       <div className="space-y-3">
@@ -249,6 +271,8 @@ function DemoRoster() {
             onFocus={setFocusedArtistId}
             bare
             grouped
+            groupBy={grouping}
+            org={org}
             notesByArtist={byArtist}
           />
         </Sheet>

@@ -1,7 +1,8 @@
 "use client";
 
 /**
- * Réglages : modules à la carte (afficher / masquer), apparence, compte.
+ * Réglages : modules à la carte (afficher / masquer), organisation de la maison (démo, vue
+ * structure), apparence, compte.
  */
 
 import { useLocale, useTranslations } from "next-intl";
@@ -11,6 +12,7 @@ import { Building2, EyeOff, Lock, MicVocal, Moon, RotateCcw, Sun, Sunrise } from
 import { setLocale } from "@/i18n/actions";
 import type { Locale } from "@/i18n/config";
 import { LOCKED_MODULES, moduleDescKey } from "@/lib/nav";
+import { useCustomer } from "@/lib/customer-mode";
 import { useRole } from "@/lib/role";
 import { useModules } from "@/lib/userdata/use-modules";
 import { cn } from "@/lib/utils";
@@ -19,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
+import { OrgSettings } from "@/components/modules/structure/org-settings";
 
 const THEME_META = [
   { id: "night", icon: Moon },
@@ -35,7 +38,9 @@ export default function SettingsPage() {
   const tc = useTranslations("common");
   const locale = useLocale();
   const { theme, setTheme } = useTheme();
-  const { persona } = useRole();
+  const { persona, isLabel } = useRole();
+  /* L'organisation de la maison est un outil de la démo, en vue structure (les deux maisons). */
+  const customer = useCustomer();
   const { catalog, isVisible, setVisible, reset, hasOverrides } = useModules();
   const hiddenCount = catalog.reduce(
     (n, s) => n + s.items.filter((i) => !isVisible(i)).length,
@@ -147,6 +152,13 @@ export default function SettingsPage() {
           ))}
         </div>
       </Sheet>
+
+      {/* ─── Organisation de la maison ─── */}
+      {!customer && isLabel && (
+        <Sheet family="catalog">
+          <OrgSettings />
+        </Sheet>
+      )}
 
       {/* ─── Apparence ─── */}
       <Sheet family="catalog">

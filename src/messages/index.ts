@@ -77,6 +77,8 @@ import enWelcome from "./en/welcome.json";
 import frFil from "./fr/fil.json";
 import enFil from "./en/fil.json";
 import enSettings from "./en/settings.json";
+import frOrganisation from "./fr/organisation.json";
+import enOrganisation from "./en/organisation.json";
 
 const MESSAGES = {
   fr: {
@@ -116,6 +118,7 @@ const MESSAGES = {
     ask: frAsk,
     welcome: frWelcome,
     fil: frFil,
+    organisation: frOrganisation,
   },
   en: {
     common: enCommon,
@@ -154,6 +157,7 @@ const MESSAGES = {
     ask: enAsk,
     welcome: enWelcome,
     fil: enFil,
+    organisation: enOrganisation,
   },
 } as const;
 
@@ -192,7 +196,13 @@ type InternalNamespace = (typeof INTERNAL_NAMESPACES)[number];
  *   namespace, bloc Believe compris, se lisait dans le HTML de /connexion et /inscription des deux
  *   maisons.
  */
-export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome"] as const satisfies readonly Namespace[];
+/*
+ * - organisation : l'organisation de la maison (pôles, équipes, regroupements du roster, Réglages
+ *   → Organisation, ligne « Équipe » de l'artiste). Envoyé par le layout (dashboard), derrière la
+ *   porte, à toutes les pages du dashboard — jamais à /connexion, /inscription ni /acces (hors du
+ *   groupe (dashboard)).
+ */
+export const PAGE_SCOPED_NAMESPACES = [...INTERNAL_NAMESPACES, "welcome", "organisation"] as const satisfies readonly Namespace[];
 export type PageScopedNamespace = (typeof PAGE_SCOPED_NAMESPACES)[number];
 
 /**
@@ -210,7 +220,7 @@ type RootClientMessages = Omit<AllMessages, PageScopedNamespace>;
 type WelcomeMessages = AllMessages["welcome"];
 /** welcome tel qu'une maison le reçoit : les seuls canaux qu'elle ouvre. */
 type HouseWelcomeMessages = Omit<WelcomeMessages, "sources"> & { sources: Partial<WelcomeMessages["sources"]> };
-type PageScopedMessages = Pick<AllMessages, InternalNamespace> & { welcome: HouseWelcomeMessages };
+type PageScopedMessages = Pick<AllMessages, InternalNamespace | "organisation"> & { welcome: HouseWelcomeMessages };
 
 function without<T extends object, K extends string>(messages: T, namespaces: readonly K[]): Omit<T, K> {
   const drop: readonly string[] = namespaces;
@@ -309,6 +319,7 @@ export function pageMessages(
   const scoped: Partial<PageScopedMessages> = {};
   for (const ns of namespaces) {
     if (ns === "welcome") scoped.welcome = houseWelcome(locale, tenant);
+    else if (ns === "organisation") Object.assign(scoped, { organisation: MESSAGES[locale].organisation });
     else if (tenant.internalPages) Object.assign(scoped, { [ns]: MESSAGES[locale][ns] });
   }
   return { ...rootClientMessages(locale, tenant), ...scoped };
