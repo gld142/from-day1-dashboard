@@ -151,7 +151,8 @@
       "savesApple": "Ajouts Apple Music depuis TikTok",
       "playlists": "Entrées en playlists éditoriales"
     },
-    "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés)."
+    "note": "Simulation pour la démo : rangs, créateurs et ajouts seront relevés en production (Soundcharts, comptes connectés).",
+    "pick": "Choisir l'artiste"
   },
   "families": {
     "streams": "Streams",

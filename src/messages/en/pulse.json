@@ -151,7 +151,8 @@
       "savesApple": "Apple Music saves from TikTok",
       "playlists": "Editorial playlist adds"
     },
-    "note": "Demo simulation: ranks, creators and saves will be measured in production (Soundcharts, connected accounts)."
+    "note": "Demo simulation: ranks, creators and saves will be measured in production (Soundcharts, connected accounts).",
+    "pick": "Choose an artist"
   },
   "families": {
     "streams": "Streams",

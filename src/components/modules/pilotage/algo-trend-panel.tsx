@@ -1,17 +1,26 @@
 "use client";
 
 /**
- * Position algo & tendances — SIMULATION de démo.
+ * Position algo & tendances — SIMULATION de démo (badge obligatoire).
  *
- * Ce que l'algorithme fait du titre ce matin, sur chaque plateforme (Spotify,
- * Apple, Deezer, YouTube) et sur les réseaux (TikTok, Instagram) : le son qui
- * a percé, quand, les 3 créateurs qui l'ont porté cette semaine, et ce que ça
- * a fait aux streams et aux ajouts. Tout est simulé (badge obligatoire) :
- * en production, ces lignes se relèvent (Soundcharts, comptes connectés).
+ * Ce que l'algorithme fait d'un artiste ce matin, plateforme par plateforme, et le son
+ * TikTok qui a percé : quand, combien de vidéos, les 3 créateurs qui l'ont porté cette
+ * semaine, et ce que ça a fait aux streams et aux ajouts. En production, ces lignes se
+ * relèvent (Soundcharts, comptes connectés).
+ *
+ * Trois artistes ont un scénario écrit à la main (17/09). Les autres en reçoivent un tiré
+ * de leurs propres chiffres — le son le plus repris, les vidéos et le rang tendance FR de
+ * `tiktokSignal` (les mêmes que « D'où vient la poussée »), leur titre en tête — pour qu'un
+ * artiste n'affiche jamais le son d'un autre. Les surfaces simulées évitent le Top 200,
+ * déjà relevé et affiché à côté : pas deux rangs contradictoires pour le même classement.
  */
+import { useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Flame, Radar, Sparkles, Users } from "lucide-react";
+import { Sheet, SheetHeading } from "@/components/dashboard/sheet";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
+import { tiktokSignal, topTracks } from "@/lib/demo/api";
+import { daysAgo, isoDay, rngFor } from "@/lib/demo/seed";
 import { fmtCompact, fmtDate, fmtInt, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +45,7 @@ type Scenario = {
   placements: Placement[];
 };
 
-/** Un scénario par artiste réel, calibré sur leur taille d'audience. */
+/** Scénarios écrits à la main pour la démo du 19/09 (artistes réels, calibrés sur leur audience). */
 const SCENARIOS: Record<string, Scenario> = {
   dadju: {
     sound: "Reine",
@@ -118,79 +127,170 @@ const SCENARIOS: Record<string, Scenario> = {
   },
 };
 
+/** Les pseudonymes déjà validés pour la démo, redistribués d'un artiste à l'autre. */
+const HANDLES = [
+  "@lea.mkp",
+  "@yassine.danse",
+  "@maelys.off",
+  "@inesbcn",
+  "@rayane.fit",
+  "@la.team.93",
+  "@kossi.dance",
+  "@afrovibes.lome",
+  "@togo.trend",
+];
+
+/** Scénario tiré des chiffres de l'artiste lui-même (déterministe, seedé par artiste). */
+function scenarioFor(artistId: string): Scenario | null {
+  if (SCENARIOS[artistId]) return SCENARIOS[artistId];
+  const sig = tiktokSignal(artistId);
+  const lead = topTracks(artistId, 30, 1)[0];
+  const sound = sig?.topSound ?? lead?.title;
+  if (!sound) return null;
+  const rand = rngFor(`${artistId}:algo-trend`);
+  const videos = sig?.videos ?? Math.round(400 + rand() * 3_600);
+  const videosDelta = sig?.deltaYesterday ?? Math.round(videos * (0.02 + rand() * 0.06));
+  const trendRankFr = sig?.trendingRankFr ?? null;
+  const reach = Math.max(15_000, videos * 25);
+
+  const pool = [...HANDLES];
+  const creators: Creator[] = [1, 0.45, 0.2].map((share) => {
+    const handle = pool.splice(Math.floor(rand() * pool.length), 1)[0];
+    const followers = Math.round(reach * share * (0.8 + rand() * 0.4));
+    return { handle, followers, videos: 1 + Math.floor(rand() * 4), views: Math.round(followers * (1.6 + rand() * 1.6)) };
+  });
+
+  const streams7 = 4 + Math.round(rand() * 22);
+  const savesSpotify = Math.round(videos * (0.2 + rand() * 0.2));
+  const rankFrom = (base: number) => Math.max(1, Math.min(50, Math.round(base)));
+  const basis = trendRankFr ?? 20 + Math.round(rand() * 25);
+  const placements: Placement[] = [
+    { platform: "spotify", surface: "Viral 50 France", rank: rankFrom(basis * 1.6 + rand() * 6), delta: 1 + Math.round(rand() * 14) },
+    { platform: "youtube", surface: "Tendances musique FR", rank: rankFrom(basis * 1.2 + rand() * 8), delta: 1 + Math.round(rand() * 9) },
+    ...(trendRankFr !== null
+      ? [{ platform: "tiktok" as const, surface: "Sons en tendance FR", rank: trendRankFr, delta: 2 + Math.round(rand() * 30) }]
+      : []),
+    { platform: "instagram", surface: "Audios Reels FR", rank: rankFrom(basis * 1.4 + rand() * 6), delta: 1 + Math.round(rand() * 12) },
+  ];
+
+  return {
+    sound,
+    brokeOn: isoDay(daysAgo(3 + Math.floor(rand() * 18))),
+    brokeAt: `${18 + Math.floor(rand() * 5)}:${String(Math.floor(rand() * 12) * 5).padStart(2, "0")}`,
+    videos,
+    videosDelta,
+    trendRankFr,
+    creators,
+    streams7,
+    streams14: streams7 + 5 + Math.round(rand() * 16),
+    savesSpotify,
+    savesApple: Math.round(savesSpotify * (0.18 + rand() * 0.12)),
+    playlistAdds: 1 + Math.floor(rand() * 7),
+    placements,
+  };
+}
+
 function signed(locale: string, n: number): string {
   return new Intl.NumberFormat(locale, { maximumFractionDigits: 0, signDisplay: "always" }).format(n);
 }
 
-export function AlgoTrendPanel({ artistId, artistName, className }: { artistId: string; artistName: string; className?: string }) {
+const LABEL = "sheet-ink flex items-center gap-1.5 text-[11px] font-semibold tracking-wide uppercase";
+
+/**
+ * `artists` : un seul (vue artiste, artiste zoomé), ou le roster — on choisit alors l'artiste
+ * en tête de liste (le plus repris sur TikTok), puis n'importe lequel d'un clic.
+ */
+export function AlgoTrendPanel({ artists, className }: { artists: { id: string; name: string }[]; className?: string }) {
   const t = useTranslations("pulse.algo");
   const locale = useLocale();
-  const s = SCENARIOS[artistId] ?? SCENARIOS.kiko;
+  const withScenario = useMemo(
+    () => artists.flatMap((a) => {
+      const s = scenarioFor(a.id);
+      return s ? [{ ...a, s }] : [];
+    }),
+    [artists],
+  );
+  const [picked, setPicked] = useState<string | null>(null);
+  const current = withScenario.find((a) => a.id === picked) ?? withScenario[0];
+  if (!current) return null;
+  const { s } = current;
 
   return (
-    <section className={cn("space-y-3", className)}>
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h2 className="font-heading text-base font-semibold tracking-tight">{t("title")}</h2>
-        <p className="text-sm text-muted-foreground">{t("subtitle", { name: artistName })}</p>
-        <ProvenanceBadge provenance="simulated" className="ml-auto" />
-      </div>
+    <Sheet family="trends" className={className}>
+      <SheetHeading action={<ProvenanceBadge provenance="simulated" />}>{t("title")}</SheetHeading>
+      <p className="sheet-ink -mt-1 text-[12.5px]">{t("subtitle", { name: current.name })}</p>
 
-      <div className="grid gap-3 lg:grid-cols-5">
+      {withScenario.length > 1 && (
+        <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label={t("pick")}>
+          {withScenario.slice(0, 8).map((a) => (
+            <button
+              key={a.id}
+              type="button"
+              aria-pressed={a.id === current.id}
+              onClick={() => setPicked(a.id)}
+              className={cn(
+                "rounded-full border px-2.5 py-0.5 text-[12px] transition-colors",
+                a.id === current.id
+                  ? "border-foreground/20 bg-background text-foreground font-medium shadow-sm"
+                  : "sheet-ink border-transparent hover:border-foreground/15",
+              )}
+            >
+              {a.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 grid gap-6 lg:grid-cols-5">
         {/* Position algo par plateforme */}
-        <div className="rounded-xl border bg-card p-4 lg:col-span-2">
-          <div className="mb-3 flex items-center gap-2">
-            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-brand/10 text-brand">
-              <Radar className="size-3.5" aria-hidden />
-            </span>
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{t("platforms")}</span>
-          </div>
-          <ul className="divide-y">
+        <div className="lg:col-span-2">
+          <p className={LABEL}>
+            <Radar className="size-3.5" aria-hidden />
+            {t("platforms")}
+          </p>
+          <ul className="mt-2">
             {s.placements.map((p) => (
-              <li key={p.platform} className="flex items-center gap-3 py-2 text-sm">
+              <li key={p.platform} className="border-border/30 flex items-center gap-3 border-t py-1.5 text-[12.5px]">
                 <span className="w-24 shrink-0 font-medium">{t(`platform.${p.platform}`)}</span>
-                <span className="min-w-0 flex-1 truncate text-muted-foreground">{p.surface}</span>
-                <span className="font-heading text-base font-semibold tabular-nums">{t("rank", { rank: p.rank })}</span>
-                <span className="w-12 text-right text-xs tabular-nums text-emerald-600 dark:text-emerald-400">
-                  {signed(locale, p.delta)}
-                </span>
+                <span className="sheet-ink min-w-0 flex-1 truncate">{p.surface}</span>
+                <span className="font-semibold tabular-nums">{t("rank", { rank: p.rank })}</span>
+                <span className="text-success w-10 text-right text-[11.5px] tabular-nums">{signed(locale, p.delta)}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-xs text-muted-foreground">{t("deltaNote")}</p>
+          <p className="sheet-ink mt-1.5 text-[11px]">{t("deltaNote")}</p>
         </div>
 
         {/* Le son qui a percé */}
-        <div className="rounded-xl border bg-card p-4 lg:col-span-3">
-          <div className="mb-3 flex items-center gap-2">
-            <span className="inline-flex size-7 items-center justify-center rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400">
-              <Flame className="size-3.5" aria-hidden />
-            </span>
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{t("breakout.kicker")}</span>
-          </div>
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <div className="lg:col-span-3">
+          <p className={LABEL}>
+            <Flame className="size-3.5" aria-hidden />
+            {t("breakout.kicker")}
+          </p>
+          <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="font-heading text-2xl font-semibold tracking-tight">« {s.sound} »</span>
-            <span className="text-sm text-muted-foreground">
+            <span className="sheet-ink text-[12.5px]">
               {t("breakout.since", { date: fmtDate(locale, s.brokeOn, { day: "numeric", month: "long" }), time: s.brokeAt })}
             </span>
           </div>
-          <p className="mt-1 text-sm">
+          <p className="mt-1 text-[13px]">
             {t("breakout.videos", { videos: fmtCompact(locale, s.videos), delta: signed(locale, s.videosDelta) })}
             {" · "}
             {s.trendRankFr !== null ? t("breakout.trend", { rank: s.trendRankFr }) : t("breakout.noTrend")}
           </p>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid gap-5 sm:grid-cols-2">
             <div>
-              <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              <p className={LABEL}>
                 <Users className="size-3.5" aria-hidden />
                 {t("creators.title")}
-              </div>
-              <ol className="space-y-1.5">
+              </p>
+              <ol className="mt-2">
                 {s.creators.map((c, i) => (
-                  <li key={c.handle} className="flex items-center gap-2 text-sm">
-                    <span className="w-4 text-xs tabular-nums text-muted-foreground">{i + 1}</span>
-                    <span className="font-medium">{c.handle}</span>
-                    <span className="ml-auto text-xs tabular-nums text-muted-foreground">
+                  <li key={c.handle} className="border-border/30 grid grid-cols-[0.75rem_minmax(0,1fr)] gap-x-2 border-t py-1.5 text-[12.5px]">
+                    <span className="sheet-ink text-[11px] tabular-nums">{i + 1}</span>
+                    <span className="truncate font-medium">{c.handle}</span>
+                    <span className="sheet-ink col-start-2 truncate text-[11px] tabular-nums">
                       {t("creators.line", { followers: fmtCompact(locale, c.followers), videos: c.videos, views: fmtCompact(locale, c.views) })}
                     </span>
                   </li>
@@ -198,11 +298,11 @@ export function AlgoTrendPanel({ artistId, artistName, className }: { artistId: 
               </ol>
             </div>
             <div>
-              <div className="mb-2 flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              <p className={LABEL}>
                 <Sparkles className="size-3.5" aria-hidden />
                 {t("impact.title")}
-              </div>
-              <dl className="space-y-1.5 text-sm">
+              </p>
+              <dl className="mt-2 text-[12.5px]">
                 {[
                   [t("impact.streams7"), fmtPct(locale, s.streams7, 0)],
                   [t("impact.streams14"), fmtPct(locale, s.streams14, 0)],
@@ -210,9 +310,9 @@ export function AlgoTrendPanel({ artistId, artistName, className }: { artistId: 
                   [t("impact.savesApple"), fmtInt(locale, s.savesApple)],
                   [t("impact.playlists"), fmtInt(locale, s.playlistAdds)],
                 ].map(([k, v]) => (
-                  <div key={k} className="flex items-baseline justify-between gap-3">
-                    <dt className="text-muted-foreground">{k}</dt>
-                    <dd className="font-medium tabular-nums">{v}</dd>
+                  <div key={k} className="border-border/30 flex items-baseline justify-between gap-3 border-t py-1.5">
+                    <dt className="sheet-ink">{k}</dt>
+                    <dd className="font-semibold tabular-nums">{v}</dd>
                   </div>
                 ))}
               </dl>
@@ -220,7 +320,7 @@ export function AlgoTrendPanel({ artistId, artistName, className }: { artistId: 
           </div>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">{t("note")}</p>
-    </section>
+      <p className="sheet-ink mt-4 text-[11px]">{t("note")}</p>
+    </Sheet>
   );
 }

@@ -32,6 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { HeroChart } from "@/components/modules/pilotage/hero-chart";
+import { AlgoTrendPanel } from "@/components/modules/pilotage/algo-trend-panel";
 import {
   Doors,
   Emph,
@@ -739,6 +740,9 @@ export default function PulsePage() {
             </Sheet>
           </div>
 
+          {/* Position algo & tendances : le son qui a percé (simulation de démo). */}
+          <AlgoTrendPanel artists={[{ id: v.artist.id, name: v.artist.name }]} />
+
           {/* 3 — la nuit et la journée qui vient. */}
           <NightStrip
             items={
@@ -1207,6 +1211,13 @@ export default function PulsePage() {
               />
             </Sheet>
           </div>
+
+          {/* Position algo & tendances : l'artiste le plus repris sur TikTok d'abord, les autres d'un clic. */}
+          <AlgoTrendPanel
+            artists={[...ARTISTS]
+              .sort((x, y) => (tiktokSignal(y.id)?.videos ?? 0) - (tiktokSignal(x.id)?.videos ?? 0))
+              .map((a) => ({ id: a.id, name: a.name }))}
+          />
 
           <NightStrip
             items={
