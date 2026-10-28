@@ -61,39 +61,7 @@ export function FeedComposer({
   const forwardTo = JOB_ROLES.filter((r) => r !== myRole && !note.to.includes(r));
 
   return (
-    <div className={cn("bg-muted/50 rounded-lg p-2.5", className)}>
-      {/* En un clic : une réponse toute faite, ou la note transmise à un service. */}
-      <div className="mb-2 flex flex-wrap items-center gap-1.5">
-        <span className="text-muted-foreground mr-0.5 text-[11px] font-semibold tracking-wide uppercase">{tp("quick.title")}</span>
-        <QuickChip
-          onClick={() => {
-            if (status !== "done") onStatus("decided");
-            onReply(tp("quick.okText"));
-          }}
-        >
-          <Check className="size-3" aria-hidden />
-          {tp("quick.ok")}
-        </QuickChip>
-        <QuickChip onClick={() => onReply(tp("quick.infoText"))}>{tp("quick.info")}</QuickChip>
-        <QuickChip onClick={() => onReply(tp("quick.chaseText"))}>{tp("quick.chase")}</QuickChip>
-        {forwardTo.length > 0 && (
-          <span className="text-muted-foreground ml-1.5 inline-flex items-center gap-1 text-[11.5px]">
-            <CornerUpRight className="size-3" aria-hidden />
-            {tp("quick.forward")}
-          </span>
-        )}
-        {forwardTo.map((r) => (
-          <QuickChip key={r} tone="brand" onClick={() => onReply(tp("quick.forwardText", { service: roleLabel(tf, r) }))}>
-            {roleLabel(tf, r)}
-          </QuickChip>
-        ))}
-        {onAttach && attachCtx && (
-          <QuickChip onClick={() => setShowAttach((v) => !v)} pressed={showAttach}>
-            <Paperclip className="size-3" aria-hidden />
-            {tp("attach.button")}
-          </QuickChip>
-        )}
-      </div>
+    <div className={cn("space-y-2", className)}>
       {onAttach && attachCtx && showAttach && (
         <AttachmentPicker
           onAttach={(a) => {
@@ -103,36 +71,80 @@ export function FeedComposer({
           ctx={attachCtx}
           artistId={note.artistId}
           artistName={artistName}
-          className="mb-2"
         />
       )}
-      <Textarea
-        aria-label={tp("replies.label")}
-        value={text}
-        maxLength={FEED_TEXT_MAX}
-        rows={2}
-        autoFocus={autoFocus}
-        placeholder={tp("replies.placeholder")}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) send();
-        }}
-        className="bg-background text-[12.5px]"
-      />
-      <div className="text-muted-foreground mt-1.5 flex flex-wrap items-center gap-2 text-[11px]">
-        {effects.added.length > 0 && (
-          <span className="text-brand">{tp("replies.adds", { list: effects.added.map((r) => recipientLabel(tf, r)).join(", ") })}</span>
-        )}
-        {effects.outOfScope.length > 0 && (
-          <span className="text-warning">
-            {tp("replies.outOfScope", { names: effects.outOfScope.map((d) => daLabel(tf, d)).join(", ") })}
+      {/* Un seul bloc : le texte, puis sa barre d'outils (réponses en un clic, transmettre, joindre, envoyer). */}
+      <div className="bg-background focus-within:border-foreground/30 rounded-lg border transition-colors">
+        <Textarea
+          aria-label={tp("replies.label")}
+          value={text}
+          maxLength={FEED_TEXT_MAX}
+          rows={2}
+          autoFocus={autoFocus}
+          placeholder={tp("replies.placeholder")}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) send();
+          }}
+          className="min-h-14 resize-none border-0 bg-transparent px-3 py-2.5 text-[13px] shadow-none focus-visible:ring-0 dark:bg-transparent"
+        />
+        <div className="flex flex-wrap items-center gap-x-0.5 gap-y-1 border-t px-1.5 py-1.5">
+          <QuickChip
+            onClick={() => {
+              if (status !== "done") onStatus("decided");
+              onReply(tp("quick.okText"));
+            }}
+          >
+            <Check className="size-3.5" aria-hidden />
+            {tp("quick.ok")}
+          </QuickChip>
+          <QuickChip onClick={() => onReply(tp("quick.infoText"))}>{tp("quick.info")}</QuickChip>
+          <QuickChip onClick={() => onReply(tp("quick.chaseText"))}>{tp("quick.chase")}</QuickChip>
+          {forwardTo.length > 0 && (
+            <span className="text-muted-foreground ml-1 inline-flex items-center gap-1 border-l pl-2 text-[12px]">
+              <CornerUpRight className="size-3.5" aria-hidden />
+              {tp("quick.forward")}
+            </span>
+          )}
+          {forwardTo.map((r) => (
+            <QuickChip key={r} tone="link" onClick={() => onReply(tp("quick.forwardText", { service: roleLabel(tf, r) }))}>
+              {roleLabel(tf, r)}
+            </QuickChip>
+          ))}
+          <span className="ml-auto flex items-center gap-1">
+            {onAttach && attachCtx && (
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                aria-pressed={showAttach}
+                aria-label={tp("attach.button")}
+                title={tp("attach.button")}
+                onClick={() => setShowAttach((v) => !v)}
+                className={cn("text-muted-foreground h-7 px-2", showAttach && "bg-muted text-foreground")}
+              >
+                <Paperclip className="size-3.5" aria-hidden />
+              </Button>
+            )}
+            <Button size="sm" className="h-7 gap-1.5 px-2.5 text-[12px]" disabled={!text.trim()} onClick={send}>
+              <Send className="size-3.5" aria-hidden />
+              {tp("replies.send")}
+            </Button>
           </span>
-        )}
-        <Button size="sm" className="ml-auto gap-1.5" disabled={!text.trim()} onClick={send}>
-          <Send className="size-3.5" aria-hidden />
-          {tp("replies.send")}
-        </Button>
+        </div>
       </div>
+      {(effects.added.length > 0 || effects.outOfScope.length > 0) && (
+        <p className="text-muted-foreground flex flex-wrap gap-x-3 px-1 text-[11.5px]">
+          {effects.added.length > 0 && (
+            <span className="text-foreground/80">{tp("replies.adds", { list: effects.added.map((r) => recipientLabel(tf, r)).join(", ") })}</span>
+          )}
+          {effects.outOfScope.length > 0 && (
+            <span className="text-warning">
+              {tp("replies.outOfScope", { names: effects.outOfScope.map((d) => daLabel(tf, d)).join(", ") })}
+            </span>
+          )}
+        </p>
+      )}
     </div>
   );
 }
@@ -145,7 +157,7 @@ export function QuickChip({
 }: {
   onClick: () => void;
   children: ReactNode;
-  tone?: "neutral" | "brand";
+  tone?: "neutral" | "link";
   pressed?: boolean;
 }) {
   return (
@@ -154,8 +166,8 @@ export function QuickChip({
       onClick={onClick}
       aria-pressed={pressed}
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[12px] font-medium transition-colors",
-        tone === "brand" ? "border-brand/30 bg-brand/10 text-brand hover:bg-brand/20" : "bg-background hover:border-foreground/25",
+        "hover:bg-muted inline-flex h-7 items-center gap-1 rounded-md px-2 text-[12px] font-medium transition-colors",
+        tone === "link" ? "text-foreground/80 hover:text-foreground" : "text-foreground/85",
       )}
     >
       {children}

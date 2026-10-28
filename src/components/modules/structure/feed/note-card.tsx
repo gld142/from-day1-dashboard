@@ -75,9 +75,17 @@ export const DUE_TONE = { overdue: "bg-destructive text-white", soon: "bg-warnin
 
 /** La barre de gauche : l'urgence se voit avant de lire. */
 export const URGENCY_BAR: Record<Urgency, string> = {
-  urgent: "border-l-destructive",
-  important: "border-l-warning",
-  info: "border-l-brand/70",
+  urgent: "shadow-[inset_3px_0_0_var(--destructive)]",
+  important: "shadow-[inset_3px_0_0_var(--warning)]",
+  info: "shadow-[inset_3px_0_0_color-mix(in_oklab,var(--muted-foreground)_45%,transparent)]",
+};
+
+/** Le statut : un point de couleur dans une pastille neutre. */
+const STATUS_DOT: Record<FeedStatus, string> = {
+  todo: "bg-muted-foreground/50",
+  doing: "bg-brand",
+  decided: "bg-warning",
+  done: "bg-success",
 };
 
 /** L'étape se lit à la forme ; seule « en cours » prend l'accent de la marque. */
@@ -183,13 +191,12 @@ export function NoteCard(props: NoteCardProps) {
     <article
       data-note={note.id}
       className={cn(
-        "group/note bg-card relative rounded-lg border border-l-[3px] shadow-xs transition-shadow",
+        "group/note relative transition-colors",
         URGENCY_BAR[note.urgency],
-        active ? "ring-brand/40 ring-2" : "hover:shadow-sm",
-        unread > 0 && !active && "ring-destructive/25 ring-1",
+        active ? "bg-muted/60" : "hover:bg-muted/35",
       )}
     >
-      <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-x-3 px-3.5 py-3">
+      <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-x-3 py-3.5 pr-4 pl-4">
         {/* L'étape se lit à la forme ; on la change dans la pastille « Statut » ci-dessous. */}
         <span className="mt-px flex size-5 items-center justify-center" title={tp(`status.${status}`)}>
           <Icon className={cn("size-[18px]", tone)} aria-hidden />
@@ -203,7 +210,8 @@ export function NoteCard(props: NoteCardProps) {
             )}
           >
             {unread > 0 && (
-              <span className="bg-destructive mr-2 inline-flex translate-y-[-1px] items-center rounded-full px-1.5 align-middle text-[10.5px] leading-4 font-semibold text-white tabular-nums">
+              <span className="text-destructive mr-2 inline-flex items-center gap-1 align-baseline text-[11.5px] font-semibold tabular-nums">
+                <span aria-hidden className="bg-destructive size-1.5 rounded-full" />
                 {tp("unread", { count: unread })}
               </span>
             )}
@@ -230,9 +238,10 @@ export function NoteCard(props: NoteCardProps) {
             <span aria-hidden>·</span>
             <span className="tabular-nums">{fmtDate(locale, note.createdAt.slice(0, 10), { day: "numeric", month: "short" })}</span>
             {stakeText && (
-              <span className="bg-foreground/[0.06] text-foreground/85 rounded px-1.5 py-px text-[11.5px] font-medium tabular-nums">
-                {stakeText}
-              </span>
+              <>
+                <span aria-hidden>·</span>
+                <span className="text-foreground/80 font-medium tabular-nums">{stakeText}</span>
+              </>
             )}
             {note.doneAt && (
               <>
@@ -253,19 +262,18 @@ export function NoteCard(props: NoteCardProps) {
             <button
               type="button"
               onClick={() => openPanel("replies")}
-              className="bg-muted/70 hover:bg-muted mt-2 block w-full max-w-[72ch] rounded-md px-3 py-2 text-left transition-colors"
+              className="border-border hover:border-foreground/30 mt-2.5 block w-full max-w-[72ch] border-l-2 py-0.5 pl-3 text-left transition-colors"
             >
-              <span className="text-muted-foreground flex items-center gap-1.5 text-[11px]">
-                <MessageSquare className="size-3" aria-hidden />
-                <span className="text-foreground font-semibold">{last.by.name}</span>
+              <span className="text-muted-foreground flex items-center gap-1.5 text-[11.5px]">
+                <span className="text-foreground/85 font-semibold">{last.by.name}</span>
                 <span className="tabular-nums">· {when(locale, last.at)}</span>
               </span>
-              <span className="text-foreground/90 mt-0.5 line-clamp-2 block text-[12.5px] leading-snug">
+              <span className="text-foreground/75 mt-0.5 line-clamp-2 block text-[12.5px] leading-snug">
                 <MentionText text={last.text} artistId={note.artistId} daOf={daOf} />
               </span>
             </button>
           )}
-          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[12px]">
+          <div className="mt-2.5 -ml-1 flex flex-wrap items-center gap-0.5 text-[12px]">
             <StatusPill
               status={status}
               canAct={canAct}
@@ -275,8 +283,8 @@ export function NoteCard(props: NoteCardProps) {
             />
             <Button
               size="sm"
-              variant={panel === "replies" ? "secondary" : "outline"}
-              className="h-7 gap-1.5 px-2.5 text-[12px]"
+              variant="ghost"
+              className="text-foreground/80 h-7 gap-1.5 px-2 text-[12px] font-medium"
               aria-expanded={panel === "replies"}
               onClick={() => openPanel("replies")}
             >
@@ -291,13 +299,14 @@ export function NoteCard(props: NoteCardProps) {
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-muted-foreground h-7 gap-1 px-2 text-[12px]"
+                className="text-muted-foreground h-7 px-2"
                 onClick={() => {
                   if (panel !== "replies") openPanel("replies");
                 }}
+                aria-label={tp("attach.button")}
+                title={tp("attach.button")}
               >
                 <Paperclip className="size-3.5" aria-hidden />
-                {tp("attach.button")}
               </Button>
             )}
             <Button
@@ -332,10 +341,7 @@ export function NoteCard(props: NoteCardProps) {
             {due && (
               <span
                 data-due={due}
-                className={cn(
-                  "mt-0.5 block rounded px-1 text-[10.5px] font-semibold",
-                  due === "overdue" ? "bg-destructive text-white" : "bg-warning/15 text-warning",
-                )}
+                className={cn("mt-0.5 block text-[11px] font-medium", due === "overdue" ? "text-destructive" : "text-warning")}
               >
                 {tp(`due.${due}`)}
               </span>
@@ -347,15 +353,15 @@ export function NoteCard(props: NoteCardProps) {
             data-assignee={note.assigneeId ?? ""}
             title={assigneeText}
             className={cn(
-              "has-[select:focus-visible]:ring-ring relative rounded-md px-2 py-0.5 text-right text-[11.5px] leading-tight has-[select:focus-visible]:ring-2",
-              assigneeName ? "bg-foreground/[0.06] text-foreground/85" : "text-muted-foreground border border-dashed",
+              "has-[select:focus-visible]:ring-ring hover:bg-muted relative -mr-1 rounded-md px-1 py-0.5 text-right text-[12px] leading-tight has-[select:focus-visible]:ring-2",
+              assigneeName ? "text-foreground/85" : "text-muted-foreground italic",
             )}
           >
-            <span aria-hidden className="block font-semibold">
+            <span aria-hidden className="block font-medium">
               {assigneeName ? tp("waiting.with", { name: assigneeName }) : tp("waiting.nobody")}
             </span>
             {props.waiting && (
-              <span aria-hidden className="text-muted-foreground block text-[10.5px]">
+              <span aria-hidden className="text-muted-foreground block text-[11px] not-italic">
                 {tp("waiting.since", { days: props.waiting.days })}
               </span>
             )}
@@ -380,7 +386,7 @@ export function NoteCard(props: NoteCardProps) {
 
         {/* Au survol (toujours visible sans souris) : les gestes qui comptent, en un clic. */}
         {(canTakeIt || (canAct && status !== "done") || plan) && (
-          <div className="bg-card absolute top-2 right-2 flex items-center gap-0.5 rounded-md border p-0.5 opacity-0 shadow-sm transition-opacity group-focus-within/note:opacity-100 group-hover/note:opacity-100 [@media(hover:none)]:static [@media(hover:none)]:col-start-2 [@media(hover:none)]:mt-1 [@media(hover:none)]:w-fit [@media(hover:none)]:opacity-100">
+          <div className="bg-background absolute top-2.5 right-3 flex items-center gap-0.5 rounded-md border p-0.5 opacity-0 shadow-sm transition-opacity group-focus-within/note:opacity-100 group-hover/note:opacity-100 [@media(hover:none)]:static [@media(hover:none)]:col-start-2 [@media(hover:none)]:mt-1 [@media(hover:none)]:w-fit [@media(hover:none)]:opacity-100">
             {canTakeIt && (
               <Button size="sm" variant="ghost" className="h-7 gap-1 px-2 text-[12px]" onClick={takeIt}>
                 <Hand className="size-3.5" aria-hidden />
@@ -496,20 +502,18 @@ export function StatusPill({
   size?: "sm" | "md";
 }) {
   const tp = useTranslations("filpage");
-  const { Icon } = STATUS_GLYPH[status];
   return (
     <span className="relative inline-flex">
       <span
         className={cn(
-          "has-[select:focus-visible]:ring-ring relative inline-flex items-center gap-1.5 rounded-full border font-semibold has-[select:focus-visible]:ring-2",
-          size === "md" ? "h-8 px-3 text-[12.5px]" : "h-7 px-2.5 text-[12px]",
-          STATUS_TONE[status],
+          "has-[select:focus-visible]:ring-ring bg-background hover:border-foreground/25 text-foreground relative inline-flex items-center gap-1.5 rounded-md border font-medium transition-colors has-[select:focus-visible]:ring-2",
+          size === "md" ? "h-8 px-2.5 text-[12.5px]" : "h-7 px-2 text-[12px]",
         )}
         title={canAct ? tp("status.label") : undefined}
       >
-        <Icon className="size-3.5" aria-hidden />
+        <span aria-hidden className={cn("size-2 rounded-full", STATUS_DOT[status])} />
         {canAct ? <span aria-hidden>{tp(`status.${status}`)}</span> : <span data-status={status}>{tp(`status.${status}`)}</span>}
-        {canAct && <ChevronDown className="size-3 opacity-70" aria-hidden />}
+        {canAct && <ChevronDown className="text-muted-foreground size-3" aria-hidden />}
         {canAct && (
           <select
             aria-label={tp("status.label")}

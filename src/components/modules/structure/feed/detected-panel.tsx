@@ -52,34 +52,34 @@ export function DetectedPanel({
   const [open, setOpen] = useState(false);
   if (signals.length === 0) return null;
   return (
-    <section aria-labelledby="fil-detect" className="border-brand/30 bg-brand/[0.04] rounded-xl border border-dashed p-2.5">
-      <h3 id="fil-detect" className={cn("flex flex-wrap items-center gap-2 px-0.5", open && "mb-2")}>
+    <section aria-labelledby="fil-detect" className="bg-card rounded-lg border px-3 py-2">
+      <h3 id="fil-detect" className={cn("flex flex-wrap items-center gap-2", open && "mb-2")}>
         <button
           type="button"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
           className="flex flex-1 flex-wrap items-center gap-2 text-left"
         >
-          <span className="bg-foreground text-background inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase">
-            <Sparkles className="size-3" aria-hidden />
+          <span className="text-foreground inline-flex items-center gap-1.5 text-[13px] font-semibold">
+            <Sparkles className="text-brand size-3.5" aria-hidden />
             {tp("detect.title")}
-            <span className="tabular-nums">{signals.length}</span>
+            <span className="text-muted-foreground font-normal tabular-nums">{signals.length}</span>
           </span>
           <span className="text-muted-foreground text-[12px]">{open ? tp("detect.hint") : tp("detect.summary", { count: signals.length })}</span>
-          <span className="text-brand ml-auto inline-flex items-center gap-1 text-[12px] font-semibold">
+          <span className="text-foreground/80 ml-auto inline-flex items-center gap-1 text-[12px] font-medium">
             {open ? tp("detect.hide") : tp("detect.show")}
             <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} aria-hidden />
           </span>
         </button>
       </h3>
       {open && (
-      <ul className="space-y-1.5">
+      <ul className="divide-border/70 -mx-3 divide-y border-t">
         {signals.map((s) => {
           const Icon = KIND_ICON[s.kind];
           return (
             <li
               key={s.id}
-              className="bg-card flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border px-3 py-2 text-[13px]"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-2.5 text-[13px]"
             >
               <Icon
                 className={cn("size-4 shrink-0", s.urgency === "urgent" ? "text-destructive" : s.urgency === "important" ? "text-warning" : "text-brand")}
@@ -96,7 +96,7 @@ export function DetectedPanel({
                 {s.to.map((r) => roleLabel(tf, r)).join(", ")}
               </span>
               <span className="flex items-center gap-1">
-                <Button size="sm" className="h-7 px-2.5 text-[12px]" onClick={() => onPost(s)}>
+                <Button size="sm" variant="outline" className="h-7 px-2.5 text-[12px]" onClick={() => onPost(s)}>
                   {tp("detect.post")}
                 </Button>
                 <Button

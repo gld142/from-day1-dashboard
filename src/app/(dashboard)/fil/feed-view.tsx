@@ -17,7 +17,7 @@ import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { AlertTriangle, CalendarCheck, Check, CheckCircle2, ChevronRight, Flame, Info, Plus, Send } from "lucide-react";
+import { CalendarCheck, Check, CheckCircle2, ChevronRight, Plus, Send } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { CommitteeAgenda } from "@/components/modules/structure/feed/committee-agenda";
 import { daLabel, recipientLabel, roleLabel } from "@/components/modules/structure/feed/labels";
@@ -79,12 +79,12 @@ const artistsFor = (jobRole: JobRole | null, daId: string | null, org: OrgState)
 /** Classe posée sur <html> tant que l'ordre du jour est ouvert : la feuille d'impression ne sort que lui. */
 const PRINT_CLASS = "print-fil-agenda";
 
-/* Chaque urgence a son bloc : un fond teinté, une pastille pleine. Rouge = à faire aujourd'hui,
-   ambre = cette semaine, bleu = pour info. Sur l'ambre, un texte foncé (lisible dans les trois thèmes). */
-const GROUP_TONE: Record<Urgency, { box: string; pill: string; Icon: typeof Flame }> = {
-  urgent: { box: "border-destructive/25 bg-destructive/[0.06]", pill: "bg-destructive text-white", Icon: Flame },
-  important: { box: "border-warning/35 bg-warning/[0.08]", pill: "bg-warning text-[oklch(0.24_0.05_70)]", Icon: AlertTriangle },
-  info: { box: "border-brand/20 bg-brand/[0.05]", pill: "bg-brand text-brand-foreground", Icon: Info },
+/* L'urgence se lit à un point de couleur devant le titre de section et au liseré de chaque ligne :
+   rouge = aujourd'hui, ambre = cette semaine, gris-bleu = pour info. Pas de fond teinté. */
+const GROUP_DOT: Record<Urgency, string> = {
+  urgent: "bg-destructive",
+  important: "bg-warning",
+  info: "bg-muted-foreground/60",
 };
 
 /* Grand écran (≥ lg) : la conversation à droite du fil. En dessous : plein écran, rendu sous <body>
@@ -504,7 +504,8 @@ function Feed() {
         </div>
         <p className="flex items-center gap-3 text-[12px]" aria-live="polite">
           {newForMe > 0 && (
-            <span className="bg-destructive inline-flex items-center rounded-full px-2.5 py-0.5 text-[11.5px] font-semibold text-white tabular-nums">
+            <span className="text-destructive inline-flex items-center gap-1.5 font-semibold tabular-nums">
+              <span aria-hidden className="bg-destructive size-1.5 rounded-full" />
               {tp("newMessages", { count: newForMe })}
             </span>
           )}
@@ -513,10 +514,10 @@ function Feed() {
       </div>
 
       <div className={cn(openNote && isWide && "grid grid-cols-[minmax(0,1fr)_minmax(22rem,30rem)] items-start gap-4")}>
-      <div className="bg-card min-w-0 overflow-hidden rounded-xl border">
+      <div className="min-w-0">
         {/* Le filet se remplit à mesure que la pile « pour moi » descend. */}
-        <div className="bg-muted h-0.5" aria-hidden>
-          <div className="bg-brand h-full transition-[width] duration-500" style={{ width: `${progress * 100}%` }} />
+        <div className="bg-border h-px" aria-hidden>
+          <div className="bg-foreground/70 h-full transition-[width] duration-500" style={{ width: `${progress * 100}%` }} />
         </div>
 
         {openShown.length === 0 && mode === "mine" && !artistFilter ? (
@@ -540,64 +541,56 @@ function Feed() {
             {t(mode === "mine" ? "empty.mine" : "empty.all")}
           </p>
         ) : (
-          <div className="space-y-3 p-3">
+          <div className="space-y-5 pt-4">
             <DetectedPanel signals={signals} onPost={postSignal} onDismiss={(sg) => markDetected(sg.id)} />
-            {groups.map((g) => {
-              const tone = GROUP_TONE[g.urgency];
-              return (
-                <section
-                  key={g.urgency}
-                  aria-labelledby={`fil-g-${g.urgency}`}
-                  className={cn("rounded-xl border p-2.5", tone.box)}
-                >
-                  <h3 id={`fil-g-${g.urgency}`} className="mb-2 flex items-center gap-2 px-0.5">
-                    <span
-                      className={cn(
-                        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wide uppercase",
-                        tone.pill,
-                      )}
-                    >
-                      <tone.Icon className="size-3" aria-hidden />
-                      {t(`urgency.${g.urgency}`)}
-                      <span className="tabular-nums">{g.items.length}</span>
-                    </span>
-                  </h3>
-                  <ul className="space-y-2">
-                    <AnimatePresence initial={false}>
-                      {g.items.map((n) => (
-                        <motion.li
-                          key={n.id}
-                          layout="position"
-                          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                          transition={{ duration: 0.22, ease: EASE_OUT }}
-                          onMouseDown={() => setActiveId(n.id)}
-                        >
-                          {renderNote(n)}
-                        </motion.li>
-                      ))}
-                    </AnimatePresence>
-                  </ul>
-                </section>
-              );
-            })}
+            {groups.map((g) => (
+              <section key={g.urgency} aria-labelledby={`fil-g-${g.urgency}`}>
+                <h3 id={`fil-g-${g.urgency}`} className="text-foreground mb-2 flex items-center gap-2 px-1 text-[13px] font-semibold">
+                  <span aria-hidden className={cn("size-2 rounded-full", GROUP_DOT[g.urgency])} />
+                  {t(`urgency.${g.urgency}`)}
+                  <span className="text-muted-foreground font-normal tabular-nums">{g.items.length}</span>
+                </h3>
+                <ul className="bg-card divide-border/70 overflow-hidden rounded-lg border divide-y">
+                  <AnimatePresence initial={false}>
+                    {g.items.map((n) => (
+                      <motion.li
+                        key={n.id}
+                        layout="position"
+                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                        transition={{ duration: 0.22, ease: EASE_OUT }}
+                        onMouseDown={() => setActiveId(n.id)}
+                      >
+                        {renderNote(n)}
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
+              </section>
+            ))}
             {doneShown.length > 0 && (
               <section>
                 <button
                   type="button"
                   aria-expanded={showDone}
                   onClick={() => setShowDone((v) => !v)}
-                  className="text-muted-foreground hover:text-foreground flex w-full items-center gap-1.5 px-3 pt-3 pb-1 text-[11px] font-semibold tracking-wide uppercase"
+                  className="text-muted-foreground hover:text-foreground mb-2 flex w-full items-center gap-1.5 px-1 text-[13px] font-semibold"
                 >
                   <ChevronRight className={cn("size-3.5 transition-transform", showDone && "rotate-90")} aria-hidden />
                   {tp("groups.done")}
                   <span className="num font-normal">{doneShown.length}</span>
                 </button>
-                {showDone && <ul>{doneShown.map((n) => <li key={n.id}>{renderNote(n)}</li>)}</ul>}
+                {showDone && (
+                  <ul className="bg-card divide-border/70 overflow-hidden rounded-lg border divide-y">
+                    {doneShown.map((n) => (
+                      <li key={n.id}>{renderNote(n)}</li>
+                    ))}
+                  </ul>
+                )}
               </section>
             )}
           </div>
         )}
-        <p className="text-muted-foreground border-t px-4 py-2 text-[11px] [@media(hover:none)]:hidden">
+        <p className="text-muted-foreground mt-4 px-1 text-[11px] [@media(hover:none)]:hidden">
           {tp("keys.hint")}
         </p>
       </div>
