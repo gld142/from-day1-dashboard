@@ -259,7 +259,14 @@ Spec `docs/superpowers/specs/2026-10-23-universal-v2-design.md`, plan
 - **Fil entre services** : `src/lib/userdata/feed-store.ts`, localStorage `day1-feed`, exemples
   posés une fois. Réservé à la persona structure (navigation ET `LabelGuard`). Rien en base,
   aucun email (produit, plus tard). L'auteur est figé à la création (« Finance », « DA · Inès M. »),
-  dans la langue de création.
+  dans la langue de création. Depuis le 28/10 : modèle pur `feed-model.ts` (statuts à faire / en
+  cours / décidé / traité — `status` open/done de la spec gardé, l'étape dans `stage` —, historique,
+  réponses, mentions, prise en charge, « Ouvrir », échéances vs `DEMO_TODAY`, ordre du jour),
+  exemples rejoués dans `feed-seed.ts` (chiffres lus dans data.ts), stockage `version: 2` ; un
+  stockage v1 est migré sans perte à la lecture. Une mention ou une prise en charge n'envoie JAMAIS
+  une note d'artiste à un DA qui ne suit pas cet artiste. Textes ajoutés : namespace de PAGE
+  `filpage` (/fil est une page serveur + `PageIntlProvider`). Vérifier :
+  `npx vitest run src/lib/userdata/__tests__/feed-model.test.ts src/lib/userdata/__tests__/feed-seed.test.ts src/components/modules/structure/__tests__/feed-components.test.ts`.
 - **Provenance du profil importé** : chiffre du jour « reconstitué », auditeurs « estimés »
   (dérivés des streams ÷ 2,6), « simulé » si le dernier mois est vide. Le badge du total roster
   qualifie la part Spotify (les autres plateformes sont estimées par construction).
