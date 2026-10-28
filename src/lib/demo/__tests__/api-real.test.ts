@@ -25,6 +25,7 @@ import {
 import { ALL_ARTISTS } from "@/lib/demo/data";
 import { hasKworbDailyRate, latestSnapshot, playcountRate, realStreamSeries } from "@/lib/real";
 import { SNAPSHOTS } from "@/lib/real/snapshots";
+import { weakest } from "@/lib/real/estimator";
 import { clearShares, saveShares } from "@/lib/userdata/shares-store";
 import { USER_ARTIST_ID, clearCustomerData, setCustomerDataSilently, userArtist, userMonthlyListeners, type UserData } from "@/lib/userdata/store";
 
@@ -194,9 +195,12 @@ describe("api.ts sur les artistes réels", () => {
     expect(provenanceOfToday([...asc].reverse())).toBe("reconstructed");
     expect(provenanceOfToday([asc[1], { date: "2026-10-24", dsp: "deezer", streams: 3, provenance: "measured" }])).toBe("reconstructed");
   });
-  it("todayProvenance : Leto (Kworb avec débit) mesuré, Dakeez (Kworb sans débit) reconstitué ; auditeurs mesurés pour les deux", () => {
+  /* Dakeez n'a pas de débit Kworb : avec UN relevé (24/10) son chiffre du jour était reconstitué ;
+     dès le DEUXIÈME relevé Spotify (28/10), il est mesuré par différence des compteurs — mesuré le
+     28/10/2026 : 24 110 streams Spotify « measured ». Le test suit le nombre de relevés. */
+  it("todayProvenance : Leto (Kworb avec débit) mesuré ; Dakeez (sans Kworb) reconstitué avec un relevé, mesuré dès deux ; auditeurs mesurés", () => {
     expect(todayProvenance("leto")).toBe("measured");
-    expect(todayProvenance("dakeez")).toBe("reconstructed");
+    expect(todayProvenance("dakeez")).toBe((SNAPSHOTS.dakeez?.length ?? 0) >= 2 ? "measured" : "reconstructed");
     expect(listenersProvenance("leto")).toBe("measured");
     expect(listenersProvenance("dakeez")).toBe("measured");
     expect(listenersProvenance("artiste-inconnu")).toBe("simulated");
@@ -274,10 +278,13 @@ describe("api.ts sur les artistes réels", () => {
       expect(measured.length).toBeGreaterThan(0);
       expect(rosterTodayProvenance(measured)).toBe("measured");
     });
-    it("un roster qui contient Dakeez est reconstitué", () => {
-      const dakeez = ALL_ARTISTS.find((a) => a.id === "dakeez")!;
-      expect(rosterTodayProvenance([...measured, dakeez])).toBe("reconstructed");
-      expect(rosterTodayProvenance(ARTISTS)).toBe("reconstructed");
+    it("un roster qui contient une partie plus faible prend sa provenance (la plus faible gagne)", () => {
+      const parts = ARTISTS.map((a) => todayProvenance(a.id));
+      expect(rosterTodayProvenance(ARTISTS)).toBe(weakest(parts));
+      // un artiste sans relevé (simulé) fait tomber tout le roster à « simulé »
+      const ghost = { ...ARTISTS[0], id: "artiste-sans-releve" };
+      expect(todayProvenance(ghost.id)).toBe("simulated");
+      expect(rosterTodayProvenance([...measured, ghost])).toBe("simulated");
     });
     it("un roster vide est simulé (rien de mesuré)", () => {
       expect(rosterTodayProvenance([])).toBe("simulated");
