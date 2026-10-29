@@ -1,0 +1,5538 @@
+{
+  "date": "2026-10-29",
+  "capturedAt": "2026-10-29T09:58:27.508Z",
+  "chartDate": "2026-10-27",
+  "country": "FR",
+  "source": "kworb.net/spotify/country/fr_daily",
+  "tracks": [
+    {
+      "rank": 1,
+      "delta": 0,
+      "trackId": "2x7ItKbPQXhqXad1SwVnwS",
+      "artistId": "5OLkn5GT6EcMuJzjwgvQnu",
+      "artist": "Vacra",
+      "title": "Fille à Papa",
+      "featuring": [
+        "La Rvfleuze"
+      ],
+      "days": 40,
+      "peak": 1,
+      "peakDays": 38,
+      "streams": 483496,
+      "streamsDelta": 5038,
+      "streams7d": 3429091,
+      "streams7dDelta": -33758,
+      "total": 23547840,
+      "label": {
+        "lines": [
+          "© 2026 Convergence Music",
+          "℗ 2026 Convergence Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Convergence Music"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 2,
+      "delta": 0,
+      "trackId": "4Olg35ikUrPTvhqwFWveRL",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "Mélo Décalé",
+      "featuring": [],
+      "days": 138,
+      "peak": 2,
+      "peakDays": 26,
+      "streams": 339518,
+      "streamsDelta": 8830,
+      "streams7d": 2414085,
+      "streams7dDelta": 5341,
+      "total": 31918383,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 3,
+      "delta": 0,
+      "trackId": "5qRO8OcqfOc7mgTEDN12XQ",
+      "artistId": "4yPFe6ZiSjH5mgjDwiYZgc",
+      "artist": "RnBoi",
+      "title": "J'assume",
+      "featuring": [],
+      "days": 12,
+      "peak": 3,
+      "peakDays": 4,
+      "streams": 316046,
+      "streamsDelta": -6536,
+      "streams7d": 1952650,
+      "streams7dDelta": 95166,
+      "total": 3054682,
+      "label": {
+        "lines": [
+          "© 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE",
+          "℗ 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 4,
+      "delta": 0,
+      "trackId": "4tJWZr9CkDDbiUPOShhvZY",
+      "artistId": "00edlcHg3ILdHtrYL54bxX",
+      "artist": "Le Crime",
+      "title": "Bodycount",
+      "featuring": [
+        "TK"
+      ],
+      "days": 29,
+      "peak": 3,
+      "peakDays": 1,
+      "streams": 264371,
+      "streamsDelta": -5217,
+      "streams7d": 1833092,
+      "streams7dDelta": 52839,
+      "total": 4440014,
+      "label": {
+        "lines": [
+          "© 2026 Le Crime, distribué par Play Two",
+          "℗ 2026 Le Crime, distribué par Play Two"
+        ],
+        "group": "playtwo",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Le Crime, distribué par Play Two"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 5,
+      "delta": 1,
+      "trackId": "2IEzETw6a4UmDVw0j0hjJt",
+      "artistId": "51OKuyM4BiiYxFm8Mi6fa9",
+      "artist": "Mauvais djo",
+      "title": "4",
+      "featuring": [],
+      "days": 23,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 253610,
+      "streamsDelta": 20270,
+      "streams7d": 1618388,
+      "streams7dDelta": 100996,
+      "total": 3199613,
+      "label": {
+        "lines": [
+          "© 2026 Nojoke Record",
+          "℗ 2026 Nojoke Record"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Nojoke Record"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 6,
+      "delta": -1,
+      "trackId": "6MSgVHt9pS3z20DNtBonCc",
+      "artistId": "7IlRNXHjoOCgEAWN5qYksg",
+      "artist": "Aya Nakamura",
+      "title": "Sexy Nana",
+      "featuring": [
+        "La Rvfleuze"
+      ],
+      "days": 173,
+      "peak": 1,
+      "peakDays": 61,
+      "streams": 236600,
+      "streamsDelta": -386,
+      "streams7d": 1710798,
+      "streams7dDelta": -23824,
+      "total": 63197218,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, © 2026 Nakamura Industrie",
+          "℗ Distribution Exclusive Warner Music France, ℗ 2025 Nakamura Industrie"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, ℗ 2025 Nakamura Industrie"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 7,
+      "delta": 0,
+      "trackId": "1ixnGkLXZJuEueqJioIjmm",
+      "artistId": "3PpJbrAbphauEun8Xf9tD2",
+      "artist": "Theodora",
+      "title": "Habiba",
+      "featuring": [],
+      "days": 24,
+      "peak": 3,
+      "peakDays": 4,
+      "streams": 222967,
+      "streamsDelta": -3669,
+      "streams7d": 1643971,
+      "streams7dDelta": -41071,
+      "total": 5683936,
+      "label": {
+        "lines": [
+          "© 2021 Neptune Production",
+          "℗ 2021 Neptune Production"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2021 Neptune Production"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 8,
+      "delta": 1,
+      "trackId": "2fsZNGcGb7KVfcp3PlXgcD",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "La Nocturne",
+      "featuring": [
+        "Theodora"
+      ],
+      "days": 33,
+      "peak": 2,
+      "peakDays": 8,
+      "streams": 217637,
+      "streamsDelta": 286,
+      "streams7d": 1563259,
+      "streams7dDelta": -34428,
+      "total": 9533226,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 9,
+      "delta": 2,
+      "trackId": "1JAigfQReciQ8yK8XikLEr",
+      "artistId": "4krMq8pXkLVTGplpYgHlnV",
+      "artist": "Ronisia",
+      "title": "Cuenta",
+      "featuring": [
+        "Meryl",
+        "Shay"
+      ],
+      "days": 26,
+      "peak": 6,
+      "peakDays": null,
+      "streams": 215801,
+      "streamsDelta": 11203,
+      "streams7d": 1471312,
+      "streams7dDelta": 20791,
+      "total": 5713224,
+      "label": {
+        "lines": [
+          "℗ 2026 Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Sony Music Entertainment France SAS"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 10,
+      "delta": 0,
+      "trackId": "3Vac8kKIqOTCEE3nuaIcec",
+      "artistId": "51OKuyM4BiiYxFm8Mi6fa9",
+      "artist": "Mauvais djo",
+      "title": "Pilé",
+      "featuring": [],
+      "days": 257,
+      "peak": 1,
+      "peakDays": 48,
+      "streams": 213164,
+      "streamsDelta": -510,
+      "streams7d": 1546380,
+      "streams7dDelta": -5826,
+      "total": 67938302,
+      "label": {
+        "lines": [
+          "© 2025 YPDP",
+          "℗ 2025 YPDP"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 YPDP"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 11,
+      "delta": -3,
+      "trackId": "7oPQDdl9wv3QrGF7oFNxCC",
+      "artistId": "2kXKa3aAFngGz2P4GjG5w2",
+      "artist": "SCH",
+      "title": "Professionnels",
+      "featuring": [
+        "SDM"
+      ],
+      "days": 6,
+      "peak": 3,
+      "peakDays": 1,
+      "streams": 213077,
+      "streamsDelta": -8629,
+      "streams7d": 1278262,
+      "streams7dDelta": 213077,
+      "total": 1278262,
+      "label": {
+        "lines": [
+          "© 2026 Maison Baron Rouge distributed by Warner Music France",
+          "℗ 2026 Maison Baron Rouge distributed by Warner Music France"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Maison Baron Rouge distributed by Warner Music France"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 12,
+      "delta": 3,
+      "trackId": "1OwIgOyy1hJuQ6ZSMpg2MU",
+      "artistId": "51OKuyM4BiiYxFm8Mi6fa9",
+      "artist": "Mauvais djo",
+      "title": "Wagyu",
+      "featuring": [],
+      "days": 82,
+      "peak": 9,
+      "peakDays": null,
+      "streams": 207550,
+      "streamsDelta": 16106,
+      "streams7d": 1405451,
+      "streams7dDelta": 12882,
+      "total": 15180380,
+      "label": {
+        "lines": [
+          "© 2026 Nojoke Record",
+          "℗ 2026 Nojoke Record"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Nojoke Record"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 13,
+      "delta": -1,
+      "trackId": "7CQW2QMr6WGaksSqn5Y4Lf",
+      "artistId": "2ptKt4yP4mYRZmvi09JYyi",
+      "artist": "Timal",
+      "title": "Sicario",
+      "featuring": [],
+      "days": 124,
+      "peak": 1,
+      "peakDays": 8,
+      "streams": 204254,
+      "streamsDelta": 2662,
+      "streams7d": 1470841,
+      "streams7dDelta": -9132,
+      "total": 26113297,
+      "label": {
+        "lines": [
+          "© 2026 Caliente Records",
+          "℗ 2026 Caliente Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Caliente Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 14,
+      "delta": -1,
+      "trackId": "2n4L2a5xgpJmPdLzDl3mE6",
+      "artistId": "51OKuyM4BiiYxFm8Mi6fa9",
+      "artist": "Mauvais djo",
+      "title": "Maladie",
+      "featuring": [],
+      "days": 203,
+      "peak": 3,
+      "peakDays": 40,
+      "streams": 201313,
+      "streamsDelta": 5263,
+      "streams7d": 1482185,
+      "streams7dDelta": -26797,
+      "total": 51110058,
+      "label": {
+        "lines": [
+          "© 2026 Nojoke records",
+          "℗ 2026 Nojoke records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Nojoke records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 15,
+      "delta": -1,
+      "trackId": "7kn0PLcflNzx1tC2dRm0BX",
+      "artistId": "6CLK013UumRbFXYJIYvRnz",
+      "artist": "Cherry Pie",
+      "title": "BIR HAKEIM",
+      "featuring": [],
+      "days": 35,
+      "peak": 10,
+      "peakDays": null,
+      "streams": 198223,
+      "streamsDelta": 5234,
+      "streams7d": 1348953,
+      "streams7dDelta": 5110,
+      "total": 6171667,
+      "label": {
+        "lines": [
+          "© 2026 Fidel, Trinity",
+          "℗ 2026 Fidel, Trinity"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Fidel, Trinity"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 16,
+      "delta": 1,
+      "trackId": "2FGUvuu07YxBUcK4fQ0nom",
+      "artistId": "7IlRNXHjoOCgEAWN5qYksg",
+      "artist": "Aya Nakamura",
+      "title": "La pétasse",
+      "featuring": [],
+      "days": 149,
+      "peak": 6,
+      "peakDays": null,
+      "streams": 181733,
+      "streamsDelta": 4838,
+      "streams7d": 1277123,
+      "streams7dDelta": -10673,
+      "total": 24867201,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, © 2026 Nakamura Industrie",
+          "℗ Distribution Exclusive Warner Music France, ℗ 2025 Nakamura Industrie"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, ℗ 2025 Nakamura Industrie"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 17,
+      "delta": -1,
+      "trackId": "2m0OFkYLkK2SysSwje4xAd",
+      "artistId": "2zW6nGPGBEaGNENvqaw9lo",
+      "artist": "Bello&Dallas",
+      "title": "Séminaire",
+      "featuring": [],
+      "days": 142,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 181729,
+      "streamsDelta": 219,
+      "streams7d": 1266741,
+      "streams7dDelta": -17793,
+      "total": 29526268,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Rec. 118,, © 2026 Gabos Entertainment / La Triade",
+          "℗ Distribution Exclusive Warner Music France, Label Rec. 118,, ℗ 2026 Gabos Entertainment / La Triade"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Rec. 118,, ℗ 2026 Gabos Entertainment / La Triade"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 18,
+      "delta": 0,
+      "trackId": "6P0oYDUPYf2CNJxcokIH09",
+      "artistId": "3DCWeG2J1fZeu0Oe6i5Q6m",
+      "artist": "PLK",
+      "title": "Pocahontas",
+      "featuring": [],
+      "days": 229,
+      "peak": 1,
+      "peakDays": 61,
+      "streams": 176159,
+      "streamsDelta": 4207,
+      "streams7d": 1244354,
+      "streams7dDelta": -10263,
+      "total": 73304000,
+      "label": {
+        "lines": [
+          "© 2026 Enna Music France, sous licence exclusive Panenka Music",
+          "℗ 2026 Enna Music France, sous licence exclusive Panenka Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Enna Music France, sous licence exclusive Panenka Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 19,
+      "delta": 1,
+      "trackId": "1jSRu1IRoB6DPKsWTVGzTB",
+      "artistId": "6HCBnyTBSLdb3TFn2ayulY",
+      "artist": "Leto",
+      "title": "Pineapple",
+      "featuring": [],
+      "days": 201,
+      "peak": 2,
+      "peakDays": 6,
+      "streams": 169589,
+      "streamsDelta": 3363,
+      "streams7d": 1168589,
+      "streams7dDelta": -17015,
+      "total": 53286093,
+      "label": {
+        "lines": [
+          "© 2026 Winterfell Music / AllPoints",
+          "℗ 2026 Winterfell Music / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Winterfell Music / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 20,
+      "delta": 2,
+      "trackId": "55vPnuXfuzXNW75JpuSczF",
+      "artistId": "7rz6ZZErn5YFDteXKhyf3g",
+      "artist": "disiz",
+      "title": "melodrama",
+      "featuring": [
+        "Theodora"
+      ],
+      "days": 397,
+      "peak": 1,
+      "peakDays": 158,
+      "streams": 166107,
+      "streamsDelta": 2169,
+      "streams7d": 1183564,
+      "streams7dDelta": -9710,
+      "total": 163395057,
+      "label": {
+        "lines": [
+          "℗ 2025 Production Carré Bleu, distributed by Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Production Carré Bleu, distributed by Sony Music Entertainment France SAS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 21,
+      "delta": -2,
+      "trackId": "2sFepQNyl1WjpROruP8bJ0",
+      "artistId": "45dkTj5sMRSjrmBSBeiHym",
+      "artist": "Tate McRae",
+      "title": "Housewife",
+      "featuring": [],
+      "days": 12,
+      "peak": 19,
+      "peakDays": null,
+      "streams": 165899,
+      "streamsDelta": -374,
+      "streams7d": 1129398,
+      "streams7dDelta": 28386,
+      "total": 1665368,
+      "label": {
+        "lines": [
+          "℗ 2026 RCA Records, a division of Sony Music Entertainment"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 RCA Records, a division of Sony Music Entertainment"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 22,
+      "delta": 6,
+      "trackId": "5CYfZNnRoSRzMwaLyl4ey1",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "Jet Lag",
+      "featuring": [
+        "Jorja Smith"
+      ],
+      "days": 33,
+      "peak": 19,
+      "peakDays": null,
+      "streams": 165258,
+      "streamsDelta": 21405,
+      "streams7d": 985700,
+      "streams7dDelta": 31891,
+      "total": 4406569,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 23,
+      "delta": 0,
+      "trackId": "1wNmBZcYBdIf3Dp6P96Vn8",
+      "artistId": "0GOx72r5AAEKRGQFn3xqXK",
+      "artist": "GIMS",
+      "title": "VIVE LA MONNAIE",
+      "featuring": [
+        "Mauvais djo"
+      ],
+      "days": 103,
+      "peak": 13,
+      "peakDays": null,
+      "streams": 163892,
+      "streamsDelta": 1448,
+      "streams7d": 1162477,
+      "streams7dDelta": 15554,
+      "total": 15915746,
+      "label": {
+        "lines": [
+          "© 2026 Black Belt",
+          "℗ 2026 Black Belt"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Black Belt"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 24,
+      "delta": 0,
+      "trackId": "6bTiBd9SYQxF4MbELTekG7",
+      "artistId": "2kIs76sEGiulKeqetZq6ua",
+      "artist": "Jok'air",
+      "title": "Nouméa",
+      "featuring": [
+        "Linema"
+      ],
+      "days": 26,
+      "peak": 23,
+      "peakDays": null,
+      "streams": 160101,
+      "streamsDelta": -156,
+      "streams7d": 1018977,
+      "streams7dDelta": 36154,
+      "total": 3213040,
+      "label": {
+        "lines": [
+          "© 2026 La Dictature",
+          "℗ 2026 La Dictature"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 La Dictature"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 25,
+      "delta": -4,
+      "trackId": "30XuVaQikcrhVfiNRvbqfr",
+      "artistId": "4hYxvgmTzS29XAXlo5adgM",
+      "artist": "L2B",
+      "title": "CYBERTESLA",
+      "featuring": [],
+      "days": 19,
+      "peak": 12,
+      "peakDays": null,
+      "streams": 158386,
+      "streamsDelta": -7446,
+      "streams7d": 1200163,
+      "streams7dDelta": -11065,
+      "total": 3302587,
+      "label": {
+        "lines": [
+          "© 2026 O-vnee Music - 172 Record",
+          "℗ 2026 O-vnee Music - 172 Record"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 O-vnee Music - 172 Record"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 26,
+      "delta": -1,
+      "trackId": "7C6qjGYDI7h28Nh4lQWYDo",
+      "artistId": "51OKuyM4BiiYxFm8Mi6fa9",
+      "artist": "Mauvais djo",
+      "title": "12",
+      "featuring": [],
+      "days": 16,
+      "peak": 25,
+      "peakDays": null,
+      "streams": 158037,
+      "streamsDelta": 6719,
+      "streams7d": 963408,
+      "streams7dDelta": 63346,
+      "total": 1635888,
+      "label": {
+        "lines": [
+          "© 2026 Nojoke Record",
+          "℗ 2026 Nojoke Record"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Nojoke Record"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 27,
+      "delta": 0,
+      "trackId": "3Kh2CbaeNyUp5PbjCh8PP5",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Cote à la hausse",
+      "featuring": [],
+      "days": 81,
+      "peak": 13,
+      "peakDays": null,
+      "streams": 156249,
+      "streamsDelta": 5734,
+      "streams7d": 1049066,
+      "streams7dDelta": -1492,
+      "total": 11532286,
+      "label": {
+        "lines": [
+          "© 2024 Le Grand Carré / Level Up Music",
+          "℗ 2024 Le Grand Carré / Level Up Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Le Grand Carré / Level Up Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 28,
+      "delta": -2,
+      "trackId": "5M6bU1A2VHwWoKmHiYjrdU",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Jalouse",
+      "featuring": [
+        "SDM",
+        "Vacra"
+      ],
+      "days": 258,
+      "peak": 8,
+      "peakDays": null,
+      "streams": 145561,
+      "streamsDelta": -5635,
+      "streams7d": 1065206,
+      "streams7dDelta": -30158,
+      "total": 30564660,
+      "label": {
+        "lines": [
+          "© 2025 PLR Music / PGP Records / AllPoints",
+          "℗ 2025 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2025 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 29,
+      "delta": 0,
+      "trackId": "4cSHMHSTRhetAtT1iDP2zO",
+      "artistId": "4ueh4hmRvt62k4BgP8dIS0",
+      "artist": "Adèle Castillon",
+      "title": "Été avec toi",
+      "featuring": [],
+      "days": 93,
+      "peak": 25,
+      "peakDays": null,
+      "streams": 141489,
+      "streamsDelta": -354,
+      "streams7d": 976786,
+      "streams7dDelta": 8083,
+      "total": 9793442,
+      "label": {
+        "lines": [
+          "℗ 2026 Iconoclast Music, distributed by Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Iconoclast Music, distributed by Sony Music Entertainment France SAS"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 30,
+      "delta": 0,
+      "trackId": "4oJxjHkaEq07v25iTcDIxT",
+      "artistId": "1lB3I3SI30v2ZOpR4XQqzJ",
+      "artist": "Gambi",
+      "title": "RENÉ CAOVILLA",
+      "featuring": [],
+      "days": 208,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 139417,
+      "streamsDelta": 1395,
+      "streams7d": 998287,
+      "streams7dDelta": -7574,
+      "total": 50010183,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Rec. 118, © 2026 SELF MADE RECORDS",
+          "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 SELF MADE RECORDS"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 SELF MADE RECORDS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 31,
+      "delta": 0,
+      "trackId": "6UThEXDDl7N3CWeFxYTMnm",
+      "artistId": "3TP2Ucsow6rW1s24aq9gb4",
+      "artist": "Lagui",
+      "title": "Olivia Valere",
+      "featuring": [],
+      "days": 108,
+      "peak": 20,
+      "peakDays": null,
+      "streams": 138374,
+      "streamsDelta": 3183,
+      "streams7d": 1000789,
+      "streams7dDelta": -3905,
+      "total": 12986041,
+      "label": {
+        "lines": [
+          "© 2026 Lagui",
+          "℗ 2026 Lagui"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Lagui"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 32,
+      "delta": 2,
+      "trackId": "35eK52MQkpWLxwyIAGKKXT",
+      "artistId": "4P2HohWBtvSxxwabNDdYXN",
+      "artist": "Nono La Grinta",
+      "title": "LOVE YOU",
+      "featuring": [],
+      "days": 380,
+      "peak": 2,
+      "peakDays": 2,
+      "streams": 138136,
+      "streamsDelta": 6890,
+      "streams7d": 942666,
+      "streams7dDelta": -24681,
+      "total": 101524133,
+      "label": {
+        "lines": [
+          "© 2025 MPR Records",
+          "℗ 2025 MPR Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 MPR Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 33,
+      "delta": -1,
+      "trackId": "42KE76b1zWzeyFYYz6xKTF",
+      "artistId": "3TP2Ucsow6rW1s24aq9gb4",
+      "artist": "Lagui",
+      "title": "Dégun",
+      "featuring": [],
+      "days": 21,
+      "peak": 20,
+      "peakDays": null,
+      "streams": 132532,
+      "streamsDelta": -74,
+      "streams7d": 963482,
+      "streams7dDelta": 9325,
+      "total": 2991297,
+      "label": {
+        "lines": [
+          "© 2026 Lagui",
+          "℗ 2026 Lagui"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Lagui"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 34,
+      "delta": 1,
+      "trackId": "3h5T5JypYU7huFiVYhv1dr",
+      "artistId": "790FomKkXshlbRYZFtlgla",
+      "artist": "KAROL G",
+      "title": "BbY WOW",
+      "featuring": [
+        "Judeline",
+        "rusowsky"
+      ],
+      "days": 26,
+      "peak": 34,
+      "peakDays": null,
+      "streams": 132292,
+      "streamsDelta": 3797,
+      "streams7d": 860640,
+      "streams7dDelta": 26947,
+      "total": 2466333,
+      "label": {
+        "lines": [
+          "© 2026 Bichota Records LLC, under exclusive license to Interscope Records",
+          "℗ 2026 Bichota Records LLC, under exclusive license to Interscope Records"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Bichota Records LLC, under exclusive license to Interscope Records"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 35,
+      "delta": -2,
+      "trackId": "0kosUz0jePvjiz4ctmR6wL",
+      "artistId": "0EmeFodog0BfCgMzAIvKQp",
+      "artist": "Shakira",
+      "title": "Dai Dai",
+      "featuring": [
+        "Burna Boy"
+      ],
+      "days": 159,
+      "peak": 2,
+      "peakDays": 9,
+      "streams": 132216,
+      "streamsDelta": 721,
+      "streams7d": 970601,
+      "streams7dDelta": -1204,
+      "total": 36591943,
+      "label": {
+        "lines": [
+          "℗ 2026 Ace Entertainment S.ar.l., under exclusive license to Sony Music Entertainment US Latin LLC"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Ace Entertainment S.ar.l., under exclusive license to Sony Music Entertainment US Latin LLC"
+      },
+      "genre": "latin"
+    },
+    {
+      "rank": 36,
+      "delta": 9,
+      "trackId": "4qW3BbQAwZsrnu8a3ZRdyT",
+      "artistId": "5mHUmlJWkcoOk1NbjfrXWz",
+      "artist": "Temper City",
+      "title": "Self Aware",
+      "featuring": [],
+      "days": 182,
+      "peak": 17,
+      "peakDays": null,
+      "streams": 130585,
+      "streamsDelta": 16356,
+      "streams7d": 827128,
+      "streams7dDelta": 9334,
+      "total": 23698372,
+      "label": {
+        "lines": [
+          "© 2026 Temper City under exclusive license to Thirty Knots",
+          "℗ 2026 Temper City under exclusive license to Thirty Knots"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Temper City under exclusive license to Thirty Knots"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 37,
+      "delta": 2,
+      "trackId": "0TABODtQpJsAUrGGdJ85tG",
+      "artistId": "1fuooeJa0UywkC89lN5tl6",
+      "artist": "Bamby",
+      "title": "Pas Jalouse",
+      "featuring": [
+        "Kerchak"
+      ],
+      "days": 327,
+      "peak": 20,
+      "peakDays": null,
+      "streams": 127450,
+      "streamsDelta": 6617,
+      "streams7d": 853642,
+      "streams7dDelta": -581,
+      "total": 29470640,
+      "label": {
+        "lines": [
+          "© 2025 Carthage Music / Muse&Music",
+          "℗ 2025 Carthage Music / Muse&Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Carthage Music / Muse&Music"
+      },
+      "genre": "afro"
+    },
+    {
+      "rank": 38,
+      "delta": 3,
+      "trackId": "0z0izoGFPCoPJKFi41azyb",
+      "artistId": "2UwqpfQtNuhBwviIC0f2ie",
+      "artist": "Damso",
+      "title": "Ε. Signaler",
+      "featuring": [],
+      "days": 1257,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 127235,
+      "streamsDelta": 8473,
+      "streams7d": 855943,
+      "streams7dDelta": -6100,
+      "total": 81148192,
+      "label": {
+        "lines": [
+          "© 2017 Capitol Music France",
+          "℗ 2017 Capitol Music France"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Capitol Music France"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 39,
+      "delta": -1,
+      "trackId": "6ctcVdXaJKn5LVFDjMBqzc",
+      "artistId": "4P2HohWBtvSxxwabNDdYXN",
+      "artist": "Nono La Grinta",
+      "title": "Paris",
+      "featuring": [],
+      "days": 573,
+      "peak": 1,
+      "peakDays": 6,
+      "streams": 124460,
+      "streamsDelta": 3232,
+      "streams7d": 861850,
+      "streams7dDelta": -13476,
+      "total": 118155504,
+      "label": {
+        "lines": [
+          "© 2025 MPR Records",
+          "℗ 2025 MPR Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 MPR Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 40,
+      "delta": -3,
+      "trackId": "5SqwlP6o9AjDRO1yNu7b09",
+      "artistId": "06iezeOUHGb86SaoYTyexg",
+      "artist": "ESTL",
+      "title": "Te rencontrer encore",
+      "featuring": [],
+      "days": 40,
+      "peak": 37,
+      "peakDays": null,
+      "streams": 124047,
+      "streamsDelta": 1946,
+      "streams7d": 824927,
+      "streams7dDelta": 18985,
+      "total": 3492017,
+      "label": {
+        "lines": [
+          "© Licence Exclusive Warner Music France, Label Parlophone, © 2026 Faubourg26",
+          "℗ Licence Exclusive Warner Music France, Label Parlophone, ℗ 2026 Faubourg26"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Licence Exclusive Warner Music France, Label Parlophone, ℗ 2026 Faubourg26"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 41,
+      "delta": 1,
+      "trackId": "0Jh6iWjna1wk5le0Ahn7No",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "La vie qu'on mène",
+      "featuring": [],
+      "days": 2777,
+      "peak": 2,
+      "peakDays": 1,
+      "streams": 123618,
+      "streamsDelta": 6479,
+      "streams7d": 849790,
+      "streams7dDelta": -6494,
+      "total": 296761182,
+      "label": {
+        "lines": [
+          "© 2019 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company",
+          "℗ 2019 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2019 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 42,
+      "delta": -2,
+      "trackId": "0UbEeYuehzUktmPlhMtfA8",
+      "artistId": "6k9F0oaxCXxbdTFDTdZihN",
+      "artist": "La Rvfleuze",
+      "title": "Argent Sale - A COLORS SHOW",
+      "featuring": [
+        "COLORS"
+      ],
+      "days": 254,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 123483,
+      "streamsDelta": 3038,
+      "streams7d": 838583,
+      "streams7dDelta": -17830,
+      "total": 40685843,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Atlantic France, © 2026 SERRURE RECORDS",
+          "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 43,
+      "delta": 4,
+      "trackId": "2PPFDGYR4t96gLVsd52NmL",
+      "artistId": "4uJNQGa3L2frXDxwgouTIw",
+      "artist": "Franglish",
+      "title": "Uber",
+      "featuring": [
+        "KeBlack",
+        "Mauvais djo"
+      ],
+      "days": 70,
+      "peak": 23,
+      "peakDays": null,
+      "streams": 122172,
+      "streamsDelta": 9314,
+      "streams7d": 865259,
+      "streams7dDelta": 8132,
+      "total": 7770867,
+      "label": {
+        "lines": [
+          "© 2026 Lutèce Music / Mirage Records Music / AllPoints",
+          "℗ 2026 Lutèce Music / Mirage Records Music / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Lutèce Music / Mirage Records Music / AllPoints"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 44,
+      "delta": 0,
+      "trackId": "5qq9r3KUlpinOXLO7zEDo8",
+      "artistId": "07h4CCFmlXkwx0g4PL5Uuh",
+      "artist": "Guy2Bezbar",
+      "title": "Je pense à toi",
+      "featuring": [],
+      "days": 207,
+      "peak": 19,
+      "peakDays": null,
+      "streams": 122010,
+      "streamsDelta": 6182,
+      "streams7d": 841793,
+      "streams7dDelta": -10733,
+      "total": 20952455,
+      "label": {
+        "lines": [
+          "℗ 2025 Blue Magic Corp, distributed by Sony Music Entertainment SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Blue Magic Corp, distributed by Sony Music Entertainment SAS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 45,
+      "delta": 5,
+      "trackId": "7bxaFZ1O3cHkgLKMsdC3xR",
+      "artistId": "5INjqkS1o8h1imAzPqGZBb",
+      "artist": "Tame Impala",
+      "title": "Loser",
+      "featuring": [],
+      "days": 86,
+      "peak": 20,
+      "peakDays": null,
+      "streams": 118566,
+      "streamsDelta": 7299,
+      "streams7d": 802579,
+      "streams7dDelta": 6211,
+      "total": 9899321,
+      "label": {
+        "lines": [
+          "℗ 2025 Columbia Records, a Division of Sony Music Entertainment, under exclusive license from Tame Impala"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Columbia Records, a Division of Sony Music Entertainment, under exclusive license from Tame Impala"
+      },
+      "genre": "rock"
+    },
+    {
+      "rank": 46,
+      "delta": -3,
+      "trackId": "4ffqxU54Ll4YRz5NVBe77w",
+      "artistId": "2D8Vb8JwQhndC6H6heA1kD",
+      "artist": "R2",
+      "title": "RUINART",
+      "featuring": [],
+      "days": 498,
+      "peak": 1,
+      "peakDays": 14,
+      "streams": 117998,
+      "streamsDelta": 1396,
+      "streams7d": 854806,
+      "streams7dDelta": 9024,
+      "total": 111915029,
+      "label": {
+        "lines": [
+          "℗ 2025 360 OTG, Label Blue Sky"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 360 OTG, Label Blue Sky"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 47,
+      "delta": -11,
+      "trackId": "5HjHYoZgZCeNvxG0IgmSNE",
+      "artistId": "2zW6nGPGBEaGNENvqaw9lo",
+      "artist": "Bello&Dallas",
+      "title": "Belvedere",
+      "featuring": [],
+      "days": 67,
+      "peak": 14,
+      "peakDays": null,
+      "streams": 117280,
+      "streamsDelta": -10212,
+      "streams7d": 864150,
+      "streams7dDelta": -14119,
+      "total": 8729882,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Rec. 118, © 2026 Gabos Entertainment / La Triade",
+          "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 Gabos Entertainment / La Triade"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 Gabos Entertainment / La Triade"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 48,
+      "delta": 3,
+      "trackId": "1Mzg6bu3hkCwJKEf7v49MN",
+      "artistId": "0LKAV3zJ8a8AIGnyc5OvfB",
+      "artist": "SDM",
+      "title": "CARTIER SANTOS",
+      "featuring": [],
+      "days": 761,
+      "peak": 1,
+      "peakDays": 38,
+      "streams": 116097,
+      "streamsDelta": 6473,
+      "streams7d": 813369,
+      "streams7dDelta": -30757,
+      "total": 145170013,
+      "label": {
+        "lines": [
+          "© 2024 Capitol Music France",
+          "℗ 2024 Capitol Music France"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Capitol Music France"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 49,
+      "delta": -1,
+      "trackId": "1C0DS17IRqwZ6AFqBlUHXn",
+      "artistId": "2tcokte1gClrCRw645UFYR",
+      "artist": "Oria",
+      "title": "Soirée mondaine",
+      "featuring": [],
+      "days": 212,
+      "peak": 40,
+      "peakDays": null,
+      "streams": 115595,
+      "streamsDelta": 3037,
+      "streams7d": 794065,
+      "streams7dDelta": 15925,
+      "total": 21126718,
+      "label": {
+        "lines": [
+          "© 2025 OVFR VIATA DE VIS / FRENCHY [PIAS]",
+          "℗ 2025 OVFR VIATA DE VIS / FRENCHY [PIAS]"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2025 OVFR VIATA DE VIS / FRENCHY [PIAS]"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 50,
+      "delta": -4,
+      "trackId": "7e4zDInS6tA2jwzphvs2Ay",
+      "artistId": "5PlfkPxwCpRRWQJBxCa0By",
+      "artist": "HUGEL",
+      "title": "Jamaican (Bam Bam)",
+      "featuring": [
+        "SOLTO (FR)"
+      ],
+      "days": 236,
+      "peak": 8,
+      "peakDays": null,
+      "streams": 115497,
+      "streamsDelta": 1466,
+      "streams7d": 847092,
+      "streams7dDelta": 3894,
+      "total": 38070187,
+      "label": {
+        "lines": [
+          "© 2025 MoBlack",
+          "℗ 2025 MoBlack Records, in JV with Make the Girls Dance Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 MoBlack Records, in JV with Make the Girls Dance Records"
+      },
+      "genre": "electro"
+    },
+    {
+      "rank": 51,
+      "delta": 4,
+      "trackId": "2A1wTYEJZkvph9zbDla67R",
+      "artistId": "5mmEMfYChd6MImBagU7zCs",
+      "artist": "Bigflo & Oli",
+      "title": "Picasso",
+      "featuring": [],
+      "days": 166,
+      "peak": 46,
+      "peakDays": null,
+      "streams": 114509,
+      "streamsDelta": 7152,
+      "streams7d": 729561,
+      "streams7dDelta": 15329,
+      "total": 14342373,
+      "label": {
+        "lines": [
+          "© 2026 Golden Child",
+          "℗ 2026 Golden Child"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Golden Child"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 52,
+      "delta": 4,
+      "trackId": "2FuofUVE32dk7jRIvqirxU",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Différent",
+      "featuring": [],
+      "days": 11,
+      "peak": 52,
+      "peakDays": null,
+      "streams": 110115,
+      "streamsDelta": 4730,
+      "streams7d": 711429,
+      "streams7dDelta": 39802,
+      "total": 993678,
+      "label": {
+        "lines": [
+          "© 2026 VERUS / Level Up / La route est longue",
+          "℗ 2026 VERUS / Level Up / La route est longue, under exclusive distribution to AllPoints, a division of Believe"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 VERUS / Level Up / La route est longue, under exclusive distribution to AllPoints, a division of Believe"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 53,
+      "delta": 1,
+      "trackId": "02tj7EJuf48fJ2S4tS7htr",
+      "artistId": "6bVOzLEn1sLSoMHUIr6rtA",
+      "artist": "Djaksparo",
+      "title": "Pangor (Swalalala)",
+      "featuring": [],
+      "days": 55,
+      "peak": 30,
+      "peakDays": null,
+      "streams": 109412,
+      "streamsDelta": 1570,
+      "streams7d": 822596,
+      "streams7dDelta": -13409,
+      "total": 6285589,
+      "label": {
+        "lines": [
+          "© 2026 BLACK PEARL RECORDS",
+          "℗ 2026 BLACK PEARL RECORDS"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 BLACK PEARL RECORDS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 54,
+      "delta": -1,
+      "trackId": "2dvChuAwfrlqZdJumaeATh",
+      "artistId": "3HmSuQk0VaGhv9hX22h10J",
+      "artist": "TRIANGLE DES BERMUDES",
+      "title": "Qu'on s'attache",
+      "featuring": [
+        "MC YOSHI",
+        "Mauvais djo",
+        "Kokosvoice"
+      ],
+      "days": 27,
+      "peak": 36,
+      "peakDays": null,
+      "streams": 109127,
+      "streamsDelta": 1089,
+      "streams7d": 816974,
+      "streams7dDelta": 3293,
+      "total": 2970398,
+      "label": {
+        "lines": [
+          "© 2025 YPDP",
+          "℗ 2025 YPDP"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 YPDP"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 55,
+      "delta": 15,
+      "trackId": "65lCFhOz5RyYH52JryAf10",
+      "artistId": "1AT8NKdQOU0EVPu6ehN4NA",
+      "artist": "Meryl",
+      "title": "Coco Chanel",
+      "featuring": [
+        "Eva"
+      ],
+      "days": 334,
+      "peak": 16,
+      "peakDays": null,
+      "streams": 108795,
+      "streamsDelta": 12655,
+      "streams7d": 681425,
+      "streams7dDelta": 15002,
+      "total": 43227021,
+      "label": {
+        "lines": [
+          "© 2025 Maison Caviar",
+          "℗ 2025 Maison Caviar"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Maison Caviar"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 56,
+      "delta": 1,
+      "trackId": "1kEVqYA0JMm0qKQqykm7gE",
+      "artistId": "2yTwZyGRSRDUjZNsLvIOW4",
+      "artist": "kulturr",
+      "title": "méli-mélo",
+      "featuring": [],
+      "days": 225,
+      "peak": 7,
+      "peakDays": null,
+      "streams": 108585,
+      "streamsDelta": 3537,
+      "streams7d": 775298,
+      "streams7dDelta": -13800,
+      "total": 40702196,
+      "label": {
+        "lines": [
+          "© Licence exclusive Warner Music France, Label Elektra France, © 2025 La Solution",
+          "℗ Licence exclusive Warner Music France, Label Elektra France, ℗ 2025 La Solution"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Licence exclusive Warner Music France, Label Elektra France, ℗ 2025 La Solution"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 57,
+      "delta": 5,
+      "trackId": "5kfAx6phDHPpz5g8IAPyc2",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Chemin d'or",
+      "featuring": [],
+      "days": 1308,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 108130,
+      "streamsDelta": 5663,
+      "streams7d": 742146,
+      "streams7dDelta": 346,
+      "total": 147165883,
+      "label": {
+        "lines": [
+          "© 2023 PLR Music / PGP Records / AllPoints",
+          "℗ 2023 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2023 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 58,
+      "delta": -9,
+      "trackId": "11toKjZRD7soOuH5ZFpWkL",
+      "artistId": "1wAtSe79kItIb9nf5EhI2Q",
+      "artist": "Niro",
+      "title": "RANIA",
+      "featuring": [],
+      "days": 12,
+      "peak": 28,
+      "peakDays": null,
+      "streams": 108061,
+      "streamsDelta": -4110,
+      "streams7d": 871960,
+      "streams7dDelta": -10343,
+      "total": 1460560,
+      "label": {
+        "lines": [
+          "℗ 2026 Ambition Music, distributed by Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Ambition Music, distributed by Sony Music Entertainment France SAS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 59,
+      "delta": 4,
+      "trackId": "3Byu179ofnuChb4zF1fMhu",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Pétunias",
+      "featuring": [],
+      "days": 754,
+      "peak": 2,
+      "peakDays": 2,
+      "streams": 107991,
+      "streamsDelta": 5755,
+      "streams7d": 719103,
+      "streams7dDelta": 9098,
+      "total": 105071137,
+      "label": {
+        "lines": [
+          "© 2024 PLR Music / PGP Records / AllPoints",
+          "℗ 2024 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2024 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 60,
+      "delta": -1,
+      "trackId": "1fMOAIge1jLxq4ONi9bIFL",
+      "artistId": "3IW7ScrzXmPvZhB27hmfgy",
+      "artist": "Jul",
+      "title": "Parfum quartier",
+      "featuring": [],
+      "days": 415,
+      "peak": 11,
+      "peakDays": null,
+      "streams": 107680,
+      "streamsDelta": 3297,
+      "streams7d": 758601,
+      "streams7dDelta": -7149,
+      "total": 44118794,
+      "label": {
+        "lines": [
+          "© D'Or et de Platine / Musicast",
+          "℗ D'Or et de Platine / Musicast"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ D'Or et de Platine / Musicast"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 61,
+      "delta": -9,
+      "trackId": "6c2ZcdXHkEFdsNArdJXrHX",
+      "artistId": "2bHWbDN72wdIF0Y48669zg",
+      "artist": "DJ Goja",
+      "title": "Mi Chico - Official - Jason Derulo x Melody",
+      "featuring": [
+        "Jason Derulo",
+        "Melody"
+      ],
+      "days": 89,
+      "peak": 39,
+      "peakDays": null,
+      "streams": 107426,
+      "streamsDelta": -2000,
+      "streams7d": 769671,
+      "streams7dDelta": -2088,
+      "total": 8427975,
+      "label": {
+        "lines": [
+          "℗ 2026 gamma."
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 gamma."
+      },
+      "genre": "electro"
+    },
+    {
+      "rank": 62,
+      "delta": 4,
+      "trackId": "74bFjTmlTbZVH9lG3EH7C2",
+      "artistId": "6k9F0oaxCXxbdTFDTdZihN",
+      "artist": "La Rvfleuze",
+      "title": "Serrure #5",
+      "featuring": [],
+      "days": 439,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 106392,
+      "streamsDelta": 7019,
+      "streams7d": 717256,
+      "streams7dDelta": -7877,
+      "total": 60925815,
+      "label": {
+        "lines": [
+          "© 2025 Serrure Records",
+          "℗ 2025 Serrure Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Serrure Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 63,
+      "delta": 4,
+      "trackId": "4cLspfLk7lebgQMDoZgSKD",
+      "artistId": "2wMA0cyQGggqKOjMfUNenu",
+      "artist": "TeddyBear",
+      "title": "Chaussures Roses",
+      "featuring": [],
+      "days": 38,
+      "peak": 59,
+      "peakDays": null,
+      "streams": 106357,
+      "streamsDelta": 7724,
+      "streams7d": 696084,
+      "streams7dDelta": 8872,
+      "total": 3178226,
+      "label": {
+        "lines": [
+          "© 2026 Ceinture Rose Records",
+          "℗ 2026 Ceinture Rose Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Ceinture Rose Records"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 64,
+      "delta": 1,
+      "trackId": "1yGJ40k7HLF3odITZPoQs4",
+      "artistId": "4yPFe6ZiSjH5mgjDwiYZgc",
+      "artist": "RnBoi",
+      "title": "MON BÉBÉ",
+      "featuring": [],
+      "days": 369,
+      "peak": 1,
+      "peakDays": 3,
+      "streams": 104882,
+      "streamsDelta": 5455,
+      "streams7d": 670529,
+      "streams7dDelta": 7567,
+      "total": 112534267,
+      "label": {
+        "lines": [
+          "© 2025 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE",
+          "℗ 2025 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 65,
+      "delta": -7,
+      "trackId": "6S8erJASTt3KImpljxcQiR",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "BRACELET",
+      "featuring": [
+        "La Rvfleuze"
+      ],
+      "days": 21,
+      "peak": 10,
+      "peakDays": null,
+      "streams": 104839,
+      "streamsDelta": 149,
+      "streams7d": 740174,
+      "streams7dDelta": -14953,
+      "total": 2795998,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Rec. 118, © 2026 Jefe Productions",
+          "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 Jefe Productions"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 Jefe Productions"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 66,
+      "delta": 3,
+      "trackId": "3iIakZIJaIpxxpQuDN7ETx",
+      "artistId": "2qzxrbVBGwJjYOay7mJmhf",
+      "artist": "Manon Lisa",
+      "title": "Le Petit Pêcheur",
+      "featuring": [],
+      "days": 126,
+      "peak": 45,
+      "peakDays": null,
+      "streams": 103841,
+      "streamsDelta": 7071,
+      "streams7d": 722684,
+      "streams7dDelta": 5444,
+      "total": 11023289,
+      "label": {
+        "lines": [
+          "© 2026 Bel Air Records",
+          "℗ 2026 Bel Air Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Bel Air Records"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 67,
+      "delta": -7,
+      "trackId": "1jRBZIoOhzuFUZOHzsCaHk",
+      "artistId": "2kXKa3aAFngGz2P4GjG5w2",
+      "artist": "SCH",
+      "title": "Précipices",
+      "featuring": [],
+      "days": 6,
+      "peak": 23,
+      "peakDays": null,
+      "streams": 103082,
+      "streamsDelta": -1117,
+      "streams7d": 666506,
+      "streams7dDelta": 103082,
+      "total": 666506,
+      "label": {
+        "lines": [
+          "© 2026 Maison Baron Rouge distributed by Warner Music France",
+          "℗ 2026 Maison Baron Rouge distributed by Warner Music France"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Maison Baron Rouge distributed by Warner Music France"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 68,
+      "delta": -7,
+      "trackId": "4vTsKN15Kqo3Geo9r7FhAN",
+      "artistId": "5PlfkPxwCpRRWQJBxCa0By",
+      "artist": "HUGEL",
+      "title": "Movin' To The Sun",
+      "featuring": [
+        "Imael Angel",
+        "Ultra Naté"
+      ],
+      "days": 116,
+      "peak": 31,
+      "peakDays": null,
+      "streams": 100988,
+      "streamsDelta": -3126,
+      "streams7d": 631667,
+      "streams7dDelta": 24145,
+      "total": 11858991,
+      "label": {
+        "lines": [
+          "© 2026 Make The Girls Dance Records",
+          "℗ 2026 Make The Girls Dance Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Make The Girls Dance Records"
+      },
+      "genre": "electro"
+    },
+    {
+      "rank": 69,
+      "delta": 9,
+      "trackId": "7gga4AEElumeu53PZPzLDh",
+      "artistId": "5hREZP0zTQbTLkZ2M8RS4v",
+      "artist": "Djadja & Dinaz",
+      "title": "J'fais mes affaires",
+      "featuring": [],
+      "days": 1431,
+      "peak": 16,
+      "peakDays": null,
+      "streams": 100983,
+      "streamsDelta": 12281,
+      "streams7d": 662676,
+      "streams7dDelta": 5414,
+      "total": 81166708,
+      "label": {
+        "lines": [
+          "© 2016 Carré-Music",
+          "℗ 2016 Carré-Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2016 Carré-Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 70,
+      "delta": 2,
+      "trackId": "3XzwTdwcIz67nPOE6sitEo",
+      "artistId": "3HmSuQk0VaGhv9hX22h10J",
+      "artist": "TRIANGLE DES BERMUDES",
+      "title": "À l'aise",
+      "featuring": [
+        "L2B",
+        "MC YOSHI",
+        "Mauvais djo",
+        "Kokosvoice"
+      ],
+      "days": 205,
+      "peak": 9,
+      "peakDays": null,
+      "streams": 97303,
+      "streamsDelta": 5011,
+      "streams7d": 675732,
+      "streams7dDelta": -1530,
+      "total": 32742651,
+      "label": {
+        "lines": [
+          "© 2026 YPDP",
+          "℗ 2026 YPDP"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 YPDP"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 71,
+      "delta": 5,
+      "trackId": "5HEtuK03ygUzqca6yfgOYZ",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Lettre à une femme",
+      "featuring": [],
+      "days": 2179,
+      "peak": 1,
+      "peakDays": 41,
+      "streams": 97101,
+      "streamsDelta": 7674,
+      "streams7d": 643326,
+      "streams7dDelta": -7520,
+      "total": 179046192,
+      "label": {
+        "lines": [
+          "© 2020 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France",
+          "℗ 2020 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2020 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 72,
+      "delta": -4,
+      "trackId": "5GW0Vh78Qa8aEVHByOCuYn",
+      "artistId": "5vnUF9uAL0ly7qw25ERLuC",
+      "artist": "TK",
+      "title": "Coachella",
+      "featuring": [
+        "GIMS"
+      ],
+      "days": 75,
+      "peak": 22,
+      "peakDays": null,
+      "streams": 96186,
+      "streamsDelta": -1426,
+      "streams7d": 704732,
+      "streams7dDelta": 7920,
+      "total": 8500862,
+      "label": {
+        "lines": [
+          "© 2026 merci Jaja Bedjik et Souley",
+          "℗ 2026 merci Jaja Bedjik et Souley"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 merci Jaja Bedjik et Souley"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 73,
+      "delta": -9,
+      "trackId": "4hEum3F9ASQVMqRm7VgcbW",
+      "artistId": "3IW7ScrzXmPvZhB27hmfgy",
+      "artist": "Jul",
+      "title": "Ragnar 2",
+      "featuring": [],
+      "days": 5,
+      "peak": 37,
+      "peakDays": null,
+      "streams": 95799,
+      "streamsDelta": -5310,
+      "streams7d": 537096,
+      "streams7dDelta": 95799,
+      "total": 537096,
+      "label": {
+        "lines": [
+          "© 2026 D’Or et de Platine, under exclusive distribution to Believe",
+          "℗ 2026 D’Or et de Platine, under exclusive distribution to Believe"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 D’Or et de Platine, under exclusive distribution to Believe"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 74,
+      "delta": 9,
+      "trackId": "66ku4Gq4k5xUqdVL4Oam2r",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Poney",
+      "featuring": [],
+      "days": 565,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 95797,
+      "streamsDelta": 8293,
+      "streams7d": 645698,
+      "streams7dDelta": 6913,
+      "total": 70114061,
+      "label": {
+        "lines": [
+          "© 2025 PLR Music / PGP Records / AllPoints",
+          "℗ 2025 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2025 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 75,
+      "delta": -1,
+      "trackId": "15phEH3Qqe3k1f94EhC5DA",
+      "artistId": "6k9F0oaxCXxbdTFDTdZihN",
+      "artist": "La Rvfleuze",
+      "title": "PARLU",
+      "featuring": [],
+      "days": 215,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 94163,
+      "streamsDelta": 2372,
+      "streams7d": 666688,
+      "streams7dDelta": -10293,
+      "total": 32519183,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Atlantic France, © 2026 SERRURE RECORDS",
+          "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 76,
+      "delta": 4,
+      "trackId": "0wLCA75tmsos5ZcVzqHFQ1",
+      "artistId": "0GOx72r5AAEKRGQFn3xqXK",
+      "artist": "GIMS",
+      "title": "PARISIENNE",
+      "featuring": [
+        "La Mano 1.9"
+      ],
+      "days": 453,
+      "peak": 1,
+      "peakDays": 50,
+      "streams": 93444,
+      "streamsDelta": 5263,
+      "streams7d": 659462,
+      "streams7dDelta": -6530,
+      "total": 121259920,
+      "label": {
+        "lines": [
+          "© 2025 GÉANTE ROUGE",
+          "℗ 2025 GÉANTE ROUGE"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 GÉANTE ROUGE"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 77,
+      "delta": -2,
+      "trackId": "5IiX5KMLfVLpdFTopU9n9o",
+      "artistId": "7gU9VyFRN3JWPJ5oHOil60",
+      "artist": "Tayc",
+      "title": "Réanymé",
+      "featuring": [
+        "Anyme023"
+      ],
+      "days": 124,
+      "peak": 14,
+      "peakDays": null,
+      "streams": 93310,
+      "streamsDelta": 2027,
+      "streams7d": 614082,
+      "streams7dDelta": 24553,
+      "total": 13950302,
+      "label": {
+        "lines": [
+          "© 2026 H24 / Play Two",
+          "℗ 2026 H24 / Play Two"
+        ],
+        "group": "playtwo",
+        "provenance": "measured",
+        "evidence": "℗ 2026 H24 / Play Two"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 78,
+      "delta": 1,
+      "trackId": "7j6Gf8nRaGFP9AITp30nHn",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "Mode de vie",
+      "featuring": [],
+      "days": 33,
+      "peak": 17,
+      "peakDays": null,
+      "streams": 93032,
+      "streamsDelta": 4750,
+      "streams7d": 647564,
+      "streams7dDelta": 5711,
+      "total": 3513506,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 79,
+      "delta": -6,
+      "trackId": "1DpXS9b1F41FQD3j0us3P5",
+      "artistId": "4eYnorQRhVHT2KBl2UyHHd",
+      "artist": "Vegedream",
+      "title": "Tu m'as menti",
+      "featuring": [],
+      "days": 73,
+      "peak": 42,
+      "peakDays": null,
+      "streams": 92845,
+      "streamsDelta": 1052,
+      "streams7d": 646327,
+      "streams7dDelta": 7557,
+      "total": 6554868,
+      "label": {
+        "lines": [
+          "© 2019 La Ruche Records, under exclusive license to Island Def Jam, a Universal Music France label",
+          "℗ 2019 La Ruche Records, under exclusive license to Island Def Jam, a Universal Music France label"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2019 La Ruche Records, under exclusive license to Island Def Jam, a Universal Music France label"
+      },
+      "genre": "afro"
+    },
+    {
+      "rank": 80,
+      "delta": 4,
+      "trackId": "3e9xneaXlmaQ2gRWRdKSXU",
+      "artistId": "3TP2Ucsow6rW1s24aq9gb4",
+      "artist": "Lagui",
+      "title": "Gros cave",
+      "featuring": [
+        "Niaks"
+      ],
+      "days": 70,
+      "peak": 57,
+      "peakDays": null,
+      "streams": 91387,
+      "streamsDelta": 3927,
+      "streams7d": 636544,
+      "streams7dDelta": 6748,
+      "total": 5840492,
+      "label": {
+        "lines": [
+          "© 2026 Lagui",
+          "℗ 2026 Lagui"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Lagui"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 81,
+      "delta": 7,
+      "trackId": "7ifMy6is2OsYKY21l12BKk",
+      "artistId": "7CUFPNi1TU8RowpnFRSsZV",
+      "artist": "Niska",
+      "title": "Allo Doudou",
+      "featuring": [
+        "litleboy lsbeats767",
+        "Miimii KDS"
+      ],
+      "days": 64,
+      "peak": 39,
+      "peakDays": null,
+      "streams": 91311,
+      "streamsDelta": 5055,
+      "streams7d": 645405,
+      "streams7dDelta": 4820,
+      "total": 6146286,
+      "label": {
+        "lines": [
+          "© 2026 Charo Inc",
+          "℗ 2026 Charo Inc"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Charo Inc"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 82,
+      "delta": 4,
+      "trackId": "6JnsxE0leMVkUvTV0n969D",
+      "artistId": "3DCWeG2J1fZeu0Oe6i5Q6m",
+      "artist": "PLK",
+      "title": "Tu dors ?",
+      "featuring": [],
+      "days": 229,
+      "peak": 9,
+      "peakDays": null,
+      "streams": 91144,
+      "streamsDelta": 4438,
+      "streams7d": 620112,
+      "streams7dDelta": -5366,
+      "total": 29646189,
+      "label": {
+        "lines": [
+          "© 2026 Enna Music France, sous licence exclusive Panenka Music",
+          "℗ 2026 Enna Music France, sous licence exclusive Panenka Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Enna Music France, sous licence exclusive Panenka Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 83,
+      "delta": 10,
+      "trackId": "4ipD5CMmWkehabGlAGTOBB",
+      "artistId": "5xXSrTidFvVRJmiam2Zh1o",
+      "artist": "GENER8ION",
+      "title": "STORM II",
+      "featuring": [
+        "Yung Lean"
+      ],
+      "days": 30,
+      "peak": 65,
+      "peakDays": null,
+      "streams": 90442,
+      "streamsDelta": 5498,
+      "streams7d": 610909,
+      "streams7dDelta": 2236,
+      "total": 2631218,
+      "label": {
+        "lines": [
+          "© 2026 Iconoclast Music",
+          "℗ 2026 Iconoclast Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Iconoclast Music"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 84,
+      "delta": -7,
+      "trackId": "34BzcgDQc4mnP8A2umJiu9",
+      "artistId": "4tk2WUKBOS9nKZj7bPQIXT",
+      "artist": "Naïka",
+      "title": "ONE TRACK MIND",
+      "featuring": [],
+      "days": 245,
+      "peak": 24,
+      "peakDays": null,
+      "streams": 90031,
+      "streamsDelta": 877,
+      "streams7d": 628801,
+      "streams7dDelta": 3430,
+      "total": 25759583,
+      "label": {
+        "lines": [
+          "© 2025 Naïka Music, under exclusive license to AWAL Recordings America, Inc.",
+          "℗ 2025 Naïka Music, under exclusive license to AWAL Recordings America, Inc."
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Naïka Music, under exclusive license to AWAL Recordings America, Inc."
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 85,
+      "delta": -14,
+      "trackId": "3rIX5DA9rUk89KUOZdGFaN",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Tu connais",
+      "featuring": [],
+      "days": 1115,
+      "peak": 7,
+      "peakDays": null,
+      "streams": 89909,
+      "streamsDelta": -2563,
+      "streams7d": 652467,
+      "streams7dDelta": -10249,
+      "total": 134972397,
+      "label": {
+        "lines": [
+          "© 2023 PLR Music / PGP Records",
+          "℗ 2023 PLR Music / PGP Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2023 PLR Music / PGP Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 86,
+      "delta": -4,
+      "trackId": "2g5kPQh1EexoG8kGZH2nOZ",
+      "artistId": "33qOK5uJ8AR2xuQQAhHump",
+      "artist": "Teddy Swims",
+      "title": "Mr. Know It All",
+      "featuring": [],
+      "days": 121,
+      "peak": 72,
+      "peakDays": null,
+      "streams": 89405,
+      "streamsDelta": 1823,
+      "streams7d": 621099,
+      "streams7dDelta": 5136,
+      "total": 9625938,
+      "label": {
+        "lines": [
+          "© Warner Records, © 2026 SWIMS Int., under exclusive license to Warner Records Inc.",
+          "℗ Warner Records, ℗ 2026 SWIMS Int., under exclusive license to Warner Records Inc."
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Warner Records, ℗ 2026 SWIMS Int., under exclusive license to Warner Records Inc."
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 87,
+      "delta": 12,
+      "trackId": "6CzkWkgEjNQnvbxIStNqIX",
+      "artistId": "3DCWeG2J1fZeu0Oe6i5Q6m",
+      "artist": "PLK",
+      "title": "Sex Model",
+      "featuring": [
+        "Theodora"
+      ],
+      "days": 250,
+      "peak": 3,
+      "peakDays": 5,
+      "streams": 89300,
+      "streamsDelta": 7684,
+      "streams7d": 608408,
+      "streams7dDelta": 1128,
+      "total": 40105729,
+      "label": {
+        "lines": [
+          "© 2026 Enna Music France, sous licence exclusive Panenka Music",
+          "℗ 2026 Enna Music France, sous licence exclusive Panenka Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Enna Music France, sous licence exclusive Panenka Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 88,
+      "delta": -3,
+      "trackId": "2C508Yx64FIUuM1ts06Ap1",
+      "artistId": "3TP2Ucsow6rW1s24aq9gb4",
+      "artist": "Lagui",
+      "title": "Maracanã",
+      "featuring": [],
+      "days": 152,
+      "peak": 58,
+      "peakDays": null,
+      "streams": 89030,
+      "streamsDelta": 1731,
+      "streams7d": 620787,
+      "streams7dDelta": -3930,
+      "total": 12006332,
+      "label": {
+        "lines": [
+          "© 2026 Lagui",
+          "℗ 2026 Lagui"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Lagui"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 89,
+      "delta": -2,
+      "trackId": "0T1CzbjyOEU60cL5G244di",
+      "artistId": "0RRp1XbMoTmW8zSWC1synA",
+      "artist": "Rambo goyard",
+      "title": "B.M.S (by my side)",
+      "featuring": [],
+      "days": 292,
+      "peak": 2,
+      "peakDays": 17,
+      "streams": 88894,
+      "streamsDelta": 2317,
+      "streams7d": 640513,
+      "streams7dDelta": -14244,
+      "total": 64638088,
+      "label": {
+        "lines": [
+          "© 2026 172 Production - Brother Hood Corp",
+          "℗ 2026 172 Production - Brother Hood Corp"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 172 Production - Brother Hood Corp"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 90,
+      "delta": 8,
+      "trackId": "3MNBUdX7zP4E0UhlfYenMf",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Jamal",
+      "featuring": [],
+      "days": 470,
+      "peak": 20,
+      "peakDays": null,
+      "streams": 88870,
+      "streamsDelta": 6946,
+      "streams7d": 582894,
+      "streams7dDelta": -10178,
+      "total": 48885822,
+      "label": {
+        "lines": [
+          "© 2022 PLR Music / PGP Records / AllPoints",
+          "℗ 2022 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2022 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 91,
+      "delta": -2,
+      "trackId": "30RmEyZdIYdYpSTkMtgtKt",
+      "artistId": "2kIs76sEGiulKeqetZq6ua",
+      "artist": "Jok'air",
+      "title": "Bonbon à la menthe",
+      "featuring": [
+        "Mallaury"
+      ],
+      "days": 524,
+      "peak": 41,
+      "peakDays": null,
+      "streams": 88848,
+      "streamsDelta": 2756,
+      "streams7d": 619729,
+      "streams7dDelta": -1469,
+      "total": 41639748,
+      "label": {
+        "lines": [
+          "© 2019 La Dictature, under exclusive license to Play Two",
+          "℗ 2019 La Dictature, under exclusive license to Play Two"
+        ],
+        "group": "playtwo",
+        "provenance": "measured",
+        "evidence": "℗ 2019 La Dictature, under exclusive license to Play Two"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 92,
+      "delta": -11,
+      "trackId": "5L76wuAiLp3sOTTipca1ux",
+      "artistId": "5nH2klYTzn8CNvUv1GOGQO",
+      "artist": "Eva",
+      "title": "Sur la piste",
+      "featuring": [],
+      "days": 61,
+      "peak": 78,
+      "peakDays": null,
+      "streams": 88248,
+      "streamsDelta": 227,
+      "streams7d": 577397,
+      "streams7dDelta": 14685,
+      "total": 4128869,
+      "label": {
+        "lines": [
+          "© 2026 AYVI PRODUCTION",
+          "℗ 2026 AYVI PRODUCTION"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 AYVI PRODUCTION"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 93,
+      "delta": -2,
+      "trackId": "7heoPFrtuH6JU6AcfzjWHp",
+      "artistId": "2UwqpfQtNuhBwviIC0f2ie",
+      "artist": "Damso",
+      "title": "Pa Pa Paw",
+      "featuring": [
+        "SARAH SEY"
+      ],
+      "days": 516,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 87326,
+      "streamsDelta": 1805,
+      "streams7d": 607492,
+      "streams7dDelta": 4685,
+      "total": 65759152,
+      "label": {
+        "lines": [
+          "© 2025 Trente-quatre centimes",
+          "℗ 2025 Trente-quatre centimes"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Trente-quatre centimes"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 94,
+      "delta": 2,
+      "trackId": "2KnZ3KmkarHJM6F1t6vdk2",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Mood",
+      "featuring": [],
+      "days": 116,
+      "peak": 10,
+      "peakDays": null,
+      "streams": 86534,
+      "streamsDelta": 3699,
+      "streams7d": 601142,
+      "streams7dDelta": -6621,
+      "total": 11799603,
+      "label": {
+        "lines": [
+          "© Licence exclusive Warner Music France, Label Rec. 118, © 2021 Mal Luné Music",
+          "℗ Licence exclusive Warner Music France, Label Rec. 118, ℗ 2021 Mal Luné Music"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Licence exclusive Warner Music France, Label Rec. 118, ℗ 2021 Mal Luné Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 95,
+      "delta": -5,
+      "trackId": "1eAGQPau3pwhVT7JLINSo5",
+      "artistId": "6k9F0oaxCXxbdTFDTdZihN",
+      "artist": "La Rvfleuze",
+      "title": "PROMENADE",
+      "featuring": [
+        "Koba LaD"
+      ],
+      "days": 210,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 86388,
+      "streamsDelta": 445,
+      "streams7d": 620062,
+      "streams7dDelta": -11264,
+      "total": 20840448,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Atlantic France, © 2026 SERRURE RECORDS",
+          "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 96,
+      "delta": 9,
+      "trackId": "3vU9V5EzwpsqI2zHbKmHi9",
+      "artistId": "4yPFe6ZiSjH5mgjDwiYZgc",
+      "artist": "RnBoi",
+      "title": "ELLE VOULAIT",
+      "featuring": [],
+      "days": 215,
+      "peak": 1,
+      "peakDays": 1,
+      "streams": 85445,
+      "streamsDelta": 5800,
+      "streams7d": 541771,
+      "streams7dDelta": 11153,
+      "total": 43833908,
+      "label": {
+        "lines": [
+          "© 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE",
+          "℗ 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 97,
+      "delta": -3,
+      "trackId": "4R0HXKZBeDJerIq9oCnDIp",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Biff pas d'love",
+      "featuring": [],
+      "days": 414,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 85438,
+      "streamsDelta": 1724,
+      "streams7d": 597725,
+      "streams7dDelta": -3276,
+      "total": 57080176,
+      "label": {
+        "lines": [
+          "© 2025 Le Grand Carré / Level Up Music / AllPoints",
+          "℗ 2025 Le Grand Carré / Level Up Music"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "© 2025 Le Grand Carré / Level Up Music / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 98,
+      "delta": -3,
+      "trackId": "0lNSoCSUfvKSmjm8B7rZYI",
+      "artistId": "4NHQUGzhtTLFvgF5SZesLK",
+      "artist": "Tove Lo",
+      "title": "des fleurs x stromae",
+      "featuring": [
+        "Stromae"
+      ],
+      "days": 83,
+      "peak": 88,
+      "peakDays": null,
+      "streams": 85277,
+      "streamsDelta": 2225,
+      "streams7d": 571919,
+      "streams7dDelta": 9686,
+      "total": 5967451,
+      "label": {
+        "lines": [
+          "© 2026 Pretty Swede Records",
+          "℗ 2026 Pretty Swede Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Pretty Swede Records"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 99,
+      "delta": 1,
+      "trackId": "3KfdpLKJxBGrUnCw8KBOCR",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "Cœur De Pirate",
+      "featuring": [],
+      "days": 33,
+      "peak": 9,
+      "peakDays": null,
+      "streams": 83053,
+      "streamsDelta": 2115,
+      "streams7d": 589466,
+      "streams7dDelta": -6733,
+      "total": 4244655,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 100,
+      "delta": -3,
+      "trackId": "5yvVYFDUpbnjcnRBgjwTzM",
+      "artistId": "5INjqkS1o8h1imAzPqGZBb",
+      "artist": "Tame Impala",
+      "title": "Dracula - JENNIE Remix",
+      "featuring": [
+        "JENNIE"
+      ],
+      "days": 238,
+      "peak": 17,
+      "peakDays": null,
+      "streams": 82917,
+      "streamsDelta": 469,
+      "streams7d": 594988,
+      "streams7dDelta": -4269,
+      "total": 31217198,
+      "label": {
+        "lines": [
+          "℗ 2026 Columbia Records, a Division of Sony Music Entertainment, under exclusive license from Tame Impala"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Columbia Records, a Division of Sony Music Entertainment, under exclusive license from Tame Impala"
+      },
+      "genre": "rock"
+    },
+    {
+      "rank": 101,
+      "delta": 0,
+      "trackId": "70cHKK8bHAfJrOGVnfRG9J",
+      "artistId": "2qanRMyA5bNuTvz1dK45OP",
+      "artist": "ADÉLA",
+      "title": "Nicole Kidman",
+      "featuring": [],
+      "days": 33,
+      "peak": 90,
+      "peakDays": null,
+      "streams": 82514,
+      "streamsDelta": 1732,
+      "streams7d": 567273,
+      "streams7dDelta": 3356,
+      "total": 2424647,
+      "label": {
+        "lines": [
+          "© 2026 UMG Recordings, Inc.",
+          "℗ 2026 UMG Recordings, Inc."
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2026 UMG Recordings, Inc."
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 102,
+      "delta": 1,
+      "trackId": "3cdxShmWeMHolKPDi3SRXM",
+      "artistId": "3NH8t45zOTqzlZgBvZRjvB",
+      "artist": "PNL",
+      "title": "Menace",
+      "featuring": [],
+      "days": 221,
+      "peak": 8,
+      "peakDays": null,
+      "streams": 82470,
+      "streamsDelta": 1934,
+      "streams7d": 579537,
+      "streams7dDelta": -9023,
+      "total": 22674051,
+      "label": {
+        "lines": [
+          "© 2019 QLF Records",
+          "℗ 2019 QLF Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2019 QLF Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 103,
+      "delta": -11,
+      "trackId": "6WfnzeciIa1Ta661GY9hue",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Vrais",
+      "featuring": [],
+      "days": 707,
+      "peak": 14,
+      "peakDays": null,
+      "streams": 82448,
+      "streamsDelta": -2617,
+      "streams7d": 591327,
+      "streams7dDelta": -11874,
+      "total": 77250310,
+      "label": {
+        "lines": [
+          "© 2018 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company",
+          "℗ 2018 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2018 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 104,
+      "delta": -2,
+      "trackId": "2kp4i1IJXmmPcanUa6ncU6",
+      "artistId": "1bbr3P3o6BGIdvTWKb6rxL",
+      "artist": "Saïf",
+      "title": "Le taf du loup",
+      "featuring": [],
+      "days": 88,
+      "peak": 57,
+      "peakDays": null,
+      "streams": 81789,
+      "streamsDelta": 1158,
+      "streams7d": 574771,
+      "streams7dDelta": -6444,
+      "total": 7530067,
+      "label": {
+        "lines": [
+          "© 2024 84 City",
+          "℗ 2024 84 City"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2024 84 City"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 105,
+      "delta": 2,
+      "trackId": "7yNf9YjeO5JXUE3JEBgnYc",
+      "artistId": "6USv9qhCn6zfxlBQIYJ9qs",
+      "artist": "Dominic Fike",
+      "title": "Babydoll",
+      "featuring": [],
+      "days": 269,
+      "peak": 15,
+      "peakDays": null,
+      "streams": 81302,
+      "streamsDelta": 2370,
+      "streams7d": 558289,
+      "streams7dDelta": 148,
+      "total": 36143526,
+      "label": {
+        "lines": [
+          "℗ 2018 & 2020 Sandy Boys, LLC., under exclusive license to Columbia Records, a Division of Sony Music Entertainment"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2018 & 2020 Sandy Boys, LLC., under exclusive license to Columbia Records, a Division of Sony Music Entertainment"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 106,
+      "delta": 0,
+      "trackId": "5TFD2bmFKGhoCRbX61nXY5",
+      "artistId": "4q3ewBCX7sLwd24euuV69X",
+      "artist": "Bad Bunny",
+      "title": "NUEVAYoL",
+      "featuring": [],
+      "days": 575,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 81274,
+      "streamsDelta": 2142,
+      "streams7d": 584925,
+      "streams7dDelta": 3107,
+      "total": 78095553,
+      "label": {
+        "lines": [
+          "© 2024 Rimas Entertainment LLC.",
+          "℗ 2024 Rimas Entertainment LLC."
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Rimas Entertainment LLC."
+      },
+      "genre": "latin"
+    },
+    {
+      "rank": 107,
+      "delta": 7,
+      "trackId": "1KGi9sZVMeszgZOWivFpxs",
+      "artistId": "0TImkz4nPqjegtVSMZnMRq",
+      "artist": "TLC",
+      "title": "No Scrubs",
+      "featuring": [],
+      "days": 59,
+      "peak": 92,
+      "peakDays": null,
+      "streams": 80235,
+      "streamsDelta": 3671,
+      "streams7d": 514744,
+      "streams7dDelta": 12299,
+      "total": 4097278,
+      "label": {
+        "lines": [
+          "℗ 1999 LaFace Records LLC"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 1999 LaFace Records LLC"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 108,
+      "delta": 3,
+      "trackId": "22skzmqfdWrjJylampe0kt",
+      "artistId": "5BcAKTbp20cv7tC5VqPFoC",
+      "artist": "Macklemore & Ryan Lewis",
+      "title": "Can't Hold Us",
+      "featuring": [
+        "Macklemore",
+        "Ryan Lewis",
+        "Ray Dalton"
+      ],
+      "days": 1685,
+      "peak": 8,
+      "peakDays": null,
+      "streams": 79847,
+      "streamsDelta": 2493,
+      "streams7d": 559728,
+      "streams7dDelta": -2219,
+      "total": 141043046,
+      "label": {
+        "lines": [
+          "© 2012 Macklemore, LLC.",
+          "℗ 2012 Macklemore, LLC."
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2012 Macklemore, LLC."
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 109,
+      "delta": 13,
+      "trackId": "6nzLuOkmiFvLfy78OlDXy6",
+      "artistId": "1AT8NKdQOU0EVPu6ehN4NA",
+      "artist": "Meryl",
+      "title": "Shatta Confessions",
+      "featuring": [
+        "N'Ken"
+      ],
+      "days": 454,
+      "peak": 22,
+      "peakDays": null,
+      "streams": 79058,
+      "streamsDelta": 7838,
+      "streams7d": 513806,
+      "streams7dDelta": 13563,
+      "total": 43310988,
+      "label": {
+        "lines": [
+          "© 2025 Maison Caviar",
+          "℗ 2025 Maison Caviar"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Maison Caviar"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 110,
+      "delta": 9,
+      "trackId": "20jbSiX29FDX4oQxBXyUEi",
+      "artistId": "66CXWjxzNUsdJxJ2JdwvnR",
+      "artist": "Ariana Grande",
+      "title": "hate that i made you love me",
+      "featuring": [],
+      "days": 151,
+      "peak": 14,
+      "peakDays": null,
+      "streams": 78860,
+      "streamsDelta": 5549,
+      "streams7d": 517343,
+      "streams7dDelta": 7809,
+      "total": 14762003,
+      "label": {
+        "lines": [
+          "© 2026 Babydoll Music, under exclusive license to Republic Records, a division of UMG Recordings, Inc.",
+          "℗ 2026 Babydoll Music, under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Babydoll Music, under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 111,
+      "delta": -3,
+      "trackId": "4vbuk1D3adU4GjFLAjIYwQ",
+      "artistId": "7sAqpkrQBaOkddsv1Tz1XK",
+      "artist": "Mosimann",
+      "title": "Soon",
+      "featuring": [
+        "Gaëtan Roussel"
+      ],
+      "days": 26,
+      "peak": 94,
+      "peakDays": null,
+      "streams": 78686,
+      "streamsDelta": 17,
+      "streams7d": 518564,
+      "streams7dDelta": 14774,
+      "total": 1758403,
+      "label": {
+        "lines": [
+          "℗ 2026 QMP Production, under exclusive license to Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 QMP Production, under exclusive license to Sony Music Entertainment France SAS"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 112,
+      "delta": 0,
+      "trackId": "0YjcIRiArrvDYyZz3YUegi",
+      "artistId": "3HmSuQk0VaGhv9hX22h10J",
+      "artist": "TRIANGLE DES BERMUDES",
+      "title": "Mopao aye",
+      "featuring": [
+        "MC YOSHI",
+        "Mauvais djo",
+        "Kokosvoice"
+      ],
+      "days": 149,
+      "peak": 25,
+      "peakDays": null,
+      "streams": 78483,
+      "streamsDelta": 1693,
+      "streams7d": 561740,
+      "streams7dDelta": -3584,
+      "total": 17388379,
+      "label": {
+        "lines": [
+          "© 2026 YPDP",
+          "℗ 2026 YPDP"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 YPDP"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 113,
+      "delta": -4,
+      "trackId": "7EyB1sN9IUO1YXIoHTyZRk",
+      "artistId": "4uJNQGa3L2frXDxwgouTIw",
+      "artist": "Franglish",
+      "title": "Génération impolie",
+      "featuring": [
+        "KeBlack"
+      ],
+      "days": 376,
+      "peak": 3,
+      "peakDays": 1,
+      "streams": 78398,
+      "streamsDelta": 409,
+      "streams7d": 549511,
+      "streams7dDelta": 359,
+      "total": 71384912,
+      "label": {
+        "lines": [
+          "© 2025 Lutèce Music / AllPoints",
+          "℗ 2025 Lutèce Music / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Lutèce Music / AllPoints"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 114,
+      "delta": -4,
+      "trackId": "2ewjMyCbNv2X1dB2qIDCwD",
+      "artistId": "2UwqpfQtNuhBwviIC0f2ie",
+      "artist": "Damso",
+      "title": "Θ. Macarena",
+      "featuring": [],
+      "days": 2746,
+      "peak": 1,
+      "peakDays": 72,
+      "streams": 77844,
+      "streamsDelta": 180,
+      "streams7d": 556203,
+      "streams7dDelta": -2775,
+      "total": 195799762,
+      "label": {
+        "lines": [
+          "© 2017 Capitol Music France",
+          "℗ 2017 Capitol Music France"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Capitol Music France"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 115,
+      "delta": 23,
+      "trackId": "5oePa8PlOTPAlRaGs2OZ3A",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Putana",
+      "featuring": [],
+      "days": 2067,
+      "peak": 3,
+      "peakDays": 1,
+      "streams": 76634,
+      "streamsDelta": 8610,
+      "streams7d": 518964,
+      "streams7dDelta": -20632,
+      "total": 166845705,
+      "label": {
+        "lines": [
+          "© 2019 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company",
+          "℗ 2019 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2019 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 116,
+      "delta": -3,
+      "trackId": "17QCWlVhlMWt5VVwale5nS",
+      "artistId": "13IyCFiPKhpVejuTyNulgU",
+      "artist": "Josas",
+      "title": "Deliciosa",
+      "featuring": [],
+      "days": 44,
+      "peak": 111,
+      "peakDays": null,
+      "streams": 76545,
+      "streamsDelta": -23,
+      "streams7d": 530790,
+      "streams7dDelta": 1550,
+      "total": 3024478,
+      "label": {
+        "lines": [
+          "© 2026 Hyper Focal Music / Kental Music",
+          "℗ 2026 Hyper Focal Publishing, Because Editions, Kental Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Hyper Focal Publishing, Because Editions, Kental Music"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 117,
+      "delta": -2,
+      "trackId": "2QjOHCTQ1Jl3zawyYOpxh6",
+      "artistId": "77SW9BnxLY8rJ0RciFqkHh",
+      "artist": "The Neighbourhood",
+      "title": "Sweater Weather",
+      "featuring": [],
+      "days": 718,
+      "peak": 24,
+      "peakDays": null,
+      "streams": 75522,
+      "streamsDelta": 540,
+      "streams7d": 533569,
+      "streams7dDelta": -4786,
+      "total": 49968891,
+      "label": {
+        "lines": [
+          "℗ 2013 Columbia Records, a Division of Sony Music Entertainment"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2013 Columbia Records, a Division of Sony Music Entertainment"
+      },
+      "genre": "rock"
+    },
+    {
+      "rank": 118,
+      "delta": 10,
+      "trackId": "5aIp2IBhStp31hkyLG6ssZ",
+      "artistId": "2zW6nGPGBEaGNENvqaw9lo",
+      "artist": "Bello&Dallas",
+      "title": "Arena de Cuba",
+      "featuring": [],
+      "days": 173,
+      "peak": 23,
+      "peakDays": null,
+      "streams": 75112,
+      "streamsDelta": 5528,
+      "streams7d": 486936,
+      "streams7dDelta": -8740,
+      "total": 17265160,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Rec. 118,, © 2026 Gabos Entertainment / La Triade",
+          "℗ Distribution Exclusive Warner Music France, Label Rec. 118,, ℗ 2026 Gabos Entertainment / La Triade"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Rec. 118,, ℗ 2026 Gabos Entertainment / La Triade"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 119,
+      "delta": -15,
+      "trackId": "3MVTefqbeNX5yHFOmnHy3X",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Un Poco",
+      "featuring": [],
+      "days": 978,
+      "peak": 6,
+      "peakDays": null,
+      "streams": 75036,
+      "streamsDelta": -4876,
+      "streams7d": 546960,
+      "streams7dDelta": -9364,
+      "total": 78834975,
+      "label": {
+        "lines": [
+          "© 2018 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company",
+          "℗ 2018 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2018 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 120,
+      "delta": -4,
+      "trackId": "0u6HzAVFUBiKslzPF9G9vd",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Dis-moi que tu m'aimes",
+      "featuring": [],
+      "days": 932,
+      "peak": 56,
+      "peakDays": null,
+      "streams": 74997,
+      "streamsDelta": 376,
+      "streams7d": 551553,
+      "streams7dDelta": -17402,
+      "total": 53345386,
+      "label": {
+        "lines": [
+          "© 2016 Mal Luné Music / Rec. 118 / Warner Music France, a Warner Music Group Company",
+          "℗ 2016 Mal Luné Music / Rec. 118 / Warner Music France, a Warner Music Group Company"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2016 Mal Luné Music / Rec. 118 / Warner Music France, a Warner Music Group Company"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 121,
+      "delta": -4,
+      "trackId": "4WFgvKVfEhb3IUAFGrutTR",
+      "artistId": "5RTLRtXjbXI2lSXc6jxlAz",
+      "artist": "Ravyn Lenae",
+      "title": "Love Me Not",
+      "featuring": [],
+      "days": 531,
+      "peak": 31,
+      "peakDays": null,
+      "streams": 74475,
+      "streamsDelta": 336,
+      "streams7d": 520462,
+      "streams7dDelta": -12223,
+      "total": 55073962,
+      "label": {
+        "lines": [
+          "© 2024 Atlantic Recording Corporation",
+          "℗ 2024 Atlantic Recording Corporation"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Atlantic Recording Corporation"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 122,
+      "delta": 4,
+      "trackId": "0eUP3XYOCAj7lGoz4LOhyQ",
+      "artistId": "4p5WgeiPSPpqPDs7T6OkWf",
+      "artist": "ANOTR",
+      "title": "Talk To You (ft. 54 Ultra)",
+      "featuring": [
+        "54 Ultra"
+      ],
+      "days": 71,
+      "peak": 27,
+      "peakDays": null,
+      "streams": 74264,
+      "streamsDelta": 4186,
+      "streams7d": 532734,
+      "streams7dDelta": -4799,
+      "total": 6803167,
+      "label": {
+        "lines": [
+          "© 2026 No Art",
+          "℗ 2026 No Art"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 No Art"
+      },
+      "genre": "electro"
+    },
+    {
+      "rank": 123,
+      "delta": 11,
+      "trackId": "0Zq4kjz9AWHeFeMw358s2c",
+      "artistId": "50m4JeiAg5aCt3kKRsKw7T",
+      "artist": "Nayte",
+      "title": "Dis-moi - Nouvelle École",
+      "featuring": [
+        "Nouvelle École"
+      ],
+      "days": 48,
+      "peak": 10,
+      "peakDays": null,
+      "streams": 74051,
+      "streamsDelta": 5636,
+      "streams7d": 511862,
+      "streams7dDelta": 2770,
+      "total": 6245810,
+      "label": {
+        "lines": [
+          "© 2026 Netflix Music, LLC",
+          "℗ 2026 Netflix Music, LLC"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Netflix Music, LLC"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 124,
+      "delta": 0,
+      "trackId": "2ffsmzPmhSoBpSSRVVdZXM",
+      "artistId": "7IlRNXHjoOCgEAWN5qYksg",
+      "artist": "Aya Nakamura",
+      "title": "Réponds",
+      "featuring": [],
+      "days": 30,
+      "peak": 124,
+      "peakDays": null,
+      "streams": 73914,
+      "streamsDelta": 3529,
+      "streams7d": 479474,
+      "streams7dDelta": 6450,
+      "total": 1964517,
+      "label": {
+        "lines": [
+          "© 2017 Rec. 118 / Warner Music France, a Warner Music Group Company.",
+          "℗ 2017 Rec. 118 / Warner Music France, a Warner Music Group Company."
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Rec. 118 / Warner Music France, a Warner Music Group Company."
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 125,
+      "delta": 4,
+      "trackId": "7J1uxwnxfQLu4APicE5Rnj",
+      "artistId": "3fMbdgg4jU18AjLCKBhRSm",
+      "artist": "Michael Jackson",
+      "title": "Billie Jean",
+      "featuring": [],
+      "days": 272,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 73855,
+      "streamsDelta": 4503,
+      "streams7d": 523527,
+      "streams7dDelta": -4563,
+      "total": 31113599,
+      "label": {
+        "lines": [
+          "℗ 1982 MJJ Productions Inc."
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 1982 MJJ Productions Inc."
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 126,
+      "delta": -8,
+      "trackId": "1VBKQJ5AVNKROv0WJ2h4ZK",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "LES DIAMANTS DE BOKASSA",
+      "featuring": [
+        "Tiakola"
+      ],
+      "days": 292,
+      "peak": 3,
+      "peakDays": 1,
+      "streams": 73770,
+      "streamsDelta": -270,
+      "streams7d": 509293,
+      "streams7dDelta": -8406,
+      "total": 41846350,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Rec. 118, © 2026 Jefe Productions",
+          "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 Jefe Productions"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Rec. 118, ℗ 2026 Jefe Productions"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 127,
+      "delta": 14,
+      "trackId": "3XtgZGEcCXf6ILvQTDl9IZ",
+      "artistId": "2wMA0cyQGggqKOjMfUNenu",
+      "artist": "TeddyBear",
+      "title": "Le Plus Beau",
+      "featuring": [],
+      "days": 33,
+      "peak": 88,
+      "peakDays": null,
+      "streams": 73575,
+      "streamsDelta": 6309,
+      "streams7d": 480546,
+      "streams7dDelta": 73575,
+      "total": 2450769,
+      "label": {
+        "lines": [
+          "© 2026 Ceinture Rose Records",
+          "℗ 2026 Ceinture Rose Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Ceinture Rose Records"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 128,
+      "delta": -8,
+      "trackId": "1F7fTbbJuN01Izb3gLFZTF",
+      "artistId": "3YwqjMyrRfuixi2pbgTGCE",
+      "artist": "Heuss L'enfoiré",
+      "title": "Maharaja",
+      "featuring": [],
+      "days": 23,
+      "peak": 95,
+      "peakDays": null,
+      "streams": 72646,
+      "streamsDelta": -563,
+      "streams7d": 512556,
+      "streams7dDelta": -1458,
+      "total": 1704027,
+      "label": {
+        "lines": [
+          "© 2025 Verdansk, under exclusive distribution to AllPoints, a division of Believe",
+          "℗ 2025 Verdansk, under exclusive distribution to AllPoints, a division of Believe"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Verdansk, under exclusive distribution to AllPoints, a division of Believe"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 129,
+      "delta": 13,
+      "trackId": "5Sj7ykVPBZsbviXmpcJ3NO",
+      "artistId": "7rFugkk9ZvVB1zXHg8h0rj",
+      "artist": "Eddy de Pretto",
+      "title": "sous influence",
+      "featuring": [],
+      "days": 4,
+      "peak": 129,
+      "peakDays": null,
+      "streams": 72392,
+      "streamsDelta": 5391,
+      "streams7d": 256103,
+      "streams7dDelta": 72392,
+      "total": 256103,
+      "label": {
+        "lines": [
+          "© 2026 Otterped Records",
+          "℗ 2026 Otterped Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Otterped Records"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 130,
+      "delta": 35,
+      "trackId": "1YNI0AW3x1KOyaNPatmn1G",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Pas de rôle",
+      "featuring": [],
+      "days": 3,
+      "peak": 102,
+      "peakDays": null,
+      "streams": 72313,
+      "streamsDelta": 11056,
+      "streams7d": 222415,
+      "streams7dDelta": 72313,
+      "total": 222415,
+      "label": {
+        "lines": [
+          "© 2026 VERUS / Level Up / La route est longue",
+          "℗ 2026 VERUS / Level Up / La route est longue, under exclusive distribution to AllPoints, a division of Believe"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 VERUS / Level Up / La route est longue, under exclusive distribution to AllPoints, a division of Believe"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 131,
+      "delta": 8,
+      "trackId": "0SKNkEMV313mE6oYsgVCgm",
+      "artistId": "3IW7ScrzXmPvZhB27hmfgy",
+      "artist": "Jul",
+      "title": "J'oublie tout",
+      "featuring": [],
+      "days": 1210,
+      "peak": 21,
+      "peakDays": null,
+      "streams": 72104,
+      "streamsDelta": 4741,
+      "streams7d": 494906,
+      "streams7dDelta": 1754,
+      "total": 90281543,
+      "label": {
+        "lines": [
+          "© 2014 LIGA ONE INDUSTRY / MUSICAST",
+          "℗ 2014 LIGA ONE INDUSTRY / MUSICAST"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2014 LIGA ONE INDUSTRY / MUSICAST"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 132,
+      "delta": 3,
+      "trackId": "6FyIByL10DzsD0xMKsa4hL",
+      "artistId": "3HmSuQk0VaGhv9hX22h10J",
+      "artist": "TRIANGLE DES BERMUDES",
+      "title": "Balek",
+      "featuring": [
+        "Aya Nakamura",
+        "MC YOSHI",
+        "Mauvais djo",
+        "Kokosvoice"
+      ],
+      "days": 204,
+      "peak": 19,
+      "peakDays": null,
+      "streams": 71927,
+      "streamsDelta": 3544,
+      "streams7d": 510641,
+      "streams7dDelta": -990,
+      "total": 26680291,
+      "label": {
+        "lines": [
+          "© 2026 YPDP",
+          "℗ 2026 YPDP"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 YPDP"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 133,
+      "delta": -8,
+      "trackId": "2qIj2igCag4Rm1tmxYdhO0",
+      "artistId": "2eh8cEKZk4VeruUrGq748D",
+      "artist": "Rim'K",
+      "title": "Air Max",
+      "featuring": [
+        "Ninho"
+      ],
+      "days": 995,
+      "peak": 1,
+      "peakDays": 24,
+      "streams": 71559,
+      "streamsDelta": 1345,
+      "streams7d": 507844,
+      "streams7dDelta": -7827,
+      "total": 82050930,
+      "label": {
+        "lines": [
+          "© 2019 MB",
+          "℗ 2019 MB"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2019 MB"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 134,
+      "delta": -11,
+      "trackId": "1s3XtkdfT3obSCbQVWtvX9",
+      "artistId": "3NH8t45zOTqzlZgBvZRjvB",
+      "artist": "PNL",
+      "title": "La misère est si belle",
+      "featuring": [],
+      "days": 1363,
+      "peak": 14,
+      "peakDays": null,
+      "streams": 71321,
+      "streamsDelta": 839,
+      "streams7d": 501148,
+      "streams7dDelta": -4917,
+      "total": 92355028,
+      "label": {
+        "lines": [
+          "© 2019 QLF Records",
+          "℗ 2019 QLF Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2019 QLF Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 135,
+      "delta": -8,
+      "trackId": "5t1LPk2QiG9O7JdL0oAsou",
+      "artistId": "4yPFe6ZiSjH5mgjDwiYZgc",
+      "artist": "RnBoi",
+      "title": "AVEC MOI",
+      "featuring": [
+        "Nono La Grinta"
+      ],
+      "days": 284,
+      "peak": 4,
+      "peakDays": null,
+      "streams": 71062,
+      "streamsDelta": 1043,
+      "streams7d": 458080,
+      "streams7dDelta": 8414,
+      "total": 51779077,
+      "label": {
+        "lines": [
+          "© 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE",
+          "℗ 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 DOUBLE JEU RECORDS & NAKAMURA INDUSTRIE"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 136,
+      "delta": -6,
+      "trackId": "4I3M1UTCL0wuM759DIkyqN",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Printemps",
+      "featuring": [],
+      "days": 353,
+      "peak": 52,
+      "peakDays": null,
+      "streams": 70963,
+      "streamsDelta": 2034,
+      "streams7d": 490447,
+      "streams7dDelta": -4660,
+      "total": 26221483,
+      "label": {
+        "lines": [
+          "© 2025 Le Grand Carré / Level Up Music / AllPoints",
+          "℗ 2025 Le Grand Carré / Level Up Music"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "© 2025 Le Grand Carré / Level Up Music / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 137,
+      "delta": -4,
+      "trackId": "5j1XxBRRoYYdL4l85Xj5WP",
+      "artistId": "4BUeuxQIWI69tEYuvzbv6D",
+      "artist": "Timar",
+      "title": "EXPLICIT 69",
+      "featuring": [],
+      "days": 56,
+      "peak": 70,
+      "peakDays": null,
+      "streams": 70299,
+      "streamsDelta": 1802,
+      "streams7d": 494412,
+      "streams7dDelta": -9242,
+      "total": 4078655,
+      "label": {
+        "lines": [
+          "© 2026 AURA MUSIC / FRENCH CO",
+          "℗ 2026 AURA MUSIC / FRENCH CO"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 AURA MUSIC / FRENCH CO"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 138,
+      "delta": 13,
+      "trackId": "1Lulg5ZiMEXy3QNwb1PB8I",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Zipette",
+      "featuring": [],
+      "days": 1163,
+      "peak": 3,
+      "peakDays": 1,
+      "streams": 69957,
+      "streamsDelta": 5577,
+      "streams7d": 465545,
+      "streams7dDelta": -3029,
+      "total": 87001719,
+      "label": {
+        "lines": [
+          "© 2020 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France",
+          "℗ 2020 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2020 Mal Luné Music, distribution exclusive Rec. 118 / Warner Music France"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 139,
+      "delta": 40,
+      "trackId": "4DOmaofCT3iUb6dMllhWBc",
+      "artistId": "5hREZP0zTQbTLkZ2M8RS4v",
+      "artist": "Djadja & Dinaz",
+      "title": "Baraque au Bled",
+      "featuring": [],
+      "days": 41,
+      "peak": 21,
+      "peakDays": null,
+      "streams": 69875,
+      "streamsDelta": 10383,
+      "streams7d": 449962,
+      "streams7dDelta": 6455,
+      "total": 3662242,
+      "label": {
+        "lines": [
+          "© 2026 Huit Clos / AllPoints, a division of Believe",
+          "℗ 2026 Huit Clos / AllPoints, a division of Believe"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Huit Clos / AllPoints, a division of Believe"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 140,
+      "delta": -9,
+      "trackId": "6U9VpmP3dEinuezxCJ2Zg9",
+      "artistId": "2qanRMyA5bNuTvz1dK45OP",
+      "artist": "ADÉLA",
+      "title": "Ain't In LA",
+      "featuring": [],
+      "days": 30,
+      "peak": 131,
+      "peakDays": null,
+      "streams": 69596,
+      "streamsDelta": 764,
+      "streams7d": 471049,
+      "streams7dDelta": -363,
+      "total": 1892403,
+      "label": {
+        "lines": [
+          "© 2026 UMG Recordings, Inc.",
+          "℗ 2026 UMG Recordings, Inc."
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2026 UMG Recordings, Inc."
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 141,
+      "delta": 5,
+      "trackId": "2QfcxxXiORn553zXq7qrFG",
+      "artistId": "0GOx72r5AAEKRGQFn3xqXK",
+      "artist": "GIMS",
+      "title": "Soleil",
+      "featuring": [],
+      "days": 208,
+      "peak": 13,
+      "peakDays": null,
+      "streams": 68838,
+      "streamsDelta": 2160,
+      "streams7d": 490262,
+      "streams7dDelta": -898,
+      "total": 28000664,
+      "label": {
+        "lines": [
+          "© 2026 Black Belt Music",
+          "℗ 2026 Black Belt"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Black Belt"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 142,
+      "delta": 6,
+      "trackId": "7jtQIBanIiJOMS6RyCx6jZ",
+      "artistId": "2txHhyCwHjUEpJjWrEyqyX",
+      "artist": "Tom Odell",
+      "title": "Another Love",
+      "featuring": [],
+      "days": 2071,
+      "peak": 15,
+      "peakDays": null,
+      "streams": 68746,
+      "streamsDelta": 3316,
+      "streams7d": 467220,
+      "streams7dDelta": -8918,
+      "total": 156357005,
+      "label": {
+        "lines": [
+          "℗ 2013 Sony Music Entertainment UK Limited"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2013 Sony Music Entertainment UK Limited"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 143,
+      "delta": -22,
+      "trackId": "1gY9cOzRGtNwRmvDGGfEun",
+      "artistId": "4ueh4hmRvt62k4BgP8dIS0",
+      "artist": "Adèle Castillon",
+      "title": "C'est tout moi",
+      "featuring": [],
+      "days": 17,
+      "peak": 100,
+      "peakDays": null,
+      "streams": 68703,
+      "streamsDelta": -2539,
+      "streams7d": 504381,
+      "streams7dDelta": -4125,
+      "total": 1255182,
+      "label": {
+        "lines": [
+          "℗ 2026 Iconoclast Music, distributed by Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Iconoclast Music, distributed by Sony Music Entertainment France SAS"
+      },
+      "genre": "pop"
+    },
+    {
+      "rank": 144,
+      "delta": -7,
+      "trackId": "518c5Dr5EmpzACX268Aeqs",
+      "artistId": "7CUFPNi1TU8RowpnFRSsZV",
+      "artist": "Niska",
+      "title": "Chasse à l'homme",
+      "featuring": [],
+      "days": 465,
+      "peak": 9,
+      "peakDays": null,
+      "streams": 68402,
+      "streamsDelta": 377,
+      "streams7d": 486854,
+      "streams7dDelta": -2651,
+      "total": 26496022,
+      "label": {
+        "lines": [
+          "© 2017 Talent Factory Ltd, under exclusive license to Millenium",
+          "℗ 2017 Talent Factory Ltd, under exclusive license to Millenium"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Talent Factory Ltd, under exclusive license to Millenium"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 145,
+      "delta": 13,
+      "trackId": "5dnM53F6iHQZbyu8k5HUSg",
+      "artistId": "0GgY7hjMoGDsX8ZDe2mwds",
+      "artist": "Soolking",
+      "title": "Tour du monde",
+      "featuring": [
+        "L2B"
+      ],
+      "days": 450,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 68386,
+      "streamsDelta": 5329,
+      "streams7d": 463839,
+      "streams7dDelta": 5491,
+      "total": 68346245,
+      "label": {
+        "lines": [
+          "© 2025 Pandor Music / Laoban International",
+          "℗ 2025 Hyper Focal Publishing, Studio INM Publishing, Because Editions, 16 Coast, Ovnee Editions, Louve, 172 Record"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Hyper Focal Publishing, Studio INM Publishing, Because Editions, 16 Coast, Ovnee Editions, Louve, 172 Record"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 146,
+      "delta": -1,
+      "trackId": "7vNKvKNraI2IAooZMMiBzZ",
+      "artistId": "6L8y2rKomt32RmT4wfwZS7",
+      "artist": "Jungeli",
+      "title": "Juste un peu",
+      "featuring": [
+        "EMMA"
+      ],
+      "days": 100,
+      "peak": 115,
+      "peakDays": null,
+      "streams": 68339,
+      "streamsDelta": 1631,
+      "streams7d": 459294,
+      "streams7dDelta": 68339,
+      "total": 6533709,
+      "label": {
+        "lines": [
+          "© 2026 2025 Next Génération, 2054 Records, Fulgu Prod",
+          "℗ 2026 2025 Next Génération, 2054 Records, Fulgu Prod"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 2025 Next Génération, 2054 Records, Fulgu Prod"
+      },
+      "genre": "afro"
+    },
+    {
+      "rank": 147,
+      "delta": -7,
+      "trackId": "1T8rMFY5DayEfuwnkIPYm8",
+      "artistId": "4Q4yUu2v7zN40G0LtsnY98",
+      "artist": "BEN plg",
+      "title": "Histoire sans fin",
+      "featuring": [
+        "MATHILDE"
+      ],
+      "days": 46,
+      "peak": 15,
+      "peakDays": null,
+      "streams": 67979,
+      "streamsDelta": 675,
+      "streams7d": 483285,
+      "streams7dDelta": -3495,
+      "total": 3945396,
+      "label": {
+        "lines": [
+          "© 2026 Pour La Gloire",
+          "℗ 2026 Pour La Gloire"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Pour La Gloire"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 148,
+      "delta": -5,
+      "trackId": "7xWvRVssTTECvWCDNgCzSH",
+      "artistId": "2HSmynRDUgRfom3fditkjf",
+      "artist": "Bleu Soleil",
+      "title": "Soleil Bleu",
+      "featuring": [
+        "LUIZA"
+      ],
+      "days": 498,
+      "peak": 2,
+      "peakDays": 23,
+      "streams": 67813,
+      "streamsDelta": 994,
+      "streams7d": 493895,
+      "streams7dDelta": -2721,
+      "total": 90601688,
+      "label": {
+        "lines": [
+          "© 2025 Chapter Two Records / Wagram Music / ODG Prod",
+          "℗ 2025 Chapter Two Records / Wagram Music / ODG Prod"
+        ],
+        "group": "wagram",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Chapter Two Records / Wagram Music / ODG Prod"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 149,
+      "delta": -13,
+      "trackId": "2eGuWa4kKeHXXXYzNY3Tnn",
+      "artistId": "79gJvpr2VpqzRpKg6WrQDU",
+      "artist": "Kanay",
+      "title": "Flex",
+      "featuring": [],
+      "days": 59,
+      "peak": 80,
+      "peakDays": null,
+      "streams": 67528,
+      "streamsDelta": -690,
+      "streams7d": 487293,
+      "streams7dDelta": -2699,
+      "total": 4481689,
+      "label": {
+        "lines": [
+          "© 2026 Kanay",
+          "℗ 2026 Kanay"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Kanay"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 150,
+      "delta": 26,
+      "trackId": "7ngBusNykaygtVeenMPwjq",
+      "artistId": "4BLLuraEiS8Sb3j5csO1jd",
+      "artist": "Iss",
+      "title": "C'EST NOUS",
+      "featuring": [
+        "Doulkha"
+      ],
+      "days": 10,
+      "peak": 145,
+      "peakDays": null,
+      "streams": 67315,
+      "streamsDelta": 7594,
+      "streams7d": 376998,
+      "streams7dDelta": 7279,
+      "total": 613777,
+      "label": {
+        "lines": [
+          "© 2026 KDK PRODUCTIONS",
+          "℗ 2026 KDK PRODUCTIONS"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 KDK PRODUCTIONS"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 151,
+      "delta": -2,
+      "trackId": "3ouNEk0tv5TTi8VWMe1xbX",
+      "artistId": "3c0gDdb9lhnHGFtP4prQpn",
+      "artist": "KATSEYE",
+      "title": "Animal",
+      "featuring": [],
+      "days": 76,
+      "peak": 95,
+      "peakDays": null,
+      "streams": 66979,
+      "streamsDelta": 1860,
+      "streams7d": 454241,
+      "streams7dDelta": 5534,
+      "total": 4896143,
+      "label": {
+        "lines": [
+          "© 2026 HYBE UMG LLC",
+          "℗ 2026 HYBE UMG LLC"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2026 HYBE UMG LLC"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 152,
+      "delta": -5,
+      "trackId": "7wOgZ1otoKYDvKyQKP1sNZ",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Laboratoire",
+      "featuring": [],
+      "days": 1265,
+      "peak": 7,
+      "peakDays": null,
+      "streams": 66677,
+      "streamsDelta": 1000,
+      "streams7d": 460617,
+      "streams7dDelta": -1585,
+      "total": 158228965,
+      "label": {
+        "lines": [
+          "© 2023 PLR Music / PGP Records / AllPoints",
+          "℗ 2023 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2023 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 153,
+      "delta": -9,
+      "trackId": "27MfyUGrOwMG6BIofE63N3",
+      "artistId": "5hREZP0zTQbTLkZ2M8RS4v",
+      "artist": "Djadja & Dinaz",
+      "title": "À tes côtés",
+      "featuring": [],
+      "days": 112,
+      "peak": 57,
+      "peakDays": null,
+      "streams": 66354,
+      "streamsDelta": -394,
+      "streams7d": 471223,
+      "streams7dDelta": -8337,
+      "total": 8537531,
+      "label": {
+        "lines": [
+          "© 2026 Carré Music / AllPoints",
+          "℗ 2026 Carré Music / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Carré Music / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 154,
+      "delta": 5,
+      "trackId": "7GvUVtvpRmxlun1sUnAHNt",
+      "artistId": "00edlcHg3ILdHtrYL54bxX",
+      "artist": "Le Crime",
+      "title": "Amiri",
+      "featuring": [
+        "Gambi"
+      ],
+      "days": 14,
+      "peak": 151,
+      "peakDays": null,
+      "streams": 66301,
+      "streamsDelta": 3582,
+      "streams7d": 449759,
+      "streams7dDelta": 66301,
+      "total": 898614,
+      "label": {
+        "lines": [
+          "© 2026 Le Crime, distribué par Play Two",
+          "℗ 2026 Le Crime, distribué par Play Two"
+        ],
+        "group": "playtwo",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Le Crime, distribué par Play Two"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 155,
+      "delta": 9,
+      "trackId": "3kzXT2poHInDISrXOgT1PR",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Solitaire",
+      "featuring": [],
+      "days": 1233,
+      "peak": 13,
+      "peakDays": null,
+      "streams": 65079,
+      "streamsDelta": 3704,
+      "streams7d": 440511,
+      "streams7dDelta": 66,
+      "total": 120679783,
+      "label": {
+        "lines": [
+          "© 2022 PLR Music / PGP Records / AllPoints",
+          "℗ 2022 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2022 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 156,
+      "delta": -2,
+      "trackId": "0ECTIqWEFbvREsiNOZuRrT",
+      "artistId": "7gdTFjXWEBzBtir4DGFzku",
+      "artist": "Lawskie",
+      "title": "MAKA SHIT",
+      "featuring": [],
+      "days": 58,
+      "peak": 38,
+      "peakDays": null,
+      "streams": 64185,
+      "streamsDelta": 455,
+      "streams7d": 457691,
+      "streams7dDelta": -1520,
+      "total": 4401441,
+      "label": {
+        "lines": [
+          "© 2026 Grand Garçon",
+          "℗ 2026 Grand Garçon"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Grand Garçon"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 157,
+      "delta": 12,
+      "trackId": "7d391WfC0HtftRcetDFQUy",
+      "artistId": "3DCWeG2J1fZeu0Oe6i5Q6m",
+      "artist": "PLK",
+      "title": "Nouvelles",
+      "featuring": [],
+      "days": 1202,
+      "peak": 3,
+      "peakDays": 4,
+      "streams": 64046,
+      "streamsDelta": 3587,
+      "streams7d": 445489,
+      "streams7dDelta": -18322,
+      "total": 121863105,
+      "label": {
+        "lines": [
+          "© 2023 Enna Music France / Panenka Music",
+          "℗ 2023 Enna Music France / Panenka Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2023 Enna Music France / Panenka Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 158,
+      "delta": -6,
+      "trackId": "5iM3RcqjHNSmMMLVdQ5wCo",
+      "artistId": "1bbr3P3o6BGIdvTWKb6rxL",
+      "artist": "Saïf",
+      "title": "Malade",
+      "featuring": [],
+      "days": 270,
+      "peak": 93,
+      "peakDays": null,
+      "streams": 63908,
+      "streamsDelta": -174,
+      "streams7d": 442524,
+      "streams7dDelta": -7177,
+      "total": 18558450,
+      "label": {
+        "lines": [
+          "© 2025 84 CITY",
+          "℗ 2025 84 CITY"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 84 CITY"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 159,
+      "delta": -2,
+      "trackId": "0LM9OoiHTImJotTo0jMeeE",
+      "artistId": "4nNMVdEVJRDHBVpKbvtsPx",
+      "artist": "OG Plugging",
+      "title": "TERRIBLE MAN",
+      "featuring": [],
+      "days": 51,
+      "peak": 77,
+      "peakDays": null,
+      "streams": 63843,
+      "streamsDelta": 717,
+      "streams7d": 466901,
+      "streams7dDelta": -13683,
+      "total": 3843543,
+      "label": {
+        "lines": [
+          "© 2026 Nomade",
+          "℗ 2026 Nomade"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Nomade"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 160,
+      "delta": -5,
+      "trackId": "02QtmORyVRyo2uB34OjZYN",
+      "artistId": "58wXmynHaAWI5hwlPZP3qL",
+      "artist": "Booba",
+      "title": "GDG",
+      "featuring": [],
+      "days": 11,
+      "peak": 41,
+      "peakDays": null,
+      "streams": 63709,
+      "streamsDelta": -15,
+      "streams7d": 404325,
+      "streams7dDelta": -16553,
+      "total": 844036,
+      "label": {
+        "lines": [
+          "© 2026 Tallac Records",
+          "℗ 2026 Tallac Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Tallac Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 161,
+      "delta": 14,
+      "trackId": "2On7uB8PN8JJmBNsms8unQ",
+      "artistId": "4sbXXFzEWJY2zsZjelerjX",
+      "artist": "Dadju",
+      "title": "Compliqué",
+      "featuring": [],
+      "days": 608,
+      "peak": 6,
+      "peakDays": null,
+      "streams": 63432,
+      "streamsDelta": 3511,
+      "streams7d": 439578,
+      "streams7dDelta": -6328,
+      "total": 50625878,
+      "label": {
+        "lines": [
+          "© 2019 Amaterasu Prod",
+          "℗ 2019 Amaterasu Prod"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2019 Amaterasu Prod"
+      },
+      "genre": "rnb"
+    },
+    {
+      "rank": 162,
+      "delta": 25,
+      "trackId": "7ogpGbKc4Io6NCU6ydxXwZ",
+      "artistId": "0fTSzq9jAh4c36UVb4V7CB",
+      "artist": "Alex Warren",
+      "title": "FEVER DREAM",
+      "featuring": [],
+      "days": 198,
+      "peak": 86,
+      "peakDays": null,
+      "streams": 63170,
+      "streamsDelta": 5638,
+      "streams7d": 423385,
+      "streams7dDelta": 3377,
+      "total": 14613847,
+      "label": {
+        "lines": [
+          "© 2026 Atlantic Recording Corporation",
+          "℗ 2026 Atlantic Recording Corporation"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Atlantic Recording Corporation"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 163,
+      "delta": -1,
+      "trackId": "1mKXFLRA179hdOWQBwUk9e",
+      "artistId": "1KCSPY1glIKqW2TotWuXOR",
+      "artist": "P!nk",
+      "title": "Just Give Me a Reason",
+      "featuring": [
+        "Nate Ruess"
+      ],
+      "days": 18,
+      "peak": 162,
+      "peakDays": null,
+      "streams": 63009,
+      "streamsDelta": 1296,
+      "streams7d": 431996,
+      "streams7dDelta": -292,
+      "total": 1119189,
+      "label": {
+        "lines": [
+          "℗ 2012 RCA Records, a division of Sony Music Entertainment"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2012 RCA Records, a division of Sony Music Entertainment"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 164,
+      "delta": 2,
+      "trackId": "1qdDVd1EMBHirJUs6RuD1r",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "Cleopatre",
+      "featuring": [],
+      "days": 34,
+      "peak": 27,
+      "peakDays": null,
+      "streams": 62969,
+      "streamsDelta": 2171,
+      "streams7d": 437686,
+      "streams7dDelta": -5899,
+      "total": 2981891,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 165,
+      "delta": 5,
+      "trackId": "787pJlm5f43sODotPcNfNp",
+      "artistId": "3IW7ScrzXmPvZhB27hmfgy",
+      "artist": "Jul",
+      "title": "C'est la cité",
+      "featuring": [
+        "Naps"
+      ],
+      "days": 277,
+      "peak": 13,
+      "peakDays": null,
+      "streams": 62794,
+      "streamsDelta": 2340,
+      "streams7d": 453422,
+      "streams7dDelta": 1386,
+      "total": 25443762,
+      "label": {
+        "lines": [
+          "© 2021 D'Or et de Platine / Believe",
+          "℗ 2021 D'Or et de Platine / Believe"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2021 D'Or et de Platine / Believe"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 166,
+      "delta": 2,
+      "trackId": "15vGti1ooNZFlDUdlLukX6",
+      "artistId": "58wXmynHaAWI5hwlPZP3qL",
+      "artist": "Booba",
+      "title": "Dolce Camara",
+      "featuring": [
+        "SDM"
+      ],
+      "days": 992,
+      "peak": 2,
+      "peakDays": 3,
+      "streams": 62728,
+      "streamsDelta": 2197,
+      "streams7d": 438573,
+      "streams7dDelta": -7866,
+      "total": 137026452,
+      "label": {
+        "lines": [
+          "© 2024 Tallac Records",
+          "℗ 2024 Tallac Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Tallac Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 167,
+      "delta": 6,
+      "trackId": "2zi3rXvURh2kGUBKC3TBN0",
+      "artistId": "3vUMXQ9kPnZAQkMkZZ7Hfh",
+      "artist": "Tiakola",
+      "title": "Caméléon",
+      "featuring": [],
+      "days": 33,
+      "peak": 27,
+      "peakDays": null,
+      "streams": 62660,
+      "streamsDelta": 2285,
+      "streams7d": 457344,
+      "streams7dDelta": -4429,
+      "total": 3075714,
+      "label": {
+        "lines": [
+          "© Distribution exclusive Warner Music France, Label Atlantic Records France, © 2026 M3lo World",
+          "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution exclusive Warner Music France, Label Atlantic Records France, ℗ 2026 M3lo World"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 168,
+      "delta": 4,
+      "trackId": "78BBuc8L0Li1nnCsLaI0vL",
+      "artistId": "64M6ah0SkkRsnPGtGiRAbb",
+      "artist": "Bebe Rexha",
+      "title": "New Religion",
+      "featuring": [],
+      "days": 134,
+      "peak": 53,
+      "peakDays": null,
+      "streams": 62557,
+      "streamsDelta": 2162,
+      "streams7d": 363457,
+      "streams7dDelta": 62557,
+      "total": 11054665,
+      "label": {
+        "lines": [
+          "© 2026 Bebe Rexha Music LLC / EMPIRE",
+          "℗ 2026 Bebe Rexha Music LLC / EMPIRE"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Bebe Rexha Music LLC / EMPIRE"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 169,
+      "delta": -19,
+      "trackId": "4liOLSxxEllQ61qaR4pFJL",
+      "artistId": "4hYxvgmTzS29XAXlo5adgM",
+      "artist": "L2B",
+      "title": "Pélican",
+      "featuring": [],
+      "days": 604,
+      "peak": 2,
+      "peakDays": 5,
+      "streams": 62551,
+      "streamsDelta": -2000,
+      "streams7d": 456913,
+      "streams7dDelta": 62551,
+      "total": 88557248,
+      "label": {
+        "lines": [
+          "© 2025 O-vnee Music - 172 Record",
+          "℗ 2025 O-vnee Music - 172 Record"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 O-vnee Music - 172 Record"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 170,
+      "delta": -7,
+      "trackId": "03k3q2HNQoqTwWD4O0UItF",
+      "artistId": "3TP2Ucsow6rW1s24aq9gb4",
+      "artist": "Lagui",
+      "title": "CIRO",
+      "featuring": [],
+      "days": 43,
+      "peak": 134,
+      "peakDays": null,
+      "streams": 62289,
+      "streamsDelta": 805,
+      "streams7d": 428442,
+      "streams7dDelta": -2330,
+      "total": 2786767,
+      "label": {
+        "lines": [
+          "© 2026 Lagui",
+          "℗ 2026 Lagui"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Lagui"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 171,
+      "delta": 13,
+      "trackId": "5I2FIj9EDp0Fz32CJ9lZNF",
+      "artistId": "3IW7ScrzXmPvZhB27hmfgy",
+      "artist": "Jul",
+      "title": "Tu la love",
+      "featuring": [],
+      "days": 896,
+      "peak": 32,
+      "peakDays": null,
+      "streams": 61638,
+      "streamsDelta": 2918,
+      "streams7d": 425403,
+      "streams7dDelta": 61638,
+      "total": 68543558,
+      "label": {
+        "lines": [
+          "© 2014 LIGA ONE INDUSTRY / MUSICAST",
+          "℗ 2014 LIGA ONE INDUSTRY / MUSICAST"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2014 LIGA ONE INDUSTRY / MUSICAST"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 172,
+      "delta": -1,
+      "trackId": "55lijDD6OAjLFFUHU9tcDm",
+      "artistId": "5KKpBU5eC2tJDzf0wmlRp2",
+      "artist": "RAYE",
+      "title": "WHERE IS MY HUSBAND!",
+      "featuring": [],
+      "days": 404,
+      "peak": 12,
+      "peakDays": null,
+      "streams": 61603,
+      "streamsDelta": 1191,
+      "streams7d": 432714,
+      "streams7dDelta": 352,
+      "total": 52564041,
+      "label": {
+        "lines": [
+          "© 2025 RAYE under exclusive license to Human Re Sources",
+          "℗ 2025 RAYE under exclusive license to Human Re Sources"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 RAYE under exclusive license to Human Re Sources"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 173,
+      "delta": 7,
+      "trackId": "3e2dR2180mZlz7dIrXZVi6",
+      "artistId": "5gs4Sm2WQUkcGeikMcVHbh",
+      "artist": "Hamza",
+      "title": "KYKY2BONDY",
+      "featuring": [],
+      "days": 543,
+      "peak": 1,
+      "peakDays": 42,
+      "streams": 61296,
+      "streamsDelta": 1821,
+      "streams7d": 361640,
+      "streams7dDelta": -2788,
+      "total": 100574413,
+      "label": {
+        "lines": [
+          "© 2025 Just Woke Up / AllPoints",
+          "℗ 2025 Just Woke Up / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Just Woke Up / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 174,
+      "delta": null,
+      "trackId": "5aULMlmU75RoNG0x46qktU",
+      "artistId": "6Te49r3A6f5BiIgBRxH7FH",
+      "artist": "Ninho",
+      "title": "Elle m'a eu",
+      "featuring": [],
+      "days": 373,
+      "peak": 5,
+      "peakDays": null,
+      "streams": 61066,
+      "streamsDelta": null,
+      "streams7d": 301955,
+      "streams7dDelta": -10099,
+      "total": 22492401,
+      "label": {
+        "lines": [
+          "© 2017 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company",
+          "℗ 2017 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Mal Luné Music, licence exclusive Rec. 118 / Warner Music France, a Warner Music Group Company"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 175,
+      "delta": 2,
+      "trackId": "2RkZ5LkEzeHGRsmDqKwmaJ",
+      "artistId": "0fTSzq9jAh4c36UVb4V7CB",
+      "artist": "Alex Warren",
+      "title": "Ordinary",
+      "featuring": [],
+      "days": 570,
+      "peak": 10,
+      "peakDays": null,
+      "streams": 60840,
+      "streamsDelta": 1144,
+      "streams7d": 429913,
+      "streams7dDelta": -6543,
+      "total": 80710760,
+      "label": {
+        "lines": [
+          "© 2024 Atlantic Recording Corporation",
+          "℗ 2024 Atlantic Recording Corporation"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Atlantic Recording Corporation"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 176,
+      "delta": -20,
+      "trackId": "7yq4Qj7cqayVTp3FF9CWbm",
+      "artistId": "10exVja0key0uqUkk6LJRT",
+      "artist": "Vance Joy",
+      "title": "Riptide",
+      "featuring": [],
+      "days": 1488,
+      "peak": 22,
+      "peakDays": null,
+      "streams": 60809,
+      "streamsDelta": -2365,
+      "streams7d": 434492,
+      "streams7dDelta": -9330,
+      "total": 71887562,
+      "label": {
+        "lines": [
+          "© 2014 Atlantic Recording Corporation for the United States and WEA International Inc. for the world outside of the United States excluding Australia and New Zealand",
+          "℗ 2014 Atlantic Recording Corporation for the United States and WEA International Inc. for the world outside of the United States excluding Australia and New Zealand."
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2014 Atlantic Recording Corporation for the United States and WEA International Inc. for the world outside of the United States excluding Australia and New Zealand."
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 177,
+      "delta": -45,
+      "trackId": "1HQwlH7X57uel45g0gAX8l",
+      "artistId": "6k9F0oaxCXxbdTFDTdZihN",
+      "artist": "La Rvfleuze",
+      "title": "Outfit",
+      "featuring": [],
+      "days": 3,
+      "peak": 132,
+      "peakDays": null,
+      "streams": 60718,
+      "streamsDelta": -7971,
+      "streams7d": 193029,
+      "streams7dDelta": 60718,
+      "total": 193029,
+      "label": {
+        "lines": [
+          "© Distribution Exclusive Warner Music France, Label Atlantic France, © 2026 SERRURE RECORDS",
+          "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Distribution Exclusive Warner Music France, Label Atlantic France, ℗ 2026 SERRURE RECORDS"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 178,
+      "delta": 3,
+      "trackId": "3qhlB30KknSejmIvZZLjOD",
+      "artistId": "5p9HO3XC5P3BLxJs5Mtrhm",
+      "artist": "Djo",
+      "title": "End of Beginning",
+      "featuring": [],
+      "days": 422,
+      "peak": 7,
+      "peakDays": null,
+      "streams": 60359,
+      "streamsDelta": 963,
+      "streams7d": 421886,
+      "streams7dDelta": -3228,
+      "total": 49491185,
+      "label": {
+        "lines": [
+          "© 2022 Djo Music under exclusive license to AWAL Recordings",
+          "℗ 2022 Djo Music under exclusive license to AWAL Recordings"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2022 Djo Music under exclusive license to AWAL Recordings"
+      },
+      "genre": "rock"
+    },
+    {
+      "rank": 179,
+      "delta": 3,
+      "trackId": "6YWjskKykdPsBuiTBOg1VK",
+      "artistId": "2UwqpfQtNuhBwviIC0f2ie",
+      "artist": "Damso",
+      "title": "Δ. Dieu ne ment jamais",
+      "featuring": [],
+      "days": 1356,
+      "peak": 6,
+      "peakDays": null,
+      "streams": 60169,
+      "streamsDelta": 1122,
+      "streams7d": 295754,
+      "streams7dDelta": -3668,
+      "total": 103221550,
+      "label": {
+        "lines": [
+          "© 2017 Capitol Music France",
+          "℗ 2017 Capitol Music France"
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Capitol Music France"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 180,
+      "delta": -20,
+      "trackId": "0xVMWYKYXKpiKqejjCIMDQ",
+      "artistId": "3YBJLs7RqR0aPGBgU27nDh",
+      "artist": "Werenoi",
+      "title": "Pyramide",
+      "featuring": [
+        "Damso"
+      ],
+      "days": 906,
+      "peak": 1,
+      "peakDays": 12,
+      "streams": 60169,
+      "streamsDelta": -2147,
+      "streams7d": 463991,
+      "streams7dDelta": -10335,
+      "total": 90006178,
+      "label": {
+        "lines": [
+          "© 2024 PLR Music / PGP Records / AllPoints",
+          "℗ 2024 PLR Music / PGP Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2024 PLR Music / PGP Records / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 181,
+      "delta": 2,
+      "trackId": "4UrHXNvA6u7Wb68nhjCK20",
+      "artistId": "4AKwRarlmsUlLjIwt38NLw",
+      "artist": "Ofenbach",
+      "title": "Four To The Floor",
+      "featuring": [
+        "Starsailor"
+      ],
+      "days": 115,
+      "peak": 65,
+      "peakDays": null,
+      "streams": 59965,
+      "streamsDelta": 1197,
+      "streams7d": 427100,
+      "streams7dDelta": 1146,
+      "total": 8223089,
+      "label": {
+        "lines": [
+          "© Licence Exclusive Warner Music France, Label Adore Music, © 2026 Ofenbach Music",
+          "℗ Licence Exclusive Warner Music France, Label Adore Music, ℗ 2026 Ofenbach Music"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ Licence Exclusive Warner Music France, Label Adore Music, ℗ 2026 Ofenbach Music"
+      },
+      "genre": "electro"
+    },
+    {
+      "rank": 182,
+      "delta": 4,
+      "trackId": "6ZjD4Qv5dPdV3pqouXjr0j",
+      "artistId": "1NB6QyaNXhrDd82y0WyG3I",
+      "artist": "Bilouki",
+      "title": "Full",
+      "featuring": [],
+      "days": 196,
+      "peak": 31,
+      "peakDays": null,
+      "streams": 59880,
+      "streamsDelta": 2173,
+      "streams7d": 418369,
+      "streams7dDelta": -2204,
+      "total": 19661468,
+      "label": {
+        "lines": [
+          "℗ 2026 MK9"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 MK9"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 183,
+      "delta": 7,
+      "trackId": "2lIBT5vhgGXKMUoCFeFJvZ",
+      "artistId": "58wXmynHaAWI5hwlPZP3qL",
+      "artist": "Booba",
+      "title": "Scarface",
+      "featuring": [],
+      "days": 179,
+      "peak": 69,
+      "peakDays": null,
+      "streams": 59863,
+      "streamsDelta": 3323,
+      "streams7d": 413397,
+      "streams7dDelta": -1314,
+      "total": 11540895,
+      "label": {
+        "lines": [
+          "© 2017 Tallac Records",
+          "℗ 2017 Tallac Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2017 Tallac Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 184,
+      "delta": null,
+      "trackId": "3xEsfzW8o15q0s7Q9YXmlm",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "J'béou",
+      "featuring": [],
+      "days": 41,
+      "peak": 102,
+      "peakDays": null,
+      "streams": 59741,
+      "streamsDelta": null,
+      "streams7d": 110811,
+      "streams7dDelta": -1626,
+      "total": 2602284,
+      "label": {
+        "lines": [
+          "© 2025 Le Grand Carré / Level Up Music / AllPoints",
+          "℗ 2025 Le Grand Carré / Level Up Music"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "© 2025 Le Grand Carré / Level Up Music / AllPoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 185,
+      "delta": -18,
+      "trackId": "7CUAGxYmpmSJv9pbLgqVjy",
+      "artistId": "2kIs76sEGiulKeqetZq6ua",
+      "artist": "Jok'air",
+      "title": "Nos souvenirs",
+      "featuring": [
+        "Chilla",
+        "Yseult"
+      ],
+      "days": 325,
+      "peak": 52,
+      "peakDays": null,
+      "streams": 59712,
+      "streamsDelta": -1027,
+      "streams7d": 290340,
+      "streams7dDelta": -3894,
+      "total": 25431366,
+      "label": {
+        "lines": [
+          "© 2019 La Dictature, under exclusive license to Play Two",
+          "℗ 2019 La Dictature, under exclusive license to Play Two"
+        ],
+        "group": "playtwo",
+        "provenance": "measured",
+        "evidence": "℗ 2019 La Dictature, under exclusive license to Play Two"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 186,
+      "delta": -33,
+      "trackId": "6JUkT21q4ck6AvgCDKk41a",
+      "artistId": "6k9F0oaxCXxbdTFDTdZihN",
+      "artist": "La Rvfleuze",
+      "title": "P.I.B",
+      "featuring": [],
+      "days": 481,
+      "peak": 20,
+      "peakDays": null,
+      "streams": 59591,
+      "streamsDelta": -4450,
+      "streams7d": 437131,
+      "streams7dDelta": -5272,
+      "total": 43461030,
+      "label": {
+        "lines": [
+          "© 2025 Serrure Records",
+          "℗ 2025 Serrure Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Serrure Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 187,
+      "delta": 5,
+      "trackId": "1LmeIVvg4CVTu6kicEVoAr",
+      "artistId": "3PpJbrAbphauEun8Xf9tD2",
+      "artist": "Theodora",
+      "title": "ZOU BISOU",
+      "featuring": [
+        "Jul"
+      ],
+      "days": 512,
+      "peak": 6,
+      "peakDays": null,
+      "streams": 59402,
+      "streamsDelta": 3189,
+      "streams7d": 353207,
+      "streams7dDelta": 59402,
+      "total": 75370832,
+      "label": {
+        "lines": [
+          "© 2025 BOSS LADY",
+          "℗ 2025 BOSS LADY"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 BOSS LADY"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 188,
+      "delta": -27,
+      "trackId": "6UeSC8jEhf9XmUL8EX2rni",
+      "artistId": "4gOc8TsQed9eqnqJct2c5v",
+      "artist": "K/DA",
+      "title": "FIRESTARTER",
+      "featuring": [
+        "League of Legends",
+        "i-dle",
+        "Mimi Webb",
+        "Sophie Powers",
+        "MIYEON",
+        "SOYEON"
+      ],
+      "days": 9,
+      "peak": 74,
+      "peakDays": null,
+      "streams": 59275,
+      "streamsDelta": -2847,
+      "streams7d": 504239,
+      "streams7dDelta": -35468,
+      "total": 669523,
+      "label": {
+        "lines": [
+          "© 2026 Riot Games, Inc.",
+          "℗ 2026 Riot Games, Inc."
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Riot Games, Inc."
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 189,
+      "delta": null,
+      "trackId": "1o9mAOmNm3wT2NdyGV1Ard",
+      "artistId": "2LkkwxA19J8C52wPQl5bG6",
+      "artist": "Jamie Miller",
+      "title": "Babydoll",
+      "featuring": [],
+      "days": 1,
+      "peak": 189,
+      "peakDays": null,
+      "streams": 59135,
+      "streamsDelta": null,
+      "streams7d": 59135,
+      "streams7dDelta": 59135,
+      "total": 59135,
+      "label": {
+        "lines": [
+          "© 2026 Jamie Miller, under exclusive license to Republic Records, a division of UMG Recordings, Inc.",
+          "℗ 2026 Jamie Miller, under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+        ],
+        "group": "universal",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Jamie Miller, under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 190,
+      "delta": 5,
+      "trackId": "46BNhNbHZi98svu6pFwYVq",
+      "artistId": "0mpZpEH8VcL0tYoGLhR8sd",
+      "artist": "Miimii KDS",
+      "title": "Sé Miimii",
+      "featuring": [
+        "DJ SKYCEE"
+      ],
+      "days": 78,
+      "peak": 95,
+      "peakDays": null,
+      "streams": 58882,
+      "streamsDelta": 3318,
+      "streams7d": 361934,
+      "streams7dDelta": 58882,
+      "total": 5093002,
+      "label": {
+        "lines": [
+          "© 2025 Stormwave Entertainment",
+          "℗ 2025 Stormwave Entertainment"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Stormwave Entertainment"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 191,
+      "delta": -6,
+      "trackId": "3SBBYSbzkLvx96bKzneYsF",
+      "artistId": "7x3eTVPlBiPjXHn3qotY86",
+      "artist": "KeBlack",
+      "title": "Melrose Place",
+      "featuring": [
+        "Guy2Bezbar"
+      ],
+      "days": 521,
+      "peak": 1,
+      "peakDays": 3,
+      "streams": 58519,
+      "streamsDelta": 522,
+      "streams7d": 177963,
+      "streams7dDelta": 58519,
+      "total": 92518183,
+      "label": {
+        "lines": [
+          "© 2025 Motema Records / AllPoints",
+          "℗ 2025 Motema Records / AllPoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2025 Motema Records / AllPoints"
+      },
+      "genre": "afro"
+    },
+    {
+      "rank": 192,
+      "delta": -4,
+      "trackId": "3zOYmiNOuyDL0ClxJcEJ0T",
+      "artistId": "6P5NO5hzJbuOqSdyPB7SJM",
+      "artist": "Ashe",
+      "title": "Stop The Wedding!",
+      "featuring": [],
+      "days": 2,
+      "peak": 188,
+      "peakDays": null,
+      "streams": 58441,
+      "streamsDelta": 1455,
+      "streams7d": 115427,
+      "streams7dDelta": 58441,
+      "total": 115427,
+      "label": {
+        "lines": [
+          "© 2026 Ashe, under exclusive license to Atlantic Recording Corporation",
+          "℗ 2026 Ashe, under exclusive license to Atlantic Recording Corporation"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Ashe, under exclusive license to Atlantic Recording Corporation"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 193,
+      "delta": -15,
+      "trackId": "71gEIIqahWVslRCXtN5yhK",
+      "artistId": "5hREZP0zTQbTLkZ2M8RS4v",
+      "artist": "Djadja & Dinaz",
+      "title": "Déstabilisé",
+      "featuring": [],
+      "days": 208,
+      "peak": 12,
+      "peakDays": null,
+      "streams": 57816,
+      "streamsDelta": -1692,
+      "streams7d": 235173,
+      "streams7dDelta": -3562,
+      "total": 8518515,
+      "label": {
+        "lines": [
+          "© Carré-Music / Musicast",
+          "℗ Carré-Music / Musicast"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ Carré-Music / Musicast"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 194,
+      "delta": null,
+      "trackId": "3yLPYSbBd4aFGFYcazyzJZ",
+      "artistId": "4P2HohWBtvSxxwabNDdYXN",
+      "artist": "Nono La Grinta",
+      "title": "Terrain",
+      "featuring": [],
+      "days": 411,
+      "peak": 39,
+      "peakDays": null,
+      "streams": 57769,
+      "streamsDelta": null,
+      "streams7d": 57769,
+      "streams7dDelta": 57769,
+      "total": 36495128,
+      "label": {
+        "lines": [
+          "© 2025 MPR Records",
+          "℗ 2025 MPR Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2025 MPR Records"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 195,
+      "delta": 4,
+      "trackId": "6f68Ac5tt5BQOpwr0BV9oN",
+      "artistId": "0du5cEVh5yTK9QJze8zA0C",
+      "artist": "Bruno Mars",
+      "title": "I Just Might",
+      "featuring": [],
+      "days": 281,
+      "peak": 23,
+      "peakDays": null,
+      "streams": 57465,
+      "streamsDelta": 2416,
+      "streams7d": 291568,
+      "streams7dDelta": 57465,
+      "total": 28630713,
+      "label": {
+        "lines": [
+          "© 2026 Atlantic Records",
+          "℗ 2026 Atlantic Records"
+        ],
+        "group": "warner",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Atlantic Records"
+      },
+      "genre": "international"
+    },
+    {
+      "rank": 196,
+      "delta": null,
+      "trackId": "4szpJnfepp7nzkX4URbXKR",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Angela",
+      "featuring": [],
+      "days": 191,
+      "peak": 24,
+      "peakDays": null,
+      "streams": 57426,
+      "streamsDelta": null,
+      "streams7d": 57426,
+      "streams7dDelta": 57426,
+      "total": 16495921,
+      "label": {
+        "lines": [
+          "© 2024 Le Grand Carré / Level Up Music",
+          "℗ 2024 Le Grand Carré / Level Up Music"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Le Grand Carré / Level Up Music"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 197,
+      "delta": -3,
+      "trackId": "2zpcE21SuB8FsuwcYZMArD",
+      "artistId": "3hWQDRr1PqwvnHeiZlucBq",
+      "artist": "Bouss",
+      "title": "Nowhere 2",
+      "featuring": [],
+      "days": 100,
+      "peak": 51,
+      "peakDays": null,
+      "streams": 56796,
+      "streamsDelta": 1099,
+      "streams7d": 170828,
+      "streams7dDelta": -8442,
+      "total": 8177288,
+      "label": {
+        "lines": [
+          "© 2026 Le Grand / Level Up / La route est longue / Allpoints",
+          "℗ 2026 Le Grand / Level Up / La route est longue / Allpoints"
+        ],
+        "group": "believe",
+        "provenance": "measured",
+        "evidence": "℗ 2026 Le Grand / Level Up / La route est longue / Allpoints"
+      },
+      "genre": "rap"
+    },
+    {
+      "rank": 198,
+      "delta": 0,
+      "trackId": "6VNkhVXeIqJgMJTHsj67tT",
+      "artistId": "2sBKOwN0fSjx39VtL2WpjJ",
+      "artist": "La Fève",
+      "title": "APPELLE LA POLICE",
+      "featuring": [
+        "Theodora"
+      ],
+      "days": 4,
+      "peak": 57,
+      "peakDays": null,
+      "streams": 56711,
+      "streamsDelta": 1419,
+      "streams7d": 292097,
+      "streams7dDelta": 56711,
+      "total": 292097,
+      "label": {
+        "lines": [
+          "℗ 2026 WALONE, distributed by Sony Music Entertainment France SAS"
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2026 WALONE, distributed by Sony Music Entertainment France SAS"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 199,
+      "delta": null,
+      "trackId": "6e4MfehUZ1wzSPwbOG3N4A",
+      "artistId": "3YiFVUColvEK1dQAqDKYzU",
+      "artist": "Black Cat",
+      "title": "BMW",
+      "featuring": [],
+      "days": 236,
+      "peak": 13,
+      "peakDays": null,
+      "streams": 56690,
+      "streamsDelta": null,
+      "streams7d": 291668,
+      "streams7dDelta": 56690,
+      "total": 29203332,
+      "label": {
+        "lines": [
+          "© 2026 MPR Records",
+          "℗ 2026 MPR Records"
+        ],
+        "group": "other",
+        "provenance": "measured",
+        "evidence": "℗ 2026 MPR Records"
+      },
+      "genre": "unknown"
+    },
+    {
+      "rank": 200,
+      "delta": -4,
+      "trackId": "0eAuGrXyGFYwur9ARUe7LJ",
+      "artistId": "7eKkW1zo5uzW8kUntiiBvz",
+      "artist": "Malcolm Todd",
+      "title": "Earrings",
+      "featuring": [],
+      "days": 133,
+      "peak": 91,
+      "peakDays": null,
+      "streams": 56608,
+      "streamsDelta": 1093,
+      "streams7d": 281375,
+      "streams7dDelta": -3889,
+      "total": 8754055,
+      "label": {
+        "lines": [
+          "℗ 2024 Columbia Records, a Division of Sony Music Entertainment, under exclusive license from Malcolm Todd, Inc."
+        ],
+        "group": "sony",
+        "provenance": "measured",
+        "evidence": "℗ 2024 Columbia Records, a Division of Sony Music Entertainment, under exclusive license from Malcolm Todd, Inc."
+      },
+      "genre": "international"
+    }
+  ]
+}

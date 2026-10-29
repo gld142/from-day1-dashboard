@@ -156,5 +156,32 @@
   },
   "ownLine": "Ses droits d'auteur sur ses propres titres ({name}) sont sur Revenus : {amount} sur 12 mois, le même chiffre.",
   "ownLink": "Voir dans Revenus",
-  "noneFor": "{name} n'a pas encore de placement chez d'autres artistes. Ajoute-le ici dès qu'une œuvre est proposée."
+  "noneFor": "{name} n'a pas encore de placement chez d'autres artistes. Ajoute-le ici dès qu'une œuvre est proposée.",
+  "sacem": {
+    "title": "Répartition SACEM",
+    "caption": "le relevé, source par source",
+    "captionYear": "relevé {year}, source par source",
+    "why": "Le chiffre que le dashboard calcule pour {name} ({amount} sur 12 mois) ne lit que le streaming. Un compositeur de musique à l'image touche l'essentiel de ses droits par la diffusion : télévision, cinéma, publicité. Saisis son dernier relevé de répartition : il remplacera l'estimation.",
+    "enter": "Saisir le dernier relevé",
+    "edit": "Modifier",
+    "sub": "Le streaming en représente {pct} % : c'est la seule part que le dashboard sait estimer seul. Saisi par {by}.",
+    "formHint": "Recopie les montants du relevé de répartition SACEM (en euros, par source). Les cases vides comptent pour 0.",
+    "year": "Année du relevé",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "errYear": "Indique l'année du relevé (par exemple 2025).",
+    "errAmount": "Le montant « {source} » n'est pas lisible : un nombre positif, en euros.",
+    "errEmpty": "Saisis au moins un montant.",
+    "sources": {
+      "tv": "Télévision",
+      "radio": "Radio",
+      "cinema": "Cinéma",
+      "pub": "Publicité",
+      "streaming": "Streaming",
+      "live": "Concerts et lieux publics",
+      "etranger": "Étranger"
+    },
+    "partial": "streaming seul",
+    "fromSacem": "relevé SACEM"
+  }
 }

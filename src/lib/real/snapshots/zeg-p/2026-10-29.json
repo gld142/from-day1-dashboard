@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-29",
+  "capturedAt": "2026-10-29T09:57:45.440Z",
+  "spotify": {
+    "monthlyListeners": 941229,
+    "followers": 40387,
+    "topTracks": [
+      {
+        "name": "FADE UP",
+        "spotifyId": "4ZpIuzx91EAPK3VimONbfB",
+        "playcount": 149957752
+      },
+      {
+        "name": "Avion de chasse",
+        "spotifyId": "3dDTJbtHZhsbe426l5Msk1",
+        "playcount": 10304038
+      },
+      {
+        "name": "Blood",
+        "spotifyId": "5snMfEYZCwQBGsqlpB6cis",
+        "playcount": 778248
+      },
+      {
+        "name": "Cités de France",
+        "spotifyId": "57BMICnS6fDk1Ynh5e5zvj",
+        "playcount": 7317593
+      },
+      {
+        "name": "Juste une minute",
+        "spotifyId": "2yiIfIO1JYMiXebaBEodWD",
+        "playcount": 5859722
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 175478882,
+    "dailyStreams": 86175,
+    "tracks": [
+      {
+        "name": "FADE UP",
+        "total": 148916497,
+        "daily": 41182
+      },
+      {
+        "name": "Avion de chasse",
+        "total": 9383640,
+        "daily": 33256
+      },
+      {
+        "name": "Cités de France",
+        "total": 7171442,
+        "daily": 3739
+      },
+      {
+        "name": "Juste une minute",
+        "total": 5820183,
+        "daily": 1522
+      },
+      {
+        "name": "Tout gâcher",
+        "total": 3388328,
+        "daily": 1107
+      },
+      {
+        "name": "Blood",
+        "total": 645544,
+        "daily": 5295
+      },
+      {
+        "name": "Personne d'autre",
+        "total": 153248,
+        "daily": 74
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 22951,
+    "topTracks": [
+      {
+        "title": "Avion de chasse",
+        "rank": 931643
+      },
+      {
+        "title": "FADE UP",
+        "rank": 858347
+      },
+      {
+        "title": "Juste une minute",
+        "rank": 669826
+      },
+      {
+        "title": "Blood",
+        "rank": 667609
+      },
+      {
+        "title": "Personne d'autre",
+        "rank": 346756
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 44787
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 20383
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 19997
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 15331
+    },
+    {
+      "city": "Lille",
+      "country": "FR",
+      "listeners": 9884
+    }
+  ]
+}

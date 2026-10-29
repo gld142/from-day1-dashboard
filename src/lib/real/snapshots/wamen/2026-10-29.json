@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-29",
+  "capturedAt": "2026-10-29T09:58:09.429Z",
+  "spotify": {
+    "monthlyListeners": 198658,
+    "followers": 58463,
+    "topTracks": [
+      {
+        "name": "Discipline",
+        "spotifyId": "1oHLNUqnUwtCE2ks737fqq",
+        "playcount": 7120996
+      },
+      {
+        "name": "Mon autre",
+        "spotifyId": "2dxXlskKUVQ8558OPr5F4L",
+        "playcount": 1336966
+      },
+      {
+        "name": "Douter",
+        "spotifyId": "005qFe7U4oVqJteXYYEWLQ",
+        "playcount": 93751
+      },
+      {
+        "name": "Hauteur",
+        "spotifyId": "4SzrnrK1JA1LLyOPp0NrOx",
+        "playcount": 55932
+      },
+      {
+        "name": "Maman",
+        "spotifyId": "6bHDcGfkubgTfWM0S4vlxg",
+        "playcount": 247931
+      }
+    ]
+  },
+  "kworb": null,
+  "deezer": {
+    "fans": 18638,
+    "topTracks": [
+      {
+        "title": "Discipline",
+        "rank": 706474
+      },
+      {
+        "title": "Mon autre",
+        "rank": 688154
+      },
+      {
+        "title": "Hauteur",
+        "rank": 578417
+      },
+      {
+        "title": "Elles (feat. Wamen)",
+        "rank": 556287
+      },
+      {
+        "title": "Les Abeilles",
+        "rank": 527094
+      },
+      {
+        "title": "Ma Lettre",
+        "rank": 594499
+      },
+      {
+        "title": "Maman",
+        "rank": 560257
+      },
+      {
+        "title": "Mon autre",
+        "rank": 557201
+      },
+      {
+        "title": "Céline",
+        "rank": 528000
+      },
+      {
+        "title": "La vie d'adulte",
+        "rank": 532894
+      }
+    ]
+  },
+  "youtube": null,
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 14949
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 4610
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 4582
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 4153
+    },
+    {
+      "city": "Toulouse",
+      "country": "FR",
+      "listeners": 2389
+    }
+  ]
+}

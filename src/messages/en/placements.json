@@ -156,5 +156,32 @@
   },
   "ownLine": "Author royalties on their own songs ({name}) live on Revenue: {amount} over 12 months, the same figure.",
   "ownLink": "See it in Revenue",
-  "noneFor": "{name} has no placement with other artists yet. Add it here as soon as a work is pitched."
+  "noneFor": "{name} has no placement with other artists yet. Add it here as soon as a work is pitched.",
+  "sacem": {
+    "title": "SACEM distribution",
+    "caption": "the statement, source by source",
+    "captionYear": "{year} statement, source by source",
+    "why": "The figure the dashboard computes for {name} ({amount} over 12 months) only reads streaming. A composer for picture earns most of their royalties from broadcast: television, cinema, advertising. Enter their latest distribution statement: it will replace the estimate.",
+    "enter": "Enter the latest statement",
+    "edit": "Edit",
+    "sub": "Streaming makes up {pct}%: the only share the dashboard can estimate on its own. Entered by {by}.",
+    "formHint": "Copy the amounts from the SACEM distribution statement (in euros, per source). Empty fields count as 0.",
+    "year": "Statement year",
+    "save": "Save",
+    "cancel": "Cancel",
+    "errYear": "Enter the statement year (for example 2025).",
+    "errAmount": "The “{source}” amount can't be read: a positive number, in euros.",
+    "errEmpty": "Enter at least one amount.",
+    "sources": {
+      "tv": "Television",
+      "radio": "Radio",
+      "cinema": "Cinema",
+      "pub": "Advertising",
+      "streaming": "Streaming",
+      "live": "Concerts and public venues",
+      "etranger": "Abroad"
+    },
+    "partial": "streaming only",
+    "fromSacem": "SACEM statement"
+  }
 }

@@ -24,7 +24,7 @@ import { LabelGuard } from "@/components/modules/structure/label-guard";
 import { RosterAlerts } from "@/components/modules/structure/roster-alerts";
 import { RosterFilters } from "@/components/modules/structure/roster-filters";
 import { RosterGrouping } from "@/components/modules/structure/roster-grouping";
-import { RosterMatrix } from "@/components/modules/structure/roster-matrix";
+import { RosterQuadrants } from "@/components/modules/structure/roster-quadrants";
 import { RosterPnlBars } from "@/components/modules/structure/roster-pnl-bars";
 import { RosterTable } from "@/components/modules/structure/roster-table";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
@@ -280,10 +280,10 @@ function DemoRoster() {
         {/* Où chacun se situe, et ce qui cloche. */}
         <div className="grid gap-3 xl:grid-cols-[1.5fr_1fr]">
           <Sheet family="trends">
-            <SheetHeading action={t("matrix.subtitle")}>
-              {t("matrix.title")}
+            <SheetHeading action={t("quadrants.subtitle")}>
+              {t("quadrants.title")}
             </SheetHeading>
-            <RosterMatrix rows={rows} bare />
+            <RosterQuadrants rows={rows} onFocus={setFocusedArtistId} />
           </Sheet>
           <Sheet family="trends">
             <SheetHeading action={t("alerts.subtitle")}>

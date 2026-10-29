@@ -23,9 +23,9 @@ import {
   Paperclip,
   Receipt,
   ScrollText,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import { LogoMark } from "@/components/dashboard/logo-mark";
 import { Button } from "@/components/ui/button";
 import { JOB_ROLES, type JobRole } from "@/lib/roles";
 import {
@@ -73,8 +73,8 @@ export function AttachmentCard({ attachment: a, role, className }: AttachmentCar
     >
       {/* En-tête : qui a traduit, quoi, joint par qui. */}
       <div className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-        <span className="bg-brand text-brand-foreground inline-flex h-5 items-center gap-1 rounded-full px-2 font-medium">
-          <Sparkles aria-hidden className="size-3" />
+        <span className="bg-foreground text-background inline-flex h-5 items-center gap-1.5 rounded-full px-2 font-medium">
+          <LogoMark size={10} />
           {t("badge")}
         </span>
         <span className="text-foreground/80 inline-flex min-w-0 items-center gap-1">

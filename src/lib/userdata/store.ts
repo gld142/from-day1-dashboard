@@ -325,9 +325,8 @@ export function userRevenueSeries(months: number, today: Date): RevenuePoint[] {
   if (!d) return [];
   const out: RevenuePoint[] = [];
   for (let i = months - 1; i >= 0; i--) {
-    const m = new Date(today);
-    m.setUTCMonth(m.getUTCMonth() - i);
-    const mk = m.toISOString().slice(0, 7);
+    // Le 1er du mois : reculer depuis un 29, 30 ou 31 débordait sur le mois suivant (février sautait).
+    const mk = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - i, 1)).toISOString().slice(0, 7);
     const amount = d.revenueByMonth[mk];
     if (amount !== undefined) {
       out.push({ month: mk, source: "streaming", amount, artistId: USER_ARTIST_ID });

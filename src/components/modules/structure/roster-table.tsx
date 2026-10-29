@@ -34,6 +34,8 @@ import {
 import { isArtistCategory, type CareerStage } from "@/lib/demo/types";
 import { fmtCompact, fmtEur, fmtPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { getSacem, sacemTotal } from "@/lib/userdata/sacem-store";
+import { useSacemSnapshot } from "@/lib/userdata/use-sacem";
 
 type SortKey = "streams30d" | "revenue12m" | "day1Index";
 
@@ -136,6 +138,20 @@ export function RosterTable({
   org?: OrgState;
 }) {
   const t = useTranslations("roster");
+  /* Compositeurs : leurs revenus passent par la SACEM (diffusion), pas par les streams. Un relevé
+     saisi (Œuvres & placements) remplace l'estimation ; sinon le chiffre est marqué « streaming seul ». */
+  const sacemKey = useSacemSnapshot();
+  const sacemOf = useMemo(() => {
+    void sacemKey;
+    return (r: RosterRow) => {
+      if (r.kind !== "composer") return null;
+      const e = getSacem(r.id);
+      if (!e) return { partial: true as const };
+      const revenue = sacemTotal(e);
+      const net = revenue - (r.revenue12m - r.net12m);
+      return { partial: false as const, revenue, net, margin: revenue === 0 ? 0 : (net / revenue) * 100 };
+    };
+  }, [sacemKey]);
   const to = useTranslations("organisation");
   const locale = useLocale();
   const [sortKey, setSortKey] = useState<SortKey>("revenue12m");
@@ -336,14 +352,37 @@ export function RosterTable({
                         </span>
                       </TableCell>
                       <TableCell className="text-right font-medium tabular-nums">
-                        {fmtEur(locale, r.revenue12m, { compact: true })}
+                        {(() => {
+                          const sc = sacemOf(r);
+                          if (!sc) return fmtEur(locale, r.revenue12m, { compact: true });
+                          return sc.partial ? (
+                            <>
+                              {fmtEur(locale, r.revenue12m, { compact: true })}
+                              <span className="text-muted-foreground block text-[11.5px] font-normal">{t("table.partial")}</span>
+                            </>
+                          ) : (
+                            <>
+                              {fmtEur(locale, sc.revenue, { compact: true })}
+                              <span className="text-muted-foreground block text-[11.5px] font-normal">{t("table.fromSacem")}</span>
+                            </>
+                          );
+                        })()}
                       </TableCell>
                       {/* Net, et dessous la marge. Rouge seulement quand on perd de l'argent. */}
                       <TableCell className="text-right tabular-nums">
-                        <span className={cn("block font-semibold", r.net12m < 0 && "text-destructive")}>
-                          {fmtEur(locale, r.net12m, { compact: true })}
-                        </span>
-                        <span className="text-muted-foreground block text-[11.5px]">{fmtPct(locale, r.margin)}</span>
+                        {(() => {
+                          const sc = sacemOf(r);
+                          /* Revenus partiels : une marge de −300 % ne dirait rien de vrai, on ne l'affiche pas. */
+                          if (sc?.partial) return <span className="text-muted-foreground block text-[12px]">{t("table.marginPartial")}</span>;
+                          const net = sc ? sc.net : r.net12m;
+                          const margin = sc ? sc.margin : r.margin;
+                          return (
+                            <>
+                              <span className={cn("block font-semibold", net < 0 && "text-destructive")}>{fmtEur(locale, net, { compact: true })}</span>
+                              <span className="text-muted-foreground block text-[11.5px]">{fmtPct(locale, margin)}</span>
+                            </>
+                          );
+                        })()}
                       </TableCell>
                       <TableCell className="text-muted-foreground hidden text-right tabular-nums lg:table-cell">
                         {fmtEur(locale, r.valuationMid, { compact: true })}

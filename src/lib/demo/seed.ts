@@ -51,8 +51,20 @@ export function isoMonth(d: Date): string {
   return d.toISOString().slice(0, 7);
 }
 
+/**
+ * Ajoute n mois (négatif : recule) sans déborder sur le mois suivant : le 29 octobre moins
+ * 8 mois donne le 28 février, pas le 1er mars. `setUTCMonth` seul débordait : mesuré le
+ * 29/10/2026, février manquait à l'historique des revenus (22 mois au lieu de 24).
+ */
+export function addMonthsUTC(d: Date, n: number): Date {
+  const y = d.getUTCFullYear();
+  const m = d.getUTCMonth() + n;
+  const last = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  return new Date(
+    Date.UTC(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()),
+  );
+}
+
 export function monthsAgo(n: number): Date {
-  const d = new Date(DEMO_TODAY);
-  d.setUTCMonth(d.getUTCMonth() - n);
-  return d;
+  return addMonthsUTC(DEMO_TODAY, -n);
 }

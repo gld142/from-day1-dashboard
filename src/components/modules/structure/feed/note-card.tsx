@@ -18,6 +18,7 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import {
+  ArrowLeft,
   ArrowUpRight,
   Circle,
   CircleCheck,
@@ -180,11 +181,11 @@ export function NoteCard(props: NoteCardProps) {
     <article
       data-note={note.id}
       className={cn(
-        "group/note relative rounded-xl transition-colors duration-200",
-        active ? "bg-muted/70" : "hover:bg-muted/40",
+        "group/note relative transition-colors duration-200",
+        active ? "bg-muted/60" : "hover:bg-muted/30",
       )}
     >
-      <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-x-3 py-3.5 pr-3 pl-3">
+      <div className="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-start gap-x-3 px-4 py-4">
         {/* L'étape se lit à la forme ; on la change dans la pastille « Statut » ci-dessous. */}
         <span className="mt-px flex size-5 items-center justify-center" title={tp(`status.${status}`)}>
           <Icon className={cn("size-[18px]", tone)} aria-hidden />
@@ -251,7 +252,7 @@ export function NoteCard(props: NoteCardProps) {
             <button
               type="button"
               onClick={() => openPanel("replies")}
-              className="group/bubble mt-2.5 block max-w-[min(64ch,100%)] text-left"
+              className="group/bubble mt-3 block max-w-[min(64ch,100%)] text-left"
             >
               <span className="text-muted-foreground mb-1 block pl-3 text-[12px]">
                 <span className="text-foreground/80 font-medium">{last.by.name}</span>
@@ -264,7 +265,7 @@ export function NoteCard(props: NoteCardProps) {
               </span>
             </button>
           )}
-          <div className="mt-2.5 -ml-2 flex flex-wrap items-center gap-x-0.5 gap-y-1 text-[13px]">
+          <div className="mt-1.5 -mb-1 -ml-2 flex flex-wrap items-center gap-x-0.5 gap-y-1 text-[13px]">
             <StatusPill
               status={status}
               canAct={canAct}
@@ -491,7 +492,7 @@ export function StatusPill({
     <span className="relative inline-flex">
       <span
         className={cn(
-          "has-[select:focus-visible]:ring-ring text-foreground/80 hover:bg-muted relative inline-flex items-center gap-1 rounded-md font-medium transition-colors duration-200 has-[select:focus-visible]:ring-2",
+          "has-[select:focus-visible]:ring-ring text-foreground/80 hover:bg-muted relative inline-flex shrink-0 items-center gap-1 rounded-md font-medium whitespace-nowrap transition-colors duration-200 has-[select:focus-visible]:ring-2",
           size === "md" ? "h-8 px-2.5 text-[13px]" : "h-7 px-2 text-[13px]",
         )}
         title={canAct ? tp("status.label") : undefined}
@@ -516,17 +517,15 @@ export function StatusPill({
           </select>
         )}
       </span>
-      {/* Première visite : on montre où se change le statut, une fois. */}
+      {/* Première visite : on montre où se change le statut, une fois. Sur la ligne, à côté du
+          statut, jamais en bulle flottante : elle recouvrait la dernière réponse. */}
       {tip && canAct && (
-        <span
-          role="note"
-          className="bg-foreground text-background absolute bottom-full left-0 z-20 mb-2 flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[11.5px] font-medium whitespace-nowrap shadow-lg"
-        >
+        <span role="note" className="text-muted-foreground inline-flex flex-wrap items-center gap-x-1.5 pr-2 pl-0.5 text-[12.5px]">
+          <ArrowLeft className="size-3.5" aria-hidden />
           {tp("tip.status")}
-          <button type="button" onClick={onDismissTip} className="bg-background/15 hover:bg-background/25 rounded px-1.5 py-0.5 text-[11px]">
+          <button type="button" onClick={onDismissTip} className="font-medium text-[var(--fil-accent,var(--brand))] hover:underline">
             {tp("tip.ok")}
           </button>
-          <span aria-hidden className="bg-foreground absolute top-full left-4 size-2 -translate-y-1 rotate-45" />
         </span>
       )}
     </span>

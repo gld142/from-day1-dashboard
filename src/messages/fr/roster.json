@@ -34,6 +34,9 @@
     "artistsHint": "{count, plural, one {# en repli sur 30 j} other {# en repli sur 30 j}}"
   },
   "table": {
+    "partial": "streaming seul",
+    "fromSacem": "relevé SACEM",
+    "marginPartial": "à compléter (SACEM)",
     "title": "Comparatif roster",
     "hint": "Cliquer sur une ligne zoome tout le dashboard sur cet artiste",
     "artist": "Artiste",
@@ -66,17 +69,22 @@
     "established": "Établi",
     "peak": "Sommet"
   },
-  "matrix": {
-    "title": "Matrice croissance × marge",
-    "subtitle": "Position stratégique de chaque artiste : croissance mensuelle des streams vs marge nette 12 mois. Taille = revenus 12 mois.",
-    "growth": "Croissance mensuelle",
-    "margin": "Marge nette",
-    "quadrants": {
-      "stars": "Locomotives",
-      "bets": "Paris de croissance",
-      "cash": "Rentes",
-      "watch": "Sous surveillance"
-    }
+  "quadrants": {
+    "title": "Qui rapporte, qui progresse",
+    "subtitle": "les interprètes, rangés en quatre cases",
+    "rule": "En croissance : au-dessus de la médiane du roster ({median} par mois). Rentable : marge nette positive sur 12 mois.",
+    "growingProfitable": "Rentable et en croissance",
+    "slowProfitable": "Rentable, croissance lente",
+    "growingLoss": "En croissance, pas encore rentable",
+    "watch": "À surveiller",
+    "nobody": "Personne aujourd'hui.",
+    "colArtist": "Artiste",
+    "colRevenue": "12 mois",
+    "colGrowth": "par mois",
+    "colMargin": "marge",
+    "more": "{count, plural, one {et # autre} other {et # autres}}",
+    "composers": "Compositeurs à part ({names}) : leurs revenus passent par la SACEM, leur marge calculée sur les streams ne se compare pas.",
+    "composersLink": "Voir Œuvres & placements"
   },
   "pnl": {
     "title": "P&L par artiste · 12 mois glissants",

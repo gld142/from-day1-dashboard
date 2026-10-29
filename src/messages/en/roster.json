@@ -34,6 +34,9 @@
     "artistsHint": "{count, plural, one {# declining over 30d} other {# declining over 30d}}"
   },
   "table": {
+    "partial": "streaming only",
+    "fromSacem": "SACEM statement",
+    "marginPartial": "to complete (SACEM)",
     "title": "Roster comparison",
     "hint": "Clicking a row focuses the whole dashboard on that artist",
     "artist": "Artist",
@@ -66,17 +69,22 @@
     "established": "Established",
     "peak": "Peak"
   },
-  "matrix": {
-    "title": "Growth × margin matrix",
-    "subtitle": "Each artist's strategic position: monthly stream growth vs 12-month net margin. Size = 12-month revenue.",
-    "growth": "Monthly growth",
-    "margin": "Net margin",
-    "quadrants": {
-      "stars": "Stars",
-      "bets": "Growth bets",
-      "cash": "Cash cows",
-      "watch": "Watch closely"
-    }
+  "quadrants": {
+    "title": "Who earns, who grows",
+    "subtitle": "performers, sorted into four boxes",
+    "rule": "Growing: above the roster median ({median} a month). Profitable: positive 12-month net margin.",
+    "growingProfitable": "Profitable and growing",
+    "slowProfitable": "Profitable, slow growth",
+    "growingLoss": "Growing, not yet profitable",
+    "watch": "To watch",
+    "nobody": "Nobody today.",
+    "colArtist": "Artist",
+    "colRevenue": "12 months",
+    "colGrowth": "per month",
+    "colMargin": "margin",
+    "more": "{count, plural, one {and # more} other {and # more}}",
+    "composers": "Composers set apart ({names}): their income flows through SACEM, a margin computed on streams doesn't compare.",
+    "composersLink": "See Works & placements"
   },
   "pnl": {
     "title": "P&L by artist · trailing 12 months",

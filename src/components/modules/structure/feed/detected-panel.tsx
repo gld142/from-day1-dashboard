@@ -7,7 +7,8 @@
  */
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, BadgeEuro, ChevronDown, FileSignature, Sparkles, TrendingDown, X } from "lucide-react";
+import { ArrowRight, BadgeEuro, ChevronDown, FileSignature, TrendingDown, X } from "lucide-react";
+import { LogoMark } from "@/components/dashboard/logo-mark";
 import { Button } from "@/components/ui/button";
 import { getArtist } from "@/lib/demo/data";
 import { fmtCompact, fmtDate, fmtEur, fmtPct } from "@/lib/format";
@@ -61,7 +62,7 @@ export function DetectedPanel({
           className="flex flex-1 flex-wrap items-center gap-2 text-left"
         >
           <span className="text-foreground inline-flex items-center gap-1.5 text-[15px] font-semibold tracking-[-0.01em]">
-            <Sparkles className="size-4 text-[var(--fil-accent,var(--brand))]" aria-hidden />
+            <LogoMark size={13} className="text-foreground" />
             {tp("detect.title")}
             <span className="text-muted-foreground font-normal tabular-nums">{signals.length}</span>
           </span>

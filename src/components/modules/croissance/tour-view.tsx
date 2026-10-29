@@ -128,9 +128,7 @@ function grossMonthly(dates: TourDate[]): Array<{ month: string; amount: number 
 
 /** Premier des douze derniers mois, au format « AAAA-MM ». */
 function isoMonth12mAgo(): string {
-  const d = new Date(DEMO_TODAY);
-  d.setUTCMonth(d.getUTCMonth() - 11);
-  return d.toISOString().slice(0, 7);
+  return new Date(Date.UTC(DEMO_TODAY.getUTCFullYear(), DEMO_TODAY.getUTCMonth() - 11, 1)).toISOString().slice(0, 7);
 }
 
 /* ─────────────────────────── Vue ─────────────────────────── */

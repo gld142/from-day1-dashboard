@@ -1,0 +1,1283 @@
+{
+  "date": "2026-10-29",
+  "capturedAt": "2026-10-29T09:57:20.614Z",
+  "spotify": {
+    "monthlyListeners": 6552348,
+    "followers": 9009401,
+    "topTracks": [
+      {
+        "name": "Reine",
+        "spotifyId": "1bxP4M9ICllcg7mel8kH89",
+        "playcount": 232750023
+      },
+      {
+        "name": "Compliqué",
+        "spotifyId": "6VtG4p0It4nM0aStU46hEl",
+        "playcount": 159656809
+      },
+      {
+        "name": "I love you",
+        "spotifyId": "6jDe94y1dbLDU53Q1NPxLH",
+        "playcount": 168321281
+      },
+      {
+        "name": "Par amour",
+        "spotifyId": "7vaHVmMKvajDN4IwtNslnI",
+        "playcount": 142397793
+      },
+      {
+        "name": "Grand bain",
+        "spotifyId": "0W4MOQ2kTOm1y7ooahgQP1",
+        "playcount": 189887487
+      }
+    ]
+  },
+  "kworb": {
+    "totalStreams": 4592589655,
+    "dailyStreams": 1596502,
+    "tracks": [
+      {
+        "name": "Reine",
+        "total": 232750023,
+        "daily": 82600
+      },
+      {
+        "name": "Meleğim",
+        "total": 208919344,
+        "daily": 55008
+      },
+      {
+        "name": "Grand bain",
+        "total": 189887487,
+        "daily": 64088
+      },
+      {
+        "name": "I love you",
+        "total": 168321281,
+        "daily": 65211
+      },
+      {
+        "name": "Compliqué",
+        "total": 159656809,
+        "daily": 90346
+      },
+      {
+        "name": "Jaloux",
+        "total": 142959705,
+        "daily": 61330
+      },
+      {
+        "name": "Par amour",
+        "total": 142397793,
+        "daily": 66046
+      },
+      {
+        "name": "DANÇARINA - Remix",
+        "total": 129714747,
+        "daily": 17594
+      },
+      {
+        "name": "Bob Marley",
+        "total": 122899537,
+        "daily": 36170
+      },
+      {
+        "name": "Dieu merci",
+        "total": 116027740,
+        "daily": 50203
+      },
+      {
+        "name": "Oublie-le",
+        "total": 97387763,
+        "daily": 63515
+      },
+      {
+        "name": "Django",
+        "total": 96951027,
+        "daily": 26874
+      },
+      {
+        "name": "Mon soleil",
+        "total": 94216113,
+        "daily": 16698
+      },
+      {
+        "name": "Jamais (feat. Dadju)",
+        "total": 88611787,
+        "daily": 21859
+      },
+      {
+        "name": "Amour toxic",
+        "total": 85261591,
+        "daily": 42388
+      },
+      {
+        "name": "Bébé",
+        "total": 81945795,
+        "daily": 23529
+      },
+      {
+        "name": "Ma vie",
+        "total": 74492922,
+        "daily": 24930
+      },
+      {
+        "name": "Donne-moi l’accord",
+        "total": 67499575,
+        "daily": 19881
+      },
+      {
+        "name": "Bobo au cœur",
+        "total": 62906290,
+        "daily": 21741
+      },
+      {
+        "name": "Muerte",
+        "total": 62488372,
+        "daily": 15131
+      },
+      {
+        "name": "Dans mes bras",
+        "total": 58447871,
+        "daily": 13627
+      },
+      {
+        "name": "Terminal 2F",
+        "total": 56785995,
+        "daily": 30867
+      },
+      {
+        "name": "Bella ciao (feat. GIMS, Dadju, Vitaa & Slimane)",
+        "total": 53893565,
+        "daily": 5267
+      },
+      {
+        "name": "Lionne",
+        "total": 52424552,
+        "daily": 17161
+      },
+      {
+        "name": "Toko Toko",
+        "total": 50136943,
+        "daily": 9484
+      },
+      {
+        "name": "Tu ne le vois pas (feat. Dadju)",
+        "total": 45205415,
+        "daily": 21959
+      },
+      {
+        "name": "10/10",
+        "total": 44509069,
+        "daily": 23596
+      },
+      {
+        "name": "Si on disait",
+        "total": 41497297,
+        "daily": 7658
+      },
+      {
+        "name": "Sous contrôle",
+        "total": 41346240,
+        "daily": 7446
+      },
+      {
+        "name": "BELLE",
+        "total": 41344973,
+        "daily": 9209
+      },
+      {
+        "name": "Mafuzzy Style",
+        "total": 38257761,
+        "daily": 10033
+      },
+      {
+        "name": "Wouli Liya",
+        "total": 37608154,
+        "daily": 5198
+      },
+      {
+        "name": "C'est plus l'heure",
+        "total": 36964393,
+        "daily": 9102
+      },
+      {
+        "name": "Déjà trouvé",
+        "total": 36884948,
+        "daily": 18114
+      },
+      {
+        "name": "Adieu",
+        "total": 35737760,
+        "daily": 9716
+      },
+      {
+        "name": "TPB",
+        "total": 35307554,
+        "daily": 22926
+      },
+      {
+        "name": "Comme si de rien n'était",
+        "total": 34505890,
+        "daily": 9893
+      },
+      {
+        "name": "Acolyte (feat. Dadju & Ninho)",
+        "total": 29086062,
+        "daily": 4166
+      },
+      {
+        "name": "Va dire à ton ex",
+        "total": 28883410,
+        "daily": 13374
+      },
+      {
+        "name": "Makila : Wablé",
+        "total": 27840415,
+        "daily": 9673
+      },
+      {
+        "name": "Trouvez-la moi",
+        "total": 27426851,
+        "daily": 10405
+      },
+      {
+        "name": "Rose rouge",
+        "total": 27054135,
+        "daily": 4638
+      },
+      {
+        "name": "Christina",
+        "total": 25447764,
+        "daily": 14081
+      },
+      {
+        "name": "Parle-moi",
+        "total": 24253264,
+        "daily": 18449
+      },
+      {
+        "name": "Back It Up",
+        "total": 24127519,
+        "daily": 8280
+      },
+      {
+        "name": "Jenny",
+        "total": 24045055,
+        "daily": 8221
+      },
+      {
+        "name": "Aime-moi demain (feat. Gradur)",
+        "total": 23453641,
+        "daily": 12301
+      },
+      {
+        "name": "Elle me demande",
+        "total": 22206733,
+        "daily": 11364
+      },
+      {
+        "name": "Ma fierté",
+        "total": 21992563,
+        "daily": 3771
+      },
+      {
+        "name": "Goodbye",
+        "total": 21377922,
+        "daily": 2764
+      },
+      {
+        "name": "Tout ou rien du tout",
+        "total": 20437457,
+        "daily": 12299
+      },
+      {
+        "name": "Calimero",
+        "total": 19828207,
+        "daily": 5559
+      },
+      {
+        "name": "Fuego (feat. Dadju)",
+        "total": 19453784,
+        "daily": 5106
+      },
+      {
+        "name": "On s'fait du mal (feat. Dadju)",
+        "total": 18962294,
+        "daily": 6127
+      },
+      {
+        "name": "TOUT essayer ?",
+        "total": 18575039,
+        "daily": 9453
+      },
+      {
+        "name": "La vie d'un... / Ma préférée",
+        "total": 18540059,
+        "daily": 4778
+      },
+      {
+        "name": "Apprends-moi !",
+        "total": 18391370,
+        "daily": 4311
+      },
+      {
+        "name": "Seconde chance",
+        "total": 18066107,
+        "daily": 4039
+      },
+      {
+        "name": "Robe",
+        "total": 17887598,
+        "daily": 5792
+      },
+      {
+        "name": "Intuition",
+        "total": 17875907,
+        "daily": 4958
+      },
+      {
+        "name": "J'ai dit non",
+        "total": 17410835,
+        "daily": 5375
+      },
+      {
+        "name": "Le contrat",
+        "total": 17340978,
+        "daily": 6749
+      },
+      {
+        "name": "Pas Comme Ça",
+        "total": 17042365,
+        "daily": 6663
+      },
+      {
+        "name": "Je ne t'aime plus",
+        "total": 16566098,
+        "daily": 4887
+      },
+      {
+        "name": "Picsou",
+        "total": 16246272,
+        "daily": 4786
+      },
+      {
+        "name": "Paire d'As",
+        "total": 16229490,
+        "daily": 2477
+      },
+      {
+        "name": "Comme ça",
+        "total": 16168412,
+        "daily": 1563
+      },
+      {
+        "name": "SOLD OUT !",
+        "total": 16054493,
+        "daily": 5421
+      },
+      {
+        "name": "Chelou",
+        "total": 16020257,
+        "daily": 3742
+      },
+      {
+        "name": "J'ai zayé",
+        "total": 15258621,
+        "daily": 17828
+      },
+      {
+        "name": "Confessions",
+        "total": 15201583,
+        "daily": 5182
+      },
+      {
+        "name": "Un coup (feat. Dadju)",
+        "total": 15106620,
+        "daily": 6939
+      },
+      {
+        "name": "Moi je vérifie",
+        "total": 15011795,
+        "daily": 2721
+      },
+      {
+        "name": "Ma Woman",
+        "total": 14039876,
+        "daily": 5770
+      },
+      {
+        "name": "Épouse-moi",
+        "total": 13508013,
+        "daily": 9658
+      },
+      {
+        "name": "Unité",
+        "total": 13328578,
+        "daily": 3544
+      },
+      {
+        "name": "Saigne",
+        "total": 13288302,
+        "daily": 3167
+      },
+      {
+        "name": "Sans thème - Remix",
+        "total": 12776357,
+        "daily": 1379
+      },
+      {
+        "name": "Tu l'aimes encore",
+        "total": 12669968,
+        "daily": 1636
+      },
+      {
+        "name": "Déjà donné",
+        "total": 12603382,
+        "daily": 3086
+      },
+      {
+        "name": "Ok.",
+        "total": 12190123,
+        "daily": 3199
+      },
+      {
+        "name": "#PTD",
+        "total": 11673417,
+        "daily": 2329
+      },
+      {
+        "name": "Ambassadeur - Animateur: Brigade",
+        "total": 11418287,
+        "daily": 2952
+      },
+      {
+        "name": "Honey Honey",
+        "total": 11296493,
+        "daily": 9863
+      },
+      {
+        "name": "La guitare suit la mélo",
+        "total": 11263685,
+        "daily": 2963
+      },
+      {
+        "name": "Histoire sans fin (feat. Dadju)",
+        "total": 11196092,
+        "daily": 2747
+      },
+      {
+        "name": "KING",
+        "total": 10757470,
+        "daily": 3471
+      },
+      {
+        "name": "Mémoire courte",
+        "total": 10376441,
+        "daily": 3749
+      },
+      {
+        "name": "Sécurisé",
+        "total": 10316666,
+        "daily": 1665
+      },
+      {
+        "name": "One Time",
+        "total": 10255027,
+        "daily": 1932
+      },
+      {
+        "name": "Ima",
+        "total": 9860527,
+        "daily": 8319
+      },
+      {
+        "name": "Monica",
+        "total": 9441425,
+        "daily": 2255
+      },
+      {
+        "name": "Provoquer",
+        "total": 9279963,
+        "daily": 4592
+      },
+      {
+        "name": "Pas permis",
+        "total": 9238523,
+        "daily": 1740
+      },
+      {
+        "name": "Perdu",
+        "total": 8992329,
+        "daily": 3343
+      },
+      {
+        "name": "Mon cœur à ta taille",
+        "total": 8831305,
+        "daily": 1134
+      },
+      {
+        "name": "Des fois",
+        "total": 8800191,
+        "daily": 8195
+      },
+      {
+        "name": "Tu n'es pas moi",
+        "total": 8769276,
+        "daily": 957
+      },
+      {
+        "name": "Victoria Secret",
+        "total": 8401735,
+        "daily": 3615
+      },
+      {
+        "name": "Mazal",
+        "total": 8308276,
+        "daily": 4720
+      },
+      {
+        "name": "Lover Boy (feat. Tayc & Dadju)",
+        "total": 8128107,
+        "daily": 3907
+      },
+      {
+        "name": "Molo (feat. Dadju)",
+        "total": 8023898,
+        "daily": 1379
+      },
+      {
+        "name": "Maamou",
+        "total": 8012479,
+        "daily": 3719
+      },
+      {
+        "name": "Ma faute",
+        "total": 7843236,
+        "daily": 2205
+      },
+      {
+        "name": "Verre de trop",
+        "total": 7742000,
+        "daily": 1660
+      },
+      {
+        "name": "Évidemment",
+        "total": 7704671,
+        "daily": 3469
+      },
+      {
+        "name": "One Piece",
+        "total": 7388793,
+        "daily": 3123
+      },
+      {
+        "name": "Normal",
+        "total": 7351655,
+        "daily": 2536
+      },
+      {
+        "name": "Toi d'abord",
+        "total": 7192822,
+        "daily": 1933
+      },
+      {
+        "name": "Please",
+        "total": 6954601,
+        "daily": 1465
+      },
+      {
+        "name": "Piquée",
+        "total": 6950229,
+        "daily": 477
+      },
+      {
+        "name": "Gentleman 2.0 - Intro",
+        "total": 6938892,
+        "daily": 1786
+      },
+      {
+        "name": "Une semaine pour oublier...",
+        "total": 6666748,
+        "daily": 2291
+      },
+      {
+        "name": "Comme avant",
+        "total": 6444852,
+        "daily": 2016
+      },
+      {
+        "name": "Papa",
+        "total": 6422883,
+        "daily": 1833
+      },
+      {
+        "name": "Tellement belle",
+        "total": 6400760,
+        "daily": 9828
+      },
+      {
+        "name": "Alter ego",
+        "total": 6256646,
+        "daily": 1847
+      },
+      {
+        "name": "Je reviendrai",
+        "total": 6182535,
+        "daily": 4109
+      },
+      {
+        "name": "Le Mâle Honnête",
+        "total": 5948037,
+        "daily": 2391
+      },
+      {
+        "name": "Mwasi Ya Congo",
+        "total": 5927749,
+        "daily": 1742
+      },
+      {
+        "name": "Cette femme",
+        "total": 5915020,
+        "daily": 2034
+      },
+      {
+        "name": "Tout se passe après minuit (feat. Dadju)",
+        "total": 5911831,
+        "daily": 885
+      },
+      {
+        "name": "Jure-le",
+        "total": 5465697,
+        "daily": 1115
+      },
+      {
+        "name": "Rêver",
+        "total": 5399775,
+        "daily": 2561
+      },
+      {
+        "name": "Safari",
+        "total": 5387489,
+        "daily": 1343
+      },
+      {
+        "name": "Sans rétro (feat. Dadju) - Pilule bleue",
+        "total": 5371670,
+        "daily": 1073
+      },
+      {
+        "name": "J'ai ce qu'il faut",
+        "total": 5327702,
+        "daily": 4084
+      },
+      {
+        "name": "LOOSE",
+        "total": 5239966,
+        "daily": 2025
+      },
+      {
+        "name": "Comme à chaque fois",
+        "total": 5190237,
+        "daily": 718
+      },
+      {
+        "name": "Face à lui",
+        "total": 5050612,
+        "daily": 2282
+      },
+      {
+        "name": "Le dua",
+        "total": 5007630,
+        "daily": 1083
+      },
+      {
+        "name": "Depuis que j'ai l'argent",
+        "total": 4983238,
+        "daily": 1100
+      },
+      {
+        "name": "G700",
+        "total": 4680456,
+        "daily": 1229
+      },
+      {
+        "name": "Promesse",
+        "total": 4576260,
+        "daily": 1265
+      },
+      {
+        "name": "Pour toi",
+        "total": 4566827,
+        "daily": 2358
+      },
+      {
+        "name": "Si j'étais",
+        "total": 4463775,
+        "daily": 3060
+      },
+      {
+        "name": "Je n'ai que toi",
+        "total": 4385087,
+        "daily": 1300
+      },
+      {
+        "name": "Assez",
+        "total": 4328815,
+        "daily": 1646
+      },
+      {
+        "name": "Escort",
+        "total": 4276926,
+        "daily": 1108
+      },
+      {
+        "name": "L'officiel",
+        "total": 4229501,
+        "daily": 740
+      },
+      {
+        "name": "Du berceau au linceul",
+        "total": 4209959,
+        "daily": 1281
+      },
+      {
+        "name": "Bansky",
+        "total": 4155062,
+        "daily": 749
+      },
+      {
+        "name": "Danger",
+        "total": 4149671,
+        "daily": 969
+      },
+      {
+        "name": "Longue Vie",
+        "total": 4072869,
+        "daily": 1168
+      },
+      {
+        "name": "Avant l'hiver",
+        "total": 4036705,
+        "daily": 1437
+      },
+      {
+        "name": "Dis-moi",
+        "total": 3926252,
+        "daily": 1157
+      },
+      {
+        "name": "Nous",
+        "total": 3907093,
+        "daily": 841
+      },
+      {
+        "name": "Makila : Wablé - Version Acoustique",
+        "total": 3885533,
+        "daily": 1445
+      },
+      {
+        "name": "Bocca & Cuba Libre",
+        "total": 3858908,
+        "daily": 1522
+      },
+      {
+        "name": "La vérité",
+        "total": 3850099,
+        "daily": 2215
+      },
+      {
+        "name": "Erreur du passé",
+        "total": 3826553,
+        "daily": 2068
+      },
+      {
+        "name": "Option",
+        "total": 3757138,
+        "daily": 1760
+      },
+      {
+        "name": "Jaloux remix",
+        "total": 3711488,
+        "daily": 2508
+      },
+      {
+        "name": "Tu me laisses",
+        "total": 3684941,
+        "daily": 648
+      },
+      {
+        "name": "GÉ VOULAIT",
+        "total": 3666446,
+        "daily": 1114
+      },
+      {
+        "name": "Cookie",
+        "total": 3641231,
+        "daily": 947
+      },
+      {
+        "name": "La paix n'a pas de prix",
+        "total": 3608981,
+        "daily": 432
+      },
+      {
+        "name": "Claro que sì (feat. Dadju)",
+        "total": 3546956,
+        "daily": 574
+      },
+      {
+        "name": "La roue tourne",
+        "total": 3511599,
+        "daily": 1004
+      },
+      {
+        "name": "Vite ou doucement",
+        "total": 3483072,
+        "daily": 941
+      },
+      {
+        "name": "M.D.V",
+        "total": 3423741,
+        "daily": 213
+      },
+      {
+        "name": "Outsider (feat. Bedjik, Dadju & Xgangs)",
+        "total": 3411609,
+        "daily": 712
+      },
+      {
+        "name": "Tourner la page",
+        "total": 3381382,
+        "daily": 1436
+      },
+      {
+        "name": "Interdit",
+        "total": 3293502,
+        "daily": 789
+      },
+      {
+        "name": "Don't Rush (feat. Dadju)",
+        "total": 3193795,
+        "daily": 255
+      },
+      {
+        "name": "Sans thème",
+        "total": 3192805,
+        "daily": 708
+      },
+      {
+        "name": "Loin",
+        "total": 3017839,
+        "daily": 725
+      },
+      {
+        "name": "Une fois mais pas deux",
+        "total": 2817102,
+        "daily": 719
+      },
+      {
+        "name": "Après minuit",
+        "total": 2763021,
+        "daily": 2116
+      },
+      {
+        "name": "1er contact",
+        "total": 2714181,
+        "daily": 356
+      },
+      {
+        "name": "Teach me",
+        "total": 2688783,
+        "daily": 1654
+      },
+      {
+        "name": "Je n'oublie pas",
+        "total": 2645022,
+        "daily": 924
+      },
+      {
+        "name": "Piqûre de rappel",
+        "total": 2608532,
+        "daily": 455
+      },
+      {
+        "name": "T'es pas normal",
+        "total": 2584115,
+        "daily": 230
+      },
+      {
+        "name": "Anonyme",
+        "total": 2511071,
+        "daily": 1036
+      },
+      {
+        "name": "Up And Down",
+        "total": 2484586,
+        "daily": 517
+      },
+      {
+        "name": "Chance Moko",
+        "total": 2200087,
+        "daily": 1029
+      },
+      {
+        "name": "Pourquoi",
+        "total": 2165071,
+        "daily": 2028
+      },
+      {
+        "name": "Mes torts",
+        "total": 2152102,
+        "daily": 831
+      },
+      {
+        "name": "Mes épaules",
+        "total": 2105464,
+        "daily": 1648
+      },
+      {
+        "name": "Tout perdre (feat. Dadju)",
+        "total": 1947284,
+        "daily": 287
+      },
+      {
+        "name": "Enfants d'Afrique",
+        "total": 1921689,
+        "daily": 219
+      },
+      {
+        "name": "Garde du coeur",
+        "total": 1878792,
+        "daily": 627
+      },
+      {
+        "name": "On verra",
+        "total": 1829149,
+        "daily": 992
+      },
+      {
+        "name": "Petites attentions",
+        "total": 1764735,
+        "daily": 634
+      },
+      {
+        "name": "Jaloux - Version acoustique",
+        "total": 1748317,
+        "daily": 587
+      },
+      {
+        "name": "Wilow - Narrateur: Francis Ngannou",
+        "total": 1718199,
+        "daily": 560
+      },
+      {
+        "name": "Ma jolie",
+        "total": 1503882,
+        "daily": 268
+      },
+      {
+        "name": "Nossa",
+        "total": 1490621,
+        "daily": 109
+      },
+      {
+        "name": "Cursus",
+        "total": 1468165,
+        "daily": 493
+      },
+      {
+        "name": "C'EST FAUX",
+        "total": 1370234,
+        "daily": 349
+      },
+      {
+        "name": "Mauvaise déduction",
+        "total": 1191139,
+        "daily": 425
+      },
+      {
+        "name": "Si tu savais",
+        "total": 1183372,
+        "daily": 708
+      },
+      {
+        "name": "Bounce (feat. Black M, S.Pri Noir & Abou Debeing)",
+        "total": 910493,
+        "daily": 105
+      },
+      {
+        "name": "Parle pas",
+        "total": 892190,
+        "daily": 106
+      },
+      {
+        "name": "Dis-leur",
+        "total": 733430,
+        "daily": 265
+      },
+      {
+        "name": "Un sourire (feat. GIMS)",
+        "total": 704751,
+        "daily": 244
+      },
+      {
+        "name": "Laisse ça",
+        "total": 648782,
+        "daily": 85
+      },
+      {
+        "name": "Rien à foutre",
+        "total": 625763,
+        "daily": 146
+      },
+      {
+        "name": "Deuxième fois",
+        "total": 596778,
+        "daily": 174
+      },
+      {
+        "name": "Zéro Problémé (feat. Dadju)",
+        "total": 580566,
+        "daily": 122
+      },
+      {
+        "name": "Rappelle toi (feat. Black Mesrimes)",
+        "total": 576753,
+        "daily": 151
+      },
+      {
+        "name": "La peur",
+        "total": 558245,
+        "daily": 111
+      },
+      {
+        "name": "Moi d'abord",
+        "total": 550754,
+        "daily": 98
+      },
+      {
+        "name": "Plumer (feat. Soprano)",
+        "total": 546774,
+        "daily": 73
+      },
+      {
+        "name": "Je n'en peux plus",
+        "total": 537304,
+        "daily": 113
+      },
+      {
+        "name": "Mens-moi dans les yeux",
+        "total": 532785,
+        "daily": 146
+      },
+      {
+        "name": "Mano",
+        "total": 489703,
+        "daily": 485
+      },
+      {
+        "name": "J'ai du mal",
+        "total": 461288,
+        "daily": 149
+      },
+      {
+        "name": "Tout pour 1 euro",
+        "total": 419020,
+        "daily": 81
+      },
+      {
+        "name": "Nouvelle ère",
+        "total": 417873,
+        "daily": 48
+      },
+      {
+        "name": "Où aller (feat. Ahmox & Bedjik)",
+        "total": 417591,
+        "daily": 42
+      },
+      {
+        "name": "Nous sommes demain",
+        "total": 392403,
+        "daily": 82
+      },
+      {
+        "name": "N'oublie jamais",
+        "total": 357792,
+        "daily": 63
+      },
+      {
+        "name": "Ne me le dit pas",
+        "total": 340588,
+        "daily": 33
+      },
+      {
+        "name": "Dévergondé (feat. L'Institut)",
+        "total": 339005,
+        "daily": 32
+      },
+      {
+        "name": "Superwoman (feat. Dadju)",
+        "total": 321370,
+        "daily": 340
+      },
+      {
+        "name": "Le temps",
+        "total": 321349,
+        "daily": 60
+      },
+      {
+        "name": "Oublie-moi",
+        "total": 306753,
+        "daily": 30
+      },
+      {
+        "name": "Précieuse",
+        "total": 296914,
+        "daily": 78
+      },
+      {
+        "name": "Soum-soum",
+        "total": 280592,
+        "daily": 28
+      },
+      {
+        "name": "Normal",
+        "total": 271706,
+        "daily": 51
+      },
+      {
+        "name": "#TPCMP",
+        "total": 263817,
+        "daily": 38
+      },
+      {
+        "name": "Tout ce que je sais",
+        "total": 240911,
+        "daily": 21
+      },
+      {
+        "name": "Intro",
+        "total": 239815,
+        "daily": 107
+      },
+      {
+        "name": "Eiffel",
+        "total": 218080,
+        "daily": 16
+      },
+      {
+        "name": "Peu importe",
+        "total": 190883,
+        "daily": 15
+      }
+    ]
+  },
+  "deezer": {
+    "fans": 3304047,
+    "topTracks": [
+      {
+        "title": "Compliqué",
+        "rank": 952570
+      },
+      {
+        "title": "Jaloux",
+        "rank": 949147
+      },
+      {
+        "title": "Reine",
+        "rank": 955803
+      },
+      {
+        "title": "Oublie-le",
+        "rank": 930000
+      },
+      {
+        "title": "Grand bain",
+        "rank": 921081
+      },
+      {
+        "title": "I love you",
+        "rank": 907669
+      },
+      {
+        "title": "Par amour",
+        "rank": 917499
+      },
+      {
+        "title": "Amour toxic",
+        "rank": 882978
+      },
+      {
+        "title": "Terminal 2F",
+        "rank": 864975
+      },
+      {
+        "title": "Ma vie",
+        "rank": 884530
+      }
+    ]
+  },
+  "youtube": {
+    "subscribers": null,
+    "videos": [
+      {
+        "videoId": "tVKaN_H35xs",
+        "title": "DADJU - Reine (Clip Officiel)",
+        "channel": "official",
+        "views": 443878860
+      },
+      {
+        "videoId": "ReK5Z0RCbSY",
+        "title": "Soolking feat. Dadju - Meleğim [Clip Officiel] Prod by Nyadjiko",
+        "channel": "official",
+        "views": 341861957
+      },
+      {
+        "videoId": "NPSvCJ9v7vI",
+        "title": "DADJU - Grand Bain ft. Ninho (Clip Officiel)",
+        "channel": "official",
+        "views": 91673692
+      },
+      {
+        "videoId": "bFEP26jCtsQ",
+        "title": "DADJU - Compliqué (Clip Officiel)",
+        "channel": "official",
+        "views": 126549102
+      },
+      {
+        "videoId": "254EHfv9RvM",
+        "title": "DADJU - Jaloux (Clip Officiel)",
+        "channel": "official",
+        "views": 388504455
+      }
+    ]
+  },
+  "topCities": [
+    {
+      "city": "Paris",
+      "country": "FR",
+      "listeners": 331194
+    },
+    {
+      "city": "Abidjan",
+      "country": "CI",
+      "listeners": 134708
+    },
+    {
+      "city": "Marseille",
+      "country": "FR",
+      "listeners": 133822
+    },
+    {
+      "city": "Lyon",
+      "country": "FR",
+      "listeners": 132858
+    },
+    {
+      "city": "Montreal",
+      "country": "CA",
+      "listeners": 124932
+    }
+  ]
+}

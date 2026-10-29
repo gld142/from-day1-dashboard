@@ -80,8 +80,9 @@ const artistsFor = (jobRole: JobRole | null, daId: string | null, org: OrgState)
 const PRINT_CLASS = "print-fil-agenda";
 
 /* L'urgence se lit à un petit drapeau devant le titre de section, comme dans Mail : rouge =
-   aujourd'hui, orange = cette semaine, rien pour une info. Listes sans fond teinté ni cadre
-   (Gaël, 29/10 : l'écosystème Messages d'Apple, pas de « plaques »). */
+   aujourd'hui, orange = cette semaine, rien pour une info. Chaque section est un groupe blanc
+   sur le fond (listes groupées d'iOS) : neutre, jamais teinté, et l'œil sait où une section
+   commence et finit (Gaël, 29/10). */
 const GROUP_FLAG: Record<Urgency, string | null> = {
   urgent: "text-destructive fill-current",
   important: "text-warning fill-current",
@@ -544,16 +545,16 @@ function Feed() {
             {t(mode === "mine" ? "empty.mine" : "empty.all")}
           </p>
         ) : (
-          <div className="space-y-5 pt-4">
+          <div className="space-y-8 pt-5">
             <DetectedPanel signals={signals} onPost={postSignal} onDismiss={(sg) => markDetected(sg.id)} />
             {groups.map((g) => (
               <section key={g.urgency} aria-labelledby={`fil-g-${g.urgency}`}>
-                <h3 id={`fil-g-${g.urgency}`} className="text-foreground mb-1 flex items-center gap-1.5 px-3 text-[15px] font-semibold tracking-[-0.01em]">
+                <h3 id={`fil-g-${g.urgency}`} className="text-foreground mb-2 flex items-center gap-1.5 px-1 text-[15px] font-semibold tracking-[-0.01em]">
                   {GROUP_FLAG[g.urgency] && <Flag className={cn("size-3.5", GROUP_FLAG[g.urgency])} aria-hidden />}
                   {t(`urgency.${g.urgency}`)}
                   <span className="text-muted-foreground font-normal tabular-nums">{g.items.length}</span>
                 </h3>
-                <ul className="divide-border/60 divide-y">
+                <ul className="bg-card divide-border/60 divide-y overflow-hidden rounded-2xl border border-border/60">
                   <AnimatePresence initial={false}>
                     {g.items.map((n) => (
                       <motion.li
@@ -576,14 +577,14 @@ function Feed() {
                   type="button"
                   aria-expanded={showDone}
                   onClick={() => setShowDone((v) => !v)}
-                  className="text-muted-foreground hover:text-foreground mb-1 flex w-full items-center gap-1.5 px-3 text-[15px] font-semibold"
+                  className="text-muted-foreground hover:text-foreground mb-2 flex w-full items-center gap-1.5 px-1 text-[15px] font-semibold"
                 >
                   <ChevronRight className={cn("size-3.5 transition-transform", showDone && "rotate-90")} aria-hidden />
                   {tp("groups.done")}
                   <span className="num font-normal">{doneShown.length}</span>
                 </button>
                 {showDone && (
-                  <ul className="divide-border/60 divide-y">
+                  <ul className="bg-card divide-border/60 divide-y overflow-hidden rounded-2xl border border-border/60">
                     {doneShown.map((n) => (
                       <li key={n.id}>{renderNote(n)}</li>
                     ))}

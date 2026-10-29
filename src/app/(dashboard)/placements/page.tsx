@@ -18,7 +18,10 @@ import { useCustomer } from "@/lib/customer-mode";
 import { useMemo } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { ARTISTS, getArtist, isComposer, isWriter, ownWorksFacts, placementFacts } from "@/lib/demo/api";
+import { ARTISTS, getArtist, isComposer, isWriter, ownWorksFacts, placementFacts, rosterRows } from "@/lib/demo/api";
+
+/** Les revenus 12 mois que le dashboard estime (streams) : ce que la répartition SACEM corrige. */
+const rosterRevenue = (id: string) => rosterRows(ARTISTS.filter((a) => a.id === id))[0]?.revenue12m ?? 0;
 import { getDa } from "@/lib/demo/das";
 import { fmtCompact, fmtEur } from "@/lib/format";
 import { useRole } from "@/lib/role";
@@ -32,6 +35,7 @@ import { AffiliatedPoints, Sheet, SheetHeading } from "@/components/dashboard/sh
 import { ProvenanceBadge } from "@/components/ui/provenance-badge";
 import { Doors } from "@/components/modules/pilotage/pulse-blocks";
 import { PlacementsActivity, PlacementsTracker } from "@/components/modules/structure/placements-tracker";
+import { SacemPanel } from "@/components/modules/structure/sacem-panel";
 
 /** Mode client : le registre saisi dans l'espace ; sinon la démo, intacte. */
 export default function PlacementsPage() {
@@ -129,6 +133,11 @@ function DemoPlacementsPage() {
       </PageHeader>
 
       <div className="space-y-3">
+        {/* Compositeur : la répartition SACEM du relevé (la diffusion, que les streams ne lisent pas). */}
+        {focusArtist && focus && isComposer(focus) && (
+          <SacemPanel artist={focusArtist} actor={actor} streamingEstimate={focusArtist ? rosterRevenue(focus) : 0} />
+        )}
+
         {facts && (
           <Sheet family="money">
             <SheetHeading action={t("hero.caption")}>{t("hero.title")}</SheetHeading>
