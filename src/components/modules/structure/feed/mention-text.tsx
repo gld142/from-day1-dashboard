@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Un texte du fil avec ses mentions en pastilles. Une mention de DA qui ne suit pas l'artiste de
+ * Un texte du fil avec ses mentions, en bleu comme dans Messages (plus de pastilles). Une mention de DA qui ne suit pas l'artiste de
  * la note s'affiche grisée : elle n'a rien envoyé (feed-model, `mentionEffects`).
  */
 import { useTranslations } from "next-intl";
@@ -25,8 +25,8 @@ export function MentionText({ text, artistId, daOf }: { text: string; artistId: 
             data-mention={off ? "out-of-scope" : "on"}
             title={off ? tp("mention.outOfScope", { name }) : tp("mention.title", { name })}
             className={cn(
-              "mx-px inline-flex items-center rounded-full px-1.5 text-[0.92em] font-medium",
-              off ? "bg-muted text-muted-foreground line-through" : "bg-brand/12 text-brand",
+              "font-semibold",
+              off ? "text-muted-foreground line-through" : "text-[var(--fil-accent,var(--brand))]",
             )}
           >
             {seg.text}

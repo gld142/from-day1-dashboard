@@ -577,3 +577,22 @@
     break-after: avoid;
   }
 }
+
+/* Fil entre services : l'écosystème Messages d'Apple (Gaël, 29/10/2026). Police système
+   (San Francisco sur Mac et iPhone), un seul accent, le bleu système, et des bulles grises.
+   Familier, épuré, « tech sans faire tech ». Thème clair : valeurs d'iOS ; sombre : celles de macOS. */
+.fil-apple {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.006em;
+  --fil-accent: #007aff;
+  --fil-bubble: #e9e9eb;
+  --fil-fill: rgb(118 118 128 / 0.12);
+}
+:root[data-theme="night"] .fil-apple,
+:root[data-theme="dawn"] .fil-apple,
+:root:not([data-theme]) .fil-apple {
+  --fil-accent: #0a84ff;
+  --fil-bubble: #2c2c2e;
+  --fil-fill: rgb(118 118 128 / 0.24);
+}

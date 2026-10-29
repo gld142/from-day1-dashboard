@@ -52,7 +52,7 @@ export function DetectedPanel({
   const [open, setOpen] = useState(false);
   if (signals.length === 0) return null;
   return (
-    <section aria-labelledby="fil-detect" className="bg-card rounded-lg border px-3 py-2">
+    <section aria-labelledby="fil-detect" className="rounded-2xl bg-[var(--fil-fill)] px-4 py-3">
       <h3 id="fil-detect" className={cn("flex flex-wrap items-center gap-2", open && "mb-2")}>
         <button
           type="button"
@@ -60,29 +60,29 @@ export function DetectedPanel({
           onClick={() => setOpen((v) => !v)}
           className="flex flex-1 flex-wrap items-center gap-2 text-left"
         >
-          <span className="text-foreground inline-flex items-center gap-1.5 text-[13px] font-semibold">
-            <Sparkles className="text-brand size-3.5" aria-hidden />
+          <span className="text-foreground inline-flex items-center gap-1.5 text-[15px] font-semibold tracking-[-0.01em]">
+            <Sparkles className="size-4 text-[var(--fil-accent,var(--brand))]" aria-hidden />
             {tp("detect.title")}
             <span className="text-muted-foreground font-normal tabular-nums">{signals.length}</span>
           </span>
-          <span className="text-muted-foreground text-[12px]">{open ? tp("detect.hint") : tp("detect.summary", { count: signals.length })}</span>
-          <span className="text-foreground/80 ml-auto inline-flex items-center gap-1 text-[12px] font-medium">
+          <span className="text-muted-foreground text-[13px]">{open ? tp("detect.hint") : tp("detect.summary", { count: signals.length })}</span>
+          <span className="ml-auto inline-flex items-center gap-1 text-[13px] font-medium text-[var(--fil-accent,var(--brand))]">
             {open ? tp("detect.hide") : tp("detect.show")}
             <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} aria-hidden />
           </span>
         </button>
       </h3>
       {open && (
-      <ul className="divide-border/70 -mx-3 divide-y border-t">
+      <ul className="divide-border/60 -mx-4 mt-1 divide-y border-t border-border/60">
         {signals.map((s) => {
           const Icon = KIND_ICON[s.kind];
           return (
             <li
               key={s.id}
-              className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-2.5 text-[13px]"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-2.5 text-[14px]"
             >
               <Icon
-                className={cn("size-4 shrink-0", s.urgency === "urgent" ? "text-destructive" : s.urgency === "important" ? "text-warning" : "text-brand")}
+                className={cn("size-4 shrink-0", s.urgency === "urgent" ? "text-destructive" : s.urgency === "important" ? "text-warning" : "text-[var(--fil-accent,var(--brand))]")}
                 aria-hidden
               />
               <span className="min-w-0 flex-1 leading-snug">{text(s)}</span>
@@ -96,7 +96,7 @@ export function DetectedPanel({
                 {s.to.map((r) => roleLabel(tf, r)).join(", ")}
               </span>
               <span className="flex items-center gap-1">
-                <Button size="sm" variant="outline" className="h-7 px-2.5 text-[12px]" onClick={() => onPost(s)}>
+                <Button size="sm" variant="ghost" className="h-7 px-2.5 text-[13px] font-medium text-[var(--fil-accent,var(--brand))] hover:text-[var(--fil-accent,var(--brand))]" onClick={() => onPost(s)}>
                   {tp("detect.post")}
                 </Button>
                 <Button

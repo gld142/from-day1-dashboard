@@ -8,7 +8,7 @@
  */
 import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { Check, CornerUpRight, Paperclip, Send } from "lucide-react";
+import { ArrowUp, Check, CornerUpRight, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { JOB_ROLES, type JobRole } from "@/lib/roles";
@@ -76,7 +76,7 @@ export function FeedComposer({
       {/* Deux rangées nommées : on voit que chaque bouton ENVOIE (l'infobulle montre le message exact). */}
       <div className="space-y-1.5">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-muted-foreground w-[8.5rem] shrink-0 text-[11.5px]">{tp("quick.label")}</span>
+          <span className="text-muted-foreground w-[8.5rem] shrink-0 text-[12px]">{tp("quick.label")}</span>
           <QuickChip
             title={tp("quick.sends", { text: tp("quick.okText") })}
             onClick={() => {
@@ -96,7 +96,7 @@ export function FeedComposer({
         </div>
         {forwardTo.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-muted-foreground w-[8.5rem] shrink-0 text-[11.5px]">{tp("quick.forward")}</span>
+            <span className="text-muted-foreground w-[8.5rem] shrink-0 text-[12px]">{tp("quick.forward")}</span>
             {forwardTo.map((r) => {
               const text = tp("quick.forwardText", { service: roleLabel(tf, r) });
               return (
@@ -111,7 +111,7 @@ export function FeedComposer({
       </div>
 
       {/* Le texte libre et sa barre : joindre, envoyer. */}
-      <div className="bg-background focus-within:border-foreground/30 rounded-lg border transition-colors">
+      <div className="bg-background focus-within:border-foreground/30 rounded-[20px] border transition-colors">
         <Textarea
           aria-label={tp("replies.label")}
           value={text}
@@ -123,9 +123,9 @@ export function FeedComposer({
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) send();
           }}
-          className="min-h-14 resize-none border-0 bg-transparent px-3 py-2.5 text-[13px] shadow-none focus-visible:ring-0 dark:bg-transparent"
+          className="min-h-14 resize-none border-0 bg-transparent px-4 py-2.5 text-[14px] shadow-none focus-visible:ring-0 dark:bg-transparent"
         />
-        <div className="flex items-center gap-1 border-t px-1.5 py-1.5">
+        <div className="flex items-center gap-1 px-2 pb-2">
           {onAttach && attachCtx && (
             <Button
               type="button"
@@ -133,16 +133,23 @@ export function FeedComposer({
               variant="ghost"
               aria-pressed={showAttach}
               onClick={() => setShowAttach((v) => !v)}
-              className={cn("text-muted-foreground h-7 gap-1.5 px-2 text-[12px]", showAttach && "bg-muted text-foreground")}
+              className={cn("text-muted-foreground h-7 gap-1.5 rounded-full px-2.5 text-[13px]", showAttach && "bg-muted text-foreground")}
             >
               <Paperclip className="size-3.5" aria-hidden />
               {tp("attach.button")}
             </Button>
           )}
-          <Button size="sm" className="ml-auto h-7 gap-1.5 px-2.5 text-[12px]" disabled={!text.trim()} onClick={send}>
-            <Send className="size-3.5" aria-hidden />
-            {tp("replies.send")}
-          </Button>
+          {/* Envoyer : la flèche bleue de Messages, avec son nom pour les lecteurs d'écran. */}
+          <button
+            type="button"
+            disabled={!text.trim()}
+            onClick={send}
+            aria-label={tp("replies.send")}
+            title={tp("replies.send")}
+            className="ml-auto inline-flex size-7 items-center justify-center rounded-full bg-[var(--fil-accent,var(--brand))] text-white transition-[opacity,transform] duration-200 active:scale-95 disabled:opacity-30"
+          >
+            <ArrowUp className="size-4" strokeWidth={2.5} aria-hidden />
+          </button>
         </div>
       </div>
       {(effects.added.length > 0 || effects.outOfScope.length > 0) && (
@@ -179,7 +186,7 @@ export function QuickChip({
       onClick={onClick}
       title={title}
       aria-pressed={pressed}
-      className="bg-background hover:bg-muted hover:border-foreground/25 text-foreground/90 inline-flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[12px] font-medium transition-colors"
+      className="bg-background hover:bg-muted text-foreground/90 inline-flex h-7 items-center gap-1.5 rounded-full border px-3 text-[13px] font-medium transition-[background-color,transform] duration-200 active:scale-[0.97]"
     >
       {children}
     </button>

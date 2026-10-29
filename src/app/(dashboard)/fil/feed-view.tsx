@@ -17,7 +17,7 @@ import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { CalendarCheck, Check, CheckCircle2, ChevronRight, Plus, Send } from "lucide-react";
+import { CalendarCheck, Check, CheckCircle2, ChevronRight, Flag, Plus, Send } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { CommitteeAgenda } from "@/components/modules/structure/feed/committee-agenda";
 import { daLabel, recipientLabel, roleLabel } from "@/components/modules/structure/feed/labels";
@@ -79,25 +79,14 @@ const artistsFor = (jobRole: JobRole | null, daId: string | null, org: OrgState)
 /** Classe posée sur <html> tant que l'ordre du jour est ouvert : la feuille d'impression ne sort que lui. */
 const PRINT_CLASS = "print-fil-agenda";
 
-/* L'urgence se lit à un point de couleur devant le titre de section et au liseré de chaque ligne :
-   rouge = aujourd'hui, ambre = cette semaine, gris-bleu = pour info. Pas de fond teinté. */
-const GROUP_DOT: Record<Urgency, string> = {
-  urgent: "bg-destructive",
-  important: "bg-warning",
-  info: "bg-muted-foreground/60",
+/* L'urgence se lit à un petit drapeau devant le titre de section, comme dans Mail : rouge =
+   aujourd'hui, orange = cette semaine, rien pour une info. Listes sans fond teinté ni cadre
+   (Gaël, 29/10 : l'écosystème Messages d'Apple, pas de « plaques »). */
+const GROUP_FLAG: Record<Urgency, string | null> = {
+  urgent: "text-destructive fill-current",
+  important: "text-warning fill-current",
+  info: null,
 };
-
-/* Une teinte TRÈS légère par section (fond à 3 %, bordure à 16 %) : assez pour séparer d'un coup
-   d'œil Urgent / Important / Info, pas assez pour refaire des blocs colorés. */
-const GROUP_COLOR: Record<Urgency, string> = {
-  urgent: "var(--destructive)",
-  important: "var(--warning)",
-  info: "var(--muted-foreground)",
-};
-const sectionSurface = (u: Urgency) => ({
-  background: `color-mix(in oklab, ${GROUP_COLOR[u]} 3%, var(--card))`,
-  borderColor: `color-mix(in oklab, ${GROUP_COLOR[u]} 16%, var(--border))`,
-});
 
 /* Grand écran (≥ lg) : la conversation à droite du fil. En dessous : plein écran, rendu sous <body>
    — l'animation d'entrée de la page pose un transform qui ferait d'un `fixed` un simple `absolute`. */
@@ -430,7 +419,7 @@ function Feed() {
   }
 
   return (
-    <div className="rise-in">
+    <div className="rise-in fil-apple">
       <PageHeader title={t("title")} subtitle={t("subtitle")}>
         <div className="flex flex-wrap gap-2">
           <Dialog open={agendaOpen} onOpenChange={setAgendaOpen}>
@@ -476,7 +465,7 @@ function Feed() {
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           <div
-            className="bg-muted/70 inline-flex rounded-lg p-0.5 text-[12.5px]"
+            className="inline-flex rounded-[9px] bg-[var(--fil-fill)] p-[2px] text-[13px]"
             role="group"
             aria-label={t("filters.modeLabel")}
           >
@@ -487,8 +476,10 @@ function Feed() {
                 aria-pressed={mode === m}
                 onClick={() => setMode(m)}
                 className={cn(
-                  "rounded-md px-3 py-1 font-medium transition-colors",
-                  mode === m ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+                  "rounded-[7px] px-3.5 py-1 font-medium transition-[background-color,color,box-shadow] duration-200",
+                  mode === m
+                    ? "bg-background text-foreground shadow-[0_3px_8px_rgb(0_0_0/0.12),0_3px_1px_rgb(0_0_0/0.04)]"
+                    : "text-foreground/70 hover:text-foreground",
                 )}
               >
                 {t(`filters.${m}`)} <span className="num ml-0.5 font-normal opacity-60">{lists[m].length}</span>
@@ -501,7 +492,7 @@ function Feed() {
               value={artistFilter ?? ""}
               onChange={(e) => setArtistFilter(e.target.value || null)}
               className={cn(
-                "hover:bg-muted/60 h-8 rounded-md bg-transparent px-2 text-[12.5px] transition-colors",
+                "hover:bg-muted/60 h-8 rounded-md bg-transparent px-2 text-[13px] transition-colors",
                 artistFilter ? "text-foreground font-medium" : "text-muted-foreground",
               )}
             >
@@ -514,10 +505,10 @@ function Feed() {
             </select>
           </label>
         </div>
-        <p className="flex items-center gap-3 text-[12px]" aria-live="polite">
+        <p className="flex items-center gap-3 text-[13px]" aria-live="polite">
           {newForMe > 0 && (
-            <span className="text-destructive inline-flex items-center gap-1.5 font-semibold tabular-nums">
-              <span aria-hidden className="bg-destructive size-1.5 rounded-full" />
+            <span className="inline-flex items-center gap-1.5 font-semibold text-[var(--fil-accent)] tabular-nums">
+              <span aria-hidden className="size-2 rounded-full bg-[var(--fil-accent)]" />
               {tp("newMessages", { count: newForMe })}
             </span>
           )}
@@ -557,12 +548,12 @@ function Feed() {
             <DetectedPanel signals={signals} onPost={postSignal} onDismiss={(sg) => markDetected(sg.id)} />
             {groups.map((g) => (
               <section key={g.urgency} aria-labelledby={`fil-g-${g.urgency}`}>
-                <h3 id={`fil-g-${g.urgency}`} className="text-foreground mb-2 flex items-center gap-2 px-1 text-[13px] font-semibold">
-                  <span aria-hidden className={cn("size-2 rounded-full", GROUP_DOT[g.urgency])} />
+                <h3 id={`fil-g-${g.urgency}`} className="text-foreground mb-1 flex items-center gap-1.5 px-3 text-[15px] font-semibold tracking-[-0.01em]">
+                  {GROUP_FLAG[g.urgency] && <Flag className={cn("size-3.5", GROUP_FLAG[g.urgency])} aria-hidden />}
                   {t(`urgency.${g.urgency}`)}
                   <span className="text-muted-foreground font-normal tabular-nums">{g.items.length}</span>
                 </h3>
-                <ul className="divide-border/70 overflow-hidden rounded-lg border divide-y" style={sectionSurface(g.urgency)}>
+                <ul className="divide-border/60 divide-y">
                   <AnimatePresence initial={false}>
                     {g.items.map((n) => (
                       <motion.li
@@ -585,14 +576,14 @@ function Feed() {
                   type="button"
                   aria-expanded={showDone}
                   onClick={() => setShowDone((v) => !v)}
-                  className="text-muted-foreground hover:text-foreground mb-2 flex w-full items-center gap-1.5 px-1 text-[13px] font-semibold"
+                  className="text-muted-foreground hover:text-foreground mb-1 flex w-full items-center gap-1.5 px-3 text-[15px] font-semibold"
                 >
                   <ChevronRight className={cn("size-3.5 transition-transform", showDone && "rotate-90")} aria-hidden />
                   {tp("groups.done")}
                   <span className="num font-normal">{doneShown.length}</span>
                 </button>
                 {showDone && (
-                  <ul className="bg-card divide-border/70 overflow-hidden rounded-lg border divide-y">
+                  <ul className="divide-border/60 divide-y">
                     {doneShown.map((n) => (
                       <li key={n.id}>{renderNote(n)}</li>
                     ))}
@@ -657,7 +648,7 @@ function Feed() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: EASE_OUT }}
-            className="bg-brand text-brand-foreground fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-2 text-[12.5px] font-medium shadow-lg"
+            className="fil-apple bg-foreground/90 text-background fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-4 py-2 text-[13px] font-medium shadow-[0_8px_24px_rgb(0_0_0/0.18)] backdrop-blur"
           >
             <Send className="size-3.5" aria-hidden />
             {flash}
@@ -770,7 +761,7 @@ function NewNoteDialog({
           {t("new.button")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="fil-apple sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{t("new.title")}</DialogTitle>
           <DialogDescription>{t("new.description")}</DialogDescription>
@@ -791,7 +782,7 @@ function NewNoteDialog({
               <span className="num ml-auto">{t("new.textHint", { count: text.length })}</span>
             </div>
             {effects.added.length > 0 && (
-              <p className="mt-1 text-[11px] text-brand">
+              <p className="mt-1 text-[11px] text-[var(--fil-accent,var(--brand))]">
                 {tp("replies.adds", { list: effects.added.map((r) => recipientLabel(t, r)).join(", ") })}
               </p>
             )}
@@ -847,7 +838,7 @@ function NewNoteDialog({
                     onClick={() => setTo(on ? to.filter((x) => x !== r) : [...to, r])}
                     className={cn(
                       "rounded-full border px-2.5 py-1 text-[12px]",
-                      on ? "border-brand bg-brand/10 text-brand" : "text-muted-foreground hover:text-foreground",
+                      on ? "border-[var(--fil-accent,var(--brand))] text-[var(--fil-accent,var(--brand))]" : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {t(`roles.${r}`)}

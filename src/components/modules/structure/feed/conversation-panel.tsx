@@ -30,7 +30,7 @@ import { AttachmentCard, type AttachmentCtxInput } from "./attachment-card";
 import { FeedComposer } from "./composer";
 import { daLabel, recipientLabel, roleLabel, toLabel } from "./labels";
 import { MentionText } from "./mention-text";
-import { EventLine, StatusPill, URGENCY_BAR } from "./note-card";
+import { EventLine, StatusPill } from "./note-card";
 
 type Reactions = Record<string, Partial<Record<Reaction, string[]>>>;
 
@@ -154,7 +154,7 @@ export function ConversationPanel(p: ConversationPanelProps) {
   return (
     <aside
       aria-label={tp("conv.title")}
-      className={cn("bg-card flex min-h-0 flex-col overflow-hidden rounded-lg border", URGENCY_BAR[note.urgency], p.className)}
+      className={cn("fil-apple bg-card flex min-h-0 flex-col overflow-hidden rounded-2xl border", p.className)}
     >
       {/* En tête : la note et ce qu'on peut en faire. */}
       <header className="space-y-2 border-b px-4 pt-3 pb-3">
@@ -197,19 +197,19 @@ export function ConversationPanel(p: ConversationPanelProps) {
           )}
           <span className="ml-auto flex flex-wrap items-center gap-1">
             {canTakeIt && (
-              <Button size="sm" variant="outline" className="h-8 gap-1 text-[12px]" onClick={() => p.myPersonId && p.onAssign(p.myPersonId)}>
+              <Button size="sm" variant="outline" className="h-8 gap-1 rounded-full text-[13px]" onClick={() => p.myPersonId && p.onAssign(p.myPersonId)}>
                 <Hand className="size-3.5" aria-hidden />
                 {tp("quick.mine")}
               </Button>
             )}
             {p.canAct && status !== "done" && (
-              <Button size="sm" variant="outline" className="h-8 gap-1 text-[12px]" onClick={p.onDone}>
+              <Button size="sm" variant="outline" className="h-8 gap-1 rounded-full text-[13px]" onClick={p.onDone}>
                 <Check className="size-3.5" aria-hidden />
                 {tf("note.markDone")}
               </Button>
             )}
             {plan && (
-              <Button size="sm" className="h-8 gap-1 text-[12px]" onClick={() => p.onOpen(plan)}>
+              <Button size="sm" className="h-8 gap-1 rounded-full bg-[var(--fil-accent)] text-[13px] text-white hover:bg-[var(--fil-accent)]/90" onClick={() => p.onOpen(plan)}>
                 <ArrowUpRight className="size-3.5" aria-hidden />
                 {openLabel}
               </Button>
@@ -223,11 +223,8 @@ export function ConversationPanel(p: ConversationPanelProps) {
         {items.map((item) => {
           if (item.kind === "event") {
             return (
-              <p key={`e-${item.at}-${item.event.type}`} className="text-muted-foreground flex items-baseline gap-2 pl-10 text-[11.5px]">
-                <span aria-hidden className="bg-muted-foreground/40 size-1 shrink-0 translate-y-[-2px] rounded-full" />
-                <span>
-                  <EventLine event={item.event} /> · <span className="tabular-nums">{when(locale, item.at)}</span>
-                </span>
+              <p key={`e-${item.at}-${item.event.type}`} className="text-muted-foreground px-6 text-center text-[11.5px] leading-snug">
+                <EventLine event={item.event} /> · <span className="tabular-nums">{when(locale, item.at)}</span>
               </p>
             );
           }
@@ -241,27 +238,34 @@ export function ConversationPanel(p: ConversationPanelProps) {
           const name = isNote ? note.fromName : by!.name;
           const text = isNote ? note.text : item.reply.text;
           return (
-            <div key={`m-${id}`} className="group/msg flex gap-2.5">
-              <span
-                aria-hidden
-                className={cn(
-                  "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md text-[10.5px] font-semibold",
-                  mine ? "bg-foreground text-background" : "bg-muted text-foreground/75",
-                )}
-              >
-                {initials(name)}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[12px] leading-tight">
-                  <span className="text-foreground font-semibold">{mine ? tp("conv.you") : name}</span>
-                  {isNote && <span className="text-muted-foreground"> {tp("conv.note")}</span>}
-                  <span className="text-muted-foreground tabular-nums"> · {when(locale, item.at)}</span>
+            <div key={`m-${id}`} className={cn("group/msg flex items-end gap-2", mine && "flex-row-reverse")}>
+              {!mine && (
+                <span
+                  aria-hidden
+                  className="bg-muted text-foreground/75 mb-5 flex size-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-semibold"
+                >
+                  {initials(name)}
+                </span>
+              )}
+              <div className={cn("flex min-w-0 max-w-[85%] flex-col", mine ? "items-end" : "items-start")}>
+                <p className="text-muted-foreground mb-1 px-3 text-[11.5px] leading-tight">
+                  <span className="text-foreground/80 font-medium">{mine ? tp("conv.you") : name}</span>
+                  {isNote && <span> {tp("conv.note")}</span>}
+                  <span className="tabular-nums"> · {when(locale, item.at)}</span>
                 </p>
-                <div className={cn("text-foreground/90 mt-0.5 text-[13px] leading-relaxed", isNote && "font-medium")}>
+                <div
+                  className={cn(
+                    "rounded-[18px] px-3.5 py-2 text-[14px] leading-snug",
+                    mine
+                      ? "bg-[var(--fil-accent)] text-white [&_[data-mention]]:text-white [&_[data-mention]]:underline [&_[data-mention]]:underline-offset-2"
+                      : "text-foreground bg-[var(--fil-bubble)]",
+                    isNote && "font-medium",
+                  )}
+                >
                   <MentionText text={text} artistId={note.artistId} daOf={daOf} />
                 </div>
                 {!isNote && item.added.length > 0 && (
-                  <p className="text-muted-foreground mt-0.5 text-[11.5px]">
+                  <p className="text-muted-foreground mt-1 px-3 text-[11.5px]">
                     {tp("conv.adds", { list: item.added.map((r) => recipientLabel(tf, r)).join(", ") })}
                   </p>
                 )}
