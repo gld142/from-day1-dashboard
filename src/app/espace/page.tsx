@@ -9,7 +9,7 @@ import { userDb } from "@/lib/supabase/server";
 import { openBillingPortal, signOut } from "./actions";
 import { AddArtistForm, ArtistActions, ClearPurchaseDraft, DangerZone, InviteForm, RemoveMemberButton, RevokeInvitationButton, WorkspaceKindForm } from "./forms";
 
-export const metadata: Metadata = { title: "Day 1 Pro — Mon espace", robots: { index: false } };
+export const metadata: Metadata = { title: "Day 1 Pro · Mon espace", robots: { index: false } };
 
 const ROLE_LABEL: Record<string, string> = { owner: "Propriétaire", member: "Équipe", artist: "Artiste" };
 const STATUS_LABEL: Record<string, string> = {

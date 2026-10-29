@@ -17,7 +17,7 @@
   },
   "segments": {
     "title": "Fan segments",
-    "subtitle": "Fanbase segmented by engagement intensity — 30-day trend",
+    "subtitle": "Fanbase segmented by engagement intensity, 30-day trend",
     "ofFanbase": "of fanbase",
     "superfans": {
       "label": "Superfans",
@@ -29,11 +29,11 @@
     },
     "casual": {
       "label": "Casual",
-      "desc": "Discovered via playlists and radio — the pool to convert."
+      "desc": "Discovered via playlists and radio: the pool to convert."
     },
     "dormant": {
       "label": "Dormant",
-      "desc": "Past listeners with no recent plays — prime re-engagement target."
+      "desc": "Past listeners with no recent plays: prime re-engagement target."
     }
   },
   "demo": {
@@ -72,7 +72,7 @@
   },
   "roster": {
     "title": "Roster audiences",
-    "subtitle": "Fanbase comparison — click an artist to zoom in",
+    "subtitle": "Fanbase comparison: click an artist to zoom in",
     "artist": "Artist",
     "listeners": "Listeners",
     "followers": "Est. followers",

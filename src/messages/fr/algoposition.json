@@ -15,23 +15,23 @@
     "description": "L'algorithme génère {share} % de tes streams, répartis sur 5 surfaces de recommandation. Chacune se travaille différemment.",
     "discoverWeekly": {
       "name": "Discover Weekly",
-      "hint": "Playlist personnalisée du lundi, pour les auditeurs qui ne te connaissent pas encore — un save rate élevé sur tes titres récents en augmente la portée."
+      "hint": "Playlist personnalisée du lundi, pour les auditeurs qui ne te connaissent pas encore. Un save rate élevé sur tes titres récents en augmente la portée."
     },
     "releaseRadar": {
       "name": "Release Radar",
-      "hint": "Tes nouveautés poussées à tes followers le vendredi — chaque abonné Spotify gagné avant la sortie élargit directement cette audience."
+      "hint": "Tes nouveautés poussées à tes followers le vendredi. Chaque abonné Spotify gagné avant la sortie élargit directement cette audience."
     },
     "radio": {
       "name": "Radio",
-      "hint": "Stations générées à partir d'un titre ou artiste proche — se déclenche quand ton save rate dépasse durablement ~30 %."
+      "hint": "Stations générées à partir d'un titre ou artiste proche, qui se déclenchent quand ton save rate dépasse durablement ~30 %."
     },
     "autoplay": {
       "name": "Autoplay",
-      "hint": "Lecture automatique en fin de playlist ou d'album — un faible skip rate maintient tes titres dans ces files d'attente."
+      "hint": "Lecture automatique en fin de playlist ou d'album. Un faible skip rate maintient tes titres dans ces files d'attente."
     },
     "dailyMix": {
       "name": "Daily Mix",
-      "hint": "Mixes quotidiens de tes auditeurs réguliers — se nourrit de la ré-écoute : plus tes fans reviennent, plus tu y apparais."
+      "hint": "Mixes quotidiens de tes auditeurs réguliers, nourris par la ré-écoute : plus tes fans reviennent, plus tu y apparais."
     }
   },
   "mix": {
@@ -57,18 +57,18 @@
   },
   "perception": {
     "title": "Comment l'algo te voit",
-    "description": "Les trois signaux d'engagement que Spotify mesure sur chaque écoute — ce sont eux qui décident si l'algo te pousse.",
+    "description": "Les trois signaux d'engagement que Spotify mesure sur chaque écoute : ce sont eux qui décident si l'algo te pousse.",
     "saveRate": "Save rate",
-    "saveRateHint": "Part des auditeurs qui ajoutent le titre à leur bibliothèque — au-dessus de ~{threshold} %, la Radio se déclenche.",
+    "saveRateHint": "Part des auditeurs qui ajoutent le titre à leur bibliothèque. Au-dessus de ~{threshold} %, la Radio se déclenche.",
     "skipRate": "Skip rate",
-    "skipRateHint": "Part des écoutes zappées avant 30 secondes — rester sous ~{threshold} % protège ta présence en Autoplay.",
+    "skipRateHint": "Part des écoutes zappées avant 30 secondes. Rester sous ~{threshold} % protège ta présence en Autoplay.",
     "completion": "Écoute complète",
-    "completionHint": "Part des écoutes menées au bout — au-dessus de ~{threshold} %, le titre est « retenu » et recommandé plus largement.",
-    "note": "Valeurs estimées à partir de tes streams de démo. En production, ces signaux viendront de Spotify for Artists — les seuils indiqués sont des ordres de grandeur observés, pas des règles officielles."
+    "completionHint": "Part des écoutes menées au bout. Au-dessus de ~{threshold} %, le titre est « retenu » et recommandé plus largement.",
+    "note": "Valeurs estimées à partir de tes streams de démo. En production, ces signaux viendront de Spotify for Artists. Les seuils indiqués sont des ordres de grandeur observés, pas des règles officielles."
   },
   "roster": {
     "title": "Santé algo du roster",
-    "description": "Score de santé, part algorithmique et tendance 28 j par artiste — clique pour ouvrir la radiographie complète.",
+    "description": "Score de santé, part algorithmique et tendance 28 j par artiste. Clique pour ouvrir la radiographie complète.",
     "avgShare": "Part algo moyenne",
     "avgScore": "Score santé moyen",
     "bestScore": "Meilleur score",

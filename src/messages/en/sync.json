@@ -1,7 +1,7 @@
 {
   "title": "Sync & Licensing",
-  "subtitle": "Your catalog in front of music supervisors — ads, film, TV, games.",
-  "subtitleLabel": "The roster's catalog in front of music supervisors — ads, film, TV, games.",
+  "subtitle": "Your catalog in front of music supervisors: ads, film, TV, games.",
+  "subtitleLabel": "The roster's catalog in front of music supervisors: ads, film, TV, games.",
   "filterAll": "All artists",
   "kpis": {
     "readyTracks": "Sync-ready tracks",
@@ -45,7 +45,7 @@
   },
   "catalog": {
     "title": "Tagged catalog",
-    "subtitle": "Mood tags derived from the catalog — a sync deal requires signed splits",
+    "subtitle": "Mood tags derived from the catalog. A sync deal requires signed splits.",
     "bpm": "BPM",
     "splitsOk": "Splits signed",
     "splitsWarning": "Splits incomplete",
@@ -63,7 +63,7 @@
     "title": "What Day 1 takes",
     "rate": "15–20%",
     "rateLabel": "on closed deals",
-    "body": "From Day 1 takes 15 to 20% only on closed sync deals — nothing upfront, nothing on your other revenue. Signed splits are applied automatically on payout."
+    "body": "From Day 1 takes 15 to 20% only on closed sync deals: nothing upfront, nothing on your other revenue. Signed splits are applied automatically on payout."
   },
   "hero": {
     "title": "Sync revenue over 12 months",

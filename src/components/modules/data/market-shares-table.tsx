@@ -49,7 +49,7 @@ export function MarketSharesTable({
     dim === "group" ? t(`groups.${key as MarketGroup}`) : dim === "genre" ? t(`genres.${key as MarketGenre}`) : key;
   const isRoster = (dim: MarketDimension, key: string) => dim === "artist" && rosterNames.has(key.toLowerCase());
   const topTrackOf = (dim: MarketDimension, r: MarketShareRow) =>
-    r.topTrack ? (dim === "artist" ? r.topTrack.title : `${r.topTrack.artist} — ${r.topTrack.title}`) : "—";
+    r.topTrack ? (dim === "artist" ? r.topTrack.title : `${r.topTrack.artist} · ${r.topTrack.title}`) : "—";
 
   const deltaTone = (d: number) =>
     d > 0.05 ? "text-success" : d < -0.05 ? "text-destructive" : "text-muted-foreground";

@@ -12,7 +12,7 @@
   "errors": {
     "SAVE_FAILED": "The statement could not be saved to your workspace. Please try again in a moment.",
     "EMPTY_FILE": "This file looks empty.",
-    "UNKNOWN_FORMAT": "Unrecognized format — we need at least an earnings or quantity column.",
+    "UNKNOWN_FORMAT": "Unrecognized format: we need at least an earnings or quantity column.",
     "NO_DATA_ROWS": "No usable rows found in this file.",
     "generic": "Couldn't read this file. Make sure it's a CSV export from your distributor."
   },
@@ -56,18 +56,18 @@
   },
   "active": {
     "title": "Your data is live",
-    "description": "The whole dashboard now shows “{name}” — imported on {date} from {format}.",
+    "description": "The whole dashboard now shows “{name}”, imported on {date} from {format}.",
     "stats": "{months} months · {streams} streams · {revenue} in revenue",
     "modules": "Modules without imported data (rights, touring, splits…) show an empty state until their integrations arrive.",
     "reimport": "Import a new statement",
     "deactivate": "Switch back to demo mode",
     "delete": "Delete my data",
     "deleteConfirm": "Your imported data will be erased from this browser. Continue?",
-    "descriptionCustomer": "My statement shows the figures for “{name}” — imported on {date} from {format}.",
+    "descriptionCustomer": "My statement shows the figures for “{name}”, imported on {date} from {format}.",
     "modulesCustomer": "The other dashboard pages open as they get connected to statements."
   },
   "success": {
-    "title": "Done — welcome home.",
+    "title": "Done. Welcome home.",
     "description": "Your Pulse, your revenue, your valuation: everything is computed from your real numbers.",
     "descriptionCustomer": "The statement is saved in your workspace: it feeds My statement, Revenue, Streams and the organisation's Roster."
   },

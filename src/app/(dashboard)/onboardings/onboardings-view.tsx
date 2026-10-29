@@ -197,7 +197,7 @@ export default function OnboardingsPage() {
                   <b className="font-semibold">
                     {t(`method.principles.${key}.title`)}
                   </b>
-                  {" — "}
+                  {". "}
                   <span className="text-foreground/75">
                     {t(`method.principles.${key}.desc`)}
                   </span>

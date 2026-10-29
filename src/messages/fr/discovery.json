@@ -1,6 +1,6 @@
 {
   "title": "Discovery Lab",
-  "subtitle": "Le potentiel de tes inédits, mesuré avant la sortie — pour choisir le bon single sans parier à l'aveugle.",
+  "subtitle": "Le potentiel de tes inédits, mesuré avant la sortie, pour choisir le bon single sans parier à l'aveugle.",
   "subtitleLabel": "Les inédits les plus prometteurs du roster, scorés par l'IA avant toute sortie.",
   "kpis": {
     "demos": "Inédits analysés",
@@ -10,7 +10,7 @@
     "firstWeek": "Streams estimés · 1re semaine",
     "firstWeekHint": "si le meilleur inédit sort en single",
     "weakest": "Son point faible",
-    "weakestHint": "{value}/100 — c'est là qu'il y a à gagner",
+    "weakestHint": "{value}/100 : c'est là qu'il y a à gagner",
     "avgHint": "sur {count, plural, one {# inédit} other {# inédits}}"
   },
   "podium": {
@@ -33,17 +33,17 @@
   "list": {
     "title": "Tes inédits",
     "bpm": "BPM",
-    "analyzing": "Analyse audio en cours — score disponible dans quelques minutes.",
+    "analyzing": "Analyse audio en cours. Score disponible dans quelques minutes.",
     "analyzingBadge": "En analyse…",
     "hint": "Le détail des quatre dimensions est dans la comparaison ci-contre"
   },
   "compare": {
     "title": "Comparaison des inédits",
-    "description": "Les 4 dimensions du Discovery Score, côte à côte — repère les forces de chaque démo."
+    "description": "Les 4 dimensions du Discovery Score, côte à côte : repère les forces de chaque démo."
   },
   "method": {
     "title": "Comment on score tes démos",
-    "description": "Le Discovery Score croise trois familles de signaux — aucune boîte noire, chaque sous-score est explicable.",
+    "description": "Le Discovery Score croise trois familles de signaux : aucune boîte noire, chaque sous-score est explicable.",
     "audio": {
       "title": "Tagging audio",
       "description": "Analyse du signal : énergie, tempo, structure, placement du hook et signature sonore de chaque démo."
@@ -70,7 +70,7 @@
   },
   "rosterView": {
     "title": "Meilleurs inédits du roster",
-    "description": "Le meilleur inédit de chaque artiste, classé par Discovery Score — de quoi prioriser les prochaines sorties.",
+    "description": "Le meilleur inédit de chaque artiste, classé par Discovery Score : de quoi prioriser les prochaines sorties.",
     "selectArtist": "Choisir un artiste",
     "hint": "Clique sur une ligne pour ouvrir le lab complet de l'artiste."
   },

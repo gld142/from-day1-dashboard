@@ -197,7 +197,7 @@ function DemoSplitsPage() {
           </p>
           <p className="sheet-ink mt-1.5 text-[13px]">
             {t("hero.caption")}
-            {" — "}
+            {". "}
             {unsigned === 0 ? (
               <b className="text-success">{t("hero.allSigned")}</b>
             ) : (

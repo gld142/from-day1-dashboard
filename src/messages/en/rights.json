@@ -1,7 +1,7 @@
 {
   "title": "French rights",
-  "subtitle": "What SACEM, ADAMI, SPEDIDAM and SPRÉ pay you — and what's missing.",
-  "subtitleLabel": "What the collecting societies pay {scope, select, roster {the roster} other {{name}}} — and what's missing.",
+  "subtitle": "What SACEM, ADAMI, SPEDIDAM and SPRÉ pay you, and what's missing.",
+  "subtitleLabel": "What the collecting societies pay {scope, select, roster {the roster} other {{name}}}, and what's missing.",
   "kpis": {
     "received12m": "Received over 12 months",
     "expected": "Expected (in progress)",
@@ -20,7 +20,7 @@
   },
   "chart": {
     "heading": "Expected vs received by period",
-    "sub": "Day 1 estimate (author share of publishing on the master gross) cross-checked against statements received — simulated for the demo —, all societies combined.",
+    "sub": "Day 1 estimate (author share of publishing on the master gross) cross-checked against statements received (simulated for the demo), all societies combined.",
     "expected": "Expected ({provenance, select, estimated {estimated} other {simulated}})",
     "received": "Received ({provenance, select, simulated {simulated statement} declared {imported statement} other {statement}})"
   },
@@ -62,10 +62,10 @@
   },
   "import": {
     "title": "Your statements, your call",
-    "lead": "The amount received shown here is simulated for the demo. For the real thing: import your SACEM distribution statement (PDF or CSV from your member area) — we match each work against the estimate and flag what is missing.",
+    "lead": "The amount received shown here is simulated for the demo. For the real thing: import your SACEM distribution statement (PDF or CSV from your member area). We match each work against the estimate and flag what is missing.",
     "cta": {
       "import": "Import my SACEM statement",
-      "imported": "{file} imported — reconciliation coming soon",
+      "imported": "{file} imported, reconciliation coming soon",
       "request": "Request my statement",
       "audit": "View audit"
     },
@@ -74,25 +74,25 @@
       "lead": "The file stays on your device: nothing is sent. For now we keep its name; the work-by-work reconciliation comes next.",
       "formatTitle": "What we expect",
       "format": {
-        "kind": "A distribution statement — not a membership fee notice or a payment reminder.",
+        "kind": "A distribution statement, not a membership fee notice or a payment reminder.",
         "period": "The period covered: distribution quarter or half-year.",
         "perWork": "The amount per work, with its source: streaming, radio, TV, live."
       },
       "fileLabel": "Choose the file (PDF or CSV)",
       "hint": "Export from the SACEM or ADAMI member area.",
-      "done": "{file} imported — reconciliation coming soon.",
+      "done": "{file} imported, reconciliation coming soon.",
       "close": "Close"
     },
     "request": {
       "subject": "Request for distribution statements",
-      "body": "Dear Sir or Madam,\n\nAs a member of your society, I would like to obtain my detailed distribution statements — per work, per period and per source of exploitation — for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to me as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
+      "body": "Dear Sir or Madam,\n\nAs a member of your society, I would like to obtain my detailed distribution statements (per work, per period and per source of exploitation) for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to me as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
     },
     "label": {
       "title": "{scope, select, roster {The roster's statements} other {{name}'s statements}}",
-      "lead": "The amount received shown here is simulated for the demo. For the real thing: import {scope, select, roster {the roster's SACEM distribution statements} other {{name}'s SACEM distribution statement}} (PDF or CSV from the member area) — we match each work against the estimate and flag what is missing.",
+      "lead": "The amount received shown here is simulated for the demo. For the real thing: import {scope, select, roster {the roster's SACEM distribution statements} other {{name}'s SACEM distribution statement}} (PDF or CSV from the member area). We match each work against the estimate and flag what is missing.",
       "cta": {
         "import": "{scope, select, roster {Import the roster's statements} other {Import {name}'s statement}}",
-        "imported": "{file} imported — reconciliation coming soon",
+        "imported": "{file} imported, reconciliation coming soon",
         "request": "{scope, select, roster {Request the statements} other {Request {name}'s statement}}",
         "audit": "View audit"
       },
@@ -101,18 +101,18 @@
         "lead": "The file stays on your device: nothing is sent. For now we keep its name; the work-by-work reconciliation comes next.",
         "formatTitle": "What we expect",
         "format": {
-          "kind": "A distribution statement — not a membership fee notice or a payment reminder.",
+          "kind": "A distribution statement, not a membership fee notice or a payment reminder.",
           "period": "The period covered: distribution quarter or half-year.",
           "perWork": "The amount per work, with its source: streaming, radio, TV, live."
         },
         "fileLabel": "Choose the file (PDF or CSV)",
         "hint": "Export from the SACEM or ADAMI member area.",
-        "done": "{file} imported — reconciliation coming soon.",
+        "done": "{file} imported, reconciliation coming soon.",
         "close": "Close"
       },
       "request": {
         "subject": "Request for distribution statements",
-        "body": "Dear Sir or Madam,\n\nWe represent {scope, select, roster {the artists of our roster} other {{name}}} and would like to obtain {scope, select, roster {their} other {their}} detailed distribution statements — per work, per period and per source of exploitation — for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to us as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
+        "body": "Dear Sir or Madam,\n\nWe represent {scope, select, roster {the artists of our roster} other {{name}}} and would like to obtain {scope, select, roster {their} other {their}} detailed distribution statements (per work, per period and per source of exploitation) for the last four quarters, together with the detail of the amounts currently being processed.\n\nYou can send them to us as PDF or CSV, in reply to this message.\n\nThank you in advance.\n\nKind regards,\n{signer}"
       }
     }
   },

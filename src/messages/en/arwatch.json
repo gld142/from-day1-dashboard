@@ -1,6 +1,6 @@
 {
   "title": "A&R Watch",
-  "subtitle": "Who's rising, and how fast — {count} emerging artists on {label}'s radar.",
+  "subtitle": "Who's rising, and how fast: {count} emerging artists on {label}'s radar.",
   "guard": {
     "title": "Label view only",
     "description": "A&R Watch is the label's scouting tool: emerging talent detection and investment scoring. It is not available in artist view.",
@@ -38,7 +38,7 @@
   "empty": "No artist matches this filter",
   "scoring": {
     "open": "Investment scoring",
-    "title": "Scoring — {name}",
+    "title": "Scoring · {name}",
     "description": "Deterministic estimate based on current audience, 30-day momentum and Day 1 Index.",
     "range": "Recommended advance range",
     "rangeHint": "Calibrated on projected 12-month streaming revenue",

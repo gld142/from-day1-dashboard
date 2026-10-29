@@ -4,12 +4,12 @@ import { coBrandPillHtml, esc, gateBrandHtml, gateTitleText, safeColor } from "@
 
 describe("pages publiques — la marque suit la maison", () => {
   it("Day 1 : titre inchangé, pas de pastille", () => {
-    expect(gateTitleText(TENANTS.day1)).toBe("From Day 1 — Accès");
+    expect(gateTitleText(TENANTS.day1)).toBe("From Day 1 · Accès");
     expect(gateBrandHtml(TENANTS.day1)).toBe("<h1>Day 1 Pro</h1>");
     expect(coBrandPillHtml(TENANTS.day1)).toBe("");
   });
   it("Universal : nom de la maison dans le titre, pastille UNIVERSAL noire sur la porte", () => {
-    expect(gateTitleText(TENANTS.universal)).toBe("Day One × Universal — Accès");
+    expect(gateTitleText(TENANTS.universal)).toBe("Day One × Universal · Accès");
     const brand = gateBrandHtml(TENANTS.universal);
     expect(brand).toContain("Day One × Universal");
     expect(brand).toContain("background:#000000;color:#ffffff");

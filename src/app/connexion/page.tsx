@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { userDb } from "@/lib/supabase/server";
 import { LoginForm } from "./login-form";
 
-export const metadata: Metadata = { title: "Day 1 Pro — Connexion", robots: { index: false } };
+export const metadata: Metadata = { title: "Day 1 Pro · Connexion", robots: { index: false } };
 
 const NOTES: Record<string, string> = {
   paye: "Paiement reçu, merci ! Ton email avait déjà un compte : connecte-toi pour retrouver ton nouvel espace.",

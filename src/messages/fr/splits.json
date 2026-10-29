@@ -1,6 +1,6 @@
 {
   "title": "Splits",
-  "subtitle": "Qui touche quoi sur chacun de tes titres — et qui n'a pas encore signé.",
+  "subtitle": "Qui touche quoi sur chacun de tes titres, et qui n'a pas encore signé.",
   "kpis": {
     "signed": "Splits signés",
     "pending": "En attente de signature",
@@ -37,7 +37,7 @@
     "detailHint": "Voir le détail du partage"
   },
   "dialog": {
-    "title": "Split — {track}",
+    "title": "Split · {track}",
     "description": "{project} · ISRC {isrc}",
     "holder": "Ayant droit",
     "role": "Rôle",
@@ -59,8 +59,8 @@
     "meta": "{tracks, plural, one {# titre} other {# titres}} · {pending, plural, =0 {tout est signé} one {# split à signer} other {# splits à signer}}"
   },
   "empty": "Aucun split ne correspond à ce filtre.",
-  "subtitleLabel": "Qui touche quoi sur chaque titre du roster — et ce qui reste à signer.",
-  "subtitleFocused": "Qui touche quoi sur les titres de {name} — et ce qui reste à signer.",
+  "subtitleLabel": "Qui touche quoi sur chaque titre du roster, et ce qui reste à signer.",
+  "subtitleFocused": "Qui touche quoi sur les titres de {name}, et ce qui reste à signer.",
   "hero": {
     "title": "Partages signés",
     "value": "{signed} / {total}",

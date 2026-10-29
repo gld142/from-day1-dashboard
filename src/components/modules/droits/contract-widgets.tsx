@@ -443,7 +443,7 @@ export function ContractsLedger({
                                         <span>
                                           <b className="font-medium">{t(`alerts.kinds.${a.kind}`)}</b>
                                           {a.dueDate && <span className="num text-muted-foreground"> · {fmtDate(locale, a.dueDate)}</span>}
-                                          <span className="text-muted-foreground"> — {a.message[locale === "fr" ? "fr" : "en"]}</span>
+                                          <span className="text-muted-foreground"> · {a.message[locale === "fr" ? "fr" : "en"]}</span>
                                         </span>
                                       </li>
                                     );

@@ -267,7 +267,7 @@ export function FansView() {
             })}
             {superSeg && (
               <>
-                {" — "}
+                {", "}
                 <b
                   className={
                     superSeg.trend >= 0 ? "text-success" : "text-destructive"

@@ -8,13 +8,13 @@
     "placeholder": "Ask a question about this data…",
     "send": "Send",
     "typing": "Copilot is writing…",
-    "disclaimer": "Demo — answers are generated from your demo data.",
+    "disclaimer": "Demo: answers are generated from your demo data.",
     "suggestionsLabel": "Suggestions",
-    "generic": "In the demo I answer the suggestions below. In production I query the whole dataset — streams, revenue, contracts, rights — and cite my sources."
+    "generic": "In the demo I answer the suggestions below. In production I query the whole dataset (streams, revenue, contracts, rights) and cite my sources."
   },
   "greeting": {
-    "artist": "Hi {name} — I have your last 24 months in front of me. Ask me anything about your streams, revenue or rights.",
-    "label": "Hi — I have the consolidated data of the {count} artists on {label} in front of me. Ask me anything about running the roster."
+    "artist": "Hi {name}, I have your last 24 months in front of me. Ask me anything about your streams, revenue or rights.",
+    "label": "Hi, I have the consolidated data of the {count} artists on {label} in front of me. Ask me anything about running the roster."
   },
   "suggestions": {
     "bestMonth": "What was my best month?",
@@ -34,7 +34,7 @@
     "bestMonthLabel": "Over 24 months, the roster's best month is {month}: {amount} in consolidated revenue, {pct} above the monthly average ({avg}).",
     "growthLabel": "Over 30 days, the roster totals {streams} streams, moving {delta} versus the previous period. The momentum is driven by your developing artists.",
     "topArtist": "{artist} is your most profitable artist: {net} in net result over 12 months, at a {margin} margin. Revenue generated: {revenue}.",
-    "auditLabel": "Across the roster I find {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totalling {amount} across {artists, plural, one {# artist} other {# artists}}. These are questions to ask, not money in hand — the letters are on the Audit page."
+    "auditLabel": "Across the roster I find {count, plural, =0 {no gap} one {# gap} other {# gaps}} between expected and reported, totalling {amount} across {artists, plural, one {# artist} other {# artists}}. These are questions to ask, not money in hand. The letters are on the Audit page."
   },
   "sources": {
     "streaming": "streaming",

@@ -104,7 +104,7 @@ export function CustomerPlacements() {
             <ul className="grid gap-1.5 text-sm">
               {s.undeclared.map((p) => (
                 <li key={p.id} className="text-destructive">
-                  « {p.title} » ({p.performer}), sortie le {date(p.release_date)}{" "}: pas déclarée — les droits d&apos;auteur ne seront pas versés tant qu&apos;elle ne l&apos;est pas.
+                  « {p.title} » ({p.performer}), sortie le {date(p.release_date)}{" "}: pas déclarée. Les droits d&apos;auteur ne seront pas versés tant qu&apos;elle ne l&apos;est pas.
                 </li>
               ))}
             </ul>

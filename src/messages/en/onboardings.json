@@ -3,7 +3,7 @@
   "subtitle": "The channels an artist can arrive through, and where each one stands.",
   "hero": {
     "title": "Partners already engaged",
-    "caption": "out of {total} targeted channels — in discussion, in pilot or signed. {toContact, plural, =0 {All have been contacted.} one {One channel is still to contact.} other {# channels are still to contact.}}"
+    "caption": "out of {total} targeted channels (in discussion, in pilot or signed). {toContact, plural, =0 {All have been contacted.} one {One channel is still to contact.} other {# channels are still to contact.}}"
   },
   "kpis": {
     "next": "next deadline",
@@ -43,7 +43,7 @@
   },
   "method": {
     "title": "The method, five non-negotiable principles",
-    "targets": "M+18 target: {share}% of signups arrive through a partner; {pilots} pilots are aimed at M+3. These are team targets, not signed commitments — no number on this page counts them as earned.",
+    "targets": "M+18 target: {share}% of signups arrive through a partner; {pilots} pilots are aimed at M+3. These are team targets, not signed commitments. No number on this page counts them as earned.",
     "principles": {
       "activable": {
         "title": "Activable within 6 months",
@@ -63,7 +63,7 @@
       },
       "exclusivity": {
         "title": "Exclusivity a posteriori",
-        "desc": "Exclusivity is earned with results — it is never granted at signature."
+        "desc": "Exclusivity is earned with results: it is never granted at signature."
       }
     }
   },
@@ -87,7 +87,7 @@
       "tag": "Label (Universal)",
       "brings": "France's #1 roster, A&R who decide every day, the door into Universal",
       "weBring": "The answer before the meeting: roster Pulse by A&R, contract alerts, DSP audit, co-branded artist portal, Wavely via UniPort",
-      "nextAction": "September 18 meeting — pilot on 3 artists / 3 A&R",
+      "nextAction": "September 18 meeting: pilot on 3 artists / 3 A&R",
       "pitch": "Capitol's A&R open six tools to answer one artist question. Day One puts it all on one line, in euros, with contract deadlines, and gives artists the portal the label never had time to build. 90-day pilot on 3 artists and 3 A&R, starting with zero Capitol data.",
       "m3": "Pilot signed, 3 A&R active ≥ 3 mornings a week",
       "m9": "A decision made with a Day One number; first documented DSP claim",
@@ -108,8 +108,8 @@
       "tag": "Publisher (Universal)",
       "brings": "The songwriters of France's #1 publisher, the publishing statements, legitimacy on the work",
       "weBring": "The song view: continuous writer's share, French rights, splits, funder's file with publisher attestation",
-      "nextAction": "Meeting with Bertil David — pilot on 3 songwriters / 1 A&R",
-      "pitch": "A songwriter signed with UMPG lives with 18 months of delay on their own music and a bank that can't read their rights. Day One tracks the work every day, reconciles SACEM statements, signs the splits, and produces the funder's file that turns the catalog into an asset — with the publisher as the third party attesting the flow. 90-day pilot on 3 songwriters.",
+      "nextAction": "Meeting with Bertil David: pilot on 3 songwriters / 1 A&R",
+      "pitch": "A songwriter signed with UMPG lives with 18 months of delay on their own music and a bank that can't read their rights. Day One tracks the work every day, reconciles SACEM statements, signs the splits, and produces the funder's file that turns the catalog into an asset, with the publisher as the third party attesting the flow. 90-day pilot on 3 songwriters.",
       "m3": "Pilot signed, 3 songwriters tracked, one SACEM statement imported and reconciled",
       "m9": "Song-level view delivered; first funder's file accepted by a partner bank",
       "m18": "Extension to the UMPG France roster; publisher attestation built into the journey",
@@ -129,7 +129,7 @@
       "tag": "Major",
       "brings": "France's leading roster, direct DSP statements, the credibility of a major",
       "weBring": "Artist statement transparency, contract alerts, DSP audit, co-branded artist portal",
-      "nextAction": "September 19 presentation — demo on real data",
+      "nextAction": "September 19 presentation: demo on real data",
       "pitch": "Universal holds the data, its artists can't see it, and every misunderstanding ends up as a contradictory audit. From Day 1 sits a transparency layer on top of the label: the artist sees their earnings continuously, the team sees deadlines, the label recovers what platforms underpay. Pilot on a targeted roster, 90 days, with real statements.",
       "m3": "Pilot signed on a targeted roster, statements connected",
       "m9": "Co-branded artist portal deployed, first DSP claim files",
@@ -150,7 +150,7 @@
       "tag": "Distribution",
       "brings": "Thousands of distributed artists, instant market credibility",
       "weBring": "White-label analytics + French rights layer, 25% rev-share",
-      "nextAction": "Warm intro Ismaël Kané — scope the 500-artist pilot",
+      "nextAction": "Warm intro Ismaël Kané: scope the 500-artist pilot",
       "pitch": "Believe distributes, From Day 1 makes artists stay. Their artist churn comes from the lack of consolidated visibility: we plug our analytics + French rights layer into their portal, white-label, 25% rev-share. Pilot on 500 artists from their French roster, activable in 90 days via warm intro Ismaël Kané. Believe gains retention, we gain the most powerful distribution channel in France.",
       "m3": "Pilot signed, 500 artists from the French roster onboarded",
       "m9": "Activation rate > 60%, measurable drop in Believe churn",
@@ -158,7 +158,7 @@
       "risks": {
         "r1": {
           "risk": "Believe internalizes and builds its own layer",
-          "mitigation": "Long product cycles on their side — lock a 12-month exclusive pilot before their next budget cycle"
+          "mitigation": "Long product cycles on their side: lock a 12-month exclusive pilot before their next budget cycle"
         },
         "r2": {
           "risk": "Rev-share negotiation dragging 6+ months",
@@ -175,7 +175,7 @@
       "tag": "Collecting society",
       "brings": "50,000 performer members, institutional legitimacy",
       "weBring": "AI translation of statements, modernized member portal",
-      "nextAction": "Meeting with digital directorate — statement translation demo",
+      "nextAction": "Meeting with digital directorate: statement translation demo",
       "pitch": "ADAMI's member portal is aging and its statements remain unreadable for most of its 50,000 members. We offer AI translation of statements into plain language, embedded in their member area. ADAMI modernizes its service with zero R&D, we gain access to the largest pool of performers in France.",
       "m3": "Demo validated by the digital directorate, pilot on 1,000 members",
       "m9": "Statement translation live in the member area",
@@ -196,14 +196,14 @@
       "tag": "Collecting society",
       "brings": "Maximum credibility, author rights data at the source",
       "weBring": "A modern tracking interface for their members",
-      "nextAction": "Map innovation contacts — target the partner program",
-      "pitch": "SACEM is the final boss: nobody pitches author rights in France without them. We are not chasing a short-term commercial deal but a seat in their innovation program — being the modern interface their members are asking for. Every quarter of institutional presence raises the barrier for a US entrant.",
+      "nextAction": "Map innovation contacts, target the partner program",
+      "pitch": "SACEM is the final boss: nobody pitches author rights in France without them. We are not chasing a short-term commercial deal but a seat in their innovation program: being the modern interface their members are asking for. Every quarter of institutional presence raises the barrier for a US entrant.",
       "m3": "Qualified contact inside the innovation program",
       "m9": "Member-tracking POC presented internally",
       "m18": "Institutional partnership or pilot member API",
       "risks": {
         "r1": {
-          "risk": "Institutional inertia — 18-24 month horizon",
+          "risk": "Institutional inertia (18-24 month horizon)",
           "mitigation": "Build nothing that depends on SACEM before signature; treat it as a bonus"
         },
         "r2": {
@@ -218,7 +218,7 @@
       "brings": "Embedded business account, 500,000 business customers",
       "weBring": "A turnkey music vertical for their marketplace",
       "nextAction": "Partner marketplace application + BD contact",
-      "pitch": "Every artist who incorporates opens a business account — and Qonto wants industry verticals to differentiate. We become their music vertical: business account embedded in From Day 1, financial onboarding of artists on their side. They gain a growing creative segment, our artists gain a business account built for royalty flows.",
+      "pitch": "Every artist who incorporates opens a business account, and Qonto wants industry verticals to differentiate. We become their music vertical: business account embedded in From Day 1, financial onboarding of artists on their side. They gain a growing creative segment, our artists gain a business account built for royalty flows.",
       "m3": "Listed on the Qonto partner marketplace",
       "m9": "Business account integrated in the From Day 1 onboarding",
       "m18": "500 artist accounts opened through the partnership",
@@ -256,11 +256,11 @@
     },
     "schools": {
       "name": "Music schools",
-      "tag": "Education — CFA / ICART",
+      "tag": "Education · CFA / ICART",
       "brings": "Entire cohorts of future professionals every year",
       "weBring": "Education licenses + turnkey \"manage your career\" module",
       "nextAction": "Pitch the career module to CFA academic directors",
-      "pitch": "Every CFA or ICART cohort is a class of artists and managers who will form their tooling habits within 24 months. We equip schools with near-free education licenses and a ready-to-teach \"manage your career\" module. Students learn the business on From Day 1 — and keep it when they graduate.",
+      "pitch": "Every CFA or ICART cohort is a class of artists and managers who will form their tooling habits within 24 months. We equip schools with near-free education licenses and a ready-to-teach \"manage your career\" module. Students learn the business on From Day 1, and keep it when they graduate.",
       "m3": "2 pilot schools equipped, career module tested in class",
       "m9": "5 active schools, first graduates converted to paid",
       "m18": "Network of 15 schools, recurring annual signup pipeline",

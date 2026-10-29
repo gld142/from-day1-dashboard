@@ -1282,7 +1282,8 @@ function PulsePage() {
                   kicker: t("night.show.kicker"),
                   body: (
                     <>
-                      <Emph>{l.night.nextShow.artistName}</Emph> —{" "}
+                      <Emph>{l.night.nextShow.artistName}</Emph>
+                      {locale === "fr" ? " : " : ": "}
                       {t.rich("night.show.body", {
                         ...tags,
                         venue: l.night.nextShow.venue,

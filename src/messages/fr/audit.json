@@ -30,14 +30,14 @@
     "dialogTitle": "Lettre de demande de vérification",
     "dialogSubtitle": "Pré-rédigée par l’IA à partir de vos données. Relisez et adaptez avant envoi.",
     "date": "Paris, le {date}",
-    "to": "À l’attention du service royalties — {source}",
-    "subject": "Objet : demande de vérification des redevances — période {period}",
+    "to": "À l’attention du service royalties, {source}",
+    "subject": "Objet : demande de vérification des redevances (période {period})",
     "greeting": "Madame, Monsieur,",
     "body1": "À la suite du rapprochement automatique entre nos données de diffusion certifiées et votre relevé pour la période {period}, nous constatons un écart significatif entre le montant attendu ({expected}) et le montant déclaré ({reported}).",
-    "body2": "L’écart constaté s’élève à {gap}. Notre modèle de rapprochement — croisement des volumes de streams par plateforme, des taux contractuels applicables et de l’historique de versements — établit ce constat avec un niveau de confiance de {confidence}.",
+    "body2": "L’écart constaté s’élève à {gap}. Notre modèle de rapprochement (croisement des volumes de streams par plateforme, des taux contractuels applicables et de l’historique de versements) établit ce constat avec un niveau de confiance de {confidence}.",
     "body3": "Nous vous remercions de bien vouloir procéder à une vérification détaillée de la période concernée, de nous transmettre le détail des assiettes et calculs appliqués et, le cas échéant, de procéder au versement de régularisation correspondant.",
     "signoff": "Dans l’attente de votre retour sous 30 jours, nous vous prions d’agréer, Madame, Monsieur, l’expression de nos salutations distinguées.",
-    "signature": "{artist} — représenté via From Day 1",
+    "signature": "{artist}, représenté via From Day 1",
     "copy": "Copier",
     "copied": "Copié",
     "download": "Télécharger .txt (démo)"
@@ -53,7 +53,7 @@
     "step3Desc": "Chaque écart est pondéré selon la qualité des données sources et la stabilité historique des versements.",
     "step4Title": "Lettre & suivi",
     "step4Desc": "Une lettre de demande de vérification est pré-rédigée, prête à relire et envoyer. Le statut est suivi ici.",
-    "disclaimer": "Données de démonstration — les montants attendus sont des estimations du modèle, pas des créances certaines."
+    "disclaimer": "Données de démonstration : les montants attendus sont des estimations du modèle, pas des créances certaines."
   },
   "label": {
     "byArtist": "Écarts par artiste",

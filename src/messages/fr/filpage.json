@@ -75,7 +75,7 @@
     "chase": "Relancé",
     "chaseText": "Relance envoyée, je reviens vers vous dès que j'ai la réponse.",
     "forward": "Transmettre à",
-    "forwardText": "@{service} — à toi pour la suite."
+    "forwardText": "@{service}, à toi pour la suite."
   },
   "sent": "Envoyé à {list}",
   "waiting": {
@@ -90,14 +90,14 @@
   },
   "detect": {
     "title": "Day One a repéré",
-    "hint": "Un clic pour le poser dans le fil, adressé au bon service — rien à recopier.",
+    "hint": "Un clic pour le poser dans le fil, adressé au bon service : rien à recopier.",
     "show": "Voir",
     "hide": "Masquer",
     "summary": "{count, plural, one {# point à poser dans le fil} other {# points à poser dans le fil}}",
     "post": "Poser dans le fil",
     "dismiss": "Écarter",
     "posted": "Posé dans le fil · envoyé à {list}",
-    "prefix": "Repéré par Day One — {text}",
+    "prefix": "Repéré par Day One : {text}",
     "audit": "Écart d'audit sur {artist} : {amount} attendus non versés ({source}, {period}).",
     "contract": "{artist} : {message}",
     "clause": "{artist} : {message}",
@@ -105,7 +105,7 @@
   },
   "attach": {
     "button": "Joindre un fichier",
-    "posted": "A joint « {name} » — traduit par Day One pour chaque service."
+    "posted": "A joint « {name} », traduit par Day One pour chaque service."
   },
   "tip": { "status": "Clique ici pour changer le statut", "ok": "Compris" },
   "conv": {

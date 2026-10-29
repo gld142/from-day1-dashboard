@@ -376,7 +376,7 @@ function Total({ label, value }: { label: string; value: number }) {
   const unused = value === 0;
   return (
     <span className={ok ? "text-success" : unused ? "text-muted-foreground" : "text-destructive"}>
-      {label} : {value.toLocaleString("fr-FR")} %{unused ? " (non renseigné)" : ok ? " ✓" : " — il faut 100 %"}
+      {label} : {value.toLocaleString("fr-FR")} %{unused ? " (non renseigné)" : ok ? " ✓" : " (il faut 100 %)"}
     </span>
   );
 }

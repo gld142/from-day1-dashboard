@@ -22,7 +22,7 @@ export function safeColor(value: string, fallback: string): string {
  * Day 1, inchangé).
  */
 export function gateTitleText(tenant: Tenant = TENANT): string {
-  return `${tenant.shortName} — Accès`;
+  return `${tenant.shortName} · Accès`;
 }
 
 /**

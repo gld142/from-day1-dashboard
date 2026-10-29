@@ -1,8 +1,8 @@
 {
   "title": "Revenus",
-  "subtitle": "Tous tes revenus, toutes sources confondues — enfin lisibles.",
+  "subtitle": "Tous tes revenus, toutes sources confondues, enfin lisibles.",
   "subtitleLabel": "Les revenus du roster, consolidés en un seul endroit.",
-  "subtitleFocused": "Tous les revenus de {name}, toutes sources confondues — enfin lisibles.",
+  "subtitleFocused": "Tous les revenus de {name}, toutes sources confondues, enfin lisibles.",
   "kpis": {
     "total12m": "Revenus 12 mois",
     "monthlyAvg": "Moyenne mensuelle",
@@ -44,7 +44,7 @@
   },
   "shares": {
     "title": "Ta part, c'est ton contrat",
-    "lead": "{gross} générés hier par tes streams, c'est le brut master : ce que les plateformes reversent avant partage. Ce que tu touches dépend de ton contrat — et on ne l'invente pas.",
+    "lead": "{gross} générés hier par tes streams, c'est le brut master : ce que les plateformes reversent avant partage. Ce que tu touches dépend de ton contrat, et on ne l'invente pas.",
     "statusSimulated": "Aujourd'hui, ta part est <b>simulée</b> (<num>{pct} %</num>) pour la démo.",
     "statusDeclared": "Ta part est renseignée : <num>{pct} %</num> du master, {author}.",
     "authorYes": "auteur/compositeur à {apct} %",
@@ -65,11 +65,11 @@
       "author": "Ma part dans les droits d'auteur de mes titres (%)",
       "authorHelp": "Regarde tes bulletins SACEM : c'est ta part sur chaque œuvre.",
       "save": "Enregistrer",
-      "saved": "Enregistré — les cascades sont à jour."
+      "saved": "Enregistré. Les cascades sont à jour."
     },
     "upload": {
       "label": "Choisir mon contrat (PDF ou Word)",
-      "imported": "{name} importé — lu localement, jamais envoyé. Reporte maintenant les pourcentages que tu y lis :",
+      "imported": "{name} importé : lu localement, jamais envoyé. Reporte maintenant les pourcentages que tu y lis :",
       "hint": "Le fichier reste sur ton appareil : rien n'est transmis. Tu recopies simplement les pourcentages de ton contrat."
     },
     "request": {
@@ -89,7 +89,7 @@
     },
     "label": {
       "title": "Sa part, c'est son contrat",
-      "lead": "{gross} générés hier par les streams de {artist}, c'est le brut master : ce que les plateformes reversent avant partage. Ce que {artist} touche dépend de son contrat — et on ne l'invente pas.",
+      "lead": "{gross} générés hier par les streams de {artist}, c'est le brut master : ce que les plateformes reversent avant partage. Ce que {artist} touche dépend de son contrat, et on ne l'invente pas.",
       "statusSimulated": "Aujourd'hui, la part de {artist} est <b>simulée</b> (<num>{pct} %</num>) pour la démo.",
       "statusDeclared": "La part de {artist} est renseignée : <num>{pct} %</num> du master, {author}.",
       "authorYes": "auteur/compositeur à {apct} %",
@@ -110,11 +110,11 @@
         "author": "Sa part dans les droits d'auteur de ses titres (%)",
         "authorHelp": "Ses bulletins SACEM font foi : c'est sa part sur chaque œuvre.",
         "save": "Enregistrer",
-        "saved": "Enregistré — les cascades sont à jour."
+        "saved": "Enregistré. Les cascades sont à jour."
       },
       "upload": {
         "label": "Choisir son contrat (PDF ou Word)",
-        "imported": "{name} importé — lu localement, jamais envoyé. Reportez maintenant les pourcentages que vous y lisez :",
+        "imported": "{name} importé : lu localement, jamais envoyé. Reportez maintenant les pourcentages que vous y lisez :",
         "hint": "Le fichier reste sur votre appareil : rien n'est transmis. Vous recopiez simplement les pourcentages du contrat."
       },
       "request": {
@@ -140,7 +140,7 @@
   "sourceDescriptions": {
     "streaming": "Spotify, Apple Music, Deezer, YouTube et les autres DSP",
     "sacem": "Droits d'auteur collectés par la SACEM",
-    "neighboring": "ADAMI / SPEDIDAM — droits des interprètes",
+    "neighboring": "ADAMI / SPEDIDAM : droits des interprètes",
     "spre": "Diffusion radio et lieux publics",
     "sync": "Licences pub, film, série, jeu vidéo",
     "live": "Cachets et billetterie",
@@ -163,7 +163,7 @@
   },
   "byArtist": {
     "title": "Revenus par artiste",
-    "subtitle": "12 derniers mois — clique pour zoomer",
+    "subtitle": "12 derniers mois · clique pour zoomer",
     "net": "Net",
     "margin": "Marge"
   },
@@ -174,9 +174,9 @@
     "month": "Mois"
   },
   "insight": {
-    "diversification": "{count, plural, one {# source active} other {# sources actives}} — {top} représente {share} des revenus",
+    "diversification": "{count, plural, one {# source active} other {# sources actives}} : {top} représente {share} des revenus",
     "concentrated": "Attention : plus de 70 % des revenus viennent d'une seule source",
-    "balanced": "Bonne diversification — aucun canal ne dépasse 70 %"
+    "balanced": "Bonne diversification : aucun canal ne dépasse 70 %"
   },
   "doors": {
     "finances": "Dépenses & P&L",

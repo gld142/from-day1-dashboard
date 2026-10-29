@@ -74,7 +74,7 @@
     "point2": "Croissance : rythme mensuel actuel de l'artiste, ajusté par votre scénario de sortie et votre curseur.",
     "point3": "Saisonnalité : coefficients mensuels appris sur 24 mois d'historique.",
     "point4": "Incertitude : la bande de confiance s'élargit de ±12 % à court terme jusqu'à ±{maxSpread} % à l'horizon choisi.",
-    "disclaimer": "Projection indicative fondée sur les tendances passées — elle ne constitue pas une garantie de revenus."
+    "disclaimer": "Projection indicative fondée sur les tendances passées. Elle ne constitue pas une garantie de revenus."
   },
   "subtitleLabel": "Ce que le roster peut rapporter dans 6 à 24 mois, selon ce que vous préparez.",
   "subtitleFocused": "Ce que les revenus de {name} peuvent devenir dans 6 à 24 mois.",

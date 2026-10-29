@@ -8,13 +8,13 @@
     "placeholder": "Poser une question sur ces données…",
     "send": "Envoyer",
     "typing": "Le Copilot rédige…",
-    "disclaimer": "Démo — les réponses sont générées à partir de vos données de démonstration.",
+    "disclaimer": "Démo : les réponses sont générées à partir de vos données de démonstration.",
     "suggestionsLabel": "Suggestions",
-    "generic": "En démo, je réponds aux suggestions ci-dessous. En production, j'interroge l'ensemble des données — streams, revenus, contrats, droits — et je cite mes sources."
+    "generic": "En démo, je réponds aux suggestions ci-dessous. En production, j'interroge l'ensemble des données (streams, revenus, contrats, droits) et je cite mes sources."
   },
   "greeting": {
-    "artist": "Bonjour {name} — j'ai tes 24 derniers mois sous les yeux. Demande-moi ce que tu veux sur tes streams, tes revenus ou tes droits.",
-    "label": "Bonjour — j’ai sous les yeux les données consolidées des {count} artistes de {label}. Posez-moi vos questions de pilotage."
+    "artist": "Bonjour {name}, j'ai tes 24 derniers mois sous les yeux. Demande-moi ce que tu veux sur tes streams, tes revenus ou tes droits.",
+    "label": "Bonjour, j’ai sous les yeux les données consolidées des {count} artistes de {label}. Posez-moi vos questions de pilotage."
   },
   "suggestions": {
     "bestMonth": "Quel a été mon meilleur mois ?",
@@ -34,7 +34,7 @@
     "bestMonthLabel": "Sur 24 mois, le meilleur mois du roster est {month} : {amount} de revenus consolidés, soit {pct} au-dessus de la moyenne mensuelle ({avg}).",
     "growthLabel": "Sur 30 jours, le roster cumule {streams} streams, en évolution de {delta} vs la période précédente. La dynamique est tirée par vos artistes en développement.",
     "topArtist": "{artist} est votre artiste le plus rentable : {net} de résultat net sur 12 mois, pour une marge de {margin}. Revenus générés : {revenue}.",
-    "auditLabel": "Sur l'ensemble du roster, je détecte {count, plural, =0 {aucun écart} one {# écart} other {# écarts}} entre attendu et déclaré, pour un total de {amount} réparti sur {artists, plural, one {# artiste} other {# artistes}}. Ce sont des questions à poser, pas des sommes acquises — les lettres sont dans la page Audit."
+    "auditLabel": "Sur l'ensemble du roster, je détecte {count, plural, =0 {aucun écart} one {# écart} other {# écarts}} entre attendu et déclaré, pour un total de {amount} réparti sur {artists, plural, one {# artiste} other {# artistes}}. Ce sont des questions à poser, pas des sommes acquises. Les lettres sont dans la page Audit."
   },
   "sources": {
     "streaming": "le streaming",

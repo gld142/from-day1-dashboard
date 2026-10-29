@@ -1,6 +1,6 @@
 {
   "title": "Valorisation du catalogue",
-  "subtitle": "Combien vaut ton catalogue — et pourquoi. Méthode transparente, chiffres à l'appui.",
+  "subtitle": "Combien vaut ton catalogue, et pourquoi. Méthode transparente, chiffres à l'appui.",
   "subtitleLabel": "La valeur du catalogue de chaque artiste, et du portefeuille entier.",
   "kpis": {
     "midValue": "Valorisation estimée",
@@ -15,7 +15,7 @@
   },
   "method": {
     "title": "Comment on calcule",
-    "step1": "NPS — ton revenu net de catalogue sur 12 mois : {nps}",
+    "step1": "NPS (ton revenu net de catalogue sur 12 mois) : {nps}",
     "step2": "Multiple selon la maturité ({stage}) : {low}× à {high}×",
     "step3": "Valorisation = NPS × multiple, soit {rangeLow} à {rangeHigh}",
     "note": "C'est une estimation, pas une promesse : on affiche toujours la fourchette, jamais un chiffre unique. Les multiples observés sur le marché : 8-14× (indé), 14-18× (catalogue prouvé 5 ans+), 18-24× (blue-chip)."
@@ -47,7 +47,7 @@
   },
   "exact": {
     "title": "La valeur exacte, c'est la vôtre",
-    "lead": "Day 1 estime le back catalogue de {name} à {mid} ({low} – {high}) — méthode revenus nets × multiple. Ce n'est pas la valeur retenue par la structure : renseignez-la, elle remplace l'estimation.",
+    "lead": "Day 1 estime le back catalogue de {name} à {mid} ({low} – {high}), méthode revenus nets × multiple. Ce n'est pas la valeur retenue par la structure : renseignez-la, elle remplace l'estimation.",
     "declared": "Valeur exacte renseignée : {value} par {source}, le {date}.",
     "edit": "Modifier",
     "fields": {
@@ -55,7 +55,7 @@
       "source": "Renseignée par",
       "sourcePlaceholder": "DAF, expert-comptable, cabinet…",
       "save": "Enregistrer",
-      "saved": "Enregistré — la valeur exacte remplace l'estimation."
+      "saved": "Enregistré. La valeur exacte remplace l'estimation."
     },
     "ask": {
       "cta": "Demander la valeur exacte à la DAF",

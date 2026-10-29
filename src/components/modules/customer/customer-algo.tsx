@@ -18,7 +18,7 @@ export function CustomerAlgo() {
       <PageHeader title="Position algo Spotify" subtitle={`${customer?.artistName ?? ""} · en attente de ton export Spotify for Artists`} />
       <div className="space-y-3">
         <Needs family="streams" title="Ce que cette page montrera">
-          <p>Pour chaque titre : la part des écoutes venue des playlists algorithmiques (Radio, Découvertes de la semaine…) et éditoriales, les sauvegardes, les ajouts en playlist — et leur évolution d&apos;un export à l&apos;autre.</p>
+          <p>Pour chaque titre : la part des écoutes venue des playlists algorithmiques (Radio, Découvertes de la semaine…) et éditoriales, les sauvegardes, les ajouts en playlist, et leur évolution d&apos;un export à l&apos;autre.</p>
           <p className="text-muted-foreground">Ces chiffres n&apos;existent que dans Spotify for Artists. Day 1 n&apos;en affichera aucun tant qu&apos;ils ne viennent pas de ton propre compte : pas d&apos;estimation, pas de note inventée.</p>
         </Needs>
         <Needs family="catalog" title="Ce qu'il faut">

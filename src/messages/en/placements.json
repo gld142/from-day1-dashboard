@@ -1,6 +1,6 @@
 {
   "title": "Works & placements",
-  "subtitle": "What works written for others earn — publishing, production points, and what hasn't shipped yet.",
+  "subtitle": "What works written for others earn: publishing, production points, and what hasn't shipped yet.",
   "subtitleEmpty": "The page for the roster's songwriters.",
   "empty": {
     "title": "This artist is a performer, not a songwriter",
@@ -33,7 +33,7 @@
   },
   "pipeline": {
     "title": "The order book",
-    "caption": "signed or pitched — not a euro yet",
+    "caption": "signed or pitched, not a euro yet",
     "legend": "A signed work has a date; a pitch has an intention. We don't add them up: the second is not future income.",
     "simulated": "Demo works: titles, performers, dates and shares are made up."
   },

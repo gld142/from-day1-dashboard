@@ -94,7 +94,7 @@ export function CustomerCalculator() {
           </Sheet>
 
           <Sheet family="money">
-            <SheetHeading action={mixTotal === 100 ? "répartition réelle de ton relevé" : `total ${mixTotal.toLocaleString(f.locale)} % — ramené à 100 %`}>Plateformes</SheetHeading>
+            <SheetHeading action={mixTotal === 100 ? "répartition réelle de ton relevé" : `total ${mixTotal.toLocaleString(f.locale)} %, ramené à 100 %`}>Plateformes</SheetHeading>
             <SimpleTable
               head={["Plateforme", "Ton taux réel", "Part des streams (%)"]}
               rows={real.map((r) => ({

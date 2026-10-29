@@ -1,6 +1,6 @@
 {
   "title": "Splits",
-  "subtitle": "Who gets what on each of your tracks — and who hasn't signed yet.",
+  "subtitle": "Who gets what on each of your tracks, and who hasn't signed yet.",
   "kpis": {
     "signed": "Signed splits",
     "pending": "Awaiting signature",
@@ -37,7 +37,7 @@
     "detailHint": "See the split in detail"
   },
   "dialog": {
-    "title": "Split — {track}",
+    "title": "Split · {track}",
     "description": "{project} · ISRC {isrc}",
     "holder": "Rights holder",
     "role": "Role",
@@ -59,8 +59,8 @@
     "meta": "{tracks, plural, one {# track} other {# tracks}} · {pending, plural, =0 {everything is signed} one {# split to sign} other {# splits to sign}}"
   },
   "empty": "No splits match this filter.",
-  "subtitleLabel": "Who gets what on each roster track — and what's left to sign.",
-  "subtitleFocused": "Who gets what on {name}'s tracks — and what's left to sign.",
+  "subtitleLabel": "Who gets what on each roster track, and what's left to sign.",
+  "subtitleFocused": "Who gets what on {name}'s tracks, and what's left to sign.",
   "hero": {
     "title": "Signed splits",
     "value": "{signed} / {total}",

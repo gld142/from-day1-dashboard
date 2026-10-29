@@ -1,6 +1,6 @@
 {
   "title": "Expenses & P&L",
-  "subtitle": "What's left once expenses are paid — year by year, project by project.",
+  "subtitle": "What's left once expenses are paid, year by year, project by project.",
   "scope": {
     "roster": "Whole roster",
     "artists": "{count} artists"
@@ -27,7 +27,7 @@
     "worstMonth": "Costliest month"
   },
   "chart": {
-    "title": "Revenue vs expenses — {year}",
+    "title": "Revenue vs expenses · {year}",
     "subtitle": "Monthly view with net result",
     "revenue": "Revenue",
     "expenses": "Expenses",
@@ -62,7 +62,7 @@
     "net": "Net",
     "empty": "No expenses on this scope",
     "topSpend": "Cumulative spend",
-    "yearNote": "Same months on both sides — {span}. Series only go back 24 months: further back, a year wouldn't have all its months."
+    "yearNote": "Same months on both sides: {span}. Series only go back 24 months: further back, a year wouldn't have all its months."
   },
   "breakdown": {
     "title": "{category} budget · by artist and track",
@@ -84,11 +84,11 @@
     "date": "Date",
     "label": "Description",
     "labels": {
-      "studioSession": "Studio session — recording",
-      "studioMix": "Mix — sound engineer",
+      "studioSession": "Studio session · recording",
+      "studioMix": "Mix · sound engineer",
       "studioMastering": "Mastering",
       "studioDayRate": "Studio hire (day rate)",
-      "clipDirector": "Music video production — director",
+      "clipDirector": "Music video production · director",
       "clipGrading": "Color grading & post-production",
       "clipCameraRental": "Camera gear rental",
       "clipSetStyling": "Set design & styling",
@@ -146,7 +146,7 @@
   },
   "wavely": {
     "title": "Wavely integration",
-    "description": "Connect your Wavely account to automatically sync your production and marketing expenses — no more double entry.",
+    "description": "Connect your Wavely account to automatically sync your production and marketing expenses. No more double entry.",
     "syncedCount": "{count, plural, one {# expense already synced} other {# expenses already synced}}",
     "connect": "Connect Wavely",
     "inline": "{count, plural, =0 {No expense synced from Wavely yet.} one {# expense comes from Wavely.} other {# expenses come from Wavely.}}",

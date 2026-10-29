@@ -1,6 +1,6 @@
 {
   "title": "vs Competitors",
-  "subtitle": "Every competitor does part of the job. From Day 1 is the only one that brings it all together — natively, in France.",
+  "subtitle": "Every competitor does part of the job. From Day 1 is the only one that brings it all together, natively, in France.",
   "hero": {
     "title": "What nobody else brings together",
     "caption": "capabilities that none of the {rivals} competitors covers in full, out of the {total} compared row by row in the table below."
@@ -78,12 +78,12 @@
       }
     },
     "readingTitle": "What we read into it",
-    "reading": "A giant — Spotify, Believe, Chartmetric — can extend its offer toward consolidation. The only answer has two parts: speed of execution, and France-first depth. This is a reading, not a measurement."
+    "reading": "A giant (Spotify, Believe, Chartmetric) can extend its offer toward consolidation. The only answer has two parts: speed of execution, and France-first depth. This is a reading, not a measurement."
   },
   "pitch": {
     "kicker": "The pitch, in 90 seconds",
-    "quote": "An independent artist in France juggles six tools without ever seeing their career whole: stats on one side, an expense spreadsheet on the other, SACEM paying 18 months late, URSSAF as a quarterly panic. From Day 1 brings it all together — multi-DSP analytics, consolidated revenue, reconciled French rights, AI royalty audit, real-time catalog valuation. Chartmetric does stats. Stem does splits. Songtrust does publishing. Nobody does all of it, and nobody will do it in France without rebuilding compliance first. From {low} to {high} per month, from bedroom producer to indie label.",
-    "author": "The investor pitch — From Day 1"
+    "quote": "An independent artist in France juggles six tools without ever seeing their career whole: stats on one side, an expense spreadsheet on the other, SACEM paying 18 months late, URSSAF as a quarterly panic. From Day 1 brings it all together: multi-DSP analytics, consolidated revenue, reconciled French rights, AI royalty audit, real-time catalog valuation. Chartmetric does stats. Stem does splits. Songtrust does publishing. Nobody does all of it, and nobody will do it in France without rebuilding compliance first. From {low} to {high} per month, from bedroom producer to indie label.",
+    "author": "The investor pitch · From Day 1"
   },
   "doors": {
     "rights": "French rights, reconciled",

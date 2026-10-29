@@ -215,7 +215,7 @@ export function CustomerStreams() {
                 label: "Sous le seuil Spotify",
                 value: view.spotify ? `${view.spotify.below.length} titre(s) sur ${view.spotify.titles}` : null,
                 formula: view.spotify
-                  ? `moins de 1 000 streams Spotify sur ${view.spotify.fullYear ? "les 12 derniers mois" : `les ${view.spotify.window?.months ?? 0} derniers mois seulement (la règle porte sur 12)`} du relevé : Spotify ne rémunère plus ces titres depuis avril 2024${view.spotify.below.length ? ` — ${view.spotify.below.slice(0, 5).map((t) => `« ${t.title} » (${f.int(t.streams)})`).join(", ")}${view.spotify.below.length > 5 ? "…" : ""}` : ""}`
+                  ? `moins de 1 000 streams Spotify sur ${view.spotify.fullYear ? "les 12 derniers mois" : `les ${view.spotify.window?.months ?? 0} derniers mois seulement (la règle porte sur 12)`} du relevé : Spotify ne rémunère plus ces titres depuis avril 2024${view.spotify.below.length ? `. Titres concernés : ${view.spotify.below.slice(0, 5).map((t) => `« ${t.title} » (${f.int(t.streams)})`).join(", ")}${view.spotify.below.length > 5 ? "…" : ""}` : ""}`
                   : "",
                 missing:
                   data.trackMonthStreams === undefined

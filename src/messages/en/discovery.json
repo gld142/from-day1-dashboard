@@ -1,6 +1,6 @@
 {
   "title": "Discovery Lab",
-  "subtitle": "The potential of your unreleased tracks, measured before release — pick the right single without betting blind.",
+  "subtitle": "The potential of your unreleased tracks, measured before release. Pick the right single without betting blind.",
   "subtitleLabel": "The most promising unreleased tracks across the roster, scored by AI before any release.",
   "kpis": {
     "demos": "Demos analyzed",
@@ -10,7 +10,7 @@
     "firstWeek": "Estimated streams · first week",
     "firstWeekHint": "if the best demo ships as a single",
     "weakest": "Its weak spot",
-    "weakestHint": "{value}/100 — that's where there's room",
+    "weakestHint": "{value}/100: that's where there's room",
     "avgHint": "across {count, plural, one {# demo} other {# demos}}"
   },
   "podium": {
@@ -33,17 +33,17 @@
   "list": {
     "title": "Your unreleased tracks",
     "bpm": "BPM",
-    "analyzing": "Audio analysis in progress — score available in a few minutes.",
+    "analyzing": "Audio analysis in progress. Score available in a few minutes.",
     "analyzingBadge": "Analyzing…",
     "hint": "The four dimensions are broken down in the comparison alongside"
   },
   "compare": {
     "title": "Demo comparison",
-    "description": "The 4 dimensions of the Discovery Score, side by side — spot each demo's strengths."
+    "description": "The 4 dimensions of the Discovery Score, side by side: spot each demo's strengths."
   },
   "method": {
     "title": "How we score your demos",
-    "description": "The Discovery Score blends three families of signals — no black box, every sub-score is explainable.",
+    "description": "The Discovery Score blends three families of signals: no black box, every sub-score is explainable.",
     "audio": {
       "title": "Audio tagging",
       "description": "Signal analysis: energy, tempo, structure, hook placement and the sonic signature of each demo."
@@ -70,7 +70,7 @@
   },
   "rosterView": {
     "title": "Best unreleased tracks in the roster",
-    "description": "Each artist's best demo, ranked by Discovery Score — everything you need to prioritize upcoming releases.",
+    "description": "Each artist's best demo, ranked by Discovery Score: everything you need to prioritize upcoming releases.",
     "selectArtist": "Pick an artist",
     "hint": "Click a row to open the artist's full lab."
   },

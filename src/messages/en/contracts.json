@@ -1,6 +1,6 @@
 {
   "title": "Contracts",
-  "subtitle": "What your contracts commit you to — and what's coming up.",
+  "subtitle": "What your contracts commit you to, and what's coming up.",
   "kpis": {
     "active": "Active contracts",
     "alerts": "Open alerts",
@@ -102,7 +102,7 @@
     "recouped": "Already recouped",
     "remaining": "Left to recoup",
     "rate": "Artist rate",
-    "done": "Advance fully recouped — your royalties are now being paid out.",
+    "done": "Advance fully recouped: your royalties are now being paid out.",
     "left": "{remaining} left to recoup before your first royalty payouts.",
     "steps": {
       "advance": {
@@ -123,8 +123,8 @@
     "contractsOf": "{count, plural, one {# contract} other {# contracts}}"
   },
   "empty": "No contracts for this view.",
-  "subtitleLabel": "What the roster's contracts commit to — and what's coming up.",
-  "subtitleFocused": "What {name}'s contracts commit to — and what's coming up.",
+  "subtitleLabel": "What the roster's contracts commit to, and what's coming up.",
+  "subtitleFocused": "What {name}'s contracts commit to, and what's coming up.",
   "hero": {
     "title": "Left to recoup",
     "caption": "before royalties are paid out",

@@ -432,7 +432,7 @@ export default function ImportPage() {
             <div className="rounded-lg border bg-surface-2 p-3">
               <p className="text-[11px] text-muted-foreground">{t("preview.period")}</p>
               <p className="num mt-0.5 text-sm font-semibold">
-                {fmtMonth(locale, parsed.months[0])} —{" "}
+                {fmtMonth(locale, parsed.months[0])} –{" "}
                 {fmtMonth(locale, parsed.months[parsed.months.length - 1])}
               </p>
             </div>
@@ -577,7 +577,7 @@ export default function ImportPage() {
             {currency && currency !== "EUR" && fx?.mode === "manual" && (
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
-                  {t("config.eurRate")} —{" "}
+                  {t("config.eurRate")} ·{" "}
                   {t("config.currency", { currency })}
                 </label>
                 <Input

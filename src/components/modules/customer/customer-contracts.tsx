@@ -59,7 +59,7 @@ export function CustomerContracts() {
   const alertText = ({ a, c }: { a: ContractAlert; c: Contract }) => {
     const who = `${c.counterparty} (${artistName.get(c.artist_id) ?? "artiste"})`;
     if (a.kind === "notice")
-      return `${who} : préavis à envoyer avant le ${date(a.date)}, ${inDays(a.daysLeft)}${c.auto_renew ? " — sinon le contrat se reconduit tacitement" : ""}.`;
+      return `${who} : préavis à envoyer avant le ${date(a.date)}, ${inDays(a.daysLeft)}${c.auto_renew ? ". Sinon, le contrat se reconduit tacitement" : ""}.`;
     if (a.kind === "notice-passed") return `${who} : la date limite de préavis était le ${date(a.date)}.`;
     return `${who} : fin du contrat le ${date(a.date)}, ${inDays(a.daysLeft)}.`;
   };
@@ -119,7 +119,7 @@ export function CustomerContracts() {
 
         </Sheet>
         <p className="text-muted-foreground flex items-center gap-2 text-xs">
-          <ProvenanceBadge provenance="declared" /> Tel que saisi dans ton espace — Day 1 ne lit pas le contrat. Préavis signalés 120 jours avant, fins 6 mois avant.
+          <ProvenanceBadge provenance="declared" /> Tel que saisi dans ton espace : Day 1 ne lit pas le contrat. Préavis signalés 120 jours avant, fins 6 mois avant.
         </p>
 
         {rows.map(({ c, t }) => (

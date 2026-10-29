@@ -74,7 +74,7 @@
     "point2": "Growth: the artist's current monthly pace, adjusted by your release scenario and slider.",
     "point3": "Seasonality: monthly coefficients learned from 24 months of history.",
     "point4": "Uncertainty: the confidence band widens from ±12% short-term up to ±{maxSpread}% at the chosen horizon.",
-    "disclaimer": "Indicative projection based on past trends — it is not a revenue guarantee."
+    "disclaimer": "Indicative projection based on past trends. It is not a revenue guarantee."
   },
   "subtitleLabel": "What the roster could earn in 6 to 24 months, given what you're preparing.",
   "subtitleFocused": "What {name}'s revenue could become in 6 to 24 months.",

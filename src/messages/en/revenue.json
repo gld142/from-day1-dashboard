@@ -1,8 +1,8 @@
 {
   "title": "Revenue",
-  "subtitle": "All your revenue, every source — finally readable.",
+  "subtitle": "All your revenue, every source, finally readable.",
   "subtitleLabel": "Your roster's revenue, consolidated in one place.",
-  "subtitleFocused": "All of {name}'s revenue, every source combined — finally readable.",
+  "subtitleFocused": "All of {name}'s revenue, every source combined, finally readable.",
   "kpis": {
     "total12m": "Revenue 12m",
     "monthlyAvg": "Monthly average",
@@ -44,7 +44,7 @@
   },
   "shares": {
     "title": "Your share is your contract",
-    "lead": "{gross} generated yesterday by your streams is the gross master: what platforms pay out before any split. What you actually receive depends on your contract — and we don't make it up.",
+    "lead": "{gross} generated yesterday by your streams is the gross master: what platforms pay out before any split. What you actually receive depends on your contract, and we don't make it up.",
     "statusSimulated": "Right now your share is <b>simulated</b> (<num>{pct}%</num>) for the demo.",
     "statusDeclared": "Your share is declared: <num>{pct}%</num> of the master, {author}.",
     "authorYes": "songwriter at {apct}%",
@@ -65,11 +65,11 @@
       "author": "My share of the songwriter royalties on my tracks (%)",
       "authorHelp": "Check your SACEM statements: it's your share on each work.",
       "save": "Save",
-      "saved": "Saved — the cascades are up to date."
+      "saved": "Saved. The cascades are up to date."
     },
     "upload": {
       "label": "Choose my contract (PDF or Word)",
-      "imported": "{name} imported — read locally, never sent. Now enter the percentages you read in it:",
+      "imported": "{name} imported: read locally, never sent. Now enter the percentages you read in it:",
       "hint": "The file stays on your device: nothing is transmitted. You simply copy the percentages from your contract."
     },
     "request": {
@@ -89,7 +89,7 @@
     },
     "label": {
       "title": "Their share is their contract",
-      "lead": "{gross} generated yesterday by {artist}'s streams is the gross master: what platforms pay out before any split. What {artist} actually receives depends on their contract — and we don't make it up.",
+      "lead": "{gross} generated yesterday by {artist}'s streams is the gross master: what platforms pay out before any split. What {artist} actually receives depends on their contract, and we don't make it up.",
       "statusSimulated": "Right now {artist}'s share is <b>simulated</b> (<num>{pct}%</num>) for the demo.",
       "statusDeclared": "{artist}'s share is declared: <num>{pct}%</num> of the master, {author}.",
       "authorYes": "songwriter at {apct}%",
@@ -110,11 +110,11 @@
         "author": "Their share of the songwriter royalties on their tracks (%)",
         "authorHelp": "Their SACEM statements are the reference: it's their share on each work.",
         "save": "Save",
-        "saved": "Saved — the cascades are up to date."
+        "saved": "Saved. The cascades are up to date."
       },
       "upload": {
         "label": "Choose their contract (PDF or Word)",
-        "imported": "{name} imported — read locally, never sent. Now enter the percentages you read in it:",
+        "imported": "{name} imported: read locally, never sent. Now enter the percentages you read in it:",
         "hint": "The file stays on your device: nothing is transmitted. You simply copy the percentages from the contract."
       },
       "request": {
@@ -140,7 +140,7 @@
   "sourceDescriptions": {
     "streaming": "Spotify, Apple Music, Deezer, YouTube and other DSPs",
     "sacem": "Author rights collected by SACEM",
-    "neighboring": "ADAMI / SPEDIDAM — performers' rights",
+    "neighboring": "ADAMI / SPEDIDAM: performers' rights",
     "spre": "Radio play and public venues",
     "sync": "Ads, film, TV and game licences",
     "live": "Fees and ticketing",
@@ -163,7 +163,7 @@
   },
   "byArtist": {
     "title": "Revenue by artist",
-    "subtitle": "Last 12 months — click to zoom in",
+    "subtitle": "Last 12 months · click to zoom in",
     "net": "Net",
     "margin": "Margin"
   },
@@ -174,9 +174,9 @@
     "month": "Month"
   },
   "insight": {
-    "diversification": "{count, plural, one {# active source} other {# active sources}} — {top} accounts for {share} of revenue",
+    "diversification": "{count, plural, one {# active source} other {# active sources}}: {top} accounts for {share} of revenue",
     "concentrated": "Heads up: over 70% of revenue comes from a single source",
-    "balanced": "Healthy diversification — no channel exceeds 70%"
+    "balanced": "Healthy diversification: no channel exceeds 70%"
   },
   "doors": {
     "finances": "Expenses & P&L",

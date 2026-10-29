@@ -1,6 +1,6 @@
 {
   "title": "URSSAF artist-author",
-  "subtitle": "What you owe URSSAF on your author rights — and by when.",
+  "subtitle": "What you owe URSSAF on your author rights, and by when.",
   "kpis": {
     "declarable": "Declarable income (12m)",
     "declarableHint": "Author rights: SACEM + sync",
@@ -12,7 +12,7 @@
     "netHint": "over the same 12 months",
     "quarter": "To declare this quarter",
     "quarterHint": "{quarter} · {amount} in contributions",
-    "quarterOpen": "{quarter} still open — the total will move",
+    "quarterOpen": "{quarter} still open: the total will move",
     "deadlineIn": "in {days} days"
   },
   "sim": {
@@ -46,7 +46,7 @@
     "body": "Day 1 assembles your quarterly author-rights income into the URSSAF form, ready to review and submit.",
     "cta": "Prepare the filing",
     "dialogTitle": "Summary · {quarter} filing",
-    "dialogSub": "Check these amounts before submitting — demo document.",
+    "dialogSub": "Check these amounts before submitting. Demo document.",
     "rows": {
       "declarant": "Declarant",
       "period": "Period",
@@ -71,13 +71,13 @@
   },
   "labelTable": {
     "heading": "Contributions per artist",
-    "sub": "Each artist-author files individually — consolidated roster view.",
+    "sub": "Each artist-author files individually. Consolidated roster view.",
     "artist": "Artist",
     "declarable": "Declarable income (12m)",
     "contributions": "Estimated contributions",
     "share": "Roster share"
   },
-  "subtitleLabel": "What the roster owes URSSAF on its author rights — and by when.",
+  "subtitleLabel": "What the roster owes URSSAF on its author rights, and by when.",
   "hero": {
     "title": "Estimated contributions",
     "caption": "{rate} of {base} of author rights over 12 months",

@@ -75,7 +75,7 @@
     "chase": "Chased",
     "chaseText": "Reminder sent, I'll come back to you as soon as I hear back.",
     "forward": "Hand over to",
-    "forwardText": "@{service} — over to you."
+    "forwardText": "@{service}, over to you."
   },
   "sent": "Sent to {list}",
   "waiting": {
@@ -90,14 +90,14 @@
   },
   "detect": {
     "title": "Day One spotted",
-    "hint": "One click posts it to the feed, addressed to the right team — nothing to copy.",
+    "hint": "One click posts it to the feed, addressed to the right team. Nothing to copy.",
     "show": "Show",
     "hide": "Hide",
     "summary": "{count, plural, one {# item to post} other {# items to post}}",
     "post": "Post to the feed",
     "dismiss": "Dismiss",
     "posted": "Posted to the feed · sent to {list}",
-    "prefix": "Spotted by Day One — {text}",
+    "prefix": "Spotted by Day One: {text}",
     "audit": "Audit gap on {artist}: {amount} expected but not paid ({source}, {period}).",
     "contract": "{artist}: {message}",
     "clause": "{artist}: {message}",
@@ -105,7 +105,7 @@
   },
   "attach": {
     "button": "Attach a file",
-    "posted": "Attached “{name}” — translated by Day One for every team."
+    "posted": "Attached “{name}”, translated by Day One for every team."
   },
   "tip": { "status": "Click here to change the status", "ok": "Got it" },
   "conv": {

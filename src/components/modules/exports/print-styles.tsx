@@ -98,7 +98,7 @@ export function PrintStyles() {
         dateStyle: "long",
         timeStyle: "short",
       }).format(new Date());
-      footerRef.current.textContent = `${window.location.href} — ${stamp}`;
+      footerRef.current.textContent = `${window.location.href} · ${stamp}`;
     };
     window.addEventListener("beforeprint", fillFooter);
     return () => window.removeEventListener("beforeprint", fillFooter);

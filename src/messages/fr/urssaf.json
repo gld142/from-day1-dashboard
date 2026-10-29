@@ -1,6 +1,6 @@
 {
   "title": "URSSAF artiste-auteur",
-  "subtitle": "Ce que tu dois à l'URSSAF sur tes droits d'auteur — et pour quand.",
+  "subtitle": "Ce que tu dois à l'URSSAF sur tes droits d'auteur, et pour quand.",
   "kpis": {
     "declarable": "Revenus déclarables (12 m)",
     "declarableHint": "Droits d'auteur : SACEM + sync",
@@ -12,7 +12,7 @@
     "netHint": "sur les mêmes 12 mois",
     "quarter": "À déclarer ce trimestre",
     "quarterHint": "{quarter} · {amount} de cotisations",
-    "quarterOpen": "{quarter} en cours — le total bougera encore",
+    "quarterOpen": "{quarter} en cours : le total bougera encore",
     "deadlineIn": "dans {days} jours"
   },
   "sim": {
@@ -46,7 +46,7 @@
     "body": "Day 1 assemble vos revenus de droits d'auteur du trimestre dans le formulaire URSSAF, prêt à vérifier puis transmettre.",
     "cta": "Préparer la déclaration",
     "dialogTitle": "Récapitulatif · déclaration {quarter}",
-    "dialogSub": "Vérifiez ces montants avant transmission — document de démonstration.",
+    "dialogSub": "Vérifiez ces montants avant transmission. Document de démonstration.",
     "rows": {
       "declarant": "Déclarant",
       "period": "Période",
@@ -71,13 +71,13 @@
   },
   "labelTable": {
     "heading": "Cotisations par artiste",
-    "sub": "Chaque artiste-auteur déclare individuellement — vue consolidée du roster.",
+    "sub": "Chaque artiste-auteur déclare individuellement. Vue consolidée du roster.",
     "artist": "Artiste",
     "declarable": "Revenus déclarables (12 m)",
     "contributions": "Cotisations estimées",
     "share": "Part du roster"
   },
-  "subtitleLabel": "Ce que le roster doit à l'URSSAF sur ses droits d'auteur — et pour quand.",
+  "subtitleLabel": "Ce que le roster doit à l'URSSAF sur ses droits d'auteur, et pour quand.",
   "hero": {
     "title": "Cotisations estimées",
     "caption": "{rate} de {base} de droits d'auteur sur 12 mois",

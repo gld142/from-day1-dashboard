@@ -1,6 +1,6 @@
 {
   "title": "Équipe & accès",
-  "subtitle": "Qui voit quoi chez {label} — et depuis quand.",
+  "subtitle": "Qui voit quoi chez {label}, et depuis quand.",
   "artistTitle": "Accès à mes données",
   "artistSubtitle": "Les personnes de {label} qui peuvent consulter ton dashboard, et ce qu'elles voient.",
   "kpis": {
@@ -63,7 +63,7 @@
   "hero": {
     "title": "Personnes avec un accès",
     "caption": "{active} actives sur les 7 derniers jours",
-    "captionIdle": "personne ne s'est connecté depuis 7 jours — dernière activité le {date}"
+    "captionIdle": "personne ne s'est connecté depuis 7 jours (dernière activité le {date})"
   },
   "doors": {
     "roster": "Roster",

@@ -1,6 +1,6 @@
 {
   "title": "Catalog valuation",
-  "subtitle": "What your catalog is worth — and why. Transparent method, numbers included.",
+  "subtitle": "What your catalog is worth, and why. Transparent method, numbers included.",
   "subtitleLabel": "Each artist's catalog value, and the whole portfolio.",
   "kpis": {
     "midValue": "Estimated valuation",
@@ -15,7 +15,7 @@
   },
   "method": {
     "title": "How we compute it",
-    "step1": "NPS — your net catalog revenue over 12 months: {nps}",
+    "step1": "NPS (your net catalog revenue over 12 months): {nps}",
     "step2": "Multiple based on maturity ({stage}): {low}× to {high}×",
     "step3": "Valuation = NPS × multiple, i.e. {rangeLow} to {rangeHigh}",
     "note": "It's an estimate, not a promise: we always show the range, never a single number. Market multiples: 8-14× (indie), 14-18× (5y+ proven catalog), 18-24× (blue-chip)."
@@ -47,7 +47,7 @@
   },
   "exact": {
     "title": "The exact value is yours",
-    "lead": "Day 1 estimates {name}'s back catalog at {mid} ({low} – {high}) — net revenue × multiple. That is not the value your company has settled on: enter it, it replaces the estimate.",
+    "lead": "Day 1 estimates {name}'s back catalog at {mid} ({low} – {high}) using net revenue × multiple. That is not the value your company has settled on: enter it, it replaces the estimate.",
     "declared": "Exact value entered: {value} by {source}, on {date}.",
     "edit": "Edit",
     "fields": {
@@ -55,7 +55,7 @@
       "source": "Entered by",
       "sourcePlaceholder": "CFO, accountant, firm…",
       "save": "Save",
-      "saved": "Saved — the exact value replaces the estimate."
+      "saved": "Saved. The exact value replaces the estimate."
     },
     "ask": {
       "cta": "Ask the CFO for the exact value",

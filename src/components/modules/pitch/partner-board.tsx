@@ -376,7 +376,7 @@ function PartnerDialog({
                         <span className="text-success font-medium">
                           {t("dialog.mitigation")}
                         </span>
-                        {" — "}
+                        {" · "}
                         {t(`partners.${partner.id}.risks.${r}.mitigation`)}
                       </p>
                     </li>

@@ -41,7 +41,7 @@
     "title": "Villes à programmer",
     "badge": "Audience sans date",
     "description": "Croisement audience streaming × dates déjà programmées",
-    "item": "Forte audience en {country} — aucune date programmée à {city}",
+    "item": "Forte audience en {country}, aucune date programmée à {city}",
     "streams": "{streams} streams / 30 j"
   },
   "hero": {

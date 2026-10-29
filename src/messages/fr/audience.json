@@ -17,7 +17,7 @@
   },
   "segments": {
     "title": "Segments de fans",
-    "subtitle": "Fanbase segmentée par intensité d'engagement — tendance sur 30 jours",
+    "subtitle": "Fanbase segmentée par intensité d'engagement, tendance sur 30 jours",
     "ofFanbase": "de la fanbase",
     "superfans": {
       "label": "Superfans",
@@ -29,11 +29,11 @@
     },
     "casual": {
       "label": "Occasionnels",
-      "desc": "Découverte via playlists et radio — à convertir en engagés."
+      "desc": "Découverte via playlists et radio, à convertir en engagés."
     },
     "dormant": {
       "label": "Dormants",
-      "desc": "Anciens auditeurs sans écoute récente — cible idéale de réactivation."
+      "desc": "Anciens auditeurs sans écoute récente : cible idéale de réactivation."
     }
   },
   "demo": {
@@ -72,7 +72,7 @@
   },
   "roster": {
     "title": "Audiences du roster",
-    "subtitle": "Comparatif des fanbases — cliquez sur un artiste pour zoomer",
+    "subtitle": "Comparatif des fanbases : cliquez sur un artiste pour zoomer",
     "artist": "Artiste",
     "listeners": "Auditeurs",
     "followers": "Followers est.",

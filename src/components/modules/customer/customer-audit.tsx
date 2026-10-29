@@ -125,7 +125,7 @@ export function CustomerAudit() {
             />
           </Sheet>
           <p className="text-muted-foreground flex items-center gap-2 text-xs">
-            <ProvenanceBadge provenance="declared" /> Calculé sur ton relevé {distributor}, comparé à ton propre historique — pas à un modèle de marché.
+            <ProvenanceBadge provenance="declared" /> Calculé sur ton relevé {distributor}, comparé à ton propre historique, pas à un modèle de marché.
           </p>
 
           {money.length > 0 && (
@@ -172,7 +172,7 @@ export function CustomerAudit() {
             <SheetHeading>Comment c&apos;est calculé</SheetHeading>
             <ul className="sheet-ink grid gap-1.5 text-[12.5px] leading-relaxed">
               <li>• Taux habituel d&apos;une plateforme : la médiane de ce qu&apos;elle t&apos;a payé pour 1 000 streams, sur les mois payés (il en faut au moins {MIN_HISTORY}).</li>
-              <li>• Signalé : un mois payé sous {fmt.pct(RATE_DROP)} de ce taux, ou des streams sans aucun revenu — à partir de {fmt.compact(MIN_STREAMS)} streams, en dessous un taux ne veut rien dire.</li>
+              <li>• Signalé : un mois payé sous {fmt.pct(RATE_DROP)} de ce taux, ou des streams sans aucun revenu, à partir de {fmt.compact(MIN_STREAMS)} streams (en dessous, un taux ne veut rien dire).</li>
               <li>• Ces seuils sont des choix de Day 1, pas une règle des plateformes : les taux varient selon les pays et la part d&apos;abonnés gratuits.</li>
             </ul>
           </Sheet>

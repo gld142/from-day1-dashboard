@@ -159,7 +159,7 @@ export function CustomerAr() {
             <b>Croissance YouTube des artistes suivis</b>{" "}(abonnés, vues sur 30 jours) : dès que la clé YouTube de Day 1 sera créée.
           </p>
           <p>
-            <b>Streams, playlists et TikTok de n&apos;importe quel artiste</b>{" "}: uniquement avec un fournisseur de données sous licence (Soundcharts, Songstats, Chartmetric) — en discussion.
+            <b>Streams, playlists et TikTok de n&apos;importe quel artiste</b>{" "}: uniquement avec un fournisseur de données sous licence (Soundcharts, Songstats, Chartmetric), en discussion.
           </p>
         </Needs>
       </div>

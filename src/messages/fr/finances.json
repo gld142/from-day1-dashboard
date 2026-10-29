@@ -1,6 +1,6 @@
 {
   "title": "Dépenses & P&L",
-  "subtitle": "Ce qu'il reste une fois les dépenses payées — année par année, projet par projet.",
+  "subtitle": "Ce qu'il reste une fois les dépenses payées, année par année, projet par projet.",
   "scope": {
     "roster": "Tout le roster",
     "artists": "{count} artistes"
@@ -27,7 +27,7 @@
     "worstMonth": "Mois le plus coûteux"
   },
   "chart": {
-    "title": "Revenus vs dépenses — {year}",
+    "title": "Revenus vs dépenses · {year}",
     "subtitle": "Vue mensuelle avec résultat net",
     "revenue": "Revenus",
     "expenses": "Dépenses",
@@ -62,7 +62,7 @@
     "net": "Net",
     "empty": "Aucune dépense sur ce périmètre",
     "topSpend": "Dépenses cumulées",
-    "yearNote": "Mêmes mois des deux côtés — {span}. Les séries ne remontent qu'à 24 mois : plus loin, une année n'aurait pas tous ses mois."
+    "yearNote": "Mêmes mois des deux côtés : {span}. Les séries ne remontent qu'à 24 mois : plus loin, une année n'aurait pas tous ses mois."
   },
   "breakdown": {
     "title": "Budget {category} · par artiste et par titre",
@@ -84,17 +84,17 @@
     "date": "Date",
     "label": "Libellé",
     "labels": {
-      "studioSession": "Session studio — enregistrement",
-      "studioMix": "Mix — ingé son",
+      "studioSession": "Session studio · enregistrement",
+      "studioMix": "Mix · ingé son",
       "studioMastering": "Mastering",
       "studioDayRate": "Location studio (journée)",
-      "clipDirector": "Production clip — réalisateur",
+      "clipDirector": "Production clip · réalisateur",
       "clipGrading": "Étalonnage & post-prod",
       "clipCameraRental": "Location matériel caméra",
       "clipSetStyling": "Décor & stylisme tournage",
       "marketingMetaAds": "Campagne Meta Ads",
       "marketingTiktokAds": "Campagne TikTok Ads",
-      "marketingInfluence": "Influence — activation créateurs",
+      "marketingInfluence": "Influence · activation créateurs",
       "marketingPlaylistPitching": "Playlist pitching",
       "distributionFees": "Frais distribution",
       "distributionDdex": "DDEX / livraison DSP",
@@ -146,7 +146,7 @@
   },
   "wavely": {
     "title": "Intégration Wavely",
-    "description": "Connectez votre compte Wavely pour synchroniser automatiquement vos dépenses de production et de marketing — fini la double saisie.",
+    "description": "Connectez votre compte Wavely pour synchroniser automatiquement vos dépenses de production et de marketing. Fini la double saisie.",
     "syncedCount": "{count, plural, one {# dépense déjà synchronisée} other {# dépenses déjà synchronisées}}",
     "connect": "Connecter Wavely",
     "inline": "{count, plural, =0 {Aucune dépense synchronisée depuis Wavely pour l'instant.} one {# dépense vient de Wavely.} other {# dépenses viennent de Wavely.}}",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FlowClient } from "./flow-client";
 
 export const metadata: Metadata = {
-  title: "Day 1 Pro — Ouvre ton espace",
+  title: "Day 1 Pro · Ouvre ton espace",
   robots: { index: false },
 };
 

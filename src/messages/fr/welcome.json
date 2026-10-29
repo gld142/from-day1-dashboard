@@ -10,9 +10,9 @@
   "sources": {
     "capitol": {
       "name": "Capitol Music France",
-      "welcomeTitle": "Bienvenue, équipes <accent>Capitol</accent> — la réponse avant la réunion",
+      "welcomeTitle": "Bienvenue, équipes <accent>Capitol</accent> : la réponse avant la réunion",
       "welcomeBody": "Vos DA ouvrent une seule app : streams cumulés et par plateforme, signal TikTok, échéances de contrat, ce que gagne chaque artiste. Et vos artistes voient enfin ce que vous voyez.",
-      "offer": "Pilote 90 jours — 3 artistes, 3 DA",
+      "offer": "Pilote 90 jours : 3 artistes, 3 DA",
       "steps": {
         "1": {
           "title": "Connectez le roster Capitol",
@@ -24,7 +24,7 @@
         },
         "3": {
           "title": "Le brief du matin, par DA",
-          "desc": "Pulse roster : ce qui a bougé cette nuit, titre moteur, plateforme en tête, TikTok, écart à réclamer — avant la réunion, pas pendant."
+          "desc": "Pulse roster : ce qui a bougé cette nuit, titre moteur, plateforme en tête, TikTok, écart à réclamer. Avant la réunion, pas pendant."
         }
       },
       "firstInsight": "« Sur le roster de démonstration, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos, chez {artists, plural, one {# artiste} other {# artistes}} : la réclamation est prête, et c'est la plateforme qu'on interroge, jamais le label. »",
@@ -39,11 +39,11 @@
         },
         "3": {
           "promise": "« Je touche combien ? »",
-          "delivery": "Portail artiste CAPITOL × FROM DAY 1 : gains estimés, sa part, ses droits — sans appeler le label"
+          "delivery": "Portail artiste CAPITOL × FROM DAY 1 : gains estimés, sa part, ses droits, sans appeler le label"
         },
         "4": {
           "promise": "Ce que les plateformes sous-paient",
-          "delivery": "Écart estimé / déclaré par DSP, dossier de réclamation prêt — le label est le demandeur, pas l'audité"
+          "delivery": "Écart estimé / déclaré par DSP, dossier de réclamation prêt : le label est le demandeur, pas l'audité"
         },
         "5": {
           "promise": "Sessions studio réservées et gâchées",
@@ -53,9 +53,9 @@
     },
     "umpg": {
       "name": "Universal Music Publishing France",
-      "welcomeTitle": "Bienvenue, auteurs <accent>Universal Music Publishing</accent> — votre œuvre, en continu",
-      "welcomeBody": "Vos droits arrivent avec 6 à 18 mois de retard. Day One suit ce que vos œuvres génèrent chaque jour, votre part d'auteur, vos relevés SACEM — et prépare le dossier qui montre votre catalogue comme un actif.",
-      "offer": "Pilote 90 jours — 3 auteurs, 1 A&R",
+      "welcomeTitle": "Bienvenue, auteurs <accent>Universal Music Publishing</accent> : votre œuvre, en continu",
+      "welcomeBody": "Vos droits arrivent avec 6 à 18 mois de retard. Day One suit ce que vos œuvres génèrent chaque jour, votre part d'auteur, vos relevés SACEM, et prépare le dossier qui montre votre catalogue comme un actif.",
+      "offer": "Pilote 90 jours : 3 auteurs, 1 A&R",
       "steps": {
         "1": {
           "title": "Connectez vos œuvres",
@@ -63,14 +63,14 @@
         },
         "2": {
           "title": "Suivez votre part d'auteur",
-          "desc": "Chaque jour : brut généré par les plateformes, part édition, part auteur selon vos splits — en fourchette, avec la provenance de chaque chiffre."
+          "desc": "Chaque jour : brut généré par les plateformes, part édition, part auteur selon vos splits. En fourchette, avec la provenance de chaque chiffre."
         },
         "3": {
           "title": "Montrez votre catalogue comme un actif",
           "desc": "Historique 24 mois, prévisionnel 12 mois, valorisation en fourchette, attestation de votre éditeur : le dossier financeur que votre banque sait lire."
         }
       },
-      "firstInsight": "« Sur le roster de démonstration, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos, chez {artists, plural, one {# artiste} other {# artistes}} — sur les œuvres comme sur les masters, c'est la plateforme qu'on interroge, jamais l'éditeur. »",
+      "firstInsight": "« Sur le roster de démonstration, <accent>{gap}</accent> d'écart estimé / déclaré sur les plateformes au dernier trimestre clos, chez {artists, plural, one {# artiste} other {# artistes}}. Sur les œuvres comme sur les masters, c'est la plateforme qu'on interroge, jamais l'éditeur. »",
       "values": {
         "1": {
           "promise": "18 mois de retard sur ses propres droits",
@@ -82,7 +82,7 @@
         },
         "3": {
           "promise": "« Vos revenus ne sont pas stables »",
-          "delivery": "Dossier financeur : historique, prévisionnel, valorisation, attestation éditeur — pour la banque"
+          "delivery": "Dossier financeur : historique, prévisionnel, valorisation, attestation éditeur (pour la banque)"
         },
         "4": {
           "promise": "Un outil pensé master, jamais œuvre",
@@ -96,7 +96,7 @@
     },
     "universal": {
       "name": "Universal Music France",
-      "welcomeTitle": "Bienvenue, équipes <accent>Universal</accent> — vos artistes voient enfin ce que vous voyez",
+      "welcomeTitle": "Bienvenue, équipes <accent>Universal</accent> : vos artistes voient enfin ce que vous voyez",
       "welcomeBody": "Et vous voyez ce que les plateformes ne vous disent pas. En 3 minutes, on connecte le roster, on cartographie les contrats et on livre le premier brief roster.",
       "offer": "Pilote sur un roster ciblé, 90 jours",
       "steps": {
@@ -156,7 +156,7 @@
           "desc": "Le brief stratégique du jour calibré sur ta data Believe. Action concrète n°1 à faire aujourd'hui."
         }
       },
-      "firstInsight": "« Exemple sur le roster de démonstration : <accent>{gap}</accent> d'écart estimé / déclaré chez Spotify au dernier trimestre clos. Lettre d'audit prête — un écart est une question à poser, pas une somme acquise. »",
+      "firstInsight": "« Exemple sur le roster de démonstration : <accent>{gap}</accent> d'écart estimé / déclaré chez Spotify au dernier trimestre clos. Lettre d'audit prête. Un écart est une question à poser, pas une somme acquise. »",
       "values": {
         "1": {
           "promise": "Différenciation Believe vs DistroKid",

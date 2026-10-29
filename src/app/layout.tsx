@@ -21,9 +21,9 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: `${TENANT.shortName} — ${TENANT.tagline}`,
+  title: `${TENANT.shortName} · ${TENANT.tagline}`,
   description:
-    "Streams, revenus, droits, contrats — tout le business d'un artiste, en live, en un seul endroit.",
+    "Streams, revenus, droits, contrats : tout le business d'un artiste, en live, en un seul endroit.",
 };
 
 export default async function RootLayout({

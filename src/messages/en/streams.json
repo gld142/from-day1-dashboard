@@ -1,6 +1,6 @@
 {
   "title": "Live streams",
-  "subtitle": "Multi-platform performance, territories and tracks — updated daily.",
+  "subtitle": "Multi-platform performance, territories and tracks. Updated daily.",
   "provenanceLegend": "Provenance by platform",
   "tiktokSignal": "TikTok · ≈ {videos} videos use the sounds",
   "tiktokNote": "virality signal, not a paid stream",
@@ -21,11 +21,11 @@
     "daily": "Daily volume, all DSPs combined",
     "weekly": "Aggregated by week to smooth the trend",
     "streams": "Streams",
-    "rosterNote": "Aggregated roster — {count} artists"
+    "rosterNote": "Aggregated roster · {count} artists"
   },
   "calendar": {
     "title": "365 days of listening",
-    "subtitle": "One square per day, all platforms — the darker, the more it played.",
+    "subtitle": "One square per day, all platforms: the darker, the more it played.",
     "tooltip": "{streams} streams",
     "aria": "{total} streams over 365 days, best day on {date} with {best} streams",
     "less": "Less",
@@ -33,7 +33,7 @@
   },
   "compare": {
     "title": "Roster comparator",
-    "subtitle": "Daily streams per artist — top {count} this period",
+    "subtitle": "Daily streams per artist · top {count} this period",
     "focusHint": "Click an artist to zoom into their dashboard"
   },
   "dsp": {

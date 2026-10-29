@@ -1,7 +1,7 @@
 {
   "title": "Sync & Licensing",
-  "subtitle": "Ton catalogue exposé aux superviseurs — pub, film, série, jeu vidéo.",
-  "subtitleLabel": "Le catalogue du roster exposé aux superviseurs — pub, film, série, jeu vidéo.",
+  "subtitle": "Ton catalogue exposé aux superviseurs : pub, film, série, jeu vidéo.",
+  "subtitleLabel": "Le catalogue du roster exposé aux superviseurs : pub, film, série, jeu vidéo.",
   "filterAll": "Tous les artistes",
   "kpis": {
     "readyTracks": "Titres prêts pour le sync",
@@ -45,7 +45,7 @@
   },
   "catalog": {
     "title": "Catalogue tagué",
-    "subtitle": "Tags mood dérivés du catalogue — un sync exige des splits signés",
+    "subtitle": "Tags mood dérivés du catalogue. Un sync exige des splits signés.",
     "bpm": "BPM",
     "splitsOk": "Splits signés",
     "splitsWarning": "Splits incomplets",
@@ -63,7 +63,7 @@
     "title": "Ce que Day 1 prend",
     "rate": "15–20 %",
     "rateLabel": "sur les deals conclus",
-    "body": "From Day 1 prend 15 à 20 % uniquement sur les deals sync conclus — rien en amont, rien sur vos autres revenus. Les splits signés sont appliqués automatiquement au versement."
+    "body": "From Day 1 prend 15 à 20 % uniquement sur les deals sync conclus : rien en amont, rien sur vos autres revenus. Les splits signés sont appliqués automatiquement au versement."
   },
   "hero": {
     "title": "Revenus sync sur 12 mois",

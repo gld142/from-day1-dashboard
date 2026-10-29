@@ -1,7 +1,7 @@
 {
   "title": "Pulse",
-  "subtitle": "Your morning ritual — the essentials in 30 seconds.",
-  "subtitleLabel": "The roster's pulse this morning — all artists combined.",
+  "subtitle": "Your morning ritual: the essentials in 30 seconds.",
+  "subtitleLabel": "The roster's pulse this morning, all artists combined.",
   "backToRoster": "Roster view",
   "greeting": "Hello {name}",
   "greetingFocus": "Where {name} stands",
@@ -39,21 +39,21 @@
     "valuationHint": "median estimate"
   },
   "chart": {
-    "title": "Streams — last 90 days",
-    "titleLabel": "Roster streams — last 90 days",
+    "title": "Streams · last 90 days",
+    "titleLabel": "Roster streams · last 90 days",
     "streams": "Streams"
   },
   "estimate": {
-    "title": "What it earns — live estimate",
+    "title": "What it earns · live estimate",
     "subtitle": "Payable streams × French rate (SNEP 2025), adjusted per platform, territory and Deezer's artist-centric model. An imported statement recalibrates everything.",
-    "titleLabel": "What the roster earns — live estimate",
+    "titleLabel": "What the roster earns · live estimate",
     "detail": "See revenue details"
   },
   "overnight": {
     "title": "What changed overnight",
     "topTrack": {
       "kicker": "Driving track",
-      "body": "“{title}” generated {streams} streams yesterday — your current locomotive."
+      "body": "“{title}” generated {streams} streams yesterday: your current locomotive."
     },
     "bestDsp": {
       "kicker": "Leading platform",
@@ -75,7 +75,7 @@
     },
     "nextShow": {
       "kicker": "Next show",
-      "body": "{venue}, {city} in {days} d — {sold} / {capacity} tickets sold."
+      "body": "{venue}, {city} in {days} d, {sold} / {capacity} tickets sold."
     },
     "contract": {
       "kicker": "Contract alert",
@@ -91,7 +91,7 @@
     },
     "labelNextShow": {
       "kicker": "Next roster show",
-      "body": "{name} — {venue}, {city} in {days} d."
+      "body": "{name}: {venue}, {city} in {days} d."
     },
     "tiktokRoster": {
       "kicker": "TikTok · roster",
@@ -257,7 +257,7 @@
     },
     "weekLabel": {
       "kicker": "Who's accelerating",
-      "body": "<em>{name}</em> gained <good>{delta}</good> streams over 30 days — the roster's biggest rise.",
+      "body": "<em>{name}</em> gained <good>{delta}</good> streams over 30 days, the roster's biggest rise.",
       "earner": "<em>{earner}</em> accounts for <em>{share}</em> of the label's revenue."
     },
     "push": {
@@ -270,7 +270,7 @@
     },
     "show": {
       "kicker": "Next show",
-      "body": "<em>{venue}</em>, {city} — in <em>{days}</em> days.",
+      "body": "<em>{venue}</em>, {city}, in <em>{days}</em> days.",
       "tickets": "<em>{sold}</em> tickets sold out of {capacity}.",
       "none": "No date scheduled."
     },

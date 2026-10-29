@@ -1,10 +1,10 @@
 {
   "title": "Market",
-  "subtitle": "Spotify France Top 200 shares by group, artist and genre — the morning capture, labels read from Spotify.",
+  "subtitle": "Spotify France Top 200 shares by group, artist and genre: the morning capture, labels read from Spotify.",
   "header": {
     "chartDate": "Spotify France chart of {date}",
     "captured": "captured {date} at {time}",
-    "scope": "Scope: Spotify France streams of the 200 tracks in the daily chart (kworb.net) — not the whole market. The group comes from the ℗ / © lines of each track's Spotify page: a label distributed under license without saying so in its ℗ shows up as “Indie / other”."
+    "scope": "Scope: Spotify France streams of the 200 tracks in the daily chart (kworb.net), not the whole market. The group comes from the ℗ / © lines of each track's Spotify page: a label distributed under license without saying so in its ℗ shows up as “Indie / other”."
   },
   "legend": {
     "title": "Provenance",
@@ -92,15 +92,15 @@
     "title": "Morning reading",
     "badge": "Estimated · rules",
     "majors": "{leader} carries {leaderShare} of today's Top 200 France streams ({leaderDelta} pts vs 7 days), ahead of {second} {secondShare} and {third} {thirdShare}.",
-    "indies": "Major indies (Believe, Because, Play Two, Wagram…) weigh {share}; other labels — ℗ without a group — {other}.",
+    "indies": "Major indies (Believe, Because, Play Two, Wagram…) weigh {share}; other labels (℗ without a group), {other}.",
     "unknown": "{count, plural, =0 {Every Spotify page delivered a ℗ / © line.} one {# track without a ℗ / © line ({share} of streams).} other {# tracks without a ℗ / © line ({share} of streams).}}",
     "genre": "Rap accounts for {rap} of Top 200 streams.",
     "genreTop": "Top genre: {genre} ({share}).",
-    "leader": "Leading: {artist} — {title}, {streams} streams.",
+    "leader": "Leading: {artist} · {title}, {streams} streams.",
     "rosterTitle": "Day One roster",
-    "rosterPresent": "{name} — {count, plural, one {# track} other {# tracks}}{featured, plural, =0 {} one { incl. # as featured} other { incl. # as featured}}, best rank {rank} ({title})",
-    "rosterAbsent": "{name} — not in the Top 200",
-    "method": "Automatic rule-based reading of the measured shares — no language model."
+    "rosterPresent": "{name}: {count, plural, one {# track} other {# tracks}}{featured, plural, =0 {} one { incl. # as featured} other { incl. # as featured}}, best rank {rank} ({title})",
+    "rosterAbsent": "{name}: not in the Top 200",
+    "method": "Automatic rule-based reading of the measured shares. No language model."
   },
   "empty": {
     "title": "No market capture",
@@ -111,7 +111,7 @@
     "scope": "Spotify France",
     "caption": "of the chart's streams · {count} charting tracks",
     "absentValue": "Not charting yet",
-    "absentHint": "None of your tracks is in today's 200 — the landscape below still tells you who you're measured against.",
+    "absentHint": "None of your tracks is in today's 200. The landscape below still tells you who you're measured against.",
     "bestTrack": "your highest-placed track",
     "bestTrackNote": "{artist} · {streams} streams",
     "leader": "leading group"

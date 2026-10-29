@@ -41,7 +41,7 @@
     "title": "Cities to book",
     "badge": "Audience with no date",
     "description": "Streaming audience crossed with already-scheduled dates",
-    "item": "Strong audience in {country} — no date scheduled in {city}",
+    "item": "Strong audience in {country}, no date scheduled in {city}",
     "streams": "{streams} streams / 30d"
   },
   "hero": {

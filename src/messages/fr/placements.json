@@ -1,6 +1,6 @@
 {
   "title": "Œuvres & placements",
-  "subtitle": "Ce que rapportent les œuvres écrites pour d'autres — édition, production, et ce qui n'est pas encore sorti.",
+  "subtitle": "Ce que rapportent les œuvres écrites pour d'autres : édition, production, et ce qui n'est pas encore sorti.",
   "subtitleEmpty": "La page des auteurs-compositeurs du roster.",
   "empty": {
     "title": "Cet artiste est interprète, pas auteur-compositeur",
@@ -33,7 +33,7 @@
   },
   "pipeline": {
     "title": "Le carnet de commandes",
-    "caption": "signé ou proposé — pas encore un euro",
+    "caption": "signé ou proposé, pas encore un euro",
     "legend": "Une œuvre signée a une date ; une proposition n'a qu'une intention. On ne les additionne pas : la seconde n'est pas un revenu à venir.",
     "simulated": "Œuvres de démonstration : titres, interprètes, dates et parts sont inventés."
   },

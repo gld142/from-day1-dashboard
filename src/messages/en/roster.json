@@ -1,7 +1,7 @@
 {
   "title": "Roster",
-  "subtitle": "Who carries {label}, and who's slipping — all {count} artists compared.",
-  "scopeSubtitle": "{count, plural, one {# artist} other {# artists}} · {scope} — who carries {label}, and who's slipping.",
+  "subtitle": "Who carries {label}, and who's slipping: all {count} artists compared.",
+  "scopeSubtitle": "{count, plural, one {# artist} other {# artists}} · {scope}: who carries {label}, and who's slipping.",
   "filters": {
     "category": "Category",
     "da": "A&R",
@@ -68,7 +68,7 @@
   },
   "matrix": {
     "title": "Growth × margin matrix",
-    "subtitle": "Each artist's strategic position — monthly stream growth vs 12-month net margin. Size = 12-month revenue.",
+    "subtitle": "Each artist's strategic position: monthly stream growth vs 12-month net margin. Size = 12-month revenue.",
     "growth": "Monthly growth",
     "margin": "Net margin",
     "quadrants": {
@@ -79,7 +79,7 @@
     }
   },
   "pnl": {
-    "title": "P&L by artist — trailing 12 months",
+    "title": "P&L by artist · trailing 12 months",
     "revenue": "Revenue",
     "expenses": "Expenses",
     "net": "Net"
@@ -91,7 +91,7 @@
     "due": "Due {date}",
     "decline": "Streams declining over 30 days",
     "declineMeta": "vs previous 30 days",
-    "empty": "No alerts — the whole roster is in the green"
+    "empty": "No alerts: the whole roster is in the green"
   },
   "hero": {
     "title": "Revenue concentration",

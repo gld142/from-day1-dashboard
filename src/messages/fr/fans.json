@@ -1,6 +1,6 @@
 {
   "title": "Fans CRM",
-  "subtitle": "Qui écoute vraiment — et quoi leur envoyer.",
+  "subtitle": "Qui écoute vraiment, et quoi leur envoyer.",
   "labelSubtitle": "Les fans du roster par intensité de relation, et quoi leur envoyer.",
   "segments": {
     "superfans": {
@@ -15,12 +15,12 @@
     },
     "casual": {
       "label": "Occasionnels",
-      "description": "Découverte via playlists — à convertir en auditeurs fidèles",
+      "description": "Découverte via playlists, à convertir en auditeurs fidèles",
       "action": "Playlist signature"
     },
     "dormant": {
       "label": "Dormants",
-      "description": "Aucune écoute depuis 90 jours — risque de décrochage",
+      "description": "Aucune écoute depuis 90 jours : risque de décrochage",
       "action": "Campagne de réactivation"
     }
   },
@@ -32,7 +32,7 @@
   },
   "superfans": {
     "title": "Super-fans",
-    "description": "Vos ambassadeurs les plus actifs — traitez-les comme des VIP",
+    "description": "Vos ambassadeurs les plus actifs : traitez-les comme des VIP",
     "rosterDescription": "Les fans les plus engagés, tous artistes confondus",
     "score": "Engagement",
     "invitePresale": "Inviter à la présale",

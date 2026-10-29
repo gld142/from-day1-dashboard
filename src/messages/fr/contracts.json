@@ -1,6 +1,6 @@
 {
   "title": "Contrats",
-  "subtitle": "Ce que tes contrats t'engagent à — et ce qui arrive bientôt.",
+  "subtitle": "Ce que tes contrats t'engagent à, et ce qui arrive bientôt.",
   "kpis": {
     "active": "Contrats actifs",
     "alerts": "Alertes ouvertes",
@@ -102,7 +102,7 @@
     "recouped": "Déjà recoupé",
     "remaining": "Reste à recouper",
     "rate": "Taux artiste",
-    "done": "Avance entièrement recoupée — vos royautés vous sont désormais versées.",
+    "done": "Avance entièrement recoupée : vos royautés vous sont désormais versées.",
     "left": "Encore {remaining} à recouper avant vos premiers versements de royautés.",
     "steps": {
       "advance": {
@@ -123,8 +123,8 @@
     "contractsOf": "{count, plural, one {# contrat} other {# contrats}}"
   },
   "empty": "Aucun contrat pour cette vue.",
-  "subtitleLabel": "Ce que les contrats du roster engagent — et ce qui arrive bientôt.",
-  "subtitleFocused": "Ce que les contrats de {name} l'engagent à — et ce qui arrive bientôt.",
+  "subtitleLabel": "Ce que les contrats du roster engagent, et ce qui arrive bientôt.",
+  "subtitleFocused": "Ce que les contrats de {name} l'engagent à, et ce qui arrive bientôt.",
   "hero": {
     "title": "Reste à recouper",
     "caption": "avant que les royautés soient versées",

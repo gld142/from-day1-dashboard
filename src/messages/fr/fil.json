@@ -1,6 +1,6 @@
 {
   "title": "Fil entre services",
-  "subtitle": "Une info posée par un service au moment où il l'a, vue par le service concerné au bon moment — sans attendre la réunion.",
+  "subtitle": "Une info posée par un service au moment où il l'a, vue par le service concerné au bon moment, sans attendre la réunion.",
   "filters": {
     "modeLabel": "Affichage",
     "mine": "À traiter pour moi",

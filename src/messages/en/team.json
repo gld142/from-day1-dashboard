@@ -1,6 +1,6 @@
 {
   "title": "Team & access",
-  "subtitle": "Who sees what at {label} — and since when.",
+  "subtitle": "Who sees what at {label}, and since when.",
   "artistTitle": "Access to my data",
   "artistSubtitle": "The people at {label} who can see your dashboard, and what they see.",
   "kpis": {
@@ -63,7 +63,7 @@
   "hero": {
     "title": "People with access",
     "caption": "{active} active over the last 7 days",
-    "captionIdle": "nobody has signed in for 7 days — last activity on {date}"
+    "captionIdle": "nobody has signed in for 7 days (last activity on {date})"
   },
   "doors": {
     "roster": "Roster",

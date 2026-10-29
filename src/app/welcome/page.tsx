@@ -10,7 +10,7 @@ import { TENANT } from "@/lib/tenant";
 
 export const metadata: Metadata = {
   // La maison du build : /welcome est l'écran co-brandé de la démo.
-  title: `${TENANT.shortName} — Bienvenue`,
+  title: `${TENANT.shortName} · Bienvenue`,
 };
 
 /**

@@ -15,23 +15,23 @@
     "description": "The algorithm drives {share}% of your streams, spread across 5 recommendation surfaces. Each one is grown differently.",
     "discoverWeekly": {
       "name": "Discover Weekly",
-      "hint": "Monday's personalized playlist, aimed at listeners who don't know you yet — a high save rate on your recent tracks widens its reach."
+      "hint": "Monday's personalized playlist, aimed at listeners who don't know you yet. A high save rate on your recent tracks widens its reach."
     },
     "releaseRadar": {
       "name": "Release Radar",
-      "hint": "Your new releases pushed to your followers every Friday — every Spotify follower gained before release day directly grows this audience."
+      "hint": "Your new releases pushed to your followers every Friday. Every Spotify follower gained before release day directly grows this audience."
     },
     "radio": {
       "name": "Radio",
-      "hint": "Stations generated from a similar track or artist — it kicks in once your save rate stays above ~30% over time."
+      "hint": "Stations generated from a similar track or artist, kicking in once your save rate stays above ~30% over time."
     },
     "autoplay": {
       "name": "Autoplay",
-      "hint": "Automatic playback after a playlist or album ends — a low skip rate keeps your tracks in these queues."
+      "hint": "Automatic playback after a playlist or album ends. A low skip rate keeps your tracks in these queues."
     },
     "dailyMix": {
       "name": "Daily Mix",
-      "hint": "Daily mixes of your regular listeners — fed by repeat listening: the more your fans come back, the more you appear."
+      "hint": "Daily mixes of your regular listeners, fed by repeat listening: the more your fans come back, the more you appear."
     }
   },
   "mix": {
@@ -57,18 +57,18 @@
   },
   "perception": {
     "title": "How the algorithm sees you",
-    "description": "The three engagement signals Spotify measures on every play — they decide whether the algorithm pushes you.",
+    "description": "The three engagement signals Spotify measures on every play: they decide whether the algorithm pushes you.",
     "saveRate": "Save rate",
-    "saveRateHint": "Share of listeners adding the track to their library — above ~{threshold}%, Radio kicks in.",
+    "saveRateHint": "Share of listeners adding the track to their library. Above ~{threshold}%, Radio kicks in.",
     "skipRate": "Skip rate",
-    "skipRateHint": "Share of plays skipped before 30 seconds — staying under ~{threshold}% protects your Autoplay presence.",
+    "skipRateHint": "Share of plays skipped before 30 seconds. Staying under ~{threshold}% protects your Autoplay presence.",
     "completion": "Completion",
-    "completionHint": "Share of plays running to the end — above ~{threshold}%, the track is “retained” and recommended more widely.",
-    "note": "Values estimated from your demo streams. In production these signals will come from Spotify for Artists — the thresholds shown are observed orders of magnitude, not official rules."
+    "completionHint": "Share of plays running to the end. Above ~{threshold}%, the track is “retained” and recommended more widely.",
+    "note": "Values estimated from your demo streams. In production these signals will come from Spotify for Artists. The thresholds shown are observed orders of magnitude, not official rules."
   },
   "roster": {
     "title": "Roster algo health",
-    "description": "Health score, algorithmic share and 28-day trend per artist — click to open the full X-ray.",
+    "description": "Health score, algorithmic share and 28-day trend per artist. Click to open the full X-ray.",
     "avgShare": "Average algo share",
     "avgScore": "Average health score",
     "bestScore": "Best score",

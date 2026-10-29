@@ -1,6 +1,6 @@
 {
   "title": "vs Concurrents",
-  "subtitle": "Chaque concurrent fait une partie du travail. From Day 1 est le seul à tout réunir — nativement, en France.",
+  "subtitle": "Chaque concurrent fait une partie du travail. From Day 1 est le seul à tout réunir, nativement, en France.",
   "hero": {
     "title": "Ce que personne d'autre ne réunit",
     "caption": "capacités qu'aucun des {rivals} concurrents ne couvre entièrement, sur les {total} comparées ligne à ligne dans le tableau ci-dessous."
@@ -78,12 +78,12 @@
       }
     },
     "readingTitle": "Ce qu'on en déduit",
-    "reading": "Un géant — Spotify, Believe, Chartmetric — peut étendre son offre vers le consolidé. La seule réponse tient en deux points : la vitesse d'exécution, et la profondeur France d'abord. C'est une lecture, pas une mesure."
+    "reading": "Un géant (Spotify, Believe, Chartmetric) peut étendre son offre vers le consolidé. La seule réponse tient en deux points : la vitesse d'exécution, et la profondeur France d'abord. C'est une lecture, pas une mesure."
   },
   "pitch": {
     "kicker": "Le pitch, en 90 secondes",
-    "quote": "Un artiste indépendant en France jongle entre six outils sans jamais voir sa carrière en entier : les stats d'un côté, un Excel de dépenses de l'autre, la SACEM qui verse avec 18 mois de retard, l'URSSAF en angoisse trimestrielle. From Day 1 réunit tout — analytics multi-DSP, revenus consolidés, droits français réconciliés, audit IA des royalties, valorisation de catalogue en temps réel. Chartmetric fait les stats. Stem fait les splits. Songtrust fait l'édition. Personne ne fait tout, et personne ne le fera en France sans reconstruire la conformité d'abord. De {low} à {high} par mois, du bedroom producer au label indé.",
-    "author": "Le pitch investisseur — From Day 1"
+    "quote": "Un artiste indépendant en France jongle entre six outils sans jamais voir sa carrière en entier : les stats d'un côté, un Excel de dépenses de l'autre, la SACEM qui verse avec 18 mois de retard, l'URSSAF en angoisse trimestrielle. From Day 1 réunit tout : analytics multi-DSP, revenus consolidés, droits français réconciliés, audit IA des royalties, valorisation de catalogue en temps réel. Chartmetric fait les stats. Stem fait les splits. Songtrust fait l'édition. Personne ne fait tout, et personne ne le fera en France sans reconstruire la conformité d'abord. De {low} à {high} par mois, du bedroom producer au label indé.",
+    "author": "Le pitch investisseur · From Day 1"
   },
   "doors": {
     "rights": "Les droits français, réconciliés",

@@ -193,7 +193,7 @@ export function PurchaseFlow() {
         )}
 
         {step === 1 && (
-          <Step title="Faisons connaissance" hint="On te recontacte si tu as une question — jamais de spam.">
+          <Step title="Faisons connaissance" hint="On te recontacte si tu as une question. Jamais de spam.">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field id="firstName" label="Prénom" value={draft.firstName} onChange={(v) => set("firstName", v)} autoComplete="given-name" />
               <Field id="lastName" label="Nom" value={draft.lastName} onChange={(v) => set("lastName", v)} autoComplete="family-name" />

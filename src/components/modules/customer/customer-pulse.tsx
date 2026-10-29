@@ -175,26 +175,26 @@ export function CustomerPulse() {
           <SheetHeading>Tes sources</SheetHeading>
           <ul className="grid gap-2 text-sm">
             <li>
-              <b>Classements Apple Music</b>{" "}— automatique, chaque nuit
+              <b>Classements Apple Music</b>{" "}: automatique, chaque nuit
               <SourceLine source="apple_music" runs={runs} locale={f.locale} />
             </li>
             <li>
-              <b>Vidéos TikTok collées</b>{" "}— fiches relues chaque nuit
+              <b>Vidéos TikTok collées</b>{" "}: fiches relues chaque nuit
               <SourceLine source="tiktok_oembed" runs={runs} locale={f.locale} />
             </li>
             <li>
-              <b>Relevé distributeur</b> —{" "}
+              <b>Relevé distributeur</b> :{" "}
               {data ? `importé le ${new Date(data.importedAt).toLocaleDateString(f.locale)} (${FORMAT_LABEL[data.format] ?? data.format})` : <span className="text-muted-foreground">à importer</span>}
             </li>
             <li>
-              <b>TikTok for Artists</b> — {lastStat ? `dernier relevé saisi le ${longDate(lastStat, f.locale)}` : <span className="text-muted-foreground">rien de saisi</span>}
+              <b>TikTok for Artists</b> : {lastStat ? `dernier relevé saisi le ${longDate(lastStat, f.locale)}` : <span className="text-muted-foreground">rien de saisi</span>}
             </li>
             <li>
-              <b>Wikipédia (vues de la page)</b> — automatique, chaque nuit
+              <b>Wikipédia (vues de la page)</b> : automatique, chaque nuit
               <SourceLine source="wikipedia" runs={runs} locale={f.locale} />
             </li>
             <li className="text-muted-foreground">
-              <b className="text-foreground">Spotify for Artists</b> — à brancher (export CSV) · <b className="text-foreground">YouTube</b>{" "}— à brancher (connexion de la chaîne)
+              <b className="text-foreground">Spotify for Artists</b> : à brancher (export CSV) · <b className="text-foreground">YouTube</b>{" "}: à brancher (connexion de la chaîne)
             </li>
           </ul>
         </Sheet>

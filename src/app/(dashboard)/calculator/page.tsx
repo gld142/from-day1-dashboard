@@ -501,12 +501,11 @@ function DemoCalculatorPage() {
               {t("methodology.title")}
             </summary>
             <p className="text-muted-foreground mt-2">{t("methodology.intro")}</p>
-            <ul className="text-muted-foreground mt-1.5 space-y-1">
+            <ul className="text-muted-foreground mt-1.5 list-disc space-y-1 pl-4">
               {(["point1", "point2", "point3"] as const).map((key) => (
-                <li key={key}>— {t(`methodology.${key}`)}</li>
+                <li key={key}>{t(`methodology.${key}`)}</li>
               ))}
               <li>
-                —{" "}
                 {t("methodology.point4", {
                   maxSpread: fmtInt(locale, maxSpread),
                 })}

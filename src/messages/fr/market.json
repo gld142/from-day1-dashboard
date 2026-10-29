@@ -1,10 +1,10 @@
 {
   "title": "Marché",
-  "subtitle": "Parts du Top 200 Spotify France par groupe, artiste et genre — le relevé du matin, labels lus sur Spotify.",
+  "subtitle": "Parts du Top 200 Spotify France par groupe, artiste et genre : le relevé du matin, labels lus sur Spotify.",
   "header": {
     "chartDate": "Classement Spotify France du {date}",
     "captured": "relevé le {date} à {time}",
-    "scope": "Périmètre : les streams Spotify France des 200 titres du classement quotidien (kworb.net) — pas le marché total. Le groupe vient des lignes ℗ / © de la page Spotify de chaque titre : un label distribué sous licence sans le dire dans son ℗ apparaît en « Indé / autre »."
+    "scope": "Périmètre : les streams Spotify France des 200 titres du classement quotidien (kworb.net), pas le marché total. Le groupe vient des lignes ℗ / © de la page Spotify de chaque titre : un label distribué sous licence sans le dire dans son ℗ apparaît en « Indé / autre »."
   },
   "legend": {
     "title": "Provenance",
@@ -92,15 +92,15 @@
     "title": "Lecture du matin",
     "badge": "Estimé · règles",
     "majors": "{leader} porte {leaderShare} des streams du Top 200 France aujourd'hui ({leaderDelta} pts vs 7 jours), devant {second} {secondShare} et {third} {thirdShare}.",
-    "indies": "Les grands indés (Believe, Because, Play Two, Wagram…) pèsent {share} ; les autres labels — ℗ sans groupe cité — {other}.",
+    "indies": "Les grands indés (Believe, Because, Play Two, Wagram…) pèsent {share} ; les autres labels (℗ sans groupe cité), {other}.",
     "unknown": "{count, plural, =0 {Toutes les pages Spotify ont livré une ligne ℗ / ©.} one {# titre sans ligne ℗ / © lue ({share} des streams).} other {# titres sans ligne ℗ / © lue ({share} des streams).}}",
     "genre": "Le rap représente {rap} des streams du Top 200.",
     "genreTop": "Premier genre : {genre} ({share}).",
-    "leader": "En tête : {artist} — {title}, {streams} streams.",
+    "leader": "En tête : {artist} · {title}, {streams} streams.",
     "rosterTitle": "Roster Day One",
-    "rosterPresent": "{name} — {count, plural, one {# titre} other {# titres}}{featured, plural, =0 {} one { dont # en featuring} other { dont # en featuring}}, meilleur rang {rank} ({title})",
-    "rosterAbsent": "{name} — absent du Top 200",
-    "method": "Lecture automatique à base de règles sur les parts mesurées — aucun modèle de langage."
+    "rosterPresent": "{name} : {count, plural, one {# titre} other {# titres}}{featured, plural, =0 {} one { dont # en featuring} other { dont # en featuring}}, meilleur rang {rank} ({title})",
+    "rosterAbsent": "{name} : absent du Top 200",
+    "method": "Lecture automatique à base de règles sur les parts mesurées. Aucun modèle de langage."
   },
   "empty": {
     "title": "Aucun relevé marché",
@@ -111,7 +111,7 @@
     "scope": "Spotify France",
     "caption": "des streams du classement · {count} titres classés",
     "absentValue": "Pas encore classé",
-    "absentHint": "Aucun de tes titres n'est dans les 200 de la journée — le paysage ci-dessous reste utile pour savoir à qui tu te mesures.",
+    "absentHint": "Aucun de tes titres n'est dans les 200 de la journée. Le paysage ci-dessous reste utile pour savoir à qui tu te mesures.",
     "bestTrack": "ton titre le mieux placé",
     "bestTrackNote": "{artist} · {streams} streams",
     "leader": "groupe en tête"

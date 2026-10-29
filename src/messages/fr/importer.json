@@ -12,7 +12,7 @@
   "errors": {
     "SAVE_FAILED": "Le relevé n'a pas pu être enregistré dans ton espace. Réessaie dans un instant.",
     "EMPTY_FILE": "Le fichier semble vide.",
-    "UNKNOWN_FORMAT": "Format non reconnu — il faut au minimum une colonne de montants ou de quantités.",
+    "UNKNOWN_FORMAT": "Format non reconnu : il faut au minimum une colonne de montants ou de quantités.",
     "NO_DATA_ROWS": "Aucune ligne exploitable trouvée dans ce fichier.",
     "generic": "Impossible de lire ce fichier. Vérifie que c'est bien un export CSV de ton distributeur."
   },
@@ -56,18 +56,18 @@
   },
   "active": {
     "title": "Tes données sont actives",
-    "description": "Tout le dashboard affiche les chiffres de « {name} » — importés le {date} depuis {format}.",
+    "description": "Tout le dashboard affiche les chiffres de « {name} », importés le {date} depuis {format}.",
     "stats": "{months} mois · {streams} streams · {revenue} de revenus",
     "modules": "Les modules sans données importées (droits, tournée, splits…) affichent un état vide en attendant leurs connexions.",
     "reimport": "Importer un nouveau relevé",
     "deactivate": "Repasser en mode démo",
     "delete": "Supprimer mes données",
     "deleteConfirm": "Tes données importées seront effacées de ce navigateur. Continuer ?",
-    "descriptionCustomer": "Mon relevé affiche les chiffres de « {name} » — importés le {date} depuis {format}.",
+    "descriptionCustomer": "Mon relevé affiche les chiffres de « {name} », importés le {date} depuis {format}.",
     "modulesCustomer": "Les autres pages du dashboard s'ouvrent au fur et à mesure qu'elles sont branchées sur les relevés."
   },
   "success": {
-    "title": "C'est fait — bienvenue chez toi.",
+    "title": "C'est fait. Bienvenue chez toi.",
     "description": "Ton Pulse, tes revenus, ta valorisation : tout est calculé sur tes vrais chiffres.",
     "descriptionCustomer": "Le relevé est enregistré dans ton espace : il alimente Mon relevé, Revenus, Streams et le Roster de la structure."
   },
