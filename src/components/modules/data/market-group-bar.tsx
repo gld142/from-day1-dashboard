@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Barre horizontale empilée des parts par groupe (une seule rampe de marque)
+ * Barre horizontale empilée des parts par groupe (une teinte par groupe, cf. market-shared)
  * + légende avec part et nombre de titres. Les groupes absents du relevé ne
  * sont pas dessinés.
  */
@@ -38,18 +38,24 @@ export function MarketGroupBar({ rows }: { rows: MarketShareRow[] }) {
           <BarChart data={data} layout="vertical" margin={{ top: 0, right: 0, bottom: 0, left: 0 }} barCategoryGap={0}>
             <XAxis type="number" domain={[0, 100]} hide />
             <YAxis type="category" dataKey={() => ""} hide />
+            {/* Infobulle lisible : le texte reste à l'encre normale, la couleur est dans le carré. */}
             <Tooltip
               cursor={false}
-              contentStyle={{
-                background: "var(--popover)",
-                border: "1px solid var(--border)",
-                borderRadius: 10,
-                fontSize: 12,
-              }}
-              formatter={(value, name) => [
-                fmtShare(locale, Number(value) / 100),
-                t(`groups.${String(name) as MarketGroup}`),
-              ]}
+              content={({ active, payload }) =>
+                active && payload?.length ? (
+                  <div className="bg-popover text-popover-foreground rounded-xl border px-3 py-2 text-[12.5px] shadow-[0_8px_24px_rgb(0_0_0/0.12)]">
+                    <ul className="space-y-1">
+                      {payload.map((p) => (
+                        <li key={String(p.dataKey)} className="flex items-center gap-2">
+                          <span aria-hidden className="size-2.5 rounded-[3px]" style={{ background: groupColor(String(p.dataKey) as MarketGroup) }} />
+                          <span className="font-medium">{t(`groups.${String(p.dataKey) as MarketGroup}`)}</span>
+                          <span className="num text-muted-foreground ml-auto pl-3">{fmtShare(locale, Number(p.value) / 100)}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null
+              }
             />
             {ordered.map((r, i) => (
               <Bar
@@ -58,7 +64,7 @@ export function MarketGroupBar({ rows }: { rows: MarketShareRow[] }) {
                 stackId="shares"
                 fill={groupColor(r.group)}
                 stroke="var(--card)"
-                strokeWidth={1}
+                strokeWidth={2}
                 radius={i === 0 ? [6, 0, 0, 6] : i === ordered.length - 1 ? [0, 6, 6, 0] : 0}
                 isAnimationActive={false}
               />
